@@ -1,19 +1,26 @@
+//=============================================================================
+// @File    : [MySceneManager]
+// @Brief   : ã‚ªãƒªã‚¸ãƒŠãƒ«ã®ã‚·ãƒ¼ãƒ³ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
+// @Author  : YOSHIHARA ASUKA
+// @Editer  : 
+// @Detail  : å‚è€ƒURL:https://noracle.jp/unity-initialize-scene/
+// 
+// [Date]
+// 2023/02/02 ã‚¹ã‚¯ãƒªãƒ—ãƒˆä½œæˆ,ãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¬ãƒ¼ãƒˆæ•°ã‚’æŒ‡å®šã®å‡¦ç†ã‚’è¨˜è¼‰(å‰åŸ)
+//=============================================================================
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-/// <summary>
-/// ‹¤’Ê‚Ì‰Šú‰»‚ğ‚·‚éƒV[ƒ“‚ÌŒÄ‚Ño‚µ‚ğs‚¤
-/// URL:https://noracle.jp/unity-initialize-scene/
-/// </summary>
+
 public class Initialize
 {
-    // ‰Šú‰»‚ğs‚¤ƒV[ƒ“‚Ì–¼‘O‚ğŒŸõ
+    // åˆæœŸåŒ–ã‚’è¡Œã†ã‚·ãƒ¼ãƒ³ã®åå‰ã‚’æ¤œç´¢
     private const string InitializeSceneName = "InitializeScene";
 
-    // ‘®«‚ÌƒŠƒtƒ@ƒŒƒ“ƒX:https://docs.unity3d.com/ScriptReference/RuntimeInitializeOnLoadMethodAttribute.html
-    // [RuntimeInitializeOnLoadMethod]ƒQ[ƒ€‚ªƒ[ƒh‚³‚ê‚½Œã‚ÉŒÄ‚Ño‚³‚ê‚éB
-    // ¦Œ»İ‚ÌƒV[ƒ“‚ÌAwake()‚ÌŒã‚É‰Šú—pƒV[ƒ“‚ª¶¬‚³‚ê‚Ä‰Šú‰»ƒV[ƒ“‚ÌAwake()‚ª‘–‚éB
-    // @Ú‚µ‚­‚Ísummry‚ÌURL‚Ö
+    // å±æ€§ã®ãƒªãƒ•ã‚¡ãƒ¬ãƒ³ã‚¹:https://docs.unity3d.com/ScriptReference/RuntimeInitializeOnLoadMethodAttribute.html
+    // [RuntimeInitializeOnLoadMethod]ã‚²ãƒ¼ãƒ ãŒãƒ­ãƒ¼ãƒ‰ã•ã‚ŒãŸå¾Œã«å‘¼ã³å‡ºã•ã‚Œã‚‹ã€‚
+    // â€»ç¾åœ¨ã®ã‚·ãƒ¼ãƒ³ã®Awake()ã®å¾Œã«åˆæœŸç”¨ã‚·ãƒ¼ãƒ³ãŒç”Ÿæˆã•ã‚Œã¦åˆæœŸåŒ–ã‚·ãƒ¼ãƒ³ã®Awake()ãŒèµ°ã‚‹ã€‚
+    // ã€€è©³ã—ãã¯summryã®URLã¸
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     public static void RuntimeInitializeApplication()
     {
@@ -22,7 +29,7 @@ public class Initialize
             SceneManager.LoadScene(InitializeSceneName,LoadSceneMode.Additive);
         }
         else{
-            Debug.LogError("‰Šú‰»—pƒV[ƒ“‚ÌŒÄ‚Ño‚µ‚ªo—ˆ‚Ü‚¹‚ñ‚Å‚µ‚½B");
+            Debug.LogError("åˆæœŸåŒ–ç”¨ã‚·ãƒ¼ãƒ³ã®å‘¼ã³å‡ºã—ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸã€‚");
         }
 
     }
