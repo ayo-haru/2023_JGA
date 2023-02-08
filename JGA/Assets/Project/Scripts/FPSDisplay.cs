@@ -15,11 +15,11 @@ using UnityEngine;
 public class FPSDisplay : MonoBehaviour
 {
     //---- 変数宣言 ----
-    [SerializeField] private float updateInterval = 0.02f;		// 計測時間間隔
+    [SerializeField] private float updateInterval = 0.05f;		// 計測時間間隔
 
-	private float acuum;
-	private float frames;
-	private float timeLeft;
+	private float accum;										// 経過時間(accumulation = 累積)
+	private float frames;										// 1フレーム
+	private float timeLeft;										// 次の計測までの時間
 	private float FPS;
 
 	/// <summary>
@@ -28,16 +28,16 @@ public class FPSDisplay : MonoBehaviour
 	void Update()
 	{
 		timeLeft -= Time.deltaTime;
-		acuum += Time.timeScale / Time.deltaTime;
+		accum += Time.timeScale / Time.deltaTime;
 		frames++;
 
 		if(0 < timeLeft){
 			return;
         }
 
-		FPS = acuum / frames;
+		FPS = accum / frames;
 		timeLeft = updateInterval;
-		acuum = 0;
+		accum = 0;
 		frames = 0;
 	}
 
