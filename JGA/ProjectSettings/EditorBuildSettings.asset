@@ -9,9 +9,6 @@ EditorBuildSettings:
     path: Assets/Project/Scenes/InitializeScene.unity
     guid: a440afc7f9f394a45b9c9af0733e2dfb
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 0
-    path: Assets/Project/Private/YoshiharaAsuka/Sample.unity
-    guid: aad5d014c38411246b7ef9cd7fa097ae
+    path: Assets/Project/Scenes/Sample001.unity
+    guid: 33cb64bc308738946b76d9a2e5693ee9
   m_configObjects: {}

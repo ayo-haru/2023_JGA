@@ -1,9 +1,9 @@
 ﻿//=============================================================================
-// @File		: [#NAME#.cs]
-// @Brief		: 
+// @File	: [#NAME#.cs]
+// @Brief	: 
 // @Author	: #MY_NAME#
-// @Editer	:
-// @Detail		: 
+// @Editer	: 
+// @Detail	: 
 // 
 // [Date]
 // #DATE#	スクリプト作成

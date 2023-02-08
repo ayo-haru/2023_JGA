@@ -1,8 +1,8 @@
 ﻿//=============================================================================
-// @File		: [#NAME#.cs]
-// @Brief		: 
+// @File	: [#NAME#.cs]
+// @Brief	: 
 // @Author	: #MY_NAME#
-// @Editer	:
+// @Editer	: 
 // @Detail	: 
 // 
 // [Date]
@@ -12,30 +12,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class #SCRIPTNAME# : MonoBehaviour
+public class #SCRIPTNAME# : SingletonMonoBehaviour<#SCRIPTNAME#>
 {
-
-
-	/// <summary>
-	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
-	/// </summary>
-	void Awake()
-	{
-		#NOTRIM#
-	}
+	protected override bool dontDestroyOnLoad { get {return true; } }
 
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
 	/// </summary>
 	void Start()
-	{
-		#NOTRIM#
-	}
-
-	/// <summary>
-	/// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
-	/// </summary>
-	void FixedUpdate()
 	{
 		#NOTRIM#
 	}
@@ -48,3 +32,4 @@ public class #SCRIPTNAME# : MonoBehaviour
 		#NOTRIM#
 	}
 }
+

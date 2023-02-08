@@ -22,6 +22,6 @@ public static class SceneLauncher
     [MenuItem("Launcher/InitializeScene", priority = 1)]
 	public static void OpenInitializeScene()
     {
-		EditorSceneManager.OpenScene("Assets/Project/Scenes/InitializeScene/unity", OpenSceneMode.Single);
+		EditorSceneManager.OpenScene("Assets/Project/Scenes/InitializeScene.unity", OpenSceneMode.Single);
     }
 }
