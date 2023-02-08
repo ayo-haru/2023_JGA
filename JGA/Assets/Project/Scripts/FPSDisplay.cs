@@ -15,7 +15,7 @@ using UnityEngine;
 public class FPSDisplay : MonoBehaviour
 {
     //---- 変数宣言 ----
-    [SerializeField] private float updateInterval = 0.5f;		// 計測時間間隔
+    [SerializeField] private float updateInterval = 0.02f;		// 計測時間間隔
 
 	private float acuum;
 	private float frames;
