@@ -17,15 +17,5 @@ public class MySceneManager : MonoBehaviour
     {
         Application.targetFrameRate = 60;       // FPS‚ð60‚ÉŒÅ’è
     }
-    // Start is called before the first frame update
-    void Start()
-    {
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
