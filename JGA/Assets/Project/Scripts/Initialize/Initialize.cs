@@ -20,18 +20,16 @@ public class Initialize
     // 属性のリファレンス:https://docs.unity3d.com/ScriptReference/RuntimeInitializeOnLoadMethodAttribute.html
     // [RuntimeInitializeOnLoadMethod]ゲームがロードされた後に呼び出される。
     // ※現在のシーンのAwake()の後に初期用シーンが生成されて初期化シーンのAwake()が走る。
-    // 　詳しくはsummryのURLへ
+    // 詳しくはsummryのURLへ
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     public static void RuntimeInitializeApplication()
     {
-
         if (!SceneManager.GetSceneByName(InitializeSceneName).IsValid()){
             SceneManager.LoadScene(InitializeSceneName,LoadSceneMode.Additive);
         }
         else{
             Debug.LogError("初期化用シーンの呼び出しが出来ませんでした。");
         }
-
     }
 
 }
