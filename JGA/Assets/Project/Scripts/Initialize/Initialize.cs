@@ -1,12 +1,13 @@
 //=============================================================================
-// @File    : [MySceneManager]
+// @File    : [MySceneManager.cs]
 // @Brief   : オリジナルのシーンマネージャー
-// @Author  : YOSHIHARA ASUKA
-// @Editer  : 
+// @Author  : Yoshihara Asuka
+// @Editer  : Yoshihara Asuka
 // @Detail  : 参考URL:https://noracle.jp/unity-initialize-scene/
 // 
 // [Date]
 // 2023/02/02 スクリプト作成,フレームレート数を指定の処理を記載(吉原)
+// 2023/02/09 確認(吉原)
 //=============================================================================
 using UnityEngine;
 using UnityEngine.SceneManagement;
