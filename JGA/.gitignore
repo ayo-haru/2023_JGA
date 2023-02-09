@@ -114,4 +114,5 @@ quick_gen_project_*_autogen.sh.meta
 CommitProhibited/
 *CommitProhibited.meta
 
-.JGA/Assets/UserName.txt.meta
+UserName.txt
+UserName.txt.meta
