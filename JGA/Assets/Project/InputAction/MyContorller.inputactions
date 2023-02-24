@@ -1,0 +1,22 @@
+{
+    "name": "MyContorller",
+    "maps": [
+        {
+            "name": "Player",
+            "id": "20cff060-f36c-4ceb-8e73-c0cf138b2cb9",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "b690002d-e846-4fa3-97df-99c2f4018617",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": []
+        }
+    ],
+    "controlSchemes": []
+}

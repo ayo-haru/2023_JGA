@@ -51,6 +51,7 @@ using UnityEngine.Windows;
  * 2023/02/08 - OnPostprocessAllAssets関数にて、
  *				拡張子判定時に、「ファイル名に含まれる場合」から「ファイル名の末尾に含まれる場合」に変更。
  *				自分の名前を「あらかじめ静的変数で定義」する方法から「テキストファイルから取得」する方法に変更。
+ * 2023/02/17 - ファイルが見つからない場合の例外処理追加
  */
 
 public class ScriptTemplateReplace : UnityEditor.AssetPostprocessor
@@ -107,8 +108,15 @@ public class ScriptTemplateReplace : UnityEditor.AssetPostprocessor
 					// 候補３：あらかじめテキストファイルで定義した名前を取得
 					{
 						TextAsset textasset = new TextAsset();
-						textasset = AssetDatabase.LoadMainAssetAtPath("Assets/UserName.txt") as TextAsset;
-						name = textasset.text;
+						try
+						{
+							textasset = AssetDatabase.LoadMainAssetAtPath("Assets/UserName.txt") as TextAsset;
+							name = textasset.text;
+						}
+						catch (System.Exception e)
+						{
+							Debug.LogWarning($"UserName.txtがAssetsファイル内に見つかりませんでした。 : {e}"); //例外が発生したら警告メッセージを表示している。
+						}
 					}
 					// 候補４：ファイル生成時のディレクトリ名を取得
 					{
