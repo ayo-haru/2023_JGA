@@ -1,7 +1,14 @@
-﻿/// @file	ImGuiTest.cs
-/// @brief	ImGuiTestクラス
-/// @date	2023/02/09
-/// @author	Sakai Ryotaro
+﻿//=============================================================================
+// @File	: [ImGuiTest.cs]
+// @Brief	: ImGuiTestクラス
+// @Author	: Sakai Ryotaro
+// @Editer	: 
+// @Detail	: 
+// 
+// [Date]
+// 2023/02/09	スクリプト作成
+//=============================================================================
+
 using ImGuiNET;
 #if !UIMGUI_REMOVE_IMNODES
 using imnodesNET;
