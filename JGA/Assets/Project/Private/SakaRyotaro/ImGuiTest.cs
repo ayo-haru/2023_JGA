@@ -24,7 +24,6 @@ using System.Reflection;
 using Unity.VisualScripting.FullSerializer;
 using static UnityEngine.GraphicsBuffer;
 using UnityEngine.UIElements;
-//using static GameSceneNetwork;
 using System.Runtime.CompilerServices;
 using System;
 using System.ComponentModel;
@@ -36,7 +35,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.AI;
-//using static Photon.Pun.UtilityScripts.PunTeams;
 using System.Numerics;
 
 using Vector2 = UnityEngine.Vector2;
@@ -44,9 +42,9 @@ using Vector3 = UnityEngine.Vector3;
 using Vector4 = UnityEngine.Vector4;
 using Quaternion = UnityEngine.Quaternion;
 using Matrix4x4 = UnityEngine.Matrix4x4;
-//using static UnityEngine.AdaptivePerformance.Provider.AdaptivePerformanceSubsystemDescriptor;
 using UnityEditor.PackageManager.UI;
 using System.Xml.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace UImGui
 {
@@ -54,8 +52,8 @@ namespace UImGui
 	{
 		[SerializeField]
 		private bool bMode;
+
 #if !UIMGUI_REMOVE_IMPLOT
-		[SerializeField]
 		private Vector4 _myColor;
 		private bool _isOpen;
 
@@ -65,16 +63,22 @@ namespace UImGui
 		private int n = 0;
 		private bool b = true;
 
+		[SerializeField]
+		private bool bShowDemoWindow;
+		[SerializeField]
+		private bool bShowHierarchy;
+		[SerializeField]
+		private bool bShowInspector;
+
 		private Camera mainCamera;
 		private GameObject SelectObj;
+		private string ObjectName;
 
 		[SerializeField]
 		private List<GameObject> gameObjects = new List<GameObject>();
 
 		private OPERATION mCurrentGizmoOperation = OPERATION.TRANSLATE;
 		private ImGuizmoNET.MODE mCurrentGizmoMode = ImGuizmoNET.MODE.LOCAL;
-		private int gizmoCount = 1;
-		private int lastUsing = 0;
 
 		/// <summary>
 		/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -147,87 +151,11 @@ namespace UImGui
 			// メインメニューバー
 			if (ImGui.BeginMainMenuBar())
 			{
-				if (ImGui.BeginMenu("File"))
+				if (ImGui.BeginMenu("Window"))
 				{
-					ImGui.MenuItem("(demo menu)", null, false, false);
-					if (ImGui.MenuItem("New")) { }
-					if (ImGui.MenuItem("Open", "Ctrl+O")) { }
-					if (ImGui.BeginMenu("Open Recent"))
-					{
-						ImGui.MenuItem("fish_hat.c");
-						ImGui.MenuItem("fish_hat.inl");
-						ImGui.MenuItem("fish_hat.h");
-						if (ImGui.BeginMenu("More.."))
-						{
-							ImGui.MenuItem("Hello");
-							ImGui.MenuItem("Sailor");
-							if (ImGui.BeginMenu("Recurse.."))
-							{
-								//ShowExampleMenuFile();
-								ImGui.EndMenu();
-							}
-							ImGui.EndMenu();
-						}
-						ImGui.EndMenu();
-					}
-					if (ImGui.MenuItem("Save", "Ctrl+S")) { }
-					if (ImGui.MenuItem("Save As..")) { }
-
-					ImGui.Separator();
-					if (ImGui.BeginMenu("Options"))
-					{
-						ImGui.MenuItem("Enabled", "", ena);
-						ImGui.BeginChild("child", new Vector2(0, 60), true);
-						for (int i = 0; i < 10; i++)
-							ImGui.Text($"Scrolling Text {i}");
-						ImGui.EndChild();
-						ImGui.SliderFloat("Value", ref f, 0.0f, 1.0f);
-						ImGui.InputFloat("Input", ref f, 0.1f);
-						ImGui.Combo("Combo", ref n, "Yes\0No\0Maybe\0\0");
-						ImGui.EndMenu();
-					}
-
-					if (ImGui.BeginMenu("Colors"))
-					{
-						float sz = ImGui.GetTextLineHeight();
-						for (int i = 0; i < ((int)ImGuiCol.COUNT); i++)
-						{
-							string name = ImGui.GetStyleColorName((ImGuiCol)i);
-							Vector2 p = ImGui.GetCursorScreenPos();
-							ImGui.GetWindowDrawList().AddRectFilled(p, new Vector2(p.x + sz, p.y + sz), ImGui.GetColorU32((ImGuiCol)i));
-							ImGui.Dummy(new Vector2(sz, sz));
-							ImGui.SameLine();
-							ImGui.MenuItem(name);
-						}
-						ImGui.EndMenu();
-					}
-
-					// ここでは、「オプション」メニュー(上記で作成済み) に再度追加する方法を示します。
-					// もちろん、このデモでは、この関数が BeginMenu("Options") を 2 回呼び出すのは少しばかげています。
-					// 実際のコードベースでは、非常に異なるコードの場所からこの機能を使用するのが理にかなっています。
-					if (ImGui.BeginMenu("Options")) // <-- Append!
-					{
-						ImGui.Checkbox("SomeOption", ref b);
-						ImGui.EndMenu();
-					}
-
-					if (ImGui.BeginMenu("Disabled", false)) // Disabled
-					{
-
-					}
-					if (ImGui.MenuItem("Checked", null, true)) { }
-					if (ImGui.MenuItem("Close ImGui", "Shift+F12")) { bMode = !bMode; }
-
-					ImGui.EndMenu();
-				}
-				if (ImGui.BeginMenu("Edit"))
-				{
-					if (ImGui.MenuItem("Undo", "CTRL+Z")) { }
-					if (ImGui.MenuItem("Redo", "CTRL+Y", false, false)) { }  // Disabled item
-					ImGui.Separator();
-					if (ImGui.MenuItem("Cut", "CTRL+X")) { }
-					if (ImGui.MenuItem("Copy", "CTRL+C")) { }
-					if (ImGui.MenuItem("Paste", "CTRL+V")) { }
+					if (ImGui.MenuItem("Demo", null, bShowDemoWindow)) { bShowDemoWindow = !bShowDemoWindow; }
+					if (ImGui.MenuItem("Hierarchy", null, bShowHierarchy)) { bShowHierarchy = !bShowHierarchy; }
+					if (ImGui.MenuItem("Inspector", null, bShowInspector)) { bShowInspector = !bShowInspector; }
 					ImGui.EndMenu();
 				}
 
@@ -235,161 +163,133 @@ namespace UImGui
 				ImGui.EndMainMenuBar();
 			}
 
-			Debug.Log($"imgui");
-
-#if !UIMGUI_REMOVE_IMNODES
-			//if (ImGui.Begin("Nodes Window Sample"))
-			//{
-			//	ImGui.SetNextWindowSize(Vector2.one * 300, ImGuiCond.Once);
-			//	imnodes.BeginNodeEditor();
-			//	imnodes.BeginNode(1);
-
-			//	imnodes.BeginNodeTitleBar();
-			//	ImGui.TextUnformatted("simple node :)");
-			//	imnodes.EndNodeTitleBar();
-
-			//	imnodes.BeginInputAttribute(2);
-			//	ImGui.Text("input");
-			//	imnodes.EndInputAttribute();
-
-			//	imnodes.BeginOutputAttribute(3);
-			//	ImGui.Indent(40);
-			//	ImGui.Text("output");
-			//	imnodes.EndOutputAttribute();
-
-			//	imnodes.EndNode();
-			//	imnodes.EndNodeEditor();
-			//	ImGui.End();
-			//}
-#endif
-
-			ImGui.ShowDemoWindow();
+			if (bShowDemoWindow)
+				ImGui.ShowDemoWindow();
 
 
 			// ヒエラルキービュー
-			ImGui.Begin("Hierarchy", ref _isOpen, ImGuiWindowFlags.MenuBar);
+			if (bShowHierarchy)
 			{
-				// メニューバー
-				//if (ImGui.BeginMenuBar())
-				//{
-				//	if (ImGui.BeginMenu("File"))
-				//	{
-				//		if (ImGui.MenuItem("Open..", "Ctrl+O")) { /* Do stuff */ }
-				//		if (ImGui.MenuItem("Save", "Ctrl+S")) { /* Do stuff */ }
-				//		if (ImGui.MenuItem("Close", "Ctrl+W")) { _isOpen = false; }
-				//		ImGui.EndMenu();
-				//	}
-				//	ImGui.EndMenuBar();
-				//}
-
-				//// カラー
-				//ImGui.ColorEdit4("Color", ref _myColor);
-
-				//// Plot some values
-				//float[] my_values = new float[] { 0.2f, 0.1f, 1.0f, 0.5f, 0.9f, 2.2f };
-				//ImGui.PlotLines("Hierarchy", ref my_values[0], my_values.Length);
-
-				ImGui.BeginChild("GameObjects");
+				ImGui.Begin("Hierarchy", ref _isOpen, ImGuiWindowFlags.MenuBar);
 				{
-					CreateHierarchy(gameObjects);
-				}
-				ImGui.EndChild();
-			}
-			ImGui.End();
+					// メニューバー
+					//if (ImGui.BeginMenuBar())
+					//{
+					//	if (ImGui.BeginMenu("File"))
+					//	{
+					//		if (ImGui.MenuItem("Open..", "Ctrl+O")) { /* Do stuff */ }
+					//		if (ImGui.MenuItem("Save", "Ctrl+S")) { /* Do stuff */ }
+					//		if (ImGui.MenuItem("Close", "Ctrl+W")) { _isOpen = false; }
+					//		ImGui.EndMenu();
+					//	}
+					//	ImGui.EndMenuBar();
+					//}
 
-
-			// インスペクタビュー
-			ImGui.Begin("Inspector", ref _isOpen, ImGuiWindowFlags.MenuBar);
-			{
-				if (SelectObj != null)
-				{
-					//--- アクティブ チェックボックス
-					bool active = SelectObj.activeSelf;
-					if (ImGui.Checkbox("", ref active))
-						SelectObj.SetActive(!SelectObj.activeSelf);
-
-					ImGui.SameLine();   // 改行しない
-
-					//--- Name
-					ImGui.Text($"{SelectObj.name}");
-
-					//--- Tag
-					// https://baba-s.hatenablog.com/entry/2014/02/25/000000
-					int Tag = 0;
-					string[] Tags = { $"{SelectObj.tag}" };
-					ImGui.Combo("Tag", ref Tag, Tags, Tags.Length);
-
-					ImGui.SameLine();   // 改行しない
-
-					//--- Layer
-					int layer = 0;
-					string[] layers = { $"{SelectObj.layer.ToString()}" };
-					ImGui.Combo("Layer", ref layer, layers, layers.Length);
-
-
-					//--- Component
-					UnityEngine.Component[] components = SelectObj.GetComponents<UnityEngine.Component>();
-
-					for (int i = 0; i < components.Length; i++)
+					ImGui.BeginChild("GameObjects");
 					{
-						if (ImGui.CollapsingHeader($"{components[i].GetType().Name}##{i}", ImGuiTreeNodeFlags.DefaultOpen))
+						CreateHierarchy(gameObjects);
+					}
+					ImGui.EndChild();
+				}
+				ImGui.End();
+			}
+
+			if (bShowInspector)
+			{
+				// インスペクタビュー
+				ImGui.Begin("Inspector", ref _isOpen, ImGuiWindowFlags.MenuBar);
+				{
+					if (SelectObj != null)
+					{
+						//--- アクティブ チェックボックス
+						bool active = SelectObj.activeSelf;
+						if (ImGui.Checkbox("", ref active))
+							SelectObj.SetActive(!SelectObj.activeSelf);
+
+						ImGui.SameLine();   // 改行しない
+
+						//--- Name
+						if (ImGui.InputText($"##ObjectName", ref ObjectName, uint.MaxValue, ImGuiInputTextFlags.AlwaysOverwrite))
+							SelectObj.name = ObjectName;
+
+						//--- Tag
+						// https://baba-s.hatenablog.com/entry/2014/02/25/000000
+						int Tag = 0;
+						string[] Tags = { $"{SelectObj.tag}" };
+						ImGui.Combo("Tag", ref Tag, Tags, Tags.Length);
+
+						ImGui.SameLine();   // 改行しない
+
+						//--- Layer
+						int layer = 0;
+						string[] layers = { $"{SelectObj.layer}" };
+						ImGui.Combo("Layer", ref layer, layers, layers.Length);
+
+
+						//--- Component
+						UnityEngine.Component[] components = SelectObj.GetComponents<UnityEngine.Component>();
+
+						for (int i = 0; i < components.Length; i++)
 						{
-							// 名前空間に"UnityEngine"が含まれる場合
-							if (components[i].GetType().FullName.Contains("UnityEngine"))
+							if (ImGui.CollapsingHeader($"{components[i].GetType().Name}##{i}", ImGuiTreeNodeFlags.DefaultOpen))
 							{
-								ShowUnityComponents(components[i]);
-							}
-
-							// その他の場合（アセットや自作のクラス）
-							else
-							{
-								Debug.LogWarning($"Type:{components[i]}");
-
-								// 型を取得
-								Type t = components[i].GetType();
-								// 取得した型のメンバを全取得する
-								var members = t.GetFields(
-									BindingFlags.Public |       // パブリックメンバを検索の対象に加える。
-									BindingFlags.NonPublic |    // パブリックでないメンバを検索の対象に加える。
-									BindingFlags.Instance |     // 非静的メンバ（インスタンスメンバ）を検索の対象に加える。
-									BindingFlags.Static |       // 静的メンバを検索の対象に加える。
-									BindingFlags.DeclaredOnly   // 継承されたメンバを検索の対象にしない。
-									);
-
-								foreach (var member in members)
+								// 名前空間に"UnityEngine"が含まれる場合
+								if (components[i].GetType().FullName.Contains("UnityEngine"))
 								{
-									Debug.Log($"{member.Name}");
+									ShowUnityComponents(components[i]);
+								}
 
-									//--- アクセス修飾子がPublicの場合
-									if (member.IsPublic)
+								// その他の場合（アセットや自作のクラス）
+								else
+								{
+									Debug.LogWarning($"Type:{components[i]}");
+
+									// 型を取得
+									Type t = components[i].GetType();
+									// 取得した型のメンバを全取得する
+									var members = t.GetFields(
+										BindingFlags.Public |       // パブリックメンバを検索の対象に加える。
+										BindingFlags.NonPublic |    // パブリックでないメンバを検索の対象に加える。
+										BindingFlags.Instance |     // 非静的メンバ（インスタンスメンバ）を検索の対象に加える。
+										BindingFlags.Static |       // 静的メンバを検索の対象に加える。
+										BindingFlags.DeclaredOnly   // 継承されたメンバを検索の対象にしない。
+										);
+
+									foreach (var member in members)
 									{
-										Debug.Log($"{member.Name}:public");
-										ShowComponents(member, components[i], false);
-									}
+										Debug.Log($"{member.Name}");
 
-									else
-									{
-										bool IsSerializable;
-										var attributes = member.GetCustomAttributes(true);
+										//--- アクセス修飾子がPublicの場合
+										if (member.IsPublic)
+										{
+											Debug.Log($"{member.Name}:public");
+											ShowComponents(member, components[i], false);
+										}
 
-										if (attributes.Any(attr => attr is NonSerializedAttribute))
-											IsSerializable = false;
-										else if (member.IsPrivate && !attributes.Any(attr => attr is SerializeField))
-											IsSerializable = false;
 										else
-											IsSerializable = member.FieldType.IsSerializable;
+										{
+											bool IsSerializable;
+											var attributes = member.GetCustomAttributes(true);
 
-										ShowComponents(member, components[i], IsSerializable);
+											if (attributes.Any(attr => attr is NonSerializedAttribute))
+												IsSerializable = false;
+											else if (member.IsPrivate && !attributes.Any(attr => attr is SerializeField))
+												IsSerializable = false;
+											else
+												IsSerializable = member.FieldType.IsSerializable;
+
+											ShowComponents(member, components[i], IsSerializable);
+										}
+
 									}
-
 								}
 							}
 						}
-					}
 
+					}
 				}
+				ImGui.End();
 			}
-			ImGui.End();
 
 			// Gizmo
 			if (SelectObj != null)
@@ -424,15 +324,6 @@ namespace UImGui
 		private void GetGameObject()
 		{
 			gameObjects.Clear();
-
-			//foreach (GameObject obj in UnityEngine.Object.FindObjectsOfType(typeof(GameObject)))
-			//{
-			//	if (obj.activeInHierarchy /*&& obj.name != "AdaptivePerformanceManager"*/)
-			//	{
-			//		gameObjects.Add(obj);		// 最後
-			//		//gameObjects.Insert(0, obj);	// 最初
-			//	}
-			//}
 
 			foreach (GameObject obj in UnityEngine.Resources.FindObjectsOfTypeAll(typeof(GameObject)))
 			{
@@ -487,8 +378,13 @@ namespace UImGui
 
 			if (ImGui.TreeNodeEx($"{transform.name}##{transform.GetInstanceID()}", node_flags))     // ##transform.GetInstanceID()でオブジェクトの名前が被っても大丈夫になる
 			{
+				// クリックされた時
 				if (ImGui.IsItemClicked())
+				{
 					SelectObj = transform.gameObject;
+					ObjectName = transform.name;
+				}
+
 				if (transform.childCount > 0)
 				{
 					foreach (Transform child in transform)
@@ -663,6 +559,8 @@ namespace UImGui
 			}
 
 		}
+
+
 
 		static void ImCombo<T>(T @enum) where T : IComparable
 		{
@@ -904,99 +802,6 @@ namespace UImGui
 		{
 
 		}
-
-#if TEST
-		private void EditTransform(float cameraView, float cameraProjection, float matrix, bool editTransformDecomposition)
-		{
-			bool useSnap = false;
-			Vector3 snap = Vector3.one;
-			float[] bounds = { -0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f };
-			Vector3 boundsSnap = new Vector3(0.1f, 0.1f, 0.1f);
-			bool boundSizing = false;
-			bool boundSizingSnap = false;
-
-			if (editTransformDecomposition)
-			{
-				if (Input.GetKeyDown(KeyCode.T))
-					mCurrentGizmoOperation = ImGuizmoNET.OPERATION.TRANSLATE;
-				if (Input.GetKeyDown(KeyCode.E))
-					mCurrentGizmoOperation = ImGuizmoNET.OPERATION.ROTATE;
-				if (Input.GetKeyDown(KeyCode.R))
-					mCurrentGizmoOperation = ImGuizmoNET.OPERATION.SCALE;
-
-				if (ImGui.RadioButton("Translate", mCurrentGizmoOperation == ImGuizmoNET.OPERATION.TRANSLATE))
-					mCurrentGizmoOperation = ImGuizmoNET.OPERATION.TRANSLATE;
-				ImGui.SameLine();
-				if (ImGui.RadioButton("Rotate", mCurrentGizmoOperation == ImGuizmoNET.OPERATION.ROTATE))
-					mCurrentGizmoOperation = ImGuizmoNET.OPERATION.ROTATE;
-				ImGui.SameLine();
-				if (ImGui.RadioButton("Scale", mCurrentGizmoOperation == ImGuizmoNET.OPERATION.SCALE))
-					mCurrentGizmoOperation = ImGuizmoNET.OPERATION.SCALE;
-				//if (ImGui.RadioButton("Universal", mCurrentGizmoOperation == ImGuizmoNET.OPERATION.UNIVERSAL))
-				//	mCurrentGizmoOperation = ImGuizmoNET.OPERATION.UNIVERSAL;
-
-				//Vector3 matrixTranslation, matrixRotation, matrixScale;
-				//ImGuizmo.DecomposeMatrixToComponents(ref matrix, ref matrixTranslation, ref matrixRotation, ref matrixScale);
-				//ImGui.InputFloat3("Tr", ref matrixTranslation);
-				//ImGui.InputFloat3("Rt", ref matrixRotation);
-				//ImGui.InputFloat3("Sc", ref matrixScale);
-				//ImGuizmo.RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, matrix);
-
-				if (mCurrentGizmoOperation != ImGuizmoNET.OPERATION.SCALE)
-				{
-					if (ImGui.RadioButton("Local", mCurrentGizmoMode == ImGuizmoNET.MODE.LOCAL))
-						mCurrentGizmoMode = ImGuizmoNET.MODE.LOCAL;
-					ImGui.SameLine();
-					if (ImGui.RadioButton("World", mCurrentGizmoMode == ImGuizmoNET.MODE.WORLD))
-						mCurrentGizmoMode = ImGuizmoNET.MODE.WORLD;
-				}
-				if (Input.GetKeyDown(KeyCode.S))
-					useSnap = !useSnap;
-				ImGui.Checkbox("##UseSnap", ref useSnap);
-				ImGui.SameLine();
-
-				switch (mCurrentGizmoOperation)
-				{
-					case ImGuizmoNET.OPERATION.TRANSLATE:
-						ImGui.InputFloat3("Snap", ref snap);
-						break;
-					case ImGuizmoNET.OPERATION.ROTATE:
-						ImGui.InputFloat("Angle Snap", ref snap.x);
-						break;
-					case ImGuizmoNET.OPERATION.SCALE:
-						ImGui.InputFloat("Scale Snap", ref snap.x);
-						break;
-				}
-				ImGui.Checkbox("Bound Sizing", ref boundSizing);
-				if (boundSizing)
-				{
-					ImGui.PushID(3);
-					ImGui.Checkbox("##BoundSizing", ref boundSizingSnap);
-					ImGui.SameLine();
-					ImGui.InputFloat3("Snap", ref boundsSnap);
-					ImGui.PopID();
-				}
-			}
-
-			ImGuiIOPtr ioPtr = ImGui.GetIO();
-			float viewManipulateRight = ioPtr.DisplaySize.x;
-			float viewManipulateTop = 0;
-			ImGuizmo.SetRect(0, 0, ioPtr.DisplaySize.x, ioPtr.DisplaySize.y);
-
-			float ide = Matrix4x4.identity.determinant;
-			float objectMatrix = 0.0f;
-			ImGuizmo.DrawGrid(ref cameraView, ref cameraProjection, ref ide, 100.0f);
-			ImGuizmo.DrawCubes(ref cameraView, ref cameraProjection, ref objectMatrix, gizmoCount);
-			//float? uSnap = useSnap ? snap.x : null;
-			//float[] uBounds = boundSizing ? bounds : null;
-			//Vector3? uBoundsSnap = boundSizingSnap ? boundsSnap : null;
-
-			ImGuizmo.Manipulate(ref cameraView, ref cameraProjection, mCurrentGizmoOperation, mCurrentGizmoMode, ref matrix/*, null, ref uSnap, ref uBounds, ref uBoundsSnap*/);
-
-			ImGuizmo.ViewManipulate(ref cameraView, mainCamera.farClipPlane, new Vector2(viewManipulateRight - 128, viewManipulateTop), new Vector2(128, 128), 0x10101010);
-
-		}
-#endif
 
 	}
 }

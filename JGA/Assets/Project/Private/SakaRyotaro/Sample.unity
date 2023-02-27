@@ -362,9 +362,8 @@ GameObject:
   - component: {fileID: 495675331}
   - component: {fileID: 495675330}
   - component: {fileID: 495675332}
-  - component: {fileID: 495675333}
   m_Layer: 0
-  m_Name: URP-HighFidelity-Renderer
+  m_Name: ImGui
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -412,7 +411,7 @@ MonoBehaviour:
   _fontAtlasConfiguration: {fileID: 0}
   _shaders: {fileID: 11400000, guid: 68f2e550e81076948ba9757c73f74336, type: 2}
   _style: {fileID: 11400000, guid: 90718c4e7d6fa04438adef1ad7a432cc, type: 2}
-  _cursorShapes: {fileID: 11400000, guid: 71deade41763c6e4eaeb5df973b321f1, type: 2}
+  _cursorShapes: {fileID: 0}
   _doGlobalEvents: 1
 --- !u!4 &495675331
 Transform:
@@ -443,52 +442,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bMode: 1
   _myColor: {x: 0, y: 0, z: 0, w: 0}
+  bShowDemoWindow: 0
+  bShowHierarchy: 1
+  bShowInspector: 1
   gameObjects: []
---- !u!114 &495675333
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 495675329}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f7e55d54eede42459ec52fabbd53824, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _barValues:
-  - 1
-  - 4
-  - 9
-  - 16
-  - 25
-  - 36
-  - 49
-  - 64
-  - 81
-  - 100
-  _xValues:
-  - 1
-  - 4
-  - 9
-  - 16
-  - 25
-  - 36
-  - 49
-  - 64
-  - 81
-  - 100
-  _yValues:
-  - 1
-  - 4
-  - 9
-  - 16
-  - 25
-  - 36
-  - 49
-  - 64
-  - 81
-  - 100
 --- !u!1 &627636056
 GameObject:
   m_ObjectHideFlags: 0
