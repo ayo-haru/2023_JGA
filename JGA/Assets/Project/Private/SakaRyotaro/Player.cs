@@ -17,9 +17,20 @@ using UnityEngine.Rendering;
 [RequireComponent(typeof(Rigidbody))]
 public class Player : MonoBehaviour
 {
-	[SerializeField] private float moveForce;
-
 	[SerializeField] private Rigidbody rb;
+
+	[Header("ステータス")]
+	[SerializeField, Tooltip("追加速度")]
+	private float moveForce = 7;
+	[SerializeField, Tooltip("走る際の倍率")]
+	private float runMagnification = 1.5f;
+	[SerializeField, Tooltip("最高速度")]
+	private float maxSpeed = 5;
+
+
+	[SerializeField] private bool isHold;
+	[SerializeField] private bool isRun;
+
 	private MyContorller gameInputs;
 	private Vector2 moveInputValue;
 
@@ -35,7 +46,18 @@ public class Player : MonoBehaviour
 		gameInputs.Player.Move.started += OnMove;
 		gameInputs.Player.Move.performed += OnMove;
 		gameInputs.Player.Move.canceled += OnMove;
+		gameInputs.Player.Hit.started += OnHit;
+		gameInputs.Player.Hit.performed += OnHit;
+		gameInputs.Player.Hit.canceled += OnHit;
+		gameInputs.Player.Hold.started += OnHold;
+		gameInputs.Player.Hold.performed += OnHold;
+		gameInputs.Player.Hold.canceled += OnHold;
+		gameInputs.Player.Run.started += OnRun;
+		gameInputs.Player.Run.performed += OnRun;
+		gameInputs.Player.Run.canceled += OnRun;
+		gameInputs.Player.Call.started += OnCall;
 		gameInputs.Player.Call.performed += OnCall;
+		gameInputs.Player.Call.canceled += OnCall;
 
 		// Input Actionを有効化
 		gameInputs.Enable();
@@ -46,14 +68,63 @@ public class Player : MonoBehaviour
 	/// </summary>
 	void FixedUpdate()
 	{
-		// 移動方向の力を与える
-		rb.AddForce(new Vector3(moveInputValue.x, 0, moveInputValue.y) * moveForce);
+		// 制限速度内の場合、移動方向の力を与える
+		if (rb.velocity.magnitude < maxSpeed * (isRun ? runMagnification : 1))
+			rb.AddForce(new Vector3(moveInputValue.x, 0, moveInputValue.y) * moveForce * (isRun ? runMagnification : 1));
 	}
 
+
+
+	/// <summary>
+	/// 移動
+	/// </summary>
 	private void OnMove(InputAction.CallbackContext context)
 	{
-		// Moveアクションの入力取得
 		moveInputValue = context.ReadValue<Vector2>();
+	}
+
+	/// <summary>
+	/// はたく
+	/// </summary>
+	private void OnHit(InputAction.CallbackContext context)
+	{
+
+	}
+
+	/// <summary>
+	/// つかむ
+	/// </summary>
+	private void OnHold(InputAction.CallbackContext context)
+	{
+		switch (context.phase)
+		{
+			// 押された時
+			case InputActionPhase.Performed:
+				isHold = true;
+				break;
+			// 離された時
+			case InputActionPhase.Canceled:
+				isHold = false;
+				break;
+		}
+	}
+
+	/// <summary>
+	/// 走る
+	/// </summary>
+	private void OnRun(InputAction.CallbackContext context)
+	{
+		switch (context.phase)
+		{
+			// 押された時
+			case InputActionPhase.Performed:
+				isRun = true;
+				break;
+			// 離された時
+			case InputActionPhase.Canceled:
+				isRun = false;
+				break;
+		}
 	}
 
 	/// <summary>
