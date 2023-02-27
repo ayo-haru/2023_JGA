@@ -23,6 +23,21 @@ MonoBehaviour:
     DirectLightingStrength: 0.25
     Radius: 0.25
     SampleCount: 12
+--- !u!114 &-1506924213678641277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ed5ed08b2b7b8040a5feac660f6c8d1, type: 3}
+  m_Name: RenderImGui
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  Camera: {fileID: 0}
+  RenderPassEvent: 600
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40,7 +55,8 @@ MonoBehaviour:
       type: 3}
   m_RendererFeatures:
   - {fileID: -1878332245247344467}
-  m_RendererFeatureMap: adc0de57c6d2eee5
+  - {fileID: -1506924213678641277}
+  m_RendererFeatureMap: adc0de57c6d2eee583ef3f64695416eb
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
