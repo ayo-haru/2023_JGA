@@ -15,6 +15,7 @@ using UnityEngine.SceneManagement;
 
 public class TestLoadScene
 {
+    #if false
     // ロードするシーンを検索
     private const string LoadSceneName = "TestGround";
 
@@ -29,6 +30,7 @@ public class TestLoadScene
             Debug.LogError(LoadSceneName+"が見つかりませんでした。");
         }
     }
+    #endif
 
 
 }
