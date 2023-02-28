@@ -46,7 +46,7 @@ public class MainCamera : MonoBehaviour
 	/// </summary>
 	void FixedUpdate()
 	{
-		maincamera.gameObject.transform.position = playerobj.transform.position;
+		
 	}
 
 	/// <summary>
