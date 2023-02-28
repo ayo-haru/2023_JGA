@@ -1,20 +1,19 @@
 //=============================================================================
-// @File	: [StateAroundWalk.cs]
-// @Brief	: 歩き回る処理
+// @File	: [StateDefaultRootWalk.cs]
+// @Brief	: 指定されたルートの移動
 // @Author	: Ogusu Yuuko
-// @Editer	: Ogusu Yuuko
+// @Editer	: 
 // @Detail	: 
 // 
 // [Date]
-// 2023/02/27	スクリプト作成
-// 2023/02/28	(小楠)目的地にたどり着けないときの処理を追加
+// 2023/02/28	スクリプト作成
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class StateAroundWalk : AIState
+public class StateDefaultRootWalk : AIState
 {
     //目的地のリスト
     [SerializeField] private List<Transform> targetList;
@@ -72,12 +71,11 @@ public class StateAroundWalk : AIState
     {
         if (agent.pathPending) return;
 
-        //目的地付けないときは目的地変更
-        if (agent.path.status == NavMeshPathStatus.PathPartial)
+        //目的地までの経路がない場合は目的地の変更
+        if(agent.path.status == NavMeshPathStatus.PathPartial)
         {
             ChangeTarget();
         }
-
         //待機時間
         if (agent.remainingDistance < 1.0f)
         {
@@ -90,11 +88,11 @@ public class StateAroundWalk : AIState
         }
     }
     /// <summary>
-    /// 目的地変更
+    /// 目的地の変更
     /// </summary>
     public void ChangeTarget()
     {
-        targetNum = Random.Range(0, targetList.Count);
+        targetNum = (targetNum + 1) % targetList.Count;
         agent.SetDestination(targetList[targetNum].position);
         fTimer = 0.0f;
     }
