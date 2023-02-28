@@ -8,11 +8,8 @@
 // [Date]
 // 2023/02/25	スクリプト作成
 //=============================================================================
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Player : MonoBehaviour
@@ -71,6 +68,22 @@ public class Player : MonoBehaviour
 		// 制限速度内の場合、移動方向の力を与える
 		if (rb.velocity.magnitude < maxSpeed * (isRun ? runMagnification : 1))
 			rb.AddForce(new Vector3(moveInputValue.x, 0, moveInputValue.y) * moveForce * (isRun ? runMagnification : 1));
+
+		// 進行方向に向かって回転する
+		if (moveInputValue.normalized != Vector2.zero)
+		{
+			// 候補1
+			var awd = transform.forward - new Vector3(-moveInputValue.x, transform.position.y, -moveInputValue.y) / 10;
+			awd.y = 0;
+			transform.LookAt(transform.position + awd);
+
+			//// 候補2
+			//var vael = new Vector3(moveInputValue.x, transform.position.y, moveInputValue.y) - transform.forward;
+			//transform.Rotate(Vector3.up, vael.magnitude, Space.World);
+		}
+		//else
+
+
 	}
 
 
@@ -134,5 +147,14 @@ public class Player : MonoBehaviour
 	{
 
 	}
+
+	private void OnGUI()
+	{
+		GUILayout.Label($"");   // imgui回避
+		GUILayout.Label($"isRun:{isRun}");
+		GUILayout.Label($"isHold:{isHold}");
+	}
+
+
 
 }
