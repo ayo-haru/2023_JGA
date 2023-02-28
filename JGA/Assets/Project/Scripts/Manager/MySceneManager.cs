@@ -1,11 +1,12 @@
 //=============================================================================
 // @File	: [MySceneManager]
-// @Brief	: ƒIƒŠƒWƒiƒ‹‚ÌƒV[ƒ“ƒ}ƒl[ƒWƒƒ[
-// @Author	: YOSHIHARA ASUKA
+// @Brief	: ã‚ªãƒªã‚¸ãƒŠãƒ«ã®ã‚·ãƒ¼ãƒ³ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
+// @Author	: Yoshihara Asuka
 // @Editer	: 
+// @Detail  : 
 // 
 // [Date]
-// 2023/02/02 ƒXƒNƒŠƒvƒgì¬,ƒtƒŒ[ƒ€ƒŒ[ƒg”‚ğw’è‚Ìˆ—‚ğ‹LÚ(‹gŒ´)
+// 2023/02/02 ã‚¹ã‚¯ãƒªãƒ—ãƒˆä½œæˆ,ãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¬ãƒ¼ãƒˆæ•°ã‚’æŒ‡å®šã®å‡¦ç†ã‚’è¨˜è¼‰(å‰åŸ)
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ public class MySceneManager : MonoBehaviour
 {
     private void Awake()
     {
-        Application.targetFrameRate = 60;       // FPS‚ğ60‚ÉŒÅ’è
+        Application.targetFrameRate = 60;       // FPSã‚’60ã«å›ºå®š
     }
 
 }
