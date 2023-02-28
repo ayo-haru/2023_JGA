@@ -197,19 +197,23 @@ namespace UImGui
 						if (ImGui.InputText($"##ObjectName", ref ObjectName, uint.MaxValue, ImGuiInputTextFlags.AlwaysOverwrite))
 							SelectObj.name = ObjectName;
 
-						//--- Tag
-						// https://baba-s.hatenablog.com/entry/2014/02/25/000000
+						//--- Tag  https://baba-s.hatenablog.com/entry/2014/02/25/000000
 						int Tag = 0;
 						string[] Tags = { $"{SelectObj.tag}" };
+						ImGui.PushItemWidth(-ImGui.GetContentRegionAvail().x * 0.5f);
 						ImGui.Combo("Tag", ref Tag, Tags, Tags.Length);
+						ImGui.PopItemWidth();
+
 
 						ImGui.SameLine();   // 改行しない
+
 
 						//--- Layer
 						int layer = 0;
 						string[] layers = { $"{SelectObj.layer}" };
+						ImGui.PushItemWidth(-ImGui.GetContentRegionAvail().x * 0.5f);
 						ImGui.Combo("Layer", ref layer, layers, layers.Length);
-
+						ImGui.PopItemWidth();
 
 						//--- Component
 						UnityEngine.Component[] components = SelectObj.GetComponents<UnityEngine.Component>();
@@ -380,12 +384,51 @@ namespace UImGui
 		//private unsafe ImGuiIO* io = ImGuiNative.igGetIO();
 		private /*unsafe*/ void ImGuizmoDemo(GameObject gameObject)
 		{
-			//ImGuizmo.BeginFrame();
+			// Gizmo設定ウィンドウ
+			{
+				ImGuiWindowFlags window_flags =
+					ImGuiWindowFlags.NoDecoration |
+					ImGuiWindowFlags.NoDocking |
+					ImGuiWindowFlags.AlwaysAutoResize |
+					ImGuiWindowFlags.NoSavedSettings |
+					ImGuiWindowFlags.NoFocusOnAppearing |
+					ImGuiWindowFlags.NoNav;
+				ImGui.SetNextWindowBgAlpha(0.35f); // Transparent background
+				bool b = true;
+				if (ImGui.Begin("Example: Simple overlay", ref b, window_flags))
+				{
+					if (ImGui.Button("T"))
+						mCurrentGizmoOperation = ImGuizmoNET.OPERATION.TRANSLATE;
+					ImGui.SameLine();
 
-			//ImGuizmoNative.ImGuizmo_SetOrthographic(true);
+					if (ImGui.Button("R"))
+						mCurrentGizmoOperation = ImGuizmoNET.OPERATION.ROTATE;
+					ImGui.SameLine();
+
+					if (ImGui.Button("S"))
+						mCurrentGizmoOperation = ImGuizmoNET.OPERATION.SCALE;
+
+
+					//ImGui.Text($"Simple overlay\nin the corner of the screen.\n(right-click to change position)");
+					//if (ImGui.BeginPopupContextWindow())
+					//{
+					//	if (ImGui.MenuItem("Custom", null, corner == -1)) corner = -1;
+					//	if (ImGui.MenuItem("Top-left", null, corner == 0)) corner = 0;
+					//	if (ImGui.MenuItem("Top-right", null, corner == 1)) corner = 1;
+					//	if (ImGui.MenuItem("Bottom-left", null, corner == 2)) corner = 2;
+					//	if (ImGui.MenuItem("Bottom-right", null, corner == 3)) corner = 3;
+					//	if (b && ImGui.MenuItem("Close")) b = false;
+					//	ImGui.EndPopup();
+					//}
+				}
+				ImGui.End();
+			}
+
 			ImGuizmo.SetRect(0, 0, Screen.width, Screen.height);
 
 			ImGuizmoNET.ImGuizmo.IsUsing();
+
+			//--- Gizmoの大きさを設定
 			ImGuizmo.SetGizmoSizeClipSpace(0.15f);
 
 			Matrix4x4 matrix = gameObject.transform.localToWorldMatrix;
@@ -404,20 +447,20 @@ namespace UImGui
 			//ImGuizmoNET.ImGuizmo.DrawGrid(ref view.m00, ref projection.m00, ref matrix.m00, 50f);
 			//ImGuizmoNET.ImGuizmo.DrawCubes(ref view.m00, ref projection.m00, ref matrix.m00, 1); //(Debug)
 
+			//--- Gizmo本体
 			ImGuizmo.Manipulate(ref view.m00, ref projection.m00, mCurrentGizmoOperation, mCurrentGizmoMode, ref matrix.m00);
 			//ImGuizmo.DrawGrid(ref view.m00, ref projection.m00, ref matrix.m00, 50f);
 
 
-			//ImGuiIOPtr ioPtr = ImGui.GetIO();
-			//float viewManipulateRight = ioPtr.DisplaySize.x;
-			//float viewManipulateTop = 0;
-			//ImGuizmo.ViewManipulate(ref view.m00, 2, new Vector2(viewManipulateRight - 128, viewManipulateTop), new Vector2(128, 128), 0x10101010);
+			//--- 右上のカメラの角度ビュー
+			ImGuiIOPtr ioPtr = ImGui.GetIO();
+			float viewManipulateRight = ioPtr.DisplaySize.x;
+			float viewManipulateTop = 0;
+			ImGuizmo.ViewManipulate(ref view.m00, 2, new Vector2(viewManipulateRight - 128, viewManipulateTop), new Vector2(128, 128), 0x10101010);
 
 			//gameObject.transform.localToWorldMatrix = matrix;
 
-			//Matrix4x4 iview = Matrix4x4.Inverse(view);
-			//mainCamera.transform.localRotation = iview.rotation;
-			//mainCamera.transform.localPosition = iview.GetPosition();
+			gameObject.transform.position = new Vector3(matrix.m03, matrix.m13, matrix.m23);
 		}
 
 		// コンポーネント別(UnityEngine)処理
@@ -534,7 +577,6 @@ namespace UImGui
 			else
 			{
 				ImGui.Text($"\"{t}\" class is not supported.");
-				Debug.Log($"\"{t}\" class is not supported.");
 			}
 
 		}
