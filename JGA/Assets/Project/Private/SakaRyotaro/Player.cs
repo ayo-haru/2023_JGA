@@ -43,18 +43,14 @@ public class Player : MonoBehaviour
 		gameInputs.Player.Move.started += OnMove;
 		gameInputs.Player.Move.performed += OnMove;
 		gameInputs.Player.Move.canceled += OnMove;
-		gameInputs.Player.Hit.started += OnHit;
 		gameInputs.Player.Hit.performed += OnHit;
-		gameInputs.Player.Hit.canceled += OnHit;
 		gameInputs.Player.Hold.started += OnHold;
 		gameInputs.Player.Hold.performed += OnHold;
 		gameInputs.Player.Hold.canceled += OnHold;
 		gameInputs.Player.Run.started += OnRun;
 		gameInputs.Player.Run.performed += OnRun;
 		gameInputs.Player.Run.canceled += OnRun;
-		gameInputs.Player.Call.started += OnCall;
 		gameInputs.Player.Call.performed += OnCall;
-		gameInputs.Player.Call.canceled += OnCall;
 
 		// Input Actionを有効化
 		gameInputs.Enable();
@@ -63,7 +59,7 @@ public class Player : MonoBehaviour
 	/// <summary>
 	/// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
 	/// </summary>
-	void FixedUpdate()
+	private void FixedUpdate()
 	{
 		// 制限速度内の場合、移動方向の力を与える
 		if (rb.velocity.magnitude < maxSpeed * (isRun ? runMagnification : 1))
@@ -81,12 +77,9 @@ public class Player : MonoBehaviour
 			//var vael = new Vector3(moveInputValue.x, transform.position.y, moveInputValue.y) - transform.forward;
 			//transform.Rotate(Vector3.up, vael.magnitude, Space.World);
 		}
-		//else
 
 
 	}
-
-
 
 	/// <summary>
 	/// 移動
@@ -101,7 +94,7 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void OnHit(InputAction.CallbackContext context)
 	{
-
+		Debug.Log($"はたく");
 	}
 
 	/// <summary>
@@ -113,11 +106,7 @@ public class Player : MonoBehaviour
 		{
 			// 押された時
 			case InputActionPhase.Performed:
-				isHold = true;
-				break;
-			// 離された時
-			case InputActionPhase.Canceled:
-				isHold = false;
+				isHold = !isHold;
 				break;
 		}
 	}
@@ -145,7 +134,7 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void OnCall(InputAction.CallbackContext context)
 	{
-
+		Debug.Log($"quack-quack");
 	}
 
 	private void OnGUI()
