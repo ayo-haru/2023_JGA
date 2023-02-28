@@ -3,13 +3,17 @@
 // @Brief	: メインカメラの挙動
 // @Author	: Fujiyama Riku
 // @Editer	: Fujiyama Riku
-// @Detail	: 
+// @Detail	: 参考URL https://programming.sincoston.com/unity-camera-follow-player/
+//					　https://nekojara.city/unity-smooth-damp
+//					  
 // 
 // [Date]
 // 2023/02/27	スクリプト作成
+// 2023/02/28	遅延作成
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MainCamera : MonoBehaviour
@@ -18,19 +22,38 @@ public class MainCamera : MonoBehaviour
 	private GameObject playerobj;
 	//メインカメラ格納用
 	private Camera maincamera;
+	//カメラとプレイヤーの座標の初期
+	private Vector3 offset;
+	//FOV格納用
+	private float _fov;
 
-	[SerializeField]
-	private Vector3 rookrotation;
+	//カメラの情報受け取り用
+	private CameraManager cameraObj;
+	//カメラの全体のparameter格納用
+	private CameraParameter cameraParamater;
+	//座標角度格納用
+	private Transform cameraParent;
+	//距離格納用
+	private Transform cameraChild;
 
-	/// <summary>
-	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
-	/// </summary>
-	void Awake()
+    [Header("到着までの大体の時間")]
+    [SerializeField] private float smoothTime = 0.1f;
+    [Header("最高速度")]
+    [SerializeField] private float maxSpeed = 10.0f;
+
+    /// <summary>
+    /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
+    /// </summary>
+    void Awake()
 	{
+        cameraObj = GameObject.Find("CameraParent").GetComponent<CameraManager>();
+		cameraParamater = cameraObj.GetParameter();
         //プレイヤーを格納
-        playerobj = GameObject.Find("Player");
+        playerobj = GameObject.FindGameObjectWithTag("Player");
         //初期化としてメインカメラを格納
-        maincamera = Camera.main;
+        maincamera = cameraObj.GetTransformObject();
+		cameraParent = cameraObj.GetTransformObject(true);
+		cameraChild = cameraObj.GetTransformObject(false);
     }
 
 	/// <summary>
@@ -38,8 +61,9 @@ public class MainCamera : MonoBehaviour
 	/// </summary>
 	void Start()
 	{
-		
-	}
+        offset = maincamera.transform.position - playerobj.transform.position;
+		_fov = maincamera.fieldOfView;
+    }
 
 	/// <summary>
 	/// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
@@ -54,6 +78,20 @@ public class MainCamera : MonoBehaviour
 	/// </summary>
 	void Update()
 	{
-		
-	}
+		CameraMove();
+    }
+    
+    /// <summary>
+    /// カメラの動き自体の処理
+    /// </summary>
+    private void CameraMove()
+	{
+		var targetpos = playerobj.transform.position + offset;
+        var currentVelocity = new Vector3();
+        maincamera.transform.position = Vector3.SmoothDamp(maincamera.transform.position,
+														   targetpos,
+														   ref currentVelocity,
+                                                           smoothTime,
+														   maxSpeed); 
+    }
 }
