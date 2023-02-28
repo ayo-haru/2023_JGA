@@ -12,7 +12,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewZooData", menuName = "自作データ/ZooData")]  // 右クリックでデータが作成できるようになる
+//[CreateAssetMenu(fileName = "NewZooData", menuName = "自作データ/ZooData")]  // 右クリックでデータが作成できるようになる
 public class ZooData : ScriptableObject
 {
    new public string name;          // 動物の名前
