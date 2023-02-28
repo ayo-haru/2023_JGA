@@ -11,40 +11,25 @@
 
 using ImGuiNET;
 #if !UIMGUI_REMOVE_IMNODES
-using imnodesNET;
 #endif
 #if !UIMGUI_REMOVE_IMPLOT
-using ImPlotNET;
 using System.Linq;
-using UImGui;
 using System.Collections.Generic;
 using UnityEditor;
 using Unity.VisualScripting;
 using System.Reflection;
-using Unity.VisualScripting.FullSerializer;
-using static UnityEngine.GraphicsBuffer;
-using UnityEngine.UIElements;
-using System.Runtime.CompilerServices;
 using System;
-using System.ComponentModel;
 #endif
 #if !UIMGUI_REMOVE_IMGUIZMO
 using ImGuizmoNET;
 #endif
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
-using UnityEngine.AI;
-using System.Numerics;
 
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 using Vector4 = UnityEngine.Vector4;
 using Quaternion = UnityEngine.Quaternion;
 using Matrix4x4 = UnityEngine.Matrix4x4;
-using UnityEditor.PackageManager.UI;
-using System.Xml.Linq;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace UImGui
 {
@@ -58,11 +43,6 @@ namespace UImGui
 		private bool _isOpen;
 
 #endif
-		private bool ena = true;
-		private float f = 0.5f;
-		private int n = 0;
-		private bool b = true;
-
 		[SerializeField]
 		private bool bShowDemoWindow;
 		[SerializeField]
@@ -151,6 +131,11 @@ namespace UImGui
 			// メインメニューバー
 			if (ImGui.BeginMainMenuBar())
 			{
+				if (ImGui.BeginMenu("File"))
+				{
+					if (ImGui.MenuItem("Debug View Exit", "Shift+F12")) { bMode = false; }
+					ImGui.EndMenu();
+				}
 				if (ImGui.BeginMenu("Window"))
 				{
 					if (ImGui.MenuItem("Demo", null, bShowDemoWindow)) { bShowDemoWindow = !bShowDemoWindow; }
@@ -242,8 +227,6 @@ namespace UImGui
 								// その他の場合（アセットや自作のクラス）
 								else
 								{
-									Debug.LogWarning($"Type:{components[i]}");
-
 									// 型を取得
 									Type t = components[i].GetType();
 									// 取得した型のメンバを全取得する
@@ -257,12 +240,9 @@ namespace UImGui
 
 									foreach (var member in members)
 									{
-										Debug.Log($"{member.Name}");
-
 										//--- アクセス修飾子がPublicの場合
 										if (member.IsPublic)
 										{
-											Debug.Log($"{member.Name}:public");
 											ShowComponents(member, components[i], false);
 										}
 
@@ -309,7 +289,6 @@ namespace UImGui
 
 		protected virtual void OnSceneGUI()
 		{
-			Debug.Log($"SelectObj:{SelectObj}");
 			EditorGUI.BeginChangeCheck();
 			Vector3 newTargetPosition = Handles.PositionHandle(SelectObj.transform.position, Quaternion.identity);
 			if (EditorGUI.EndChangeCheck())
