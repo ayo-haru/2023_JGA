@@ -1,6 +1,6 @@
 //=============================================================================
-// @File    : [MySceneManager.cs]
-// @Brief   : オリジナルのシーンマネージャー
+// @File    : [Initialize.cs]
+// @Brief   : 初期化用シーンの呼び出し
 // @Author  : Yoshihara Asuka
 // @Editer  : Yoshihara Asuka
 // @Detail  : 参考URL:https://noracle.jp/unity-initialize-scene/
