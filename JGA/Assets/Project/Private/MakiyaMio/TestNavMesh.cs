@@ -154,7 +154,6 @@ public class TestNavMesh : MonoBehaviour
                 if(zooenter)
                 {
                     zooenter = false;
-                    //Debug.Log("何を見に行こう");
 
                     navMesh.SetDestination(goalPosition.position);
                 }
@@ -166,7 +165,6 @@ public class TestNavMesh : MonoBehaviour
                 if(zooenter)
                 {
                     zooenter = false;
-                    //Debug.Log("ペンギンを見に行こう");
 
                     navMesh.SetDestination(penguinPosition.position);
                 }
@@ -186,7 +184,6 @@ public class TestNavMesh : MonoBehaviour
 
                     //ZooData penguinData = zooDatabase[0];  // ZooDataのペンギンデータ取得
 
-                    //Debug.Log("ペンギンだ！");
                     desires.GetDesire(desiretype.penguin).value = 1;    // 欲求の値を1で固定
                 }
                 desires.GetDesire(desiretype.penguin).value -= Time.deltaTime / penguinDesireDownSpeed;
@@ -205,7 +202,6 @@ public class TestNavMesh : MonoBehaviour
                 if (zooenter)
                 {
                     zooenter = false;
-                    //Debug.Log("クマを見に行こう");
 
                     navMesh.SetDestination(bearPosition.position);
                 }
@@ -222,7 +218,6 @@ public class TestNavMesh : MonoBehaviour
                 if (zooenter)
                 {
                     zooenter = false;
-                    //Debug.Log("クマだ！");
                     desires.GetDesire(desiretype.bear).value = 1;    // 欲求の値を1で固定
                 }
                 desires.GetDesire(desiretype.bear).value -= Time.deltaTime / bearDesireDownSpeed;
@@ -241,7 +236,6 @@ public class TestNavMesh : MonoBehaviour
                 if (zooenter)
                 {
                     zooenter = false;
-                    //Debug.Log("イルカを見に行こう");
 
                     navMesh.SetDestination(dolphinPosition.position);
                 }
@@ -258,7 +252,6 @@ public class TestNavMesh : MonoBehaviour
                 if (zooenter)
                 {
                     zooenter = false;
-                    //Debug.Log("イルカだ！");
                     desires.GetDesire(desiretype.dolphin).value = 1;    // 欲求の値を1で固定
                 }
                 desires.GetDesire(desiretype.dolphin).value -= Time.deltaTime / dolphinDesireDownSpeed;
@@ -277,7 +270,6 @@ public class TestNavMesh : MonoBehaviour
                 if (zooenter)
                 {
                     zooenter = false;
-                    //Debug.Log("魚を見に行こう");
 
                     navMesh.SetDestination(fishPosition.position);
                 }
@@ -294,7 +286,6 @@ public class TestNavMesh : MonoBehaviour
                 if (zooenter)
                 {
                     zooenter = false;
-                    //Debug.Log("魚だ！");
                     desires.GetDesire(desiretype.fish).value = 1;    // 欲求の値を1で固定
                 }
                 desires.GetDesire(desiretype.fish).value -= Time.deltaTime / fishDesireDownSpeed;
