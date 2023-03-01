@@ -12,9 +12,12 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(AudioSource))]
 public class Player : MonoBehaviour
 {
 	[SerializeField] private Rigidbody rb;
+	[SerializeField] private AudioSource audioSource;
+	[SerializeField] private AudioClip seCall;
 
 	[Header("ステータス")]
 	[SerializeField, Tooltip("追加速度")]
@@ -36,6 +39,15 @@ public class Player : MonoBehaviour
 	/// </summary>
 	void Awake()
 	{
+		if (rb == null)
+			rb = GetComponent<Rigidbody>();
+
+		if (audioSource == null)
+			audioSource = GetComponent<AudioSource>();
+
+		// seCallの音量クソでかいので小さくする
+		audioSource.volume = 0.2f;
+
 		// Input Actionインスタンス生成
 		gameInputs = new MyContorller();
 
@@ -134,7 +146,11 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void OnCall(InputAction.CallbackContext context)
 	{
-		Debug.Log($"quack-quack");
+		if (seCall != null)
+			audioSource.PlayOneShot(seCall);
+		else
+			Debug.LogError($"seCallが定義されていません。");
+
 	}
 
 	private void OnGUI()
