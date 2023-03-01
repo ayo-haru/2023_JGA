@@ -1,5 +1,5 @@
 //=============================================================================
-// @File	: [TestAI.cs]
+// @File	: [ZooKeeperAI.cs]
 // @Brief	: 飼育員の仮の処理
 // @Author	: MAKIYA MIO
 // @Editer	: 
@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class TestAI : MonoBehaviour
+public class ZooKeeperAI : MonoBehaviour
 {
     [SerializeField] private GameObject player;
     private TestPlayer testPlayer;
