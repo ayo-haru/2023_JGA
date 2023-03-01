@@ -347,13 +347,14 @@ namespace UImGui
 		// 子オブジェクト取得
 		private void GetChild(Transform transform)
 		{
-			ImGuiTreeNodeFlags node_flags;
+			ImGuiTreeNodeFlags node_flags =
+				ImGuiTreeNodeFlags.SpanAvailWidth;
 
 			// 子オブジェクトを持っているか
 			if (transform.childCount > 0)
-				node_flags = ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.OpenOnDoubleClick | ImGuiTreeNodeFlags.SpanAvailWidth;
+				node_flags |= ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.OpenOnDoubleClick;
 			else
-				node_flags = ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanAvailWidth;
+				node_flags |= ImGuiTreeNodeFlags.Leaf;
 
 			// オブジェクトが非アクティブか
 			if (!transform.gameObject.activeSelf)
@@ -362,8 +363,9 @@ namespace UImGui
 			if (ImGui.TreeNodeEx($"{transform.name}##{transform.GetInstanceID()}", node_flags))     // ##transform.GetInstanceID()でオブジェクトの名前が被っても大丈夫になる
 			{
 				// クリックされた時
-				if (ImGui.IsItemClicked())
+				if (ImGui.IsItemActive() && SelectObj != transform.gameObject)
 				{
+					Debug.Log($"ItemClicked:{transform.name}");
 					SelectObj = transform.gameObject;
 					ObjectName = transform.name;
 				}
@@ -376,6 +378,16 @@ namespace UImGui
 					}
 				}
 				ImGui.TreePop();
+			}
+			else
+			{
+				// クリックされた時
+				if (ImGui.IsItemActive() && SelectObj != transform.gameObject)
+				{
+					Debug.Log($"ItemClicked:{transform.name}");
+					SelectObj = transform.gameObject;
+					ObjectName = transform.name;
+				}
 			}
 			if (!transform.gameObject.activeSelf)
 				ImGui.PopStyleColor(1);
