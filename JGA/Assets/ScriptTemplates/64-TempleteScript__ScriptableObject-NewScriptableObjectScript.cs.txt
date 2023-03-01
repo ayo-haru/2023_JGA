@@ -1,0 +1,19 @@
+﻿//=============================================================================
+// @File	: [#NAME#.cs]
+// @Brief	: 
+// @Author	: #MY_NAME#
+// @Editer	: 
+// @Detail	: 
+// 
+// [Date]
+// #DATE#	スクリプト作成
+//=============================================================================
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[CreateAssetMenu]
+public class #SCRIPTNAME# : ScriptableObject
+{
+
+}
