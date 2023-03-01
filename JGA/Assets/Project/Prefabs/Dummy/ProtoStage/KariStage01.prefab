@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3850861117624525870}
   m_Layer: 0
   m_Name: wall02
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -289,8 +289,8 @@ GameObject:
   - component: {fileID: 7641312658788609938}
   - component: {fileID: 881870398618485590}
   m_Layer: 0
-  m_Name: entrance01 (4)
-  m_TagString: Untagged
+  m_Name: entrance05
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -565,7 +565,7 @@ GameObject:
   - component: {fileID: 4642669504240903165}
   m_Layer: 0
   m_Name: OuterWall
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -617,7 +617,7 @@ GameObject:
   - component: {fileID: 6153685843101844671}
   m_Layer: 0
   m_Name: wall12
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1185,7 +1185,7 @@ GameObject:
   - component: {fileID: 584467482753467935}
   m_Layer: 0
   m_Name: wall16
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1448,7 +1448,7 @@ GameObject:
   - component: {fileID: 8974196774445060948}
   m_Layer: 0
   m_Name: birdcage07
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2099,7 +2099,7 @@ GameObject:
   - component: {fileID: 7230781703947778537}
   m_Layer: 0
   m_Name: wall09
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2459,7 +2459,7 @@ GameObject:
   - component: {fileID: 6351153136918733765}
   m_Layer: 0
   m_Name: wall17
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3028,7 +3028,7 @@ GameObject:
   - component: {fileID: 6770470360449199511}
   m_Layer: 0
   m_Name: toilet01
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3955,7 +3955,7 @@ GameObject:
   - component: {fileID: 3768185343882584529}
   m_Layer: 0
   m_Name: wall18
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4540,8 +4540,8 @@ GameObject:
   - component: {fileID: 384567133959270556}
   - component: {fileID: 4537691361147622974}
   m_Layer: 0
-  m_Name: entrance01 (12)
-  m_TagString: Untagged
+  m_Name: entrance13
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4622,7 +4622,7 @@ GameObject:
   - component: {fileID: 5634696633877562580}
   m_Layer: 0
   m_Name: BirdCage
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4662,7 +4662,7 @@ GameObject:
   - component: {fileID: 3399160624829751955}
   m_Layer: 0
   m_Name: birdcage03
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5672,8 +5672,8 @@ GameObject:
   - component: {fileID: 8667370807799234735}
   - component: {fileID: 5054240369132014924}
   m_Layer: 0
-  m_Name: entrance01 (13)
-  m_TagString: Untagged
+  m_Name: entrance14
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6115,8 +6115,8 @@ GameObject:
   - component: {fileID: 2518874978706226062}
   - component: {fileID: 129112550860181340}
   m_Layer: 0
-  m_Name: entrance01 (5)
-  m_TagString: Untagged
+  m_Name: entrance06
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6296,7 +6296,7 @@ GameObject:
   - component: {fileID: 3274452049425961067}
   m_Layer: 0
   m_Name: wall10
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6655,8 +6655,8 @@ GameObject:
   - component: {fileID: 8202273878945285858}
   - component: {fileID: 2883132731620013555}
   m_Layer: 0
-  m_Name: entrance01 (3)
-  m_TagString: Untagged
+  m_Name: entrance04
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6836,7 +6836,7 @@ GameObject:
   - component: {fileID: 3612776765709103592}
   m_Layer: 0
   m_Name: wall11
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7278,8 +7278,8 @@ GameObject:
   - component: {fileID: 13331483691350271}
   - component: {fileID: 1515355615904542227}
   m_Layer: 0
-  m_Name: entrance01 (6)
-  m_TagString: Untagged
+  m_Name: entrance07
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7361,8 +7361,8 @@ GameObject:
   - component: {fileID: 3215909225680265542}
   - component: {fileID: 7182582937249238848}
   m_Layer: 0
-  m_Name: entrance01 (2)
-  m_TagString: Untagged
+  m_Name: entrance03
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8763,7 +8763,7 @@ GameObject:
   - component: {fileID: 3538003090452530675}
   m_Layer: 0
   m_Name: wall04
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9233,8 +9233,8 @@ GameObject:
   - component: {fileID: 3182091155527110159}
   - component: {fileID: 1571988778756835741}
   m_Layer: 0
-  m_Name: entrance01 (10)
-  m_TagString: Untagged
+  m_Name: entrance11
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9317,7 +9317,7 @@ GameObject:
   - component: {fileID: 1393750774581293830}
   m_Layer: 0
   m_Name: wall05
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9580,7 +9580,7 @@ GameObject:
   - component: {fileID: 3623266392767749243}
   m_Layer: 0
   m_Name: wall14
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9841,7 +9841,7 @@ GameObject:
   - component: {fileID: 1148894411606646808}
   m_Layer: 0
   m_Name: Shop
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9873,8 +9873,8 @@ GameObject:
   - component: {fileID: 450186590888681938}
   - component: {fileID: 1150319085529004619}
   m_Layer: 0
-  m_Name: entrance01 (7)
-  m_TagString: Untagged
+  m_Name: entrance08
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10054,7 +10054,7 @@ GameObject:
   - component: {fileID: 8191474145844233646}
   m_Layer: 0
   m_Name: birdcage02
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10467,7 +10467,7 @@ GameObject:
   - component: {fileID: 7907710176051623191}
   m_Layer: 0
   m_Name: birdcage01
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10550,7 +10550,7 @@ GameObject:
   - component: {fileID: 5235358759216974378}
   m_Layer: 0
   m_Name: wall06
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11215,7 +11215,7 @@ GameObject:
   - component: {fileID: 8817952047894744947}
   m_Layer: 0
   m_Name: wall08
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11297,8 +11297,8 @@ GameObject:
   - component: {fileID: 7149852501095491745}
   - component: {fileID: 2797511876520984114}
   m_Layer: 0
-  m_Name: entrance01 (14)
-  m_TagString: Untagged
+  m_Name: entrance15
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11769,7 +11769,7 @@ GameObject:
   - component: {fileID: 2572528906866507020}
   m_Layer: 0
   m_Name: wall15
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11850,7 +11850,7 @@ GameObject:
   - component: {fileID: 1392091595017085896}
   m_Layer: 0
   m_Name: Toilet
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12171,7 +12171,7 @@ GameObject:
   - component: {fileID: 5793110808123231629}
   m_Layer: 0
   m_Name: entrance01
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12836,7 +12836,7 @@ GameObject:
   - component: {fileID: 2254537701125321986}
   m_Layer: 0
   m_Name: wall19
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13112,8 +13112,8 @@ GameObject:
   - component: {fileID: 930479115738749464}
   - component: {fileID: 3617241673480321841}
   m_Layer: 0
-  m_Name: entrance01 (1)
-  m_TagString: Untagged
+  m_Name: entrance02
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13196,7 +13196,7 @@ GameObject:
   - component: {fileID: 7583605094560763700}
   m_Layer: 0
   m_Name: wall03
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13279,7 +13279,7 @@ GameObject:
   - component: {fileID: 477015696270418198}
   m_Layer: 0
   m_Name: wall01
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13363,7 +13363,7 @@ GameObject:
   - component: {fileID: 6814911188099909926}
   m_Layer: 0
   m_Name: birdcage05
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13930,7 +13930,7 @@ GameObject:
   - component: {fileID: 3938934146219277308}
   m_Layer: 0
   m_Name: birdcage04
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14012,8 +14012,8 @@ GameObject:
   - component: {fileID: 6652611474558651665}
   - component: {fileID: 2095149387990176349}
   m_Layer: 0
-  m_Name: entrance01 (15)
-  m_TagString: Untagged
+  m_Name: entrance16
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15037,8 +15037,8 @@ GameObject:
   - component: {fileID: 1631890587924537076}
   - component: {fileID: 5093927237868311029}
   m_Layer: 0
-  m_Name: entrance01 (9)
-  m_TagString: Untagged
+  m_Name: entrance10
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15314,8 +15314,8 @@ GameObject:
   - component: {fileID: 7774022674134195893}
   - component: {fileID: 2022574296906454883}
   m_Layer: 0
-  m_Name: entrance01 (11)
-  m_TagString: Untagged
+  m_Name: entrance12
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15494,8 +15494,8 @@ GameObject:
   - component: {fileID: 731767453056002572}
   - component: {fileID: 3866011584222062970}
   m_Layer: 0
-  m_Name: entrance01 (8)
-  m_TagString: Untagged
+  m_Name: entrance09
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15578,7 +15578,7 @@ GameObject:
   - component: {fileID: 6785493381233381327}
   m_Layer: 0
   m_Name: wall13
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15855,7 +15855,7 @@ GameObject:
   - component: {fileID: 6574597404294595084}
   m_Layer: 0
   m_Name: wall07
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15938,7 +15938,7 @@ GameObject:
   - component: {fileID: 6284697641416990766}
   m_Layer: 0
   m_Name: birdcage06
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16116,7 +16116,7 @@ GameObject:
   - component: {fileID: 2879228091874977238}
   m_Layer: 0
   m_Name: Entrance
-  m_TagString: Untagged
+  m_TagString: Scenery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -501,6 +501,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 27491472982667146, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 46040636957943397, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 169767168015827058, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 170724817436336411, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
     - target: {fileID: 433078171182358295, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
         type: 3}
       propertyPath: m_RootOrder
@@ -556,10 +576,230 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 569951775280627882, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 650534808713263664, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 1259897994586842910, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 1413651106205089722, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 1766744305609660617, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 2072551640173668466, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 2349681179140245938, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 2406084831115454725, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 2411766754763681017, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 2945463724795676666, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 3162354488425442534, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 3373798023721885175, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 3466549944675264730, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 3507550599769058433, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 3810499507585661035, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 3993357173207290695, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 4741265431489331440, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957081313009159357, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 5022956667047908473, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 5190576177381697961, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 5276575371783878208, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 5280012192035476488, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 5361266560852839814, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
     - target: {fileID: 5578005877232230741, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
         type: 3}
       propertyPath: m_Name
       value: KariStage01
+      objectReference: {fileID: 0}
+    - target: {fileID: 5602094999389340179, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 5625281971350366137, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 6066040011657942643, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 6160034338467127297, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 6541114794707658496, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 6567028191907660655, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 6714631016627910226, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 7255093375397604809, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 7383881159453661748, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 7416723243779993281, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 7516225150621359360, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 7588859446773557920, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 7918791180920901458, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 7923846730142442532, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 8372191248292510923, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 8479104253104366261, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 8562157799532962700, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644448228791447928, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 8749038518304046440, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 8779075021134537977, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
+      objectReference: {fileID: 0}
+    - target: {fileID: 9018239600241439240, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_TagString
+      value: Scenery
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4f165d9df4d5e6a4c87335e3e44befbd, type: 3}
