@@ -118,6 +118,7 @@ public class MainCamera : MonoBehaviour
 														   maxSpeed); 
     }
 
+    //ズームインとズームアウトを決定動かす処理
 	private void ZoomInOut()
 	{
         switch(currentZoom)
@@ -155,6 +156,7 @@ public class MainCamera : MonoBehaviour
                 }
                 break;
         }
+
         maincamera.fieldOfView = fov;
     }
 }

@@ -38,7 +38,7 @@ public class CameraManager : MonoBehaviour
     private Transform child;
 
     [SerializeField]
-    private Camera camera;
+    private new Camera camera;
 
     [SerializeField]
     private CameraParameter parameter;
