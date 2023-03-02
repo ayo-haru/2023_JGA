@@ -17,14 +17,10 @@ using UnityEngine;
 public enum EAIState
 {
     GUEST_AROUND_WALK,              //客　歩き回る
+    GUEST_ATTENSION_PENGUIN,        //客　ペンギンに注目する
     GUEST_FOLLOW_PENGUIN,           //客　ペンギンについていく
     GUEST_STAY_PENGUIN_AREA,        //客　ペンギンブースに着いた
-
-    STAFF_AROUND_WALK,              //飼育員　歩き回る
-    STAFF_CHASE_PENGUIN,            //飼育員　ペンギン追いかける
-    STAFF_CATCH_PENGUIN,            //飼育員　ペンギン捕まえた
-    STAFF_GO_TO_GIMICK,             //飼育員　ギミックに向かう
-    STAFF_CATCH_GIMICK,             //飼育員　ギミックを片づける
+    GUEST_COOL_DOWN,                //客　ペンギンに飽きかけてる
 
     MAX_AI_STATE,
 }
