@@ -71,8 +71,21 @@ MonoBehaviour:
     ConfigDockingTransparentPayload: 0
   _fontCustomInitializer:
     m_PersistentCalls:
-      m_Calls: []
-  _fontAtlasConfiguration: {fileID: 0}
+      m_Calls:
+      - m_Target: {fileID: 8323915648899601954}
+        m_TargetAssemblyTypeName: UImGui.ImGuiView, Assembly-CSharp
+        m_MethodName: AddIconFont
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _fontAtlasConfiguration: {fileID: 11400000, guid: e7a14200c86caf64cb8dcda07709491a,
+    type: 2}
   _shaders: {fileID: 11400000, guid: 68f2e550e81076948ba9757c73f74336, type: 2}
   _style: {fileID: 11400000, guid: 90718c4e7d6fa04438adef1ad7a432cc, type: 2}
   _cursorShapes: {fileID: 0}

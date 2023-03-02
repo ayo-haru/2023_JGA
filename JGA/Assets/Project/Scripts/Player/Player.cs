@@ -8,6 +8,7 @@
 // [Date]
 // 2023/02/25	スクリプト作成
 //=============================================================================
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,7 +18,7 @@ public class Player : MonoBehaviour
 {
 	[SerializeField] private Rigidbody rb;
 	[SerializeField] private AudioSource audioSource;
-	[SerializeField] private AudioClip seCall;
+	[SerializeField] private AudioClip seCall;          // ＳＥ：鳴き声
 
 	[Header("ステータス")]
 	[SerializeField, Tooltip("追加速度")]
@@ -28,11 +29,17 @@ public class Player : MonoBehaviour
 	private float maxSpeed = 5;
 
 
-	[SerializeField] private bool isHold;
-	[SerializeField] private bool isRun;
+	[SerializeField] private bool isHold;       // つかみフラグ
+	[SerializeField] private bool isRun;        // 走りフラグ
 
-	private MyContorller gameInputs;
-	private Vector2 moveInputValue;
+	private MyContorller gameInputs;            // キー入力
+	private Vector2 moveInputValue;             // 移動方向
+
+	private Collider HoldObject;                // 掴んでいるオブジェクト：コリジョン
+	private Rigidbody HoldObjectRb;             // 掴んでいるオブジェクト：重力関連
+	[SerializeField]
+	private List<Collider> WithinRange = new List<Collider>();
+
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -43,7 +50,7 @@ public class Player : MonoBehaviour
 			rb = GetComponent<Rigidbody>();
 
 		// 回転固定
-		rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+		rb.constraints = RigidbodyConstraints.FreezeRotation;
 
 		if (audioSource == null)
 			audioSource = GetComponent<AudioSource>();
@@ -73,10 +80,19 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void FixedUpdate()
 	{
+		Move();
+
+	}
+
+	/// <summary>
+	/// 移動処理
+	/// </summary>
+	private void Move()
+	{
 		// 制限速度内の場合、移動方向の力を与える
 		if (rb.velocity.magnitude < maxSpeed * (isRun ? runMagnification : 1))
-			//rb.AddForce(new Vector3(moveInputValue.x, 0, moveInputValue.y) * moveForce * (isRun ? runMagnification : 1));
-			rb.velocity = new Vector3(moveInputValue.x, 0, moveInputValue.y) * moveForce * (isRun ? runMagnification : 1);
+			rb.AddForce(new Vector3(moveInputValue.x, 0, moveInputValue.y) * moveForce * (isRun ? runMagnification : 1));
+		//rb.velocity = new Vector3(moveInputValue.x, 0, moveInputValue.y) * moveForce * (isRun ? runMagnification : 1);
 
 		// 進行方向に向かって回転する
 		if (moveInputValue.normalized != Vector2.zero)
@@ -90,19 +106,10 @@ public class Player : MonoBehaviour
 			//var vael = new Vector3(moveInputValue.x, transform.position.y, moveInputValue.y) - transform.forward;
 			//transform.Rotate(Vector3.up, vael.magnitude, Space.World);
 		}
-
-
-	}
-
-	private void Update()
-	{
-		//// 制限速度内の場合、移動方向の力を与える
-		//if (rb.velocity.magnitude < maxSpeed * (isRun ? runMagnification : 1))
-		//	rb.velocity = new Vector3(moveInputValue.x, 0, moveInputValue.y) * moveForce * (isRun ? runMagnification : 1);
 	}
 
 	/// <summary>
-	/// 移動
+	/// 移動方向取得
 	/// </summary>
 	private void OnMove(InputAction.CallbackContext context)
 	{
@@ -122,13 +129,54 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void OnHold(InputAction.CallbackContext context)
 	{
-		switch (context.phase)
+		if (WithinRange.Count == 0)
+			return;
+
+		// 押された時
+		if (context.phase == InputActionPhase.Performed)
 		{
-			// 押された時
-			case InputActionPhase.Performed:
-				isHold = !isHold;
-				break;
+			isHold = !isHold;
+
+			// 掴む処理
+			if (isHold)
+			{
+				float length = 10.0f;
+
+				// キャッチできる範囲内にある複数のオブジェクトから
+				// 一番近いオブジェクトをキャッチする
+				foreach (Collider obj in WithinRange)
+				{
+					float distance = Vector3.Distance(transform.position, obj.transform.position);
+
+					if (length > distance)
+					{
+						length = distance;
+						HoldObject = obj;
+					}
+				}
+
+				HoldObject.transform.parent = transform;
+				HoldObject.transform.localPosition = new Vector3(0, 0, HoldObject.transform.localPosition.z);
+				HoldObject.transform.localRotation = Quaternion.identity;
+				if (HoldObject.TryGetComponent(out Rigidbody rigidbody))
+				{
+					HoldObjectRb = rigidbody;
+					HoldObjectRb.useGravity = false;
+					HoldObjectRb.isKinematic = true;
+				}
+			}
+
+			// 離す処理
+			else
+			{
+				HoldObject.transform.parent = null;
+				HoldObjectRb.useGravity = true;
+				HoldObjectRb.isKinematic = false;
+				HoldObject = null;
+				HoldObjectRb = null;
+			}
 		}
+
 	}
 
 	/// <summary>
@@ -167,6 +215,28 @@ public class Player : MonoBehaviour
 		GUILayout.Label($"isRun:{isRun}");
 		GUILayout.Label($"isHold:{isHold}");
 	}
+
+
+
+	private void OnCollisionStay(Collision collision)
+	{
+		// Playerと掴んでいるオブジェクトが接触していると、ぶっ飛ぶので離す
+		if (HoldObject == collision.collider)
+			collision.transform.localPosition += Vector3.forward / 10;
+	}
+
+	private void OnTriggerEnter(Collider other)
+	{
+		WithinRange.Add(other);
+	}
+
+	private void OnTriggerExit(Collider other)
+	{
+		WithinRange.Remove(other);
+	}
+
+
+
 
 
 
