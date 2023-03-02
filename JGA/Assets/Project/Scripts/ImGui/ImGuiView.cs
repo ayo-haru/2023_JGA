@@ -10,8 +10,6 @@
 //=============================================================================
 
 using ImGuiNET;
-#if !UIMGUI_REMOVE_IMNODES
-#endif
 #if !UIMGUI_REMOVE_IMPLOT
 using System.Linq;
 using System.Collections.Generic;
@@ -217,9 +215,17 @@ namespace UImGui
 					if (SelectObj != null)
 					{
 						//--- アクティブ チェックボックス
-						bool active = SelectObj.activeSelf;
-						if (ImGui.Checkbox("", ref active))
-							SelectObj.SetActive(!SelectObj.activeSelf);
+						if (SelectObj.name.Contains("ImGui"))
+						{
+							bool active = true;
+							ImGui.Checkbox("", ref active);
+						}
+						else
+						{
+							bool active = SelectObj.activeSelf;
+							if (ImGui.Checkbox("", ref active))
+								SelectObj.SetActive(!SelectObj.activeSelf);
+						}
 
 						ImGui.SameLine();   // 改行しない
 
@@ -231,10 +237,9 @@ namespace UImGui
 						{
 							int Tag = 0;
 
-							string[] Tags = new string[UnityEditorInternal.InternalEditorUtility.tags.Length];
-							for (int i = 0; i < UnityEditorInternal.InternalEditorUtility.tags.Length; i++)
+							string[] Tags = UnityEditorInternal.InternalEditorUtility.tags;
+							for (int i = 0; i < Tags.Length; i++)
 							{
-								Tags[i] = UnityEditorInternal.InternalEditorUtility.tags[i];
 								if (Tags[i].Contains(SelectObj.tag))
 									Tag = i;
 							}
@@ -250,11 +255,20 @@ namespace UImGui
 
 
 						//--- Layer
-						int layer = 0;
-						string[] layers = { $"{SelectObj.layer}" };
-						ImGui.PushItemWidth(-ImGui.GetContentRegionAvail().x * 0.5f);
-						ImGui.Combo("Layer", ref layer, layers, layers.Length);
-						ImGui.PopItemWidth();
+						{
+							int layer = 0;
+
+							string[] layers = UnityEditorInternal.InternalEditorUtility.layers;
+							for (int i = 0; i < layers.Length; i++)
+							{
+								if (layers[i].Contains(SelectObj.layer.ToString()))
+									layer = i;
+							}
+							ImGui.PushItemWidth(-ImGui.GetContentRegionAvail().x * 0.5f);
+							if (ImGui.Combo("Layer", ref layer, layers, layers.Length))
+								SelectObj.layer = layer;
+							ImGui.PopItemWidth();
+						}
 
 						//--- Component
 						UnityEngine.Component[] components = SelectObj.GetComponents<UnityEngine.Component>();
