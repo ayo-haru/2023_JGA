@@ -15,20 +15,29 @@ using UnityEngine.SceneManagement;
 
 public class TestLoadScene
 {
-    #if false
+#if true
+
+    private const string ActiveSceneName = "ProtoType";
     // ロードするシーンを検索
     private const string LoadSceneName = "TestGround";
 
+    /// <summary>
+    /// シーンを呼び出す。
+    /// </summary>
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     public static void LoadGroundScene()
     {
-        if (!SceneManager.GetSceneByName(LoadSceneName).IsValid()){
-            SceneManager.LoadScene(LoadSceneName, LoadSceneMode.Additive);
+        // 現在のアクティブシーン名を取得
+        Scene activeSceneName = SceneManager.GetActiveScene();
 
-        }
-        else{
-            Debug.LogError(LoadSceneName+"が見つかりませんでした。");
-        }
+        // 現在開いているシーンが"ProtoType"シーンの場合、ステージシーン(Dummy)を読み込む。
+        if(activeSceneName.name == ActiveSceneName)
+		{
+            SceneManager.LoadScene(LoadSceneName, LoadSceneMode.Additive);
+		}
+		else{
+			Debug.LogWarning(ActiveSceneName + "シーンではないので、ステージシーンを読み込みませんでした。");
+		}
     }
     #endif
 
