@@ -454,6 +454,18 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
+--- !u!114 &1982839613 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8323915648899601954, guid: 46166a0e18a0e4e4f920091d2790bdf8,
+    type: 3}
+  m_PrefabInstance: {fileID: 8323915649377284582}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7c612073d6ea6045b635c9f920237c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6915197449381663067
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -535,6 +547,77 @@ PrefabInstance:
       propertyPath: _camera
       value: 
       objectReference: {fileID: 627636058}
+    - target: {fileID: 8323915648899601956, guid: 46166a0e18a0e4e4f920091d2790bdf8,
+        type: 3}
+      propertyPath: _fontAtlasConfiguration
+      value: 
+      objectReference: {fileID: 11400000, guid: e7a14200c86caf64cb8dcda07709491a,
+        type: 2}
+    - target: {fileID: 8323915648899601956, guid: 46166a0e18a0e4e4f920091d2790bdf8,
+        type: 3}
+      propertyPath: _fontCustomInitializer.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8323915648899601956, guid: 46166a0e18a0e4e4f920091d2790bdf8,
+        type: 3}
+      propertyPath: _fontCustomInitializer.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8323915648899601956, guid: 46166a0e18a0e4e4f920091d2790bdf8,
+        type: 3}
+      propertyPath: _fontCustomInitializer.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8323915648899601956, guid: 46166a0e18a0e4e4f920091d2790bdf8,
+        type: 3}
+      propertyPath: _fontCustomInitializer.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1982839613}
+    - target: {fileID: 8323915648899601956, guid: 46166a0e18a0e4e4f920091d2790bdf8,
+        type: 3}
+      propertyPath: _fontCustomInitializer.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1982839613}
+    - target: {fileID: 8323915648899601956, guid: 46166a0e18a0e4e4f920091d2790bdf8,
+        type: 3}
+      propertyPath: _fontCustomInitializer.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8323915648899601956, guid: 46166a0e18a0e4e4f920091d2790bdf8,
+        type: 3}
+      propertyPath: _fontCustomInitializer.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8323915648899601956, guid: 46166a0e18a0e4e4f920091d2790bdf8,
+        type: 3}
+      propertyPath: _fontCustomInitializer.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: AddIconFont
+      objectReference: {fileID: 0}
+    - target: {fileID: 8323915648899601956, guid: 46166a0e18a0e4e4f920091d2790bdf8,
+        type: 3}
+      propertyPath: _fontCustomInitializer.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: AddDefaultFont
+      objectReference: {fileID: 0}
+    - target: {fileID: 8323915648899601956, guid: 46166a0e18a0e4e4f920091d2790bdf8,
+        type: 3}
+      propertyPath: _fontCustomInitializer.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UImGui.ImGuiView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8323915648899601956, guid: 46166a0e18a0e4e4f920091d2790bdf8,
+        type: 3}
+      propertyPath: _fontCustomInitializer.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: UImGui.ImGuiView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8323915648899601956, guid: 46166a0e18a0e4e4f920091d2790bdf8,
+        type: 3}
+      propertyPath: _fontCustomInitializer.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8323915648899601956, guid: 46166a0e18a0e4e4f920091d2790bdf8,
+        type: 3}
+      propertyPath: _fontCustomInitializer.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 8323915648899601957, guid: 46166a0e18a0e4e4f920091d2790bdf8,
         type: 3}
       propertyPath: m_RootOrder

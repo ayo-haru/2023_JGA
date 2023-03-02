@@ -87,7 +87,7 @@ namespace UImGui
 		/// </summary>
 		void Awake()
 		{
-			if (mainCamera != null)
+			if (mainCamera == null)
 				mainCamera = Camera.main;
 
 			uImGui.SetCamera(mainCamera);

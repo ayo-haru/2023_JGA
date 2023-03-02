@@ -55,14 +55,11 @@ public class Player : MonoBehaviour
 		gameInputs = new MyContorller();
 
 		// Actionイベント登録
-		gameInputs.Player.Move.started += OnMove;
 		gameInputs.Player.Move.performed += OnMove;
 		gameInputs.Player.Move.canceled += OnMove;
 		gameInputs.Player.Hit.performed += OnHit;
-		gameInputs.Player.Hold.started += OnHold;
 		gameInputs.Player.Hold.performed += OnHold;
 		gameInputs.Player.Hold.canceled += OnHold;
-		gameInputs.Player.Run.started += OnRun;
 		gameInputs.Player.Run.performed += OnRun;
 		gameInputs.Player.Run.canceled += OnRun;
 		gameInputs.Player.Call.performed += OnCall;
