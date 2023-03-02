@@ -2,11 +2,12 @@
 // @File	: [TransitionFarTarget.cs]
 // @Brief	: 遷移条件　ターゲットが遠ざかったら
 // @Author	: Ogusu Yuuko
-// @Editer	: 
+// @Editer	: Ogusu Yuuko
 // @Detail	: 
 // 
 // [Date]
 // 2023/02/28	スクリプト作成
+// 2023/03/02	(小楠)データの取得方法変更
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -14,17 +15,17 @@ using UnityEngine;
 
 public class TransitionFarTarget : AITransition
 {
-    //指定距離
-    [SerializeField, Min(0)] private float distance = 1.0f;
     //ターゲットのTransforom
     [SerializeField] private Transform target;
+
+    private GuestData data;
 
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
     /// </summary>
     void Awake()
 	{
-		
+        data = GetComponent<AIManager>().GetGuestData();
 	}
 
 	/// <summary>
@@ -58,6 +59,6 @@ public class TransitionFarTarget : AITransition
 
     public override bool IsTransition()
     {
-        return Vector3.Distance(gameObject.transform.position, target.position) > distance ? true : false;
+        return Vector3.Distance(gameObject.transform.position, target.position) > data.reactionArea ? true : false;
     }
 }

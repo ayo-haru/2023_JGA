@@ -7,7 +7,8 @@
 // 
 // [Date]
 // 2023/02/27	スクリプト作成
-// 2023/02/28	ペンギンと一定距離保てるようにした
+// 2023/02/28	(小楠)ペンギンと一定距離保てるようにした
+// 2023/03/02	(小楠）データの取得方法変更
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -19,10 +20,8 @@ public class StateFollowPenguin : AIState
     //ペンギンのTransform
     [SerializeField] private Transform target;
     private NavMeshAgent agent;
-    [SerializeField, Min(0)] private float followSpeed = 1.0f;
 
-    //ペンギンとの距離
-    [SerializeField, Range(2, 10)] private float distance = 1.0f;
+    private GuestData data;
 
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -30,6 +29,7 @@ public class StateFollowPenguin : AIState
     void Awake()
 	{
         agent = GetComponent<NavMeshAgent>();
+        data = GetComponent<AIManager>().GetGuestData();
     }
 
 	/// <summary>
@@ -37,7 +37,7 @@ public class StateFollowPenguin : AIState
 	/// </summary>
 	void Start()
 	{
-        
+
     }
 
 	/// <summary>
@@ -60,13 +60,13 @@ public class StateFollowPenguin : AIState
     {
         if (!agent) GetComponent<NavMeshAgent>();
         agent.SetDestination(target.position);
-        agent.speed = followSpeed;
+        agent.speed = data.speed;
     }
 
     public override void UpdateState()
     {
         //ペンギンとの距離が近い場合は移動しない
-        agent.speed = (agent.remainingDistance < distance) ? 0.0f : followSpeed;
+        agent.speed = (agent.remainingDistance < data.distance) ? 0.0f : data.speed;
 
         agent.SetDestination(target.position);
     }
