@@ -10,8 +10,6 @@
 //=============================================================================
 
 using ImGuiNET;
-#if !UIMGUI_REMOVE_IMNODES
-#endif
 #if !UIMGUI_REMOVE_IMPLOT
 using System.Linq;
 using System.Collections.Generic;
@@ -217,9 +215,17 @@ namespace UImGui
 					if (SelectObj != null)
 					{
 						//--- アクティブ チェックボックス
-						bool active = SelectObj.activeSelf;
-						if (ImGui.Checkbox("", ref active))
-							SelectObj.SetActive(!SelectObj.activeSelf);
+						if (SelectObj.name.Contains("ImGui"))
+						{
+							bool active = true;
+							ImGui.Checkbox("", ref active);
+						}
+						else
+						{
+							bool active = SelectObj.activeSelf;
+							if (ImGui.Checkbox("", ref active))
+								SelectObj.SetActive(!SelectObj.activeSelf);
+						}
 
 						ImGui.SameLine();   // 改行しない
 
@@ -231,10 +237,9 @@ namespace UImGui
 						{
 							int Tag = 0;
 
-							string[] Tags = new string[UnityEditorInternal.InternalEditorUtility.tags.Length];
-							for (int i = 0; i < UnityEditorInternal.InternalEditorUtility.tags.Length; i++)
+							string[] Tags = UnityEditorInternal.InternalEditorUtility.tags;
+							for (int i = 0; i < Tags.Length; i++)
 							{
-								Tags[i] = UnityEditorInternal.InternalEditorUtility.tags[i];
 								if (Tags[i].Contains(SelectObj.tag))
 									Tag = i;
 							}
@@ -250,11 +255,20 @@ namespace UImGui
 
 
 						//--- Layer
-						int layer = 0;
-						string[] layers = { $"{SelectObj.layer}" };
-						ImGui.PushItemWidth(-ImGui.GetContentRegionAvail().x * 0.5f);
-						ImGui.Combo("Layer", ref layer, layers, layers.Length);
-						ImGui.PopItemWidth();
+						{
+							int layer = 0;
+
+							string[] layers = UnityEditorInternal.InternalEditorUtility.layers;
+							for (int i = 0; i < layers.Length; i++)
+							{
+								if (layers[i].Contains(SelectObj.layer.ToString()))
+									layer = i;
+							}
+							ImGui.PushItemWidth(-ImGui.GetContentRegionAvail().x * 0.5f);
+							if (ImGui.Combo("Layer", ref layer, layers, layers.Length))
+								SelectObj.layer = layer;
+							ImGui.PopItemWidth();
+						}
 
 						//--- Component
 						UnityEngine.Component[] components = SelectObj.GetComponents<UnityEngine.Component>();
@@ -475,6 +489,14 @@ namespace UImGui
 						mCurrentGizmoOperation = ImGuizmoNET.OPERATION.SCALE;
 
 
+					if (ImGui.Button("LOCAL"))
+						mCurrentGizmoMode = MODE.LOCAL;
+					ImGui.SameLine();
+
+					if (ImGui.Button("WORLD"))
+						mCurrentGizmoMode = MODE.WORLD;
+
+
 					//ImGui.Text($"Simple overlay\nin the corner of the screen.\n(right-click to change position)");
 					//if (ImGui.BeginPopupContextWindow())
 					//{
@@ -500,7 +522,7 @@ namespace UImGui
 			Matrix4x4 matrix = gameObject.transform.localToWorldMatrix;
 			Matrix4x4 view = mainCamera.worldToCameraMatrix;
 			Matrix4x4 projection = mainCamera.projectionMatrix;
-
+			Matrix4x4 origin = Matrix4x4.zero;
 
 			//Vector3 matrixTranslation, matrixRotation, matrixScale;
 			//ImGuizmo.DecomposeMatrixToComponents(ref matrix.m00, ref matrixTranslation, ref matrixRotation, ref matrixScale);
@@ -514,8 +536,8 @@ namespace UImGui
 			//ImGuizmoNET.ImGuizmo.DrawCubes(ref view.m00, ref projection.m00, ref matrix.m00, 1); //(Debug)
 
 			//--- Gizmo本体
-			ImGuizmo.Manipulate(ref view.m00, ref projection.m00, mCurrentGizmoOperation, mCurrentGizmoMode, ref matrix.m00);
-			//ImGuizmo.DrawGrid(ref view.m00, ref projection.m00, ref matrix.m00, 50f);
+			if (ImGuizmo.Manipulate(ref view.m00, ref projection.m00, mCurrentGizmoOperation, mCurrentGizmoMode, ref matrix.m00))
+				ImGuizmo.DrawGrid(ref view.m00, ref projection.m00, ref origin.m00, 50f);
 
 
 			//--- 右上のカメラの角度ビュー
