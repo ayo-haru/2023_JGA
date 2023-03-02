@@ -15,14 +15,15 @@ using UnityEngine;
 public class TestPlayer : MonoBehaviour
 {
     public float speed = 3.0f;
+    [SerializeField] private GameObject obj;
 
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
     /// </summary>
     void Awake()
 	{
-		
-	}
+
+    }
 
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
@@ -45,6 +46,17 @@ public class TestPlayer : MonoBehaviour
 	/// </summary>
 	void Update()
 	{
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Instantiate(obj, transform.position, Quaternion.identity);
+            ZooKeeperAI.flg = true;
+        }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            // 壁削除
+            GameObject g = GameObject.Find("kanban(Clone)");
+            Destroy(g);
+        }
         if (Input.GetKey(KeyCode.W))
         {
             transform.position += transform.forward * speed * Time.deltaTime;

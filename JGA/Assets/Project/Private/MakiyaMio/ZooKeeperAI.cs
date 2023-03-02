@@ -6,6 +6,7 @@
 // @Detail	: https://yttm-work.jp/unity/unity_0036.html
 //            https://www.sejuku.net/blog/83620
 //            https://www.matatabi-ux.com/entry/2021/03/18/100000 
+//            https://light11.hatenadiary.com/entry/2019/12/10/223519
 //
 // [Date]
 // 2023/02/28	スクリプト作成
@@ -30,6 +31,8 @@ public class ZooKeeperAI : MonoBehaviour
     private SphereCollider sphereCollider;
     private NavMeshAgent navMesh;
     private RaycastHit rayhit;
+
+    public static bool flg = false;
 
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -79,6 +82,7 @@ public class ZooKeeperAI : MonoBehaviour
     {
         if(collision.gameObject.tag == "Player")
         {
+            //Debug.Log("捕まえた");
         }
     }
 
