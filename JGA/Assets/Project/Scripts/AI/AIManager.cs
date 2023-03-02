@@ -2,11 +2,12 @@
 // @File	: [AIManager.cs]
 // @Brief	: AI管理クラス
 // @Author	: Ogusu Yuuko
-// @Editer	: 
+// @Editer	: Ogusu Yuuko
 // @Detail	: 
 // 
 // [Date]
 // 2023/02/27	スクリプト作成
+// 2023/03/02	(小楠)客用のデータ持たせた
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -19,10 +20,21 @@ public class AIManager : MonoBehaviour
     //現在のステート
     private int currentState = 0;
 
+    //使用する客データ
+    [SerializeField] private GuestData data;
+
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
     /// </summary>
     void Awake()
+	{
+
+    }
+
+	/// <summary>
+	/// 最初のフレーム更新の前に呼び出される
+	/// </summary>
+	void Start()
 	{
         //エラーチェック
         #region
@@ -38,13 +50,6 @@ public class AIManager : MonoBehaviour
             Debug.LogWarning(i + "番目のステートの処理が設定されていません");
         }
         #endregion
-    }
-
-	/// <summary>
-	/// 最初のフレーム更新の前に呼び出される
-	/// </summary>
-	void Start()
-	{
         currentState = 0;
         if (nodeList[currentState].state) nodeList[currentState].state.InitState();
     }
@@ -104,5 +109,10 @@ public class AIManager : MonoBehaviour
 
         Debug.LogError("存在しないノードです");
         return -1;
+    }
+
+    public GuestData GetGuestData()
+    {
+        return data;
     }
 }

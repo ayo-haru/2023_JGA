@@ -1,29 +1,25 @@
 //=============================================================================
-// @File	: [TransitionNearTarget.cs]
-// @Brief	: 遷移条件　ターゲットが近づいたら
+// @File	: [AIDebugGimmick.cs]
+// @Brief	: AIテスト用ギミックスクリプト
 // @Author	: Ogusu Yuuko
 // @Editer	: 
 // @Detail	: 
 // 
 // [Date]
-// 2023/02/28	スクリプト作成
+// 2023/03/02	スクリプト作成
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TransitionNearTarget : AITransition
+public class AIDebugGimmick : MonoBehaviour
 {
-    //指定距離
-    [SerializeField, Min(0)] private float distance = 1.0f;
-    //ターゲットのTransforom
-    [SerializeField] private Transform target;
+    [SerializeField] private float speed = 0.01f;
 
-
-	/// <summary>
-	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
-	/// </summary>
-	void Awake()
+    /// <summary>
+    /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
+    /// </summary>
+    void Awake()
 	{
 		
 	}
@@ -49,16 +45,21 @@ public class TransitionNearTarget : AITransition
 	/// </summary>
 	void Update()
 	{
-		
-	}
-
-    public override void InitTransition()
-    {
-        //特になし
-    }
-
-    public override bool IsTransition()
-    {
-        return Vector3.Distance(gameObject.transform.position, target.position) < distance ? true : false;
+        if (Input.GetKey(KeyCode.W))
+        {
+            transform.Translate(0f, 0f, speed);
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            transform.Translate(0f, 0f, -speed);
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            transform.Translate(-speed, 0f, 0f);
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            transform.Translate(speed, 0f, 0f);
+        }
     }
 }

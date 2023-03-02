@@ -2,11 +2,12 @@
 // @File	: [StateDefaultRootWalk.cs]
 // @Brief	: 指定されたルートの移動
 // @Author	: Ogusu Yuuko
-// @Editer	: 
+// @Editer	: Ogusu Yuuko
 // @Detail	: 
 // 
 // [Date]
 // 2023/02/28	スクリプト作成
+// 2023/03/02	(小楠）データの取得方法変更
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -19,13 +20,12 @@ public class StateDefaultRootWalk : AIState
     [SerializeField] private List<Transform> targetList;
     //現在向かっている目的地
     private int targetNum = 0;
-    //目的地に着いたときの待機時間(動物眺めてる時間)
-    [SerializeField, Min(0)] private float waitTime = 10.0f;
+    //待機時間カウント用
     private float fTimer = 0.0f;
-    //歩く速度
-    [SerializeField, Min(0)] private float walkSpeed = 1.0f;
 
     private NavMeshAgent agent;
+
+    private GuestData data;
 
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -33,6 +33,7 @@ public class StateDefaultRootWalk : AIState
     void Awake()
 	{
         agent = GetComponent<NavMeshAgent>();
+        data = GetComponent<AIManager>().GetGuestData();
     }
 
 	/// <summary>
@@ -63,7 +64,7 @@ public class StateDefaultRootWalk : AIState
     {
         if (!agent) agent = GetComponent<NavMeshAgent>();
         agent.SetDestination(targetList[targetNum].position);
-        agent.speed = walkSpeed;
+        agent.speed = data.speed;
         fTimer = 0.0f;
     }
 
@@ -81,7 +82,7 @@ public class StateDefaultRootWalk : AIState
         {
             fTimer += Time.deltaTime;
 
-            if (waitTime <= fTimer)
+            if (data.waitTime <= fTimer)
             {
                 ChangeTarget();
             }
