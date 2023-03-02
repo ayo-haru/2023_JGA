@@ -52,7 +52,7 @@ public class TestPlayer : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
-            // 壁削除
+            // オブジェクト削除
             GameObject g = GameObject.Find("kanban(Clone)");
             Destroy(g);
         }

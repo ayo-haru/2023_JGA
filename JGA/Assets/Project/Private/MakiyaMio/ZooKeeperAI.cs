@@ -12,6 +12,8 @@
 // 2023/02/28	スクリプト作成
 // 2023/02/28	スピードをスライダーで変更可能にした
 // 2023/02/28	Raycastの追加
+// 2023/03/02	オブジェクトのListを追加
+// 2023/03/02   ギミックオブジェクトとの当たり判定処理の作成
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -27,12 +29,12 @@ public class ZooKeeperAI : MonoBehaviour
     private int rootNum = 0;
     [SerializeField, Range(1.1f, 2.0f)] private float speed;    // 飼育員のスピード
     [SerializeField, Range(0.0f, 2.0f)] private float search;   // 飼育員の索敵範囲
-
     private SphereCollider sphereCollider;
+
     private NavMeshAgent navMesh;
     private RaycastHit rayhit;
-
-    [SerializeField] private List<Transform> resetPos;  // 元に戻す位置
+    [SerializeField] private List<Transform> resetPos;          // ギミックオブジェクトを元に戻す位置
+    private bool gimmickFlg = false;
 
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -59,7 +61,18 @@ public class ZooKeeperAI : MonoBehaviour
 	/// </summary>
 	void FixedUpdate()
 	{
-        if (rootList.Count >= 1)
+        // オブジェクトを元の位置に戻す
+        if(gimmickFlg)
+        {
+            if (navMesh.remainingDistance <= 0.1f    // 目標地点までの距離が0.1ｍ以下になったら到着
+                 && !navMesh.pathPending)            // 経路計算中かどうか（計算中：true　計算完了：false）
+            {
+                gimmickFlg = false;
+                rootNum = Random.Range(0, rootList.Count);
+                navMesh.SetDestination(rootList[rootNum].position);     // 目的地の再設定
+            }
+        }
+        else if (rootList.Count >= 1)
         {
             navMesh.SetDestination(rootList[rootNum].position);     // 目的地の設定
             if (navMesh.remainingDistance <= 0.1f    // 目標地点までの距離が0.1ｍ以下になったら到着
@@ -87,34 +100,67 @@ public class ZooKeeperAI : MonoBehaviour
     }
 
     /// <summary>
-    /// 飼育員の索敵範囲にペンギンがいるかどうか
+    /// 飼育員の索敵範囲にペンギン、ギミックがあるか
     /// </summary>
     private void OnTriggerStay(Collider other)
     {
         #region ペンギン
         // ペンギンとの当たり判定
-        if (other.CompareTag("Player"))
-        {
-            var diff = player.transform.position - transform.position;  // 差分
-            var distance = diff.magnitude;      // 距離
-            var direction = diff.normalized;    // 方向
-            
-            // rayとコライダーが当たっているか
-            if(Physics.Raycast(transform.position, direction, out rayhit, distance))    // rayの開始地点、rayの向き、当たったオブジェクトの情報を格納、rayの発射距離
-            {
-                // 当たったオブジェクトがペンギンかどうか
-                if(rayhit.transform.gameObject == player)
-                {
-                    navMesh.isStopped = false;
-                    navMesh.destination = player.transform.position;    // ペンギンを追従
-                }
-                else
-                {
-                    //navMesh.isStopped = true;   // ナビゲーションの停止（true:ナビゲーションOFF　false:ナビゲーションON）
-                    navMesh.SetDestination(rootList[rootNum].position);     // 目的地の設定
-                }
-            }
-        }
+        //if (other.CompareTag("Player"))
+        //{
+        //    var diff = player.transform.position - transform.position;  // 差分
+        //    var distance = diff.magnitude;      // 距離
+        //    var direction = diff.normalized;    // 方向
+        //    
+        //    // rayとコライダーが当たっているか
+        //    if(Physics.Raycast(transform.position, direction, out rayhit, distance))    // rayの開始地点、rayの向き、当たったオブジェクトの情報を格納、rayの発射距離
+        //    {
+        //        // 当たったオブジェクトがペンギンかどうか
+        //        if(rayhit.transform.gameObject == player)
+        //        {
+        //            navMesh.isStopped = false;
+        //            navMesh.destination = player.transform.position;    // ペンギンを追従
+        //        }
+        //        else
+        //        {
+        //            //navMesh.isStopped = true;   // ナビゲーションの停止（true:ナビゲーションOFF　false:ナビゲーションON）
+        //            navMesh.SetDestination(rootList[rootNum].position);     // 目的地の再設定
+        //        }
+        //    }
+        //}
+        #endregion
+
+        #region ギミックオブジェクト
+        // タグかリストで管理
+        //if (other.CompareTag("Player"))
+        //{
+        //    var diff = other.transform.position - transform.position;  // 差分
+        //    var distance = diff.magnitude;      // 距離
+        //    var direction = diff.normalized;    // 方向
+        //
+        //    // rayとコライダーが当たっているか
+        //    if (Physics.Raycast(transform.position, direction, out rayhit, distance))    // rayの開始地点、rayの向き、当たったオブジェクトの情報を格納、rayの発射距離
+        //    {
+        //        // 当たったオブジェクトがギミックオブジェクトかどうか
+        //        if (rayhit.transform.tag == "Player")
+        //        {
+        //            // オブジェクトを持つ
+        //            gimmickFlg = true;
+        //            // オブジェクト削除
+        //            GameObject g = GameObject.Find("kanban(Clone)");
+        //            Destroy(g);
+        //            // 元の位置に戻しに行く
+        //            navMesh.SetDestination(resetPos[0].position);
+        //        }
+        //        else
+        //        {
+        //            rootNum = Random.Range(0, rootList.Count);
+        //            // 目的地の再設定
+        //            navMesh.SetDestination(rootList[rootNum].position);     // 目的地の再設定
+        //        }
+        //    }
+        //
+        //}
         #endregion
     }
 }
