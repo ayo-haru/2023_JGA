@@ -3,49 +3,62 @@
 // @Brief	: メインカメラの挙動
 // @Author	: Fujiyama Riku
 // @Editer	: 
-// @Detail	: 参考URL https://programming.sincoston.com/unity-camera-follow-player/
-//					　https://nekojara.city/unity-smooth-damp
+// @Detail	: 参考URL カメラ追従 https://programming.sincoston.com/unity-camera-follow-player/
+//					　スムーズに動くカメラ https://nekojara.city/unity-smooth-damp
+//                    animationカーブ https://kan-kikuchi.hatenablog.com/entry/AnimationCurve_nspector
 //					  
 // 
 // [Date]
 // 2023/02/27	スクリプト作成
 // 2023/02/28	遅延作成
-//=============================================================================
+//=============================================================================ya
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class MainCamera : MonoBehaviour
 {
     enum ZOOM
     {
-        NORMAL = 0,
+        
+        DEFAULT = 0,
         IN,
         OUT,
     }
+    //ズームの状況
+    ZOOM zoom = ZOOM.DEFAULT;
+    ZOOM currentZoom = ZOOM.DEFAULT;
 
-    ZOOM zoom = ZOOM.NORMAL;
-    ZOOM currentZoom = ZOOM.NORMAL;
+    //インプットアクション
+    private MyContorller gameInput;
 
     //プレイヤー追従用のプレイヤー取得
     private GameObject playerobj;
-	//メインカメラ格納用
-	private Camera maincamera;
 	//カメラとプレイヤーの座標の初期
 	private Vector3 offset;
 	//初期FOV格納用
 	private float fov;
+    //計算用FOV格納用
+    private float currentFov;
+
+    //イージング実行中の現在の割合
+    //private float easingRate;
+    //ズームインアウトの実行中フラグ
+    private bool zoomFlg;
+
 
     //カメラの情報受け取り用
     private CameraManager cameraObj;
-	//カメラの全体のparameter格納用
-	private CameraParameter cameraParamater;
-	//座標角度格納用
-	private Transform cameraParent;
+    //メインカメラ格納用
+    private Camera maincamera;
+    //座標角度格納用
+    private Transform cameraParent;
 	//距離格納用
 	private Transform cameraChild;
 
+    //基本的にメインカメラのみで設定するところ
     [Header("到着までの大体の時間")]
     [SerializeField] private float smoothTime = 0.1f;
     [Header("最高速度")]
@@ -54,20 +67,41 @@ public class MainCamera : MonoBehaviour
     [SerializeField] private float zoomIn = 0.1f;
     [Header("ズームアウト倍率")]
     [SerializeField] private float zoomOut = 0.1f;
+    //[Header("ズームイン、アウトのイージング設定")]
+    //[SerializeField] private AnimationCurve zoomCurve = null;
+    [Header("ズームイン、アウトの時間")]
+    [SerializeField] private float zoomTime = 1.0f;
+    [Header("ズームから戻ってくる時間")]
+    [SerializeField] private float zoomRetTime = 1.0f;
+
+    //テスト用
+    [Header("デバッグ用ズームの方式を変更(false FOV , true position)")]
+    [SerializeField] private bool zoomObjChange = false;
 
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
     /// </summary>
     void Awake()
 	{
+        //カメラの情報の受け取り
         cameraObj = GameObject.Find("CameraParent").GetComponent<CameraManager>();
-		cameraParamater = cameraObj.GetParameter();
         //プレイヤーを格納
         playerobj = GameObject.FindGameObjectWithTag("Player");
-        //初期化としてメインカメラを格納
+        //初期化としてカメラの情報を格納
         maincamera = cameraObj.GetTransformObject();
 		cameraParent = cameraObj.GetTransformObject(true);
 		cameraChild = cameraObj.GetTransformObject(false);
+
+        gameInput = new MyContorller();
+        //インプットアクション設定
+        gameInput.Camera.ZoomIn.started += OnZoomIn;
+        gameInput.Camera.ZoomIn.performed+= OnZoomIn;
+        gameInput.Camera.ZoomIn.canceled += OnZoomIn;
+        gameInput.Camera.ZoomOut.started += OnZoomOut;
+        gameInput.Camera.ZoomOut.performed += OnZoomOut;
+        gameInput.Camera.ZoomOut.canceled += OnZoomOut;
+
+        gameInput.Enable();
     }
 
 	/// <summary>
@@ -75,8 +109,19 @@ public class MainCamera : MonoBehaviour
 	/// </summary>
 	void Start()
 	{
-        offset = maincamera.transform.position - playerobj.transform.position;
-		fov = maincamera.fieldOfView;
+        //プレイヤーの初期位置とカメラの座標を固定
+        offset = cameraParent.transform.position - playerobj.transform.position;
+        //初期の視野角を格納
+        if (!zoomObjChange)
+        {
+            fov = maincamera.fieldOfView;
+            currentFov = maincamera.fieldOfView;
+        }
+        if(zoomObjChange)
+        {
+            fov = -cameraChild.transform.localPosition.z;
+            currentFov = -cameraChild.transform.localPosition.z;
+        }
     }
 
 	/// <summary>
@@ -85,6 +130,10 @@ public class MainCamera : MonoBehaviour
 	void FixedUpdate()
 	{
         CameraMove();
+        if(zoomFlg)
+        {
+            ZoomInOut();
+        }
     }
 
 	/// <summary>
@@ -92,16 +141,7 @@ public class MainCamera : MonoBehaviour
 	/// </summary>
 	void Update()
 	{
-        if (Input.GetKeyUp(KeyCode.F1))
-        {
-            zoom = ZOOM.IN;
-            ZoomInOut();
-        }
-        if (Input.GetKeyUp(KeyCode.F2))
-        {
-            zoom = ZOOM.OUT;
-            ZoomInOut();
-        }
+        
     }
     
     /// <summary>
@@ -109,54 +149,161 @@ public class MainCamera : MonoBehaviour
     /// </summary>
     private void CameraMove()
 	{
+        //カメラの座標の更新
 		var targetpos = playerobj.transform.position + offset;
         var currentVelocity = new Vector3();
-        maincamera.transform.position = Vector3.SmoothDamp(maincamera.transform.position,
+        cameraParent.transform.position = Vector3.SmoothDamp(cameraParent.transform.position,
 														   targetpos,
 														   ref currentVelocity,
                                                            smoothTime,
 														   maxSpeed); 
     }
+    //ズームインのボタンが押されたときに実行する関数
+    private void OnZoomIn(InputAction.CallbackContext context)
+    {
+        switch (context.phase)
+        {
+            //押しているとき
+            case InputActionPhase.Performed:
+                //片方のボタンを押しているときにもう片方のボタンを実行させないための例外処理
+                if (currentZoom == ZOOM.OUT) { break; }
+                currentZoom = ZOOM.IN;
+                zoomFlg = true;
+                break;
+            //離したとき
+            case InputActionPhase.Canceled:
+                if (currentZoom == ZOOM.OUT) { break; }
+                currentZoom = ZOOM.DEFAULT;
+                break;
+        }
+
+    }
+    //ズームアウトのボタンが押されたときに実行する関数
+    private void OnZoomOut(InputAction.CallbackContext context)
+    {
+        switch (context.phase)
+        {
+            //押しているとき
+            case InputActionPhase.Performed:
+                if(currentZoom == ZOOM.IN) { break; }
+                currentZoom = ZOOM.OUT;
+                zoomFlg = true;
+                break;
+            //離したとき
+            case InputActionPhase.Canceled:
+                if (currentZoom == ZOOM.IN) { break; }
+                currentZoom = ZOOM.DEFAULT;
+                break;
+        }
+
+    }
 
     //ズームインとズームアウトを決定動かす処理
-	private void ZoomInOut()
+    private void ZoomInOut()
 	{
-        switch(currentZoom)
-		{
-			case ZOOM.NORMAL:
-                if(zoom == ZOOM.IN)
-                {
-                    fov *= zoomIn;
-                    currentZoom = ZOOM.IN;
-                    break;
-                }
-                if (zoom == ZOOM.OUT)
-                {
-                    fov *= zoomOut;
-                    currentZoom = ZOOM.OUT;
-                    break;
-                }
-                break;
-
+        //視野角
+        if (!zoomObjChange)
+        {
+            switch (currentZoom)
+        {
             case ZOOM.IN:
-                if (zoom == ZOOM.OUT)
+                if(currentFov > fov * zoomIn)
                 {
-                    fov /= zoomIn;
-                    currentZoom = ZOOM.NORMAL;
-                    break;
+                    currentFov -= ((fov - zoomIn * fov) / (60.0f * zoomTime));
                 }
+                zoom = ZOOM.IN;
+                break;
+                
+            case ZOOM.OUT:
+                if (currentFov < fov * zoomOut)
+                {
+                    currentFov += ((zoomOut * fov - fov) / (60.0f * zoomTime));
+                }
+                zoom = ZOOM.OUT;
                 break;
 
-            case ZOOM.OUT:
+            case ZOOM.DEFAULT:
                 if (zoom == ZOOM.IN)
                 {
-                    fov /= zoomOut;
-                    currentZoom = ZOOM.NORMAL;
+                    if (currentFov < fov)
+                    {
+                        currentFov += ((fov - zoomIn * fov) / (60.0f * zoomRetTime));
+                    }
+                    else
+                    {
+                        zoomFlg = false;
+                    }
+                    break;
+                }
+                if (zoom == ZOOM.OUT)
+                {
+                    if (currentFov > fov)
+                    {
+                        currentFov -= ((zoomOut * fov - fov) / (60.0f * zoomRetTime));
+                    }
+                    else
+                    {
+                        zoomFlg = false;
+                    }
                     break;
                 }
                 break;
         }
+       
+            maincamera.fieldOfView = currentFov;
+        }
 
-        maincamera.fieldOfView = fov;
+        //距離
+        if (zoomObjChange)
+        {
+            switch (currentZoom)
+            {
+                case ZOOM.IN:
+                    if (currentFov > fov * zoomIn)
+                    {
+                        currentFov -= ((fov - zoomIn * fov) / (60.0f * zoomTime));
+                    }
+                    zoom = ZOOM.IN;
+                    break;
+
+                case ZOOM.OUT:
+                    if (currentFov < fov * zoomOut)
+                    {
+                        currentFov += ((zoomOut * fov - fov) / (60.0f * zoomTime));
+                    }
+                    zoom = ZOOM.OUT;
+                    break;
+
+                case ZOOM.DEFAULT:
+                    if (zoom == ZOOM.IN)
+                    {
+                        if (currentFov < fov)
+                        {
+                            currentFov += ((fov - zoomIn * fov) / (60.0f * zoomRetTime));
+                        }
+                        else
+                        {
+                            zoomFlg = false;
+                        }
+                        break;
+                    }
+                    if (zoom == ZOOM.OUT)
+                    {
+                        if (currentFov > fov)
+                        {
+                            currentFov -= ((zoomOut * fov - fov) / (60.0f * zoomRetTime));
+                        }
+                        else
+                        {
+                            zoomFlg = false;
+                        }
+                        break;
+                    }
+                    break;
+            }
+
+            cameraChild.localPosition = new Vector3 (0.0f,0.0f, -currentFov);
+        }
+
     }
 }

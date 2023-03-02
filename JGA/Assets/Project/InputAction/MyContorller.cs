@@ -229,6 +229,54 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Camera"",
+            ""id"": ""5830a41b-22b2-4985-9382-d3b671be56c8"",
+            ""actions"": [
+                {
+                    ""name"": ""ZoomIn"",
+                    ""type"": ""Button"",
+                    ""id"": ""0dca2704-aefd-449f-b16b-9b9906e18bab"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ZoomOut"",
+                    ""type"": ""Button"",
+                    ""id"": ""18196892-f38d-4de8-9549-913e65ad3802"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""fc84a5e1-3988-4620-86fe-1bb82429f449"",
+                    ""path"": ""<Keyboard>/i"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ZoomIn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c532e160-5849-41bd-8b59-fcb51866d608"",
+                    ""path"": ""<Keyboard>/o"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ZoomOut"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -240,6 +288,10 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
         m_Player_Hold = m_Player.FindAction("Hold", throwIfNotFound: true);
         m_Player_Call = m_Player.FindAction("Call", throwIfNotFound: true);
         m_Player_Hit = m_Player.FindAction("Hit", throwIfNotFound: true);
+        // Camera
+        m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
+        m_Camera_ZoomIn = m_Camera.FindAction("ZoomIn", throwIfNotFound: true);
+        m_Camera_ZoomOut = m_Camera.FindAction("ZoomOut", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -360,6 +412,47 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
         }
     }
     public PlayerActions @Player => new PlayerActions(this);
+
+    // Camera
+    private readonly InputActionMap m_Camera;
+    private ICameraActions m_CameraActionsCallbackInterface;
+    private readonly InputAction m_Camera_ZoomIn;
+    private readonly InputAction m_Camera_ZoomOut;
+    public struct CameraActions
+    {
+        private @MyContorller m_Wrapper;
+        public CameraActions(@MyContorller wrapper) { m_Wrapper = wrapper; }
+        public InputAction @ZoomIn => m_Wrapper.m_Camera_ZoomIn;
+        public InputAction @ZoomOut => m_Wrapper.m_Camera_ZoomOut;
+        public InputActionMap Get() { return m_Wrapper.m_Camera; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(CameraActions set) { return set.Get(); }
+        public void SetCallbacks(ICameraActions instance)
+        {
+            if (m_Wrapper.m_CameraActionsCallbackInterface != null)
+            {
+                @ZoomIn.started -= m_Wrapper.m_CameraActionsCallbackInterface.OnZoomIn;
+                @ZoomIn.performed -= m_Wrapper.m_CameraActionsCallbackInterface.OnZoomIn;
+                @ZoomIn.canceled -= m_Wrapper.m_CameraActionsCallbackInterface.OnZoomIn;
+                @ZoomOut.started -= m_Wrapper.m_CameraActionsCallbackInterface.OnZoomOut;
+                @ZoomOut.performed -= m_Wrapper.m_CameraActionsCallbackInterface.OnZoomOut;
+                @ZoomOut.canceled -= m_Wrapper.m_CameraActionsCallbackInterface.OnZoomOut;
+            }
+            m_Wrapper.m_CameraActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @ZoomIn.started += instance.OnZoomIn;
+                @ZoomIn.performed += instance.OnZoomIn;
+                @ZoomIn.canceled += instance.OnZoomIn;
+                @ZoomOut.started += instance.OnZoomOut;
+                @ZoomOut.performed += instance.OnZoomOut;
+                @ZoomOut.canceled += instance.OnZoomOut;
+            }
+        }
+    }
+    public CameraActions @Camera => new CameraActions(this);
     public interface IPlayerActions
     {
         void OnMove(InputAction.CallbackContext context);
@@ -367,5 +460,10 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
         void OnHold(InputAction.CallbackContext context);
         void OnCall(InputAction.CallbackContext context);
         void OnHit(InputAction.CallbackContext context);
+    }
+    public interface ICameraActions
+    {
+        void OnZoomIn(InputAction.CallbackContext context);
+        void OnZoomOut(InputAction.CallbackContext context);
     }
 }
