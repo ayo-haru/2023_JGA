@@ -28,6 +28,6 @@ public static class SceneLauncher
 	[MenuItem("Launcher/ProtoType", priority = 2)]
 	public static void OpeneProtoTypeScene()
 	{
-		EditorSceneManager.OpenScene("Assets/Project/Scenes/ProtoType.unity", OpenSceneMode.Single);
+		EditorSceneManager.OpenScene("Assets/Project/Scenes/ProtoType/ProtoType.unity", OpenSceneMode.Single);
 	}
 }
