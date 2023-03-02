@@ -1,7 +1,7 @@
 //=============================================================================
 // @File	: [CameraManager.cs]
-// @Brief	: 
-// @Author	: YOUR_NAME
+// @Brief	: メインカメラのクラス的なもの
+// @Author	: Fujiyama Riku
 // @Editer	: 
 // @Detail	: 
 // 

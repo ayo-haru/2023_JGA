@@ -2,7 +2,7 @@
 // @File	: [MainCamera.cs]
 // @Brief	: メインカメラの挙動
 // @Author	: Fujiyama Riku
-// @Editer	: Fujiyama Riku
+// @Editer	: 
 // @Detail	: 参考URL https://programming.sincoston.com/unity-camera-follow-player/
 //					　https://nekojara.city/unity-smooth-damp
 //					  
