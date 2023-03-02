@@ -2,7 +2,7 @@
 // @File	: [MySceneManager]
 // @Brief	: オリジナルのシーンマネージャー
 // @Author	: Yoshihara Asuka
-// @Editer	: 
+// @Editer	: Ichida Mai
 // @Detail  : 
 // 
 // [Date]
@@ -12,11 +12,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MySceneManager : MonoBehaviour
-{
-    private void Awake()
-    {
+public class MySceneManager : SingletonMonoBehaviour<MySceneManager> {
+    protected override bool dontDestroyOnLoad { get { return true; } }
+
+
+    public static class GameData {
+        public static PrefabContainer characterDatas;
+    }
+
+
+    private void Awake() {
         Application.targetFrameRate = 60;       // FPSを60に固定
+        GameData.characterDatas = AddressableLoader<PrefabContainer>.Load("CharacterData");
+    }
+
+    private void Start() {
     }
 
 }
