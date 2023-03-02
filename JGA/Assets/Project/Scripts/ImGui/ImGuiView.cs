@@ -33,10 +33,13 @@ using Matrix4x4 = UnityEngine.Matrix4x4;
 
 namespace UImGui
 {
-	public class ImGuiTest : MonoBehaviour
+	public class ImGuiView : MonoBehaviour
 	{
 		[SerializeField]
 		private bool bMode;
+
+		[SerializeField]
+		private UImGui uImGui;
 
 #if !UIMGUI_REMOVE_IMPLOT
 		private Vector4 _myColor;
@@ -50,6 +53,7 @@ namespace UImGui
 		[SerializeField]
 		private bool bShowInspector;
 
+
 		private Camera mainCamera;
 		private GameObject SelectObj;
 		private string ObjectName;
@@ -60,12 +64,34 @@ namespace UImGui
 		private OPERATION mCurrentGizmoOperation = OPERATION.TRANSLATE;
 		private ImGuizmoNET.MODE mCurrentGizmoMode = ImGuizmoNET.MODE.LOCAL;
 
+		/*unsafe*/
+		public void AddIconFont(ImGuiIOPtr io)
+		{
+			//// @Application.dataPath => "... JGA\Assets"
+			//string path = $"{Application.dataPath}\\Project\\Private\\SakaiRyotaro\\{FontAwesome6.FontIconFileNameFAR}";
+			//int[] icons = { FontAwesome6.IconMin, FontAwesome6.IconMax, 0 };
+			//ImFontConfig fontConfig = default;
+			//ImFontConfigPtr fontConfigPtr = new ImFontConfigPtr(&fontConfig);
+			//fontConfigPtr.OversampleH = fontConfigPtr.OversampleV = 1;
+			//fontConfigPtr.MergeMode = true;
+			//fontConfigPtr.FontBuilderFlags |= (uint)ImGuiFreeTypeBuilderFlags.LoadColor;
+			//io.Fonts.AddFontDefault(fontConfigPtr);
+			//ImFontPtr font;
+			//fixed (void* iconsPtr = icons)
+			//	font = io.Fonts.AddFontFromFileTTF(path, 16.0f, fontConfigPtr, (IntPtr)iconsPtr);
+			//io.Fonts.Build();
+		}
+
 		/// <summary>
 		/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
 		/// </summary>
 		void Awake()
 		{
-			mainCamera = Camera.main;
+			if (mainCamera != null)
+				mainCamera = Camera.main;
+
+			uImGui.SetCamera(mainCamera);
+
 			GetGameObject();
 		}
 
@@ -143,7 +169,10 @@ namespace UImGui
 					if (ImGui.MenuItem("Inspector", null, bShowInspector)) { bShowInspector = !bShowInspector; }
 					ImGui.EndMenu();
 				}
-
+				if (ImGui.BeginMenu(IconFonts.FontAwesome6.Fish))
+				{
+					ImGui.EndMenu();
+				}
 
 				ImGui.EndMainMenuBar();
 			}
@@ -407,8 +436,10 @@ namespace UImGui
 					ImGuiWindowFlags.NoNav;
 				ImGui.SetNextWindowBgAlpha(0.35f); // Transparent background
 				bool b = true;
-				if (ImGui.Begin("Example: Simple overlay", ref b, window_flags))
+				if (ImGui.Begin("GizmoTools", ref b, window_flags))
 				{
+					ImGui.Text($"GizmoTools");
+
 					if (ImGui.Button("T"))
 						mCurrentGizmoOperation = ImGuizmoNET.OPERATION.TRANSLATE;
 					ImGui.SameLine();
