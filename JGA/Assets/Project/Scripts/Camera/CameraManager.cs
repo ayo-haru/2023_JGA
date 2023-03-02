@@ -67,6 +67,7 @@ public class CameraManager : MonoBehaviour
             camera.fieldOfView = parameter.fieldOfView;
             camera.transform.localPosition = parameter.offsetPosition;
             camera.transform.localEulerAngles = parameter.offsetAngles;
+
         }
     }
     
