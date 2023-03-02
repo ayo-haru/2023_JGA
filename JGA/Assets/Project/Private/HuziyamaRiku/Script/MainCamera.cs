@@ -18,17 +18,27 @@ using UnityEngine;
 
 public class MainCamera : MonoBehaviour
 {
-	//プレイヤー追従用のプレイヤー取得
-	private GameObject playerobj;
+    enum ZOOM
+    {
+        NORMAL = 0,
+        IN,
+        OUT,
+    }
+
+    ZOOM zoom = ZOOM.NORMAL;
+    ZOOM currentZoom = ZOOM.NORMAL;
+
+    //プレイヤー追従用のプレイヤー取得
+    private GameObject playerobj;
 	//メインカメラ格納用
 	private Camera maincamera;
 	//カメラとプレイヤーの座標の初期
 	private Vector3 offset;
-	//FOV格納用
-	private float _fov;
+	//初期FOV格納用
+	private float fov;
 
-	//カメラの情報受け取り用
-	private CameraManager cameraObj;
+    //カメラの情報受け取り用
+    private CameraManager cameraObj;
 	//カメラの全体のparameter格納用
 	private CameraParameter cameraParamater;
 	//座標角度格納用
@@ -40,6 +50,10 @@ public class MainCamera : MonoBehaviour
     [SerializeField] private float smoothTime = 0.1f;
     [Header("最高速度")]
     [SerializeField] private float maxSpeed = 10.0f;
+    [Header("ズームイン倍率")]
+    [SerializeField] private float zoomIn = 0.1f;
+    [Header("ズームアウト倍率")]
+    [SerializeField] private float zoomOut = 0.1f;
 
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -62,7 +76,7 @@ public class MainCamera : MonoBehaviour
 	void Start()
 	{
         offset = maincamera.transform.position - playerobj.transform.position;
-		_fov = maincamera.fieldOfView;
+		fov = maincamera.fieldOfView;
     }
 
 	/// <summary>
@@ -70,15 +84,24 @@ public class MainCamera : MonoBehaviour
 	/// </summary>
 	void FixedUpdate()
 	{
-		
-	}
+        CameraMove();
+    }
 
 	/// <summary>
 	/// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
 	/// </summary>
 	void Update()
 	{
-		CameraMove();
+        if (Input.GetKeyUp(KeyCode.F1))
+        {
+            zoom = ZOOM.IN;
+            ZoomInOut();
+        }
+        if (Input.GetKeyUp(KeyCode.F2))
+        {
+            zoom = ZOOM.OUT;
+            ZoomInOut();
+        }
     }
     
     /// <summary>
@@ -93,5 +116,45 @@ public class MainCamera : MonoBehaviour
 														   ref currentVelocity,
                                                            smoothTime,
 														   maxSpeed); 
+    }
+
+	private void ZoomInOut()
+	{
+        switch(currentZoom)
+		{
+			case ZOOM.NORMAL:
+                if(zoom == ZOOM.IN)
+                {
+                    fov *= zoomIn;
+                    currentZoom = ZOOM.IN;
+                    break;
+                }
+                if (zoom == ZOOM.OUT)
+                {
+                    fov *= zoomOut;
+                    currentZoom = ZOOM.OUT;
+                    break;
+                }
+                break;
+
+            case ZOOM.IN:
+                if (zoom == ZOOM.OUT)
+                {
+                    fov /= zoomIn;
+                    currentZoom = ZOOM.NORMAL;
+                    break;
+                }
+                break;
+
+            case ZOOM.OUT:
+                if (zoom == ZOOM.IN)
+                {
+                    fov /= zoomOut;
+                    currentZoom = ZOOM.NORMAL;
+                    break;
+                }
+                break;
+        }
+        maincamera.fieldOfView = fov;
     }
 }
