@@ -489,6 +489,14 @@ namespace UImGui
 						mCurrentGizmoOperation = ImGuizmoNET.OPERATION.SCALE;
 
 
+					if (ImGui.Button("LOCAL"))
+						mCurrentGizmoMode = MODE.LOCAL;
+					ImGui.SameLine();
+
+					if (ImGui.Button("WORLD"))
+						mCurrentGizmoMode = MODE.WORLD;
+
+
 					//ImGui.Text($"Simple overlay\nin the corner of the screen.\n(right-click to change position)");
 					//if (ImGui.BeginPopupContextWindow())
 					//{
@@ -514,7 +522,7 @@ namespace UImGui
 			Matrix4x4 matrix = gameObject.transform.localToWorldMatrix;
 			Matrix4x4 view = mainCamera.worldToCameraMatrix;
 			Matrix4x4 projection = mainCamera.projectionMatrix;
-
+			Matrix4x4 origin = Matrix4x4.zero;
 
 			//Vector3 matrixTranslation, matrixRotation, matrixScale;
 			//ImGuizmo.DecomposeMatrixToComponents(ref matrix.m00, ref matrixTranslation, ref matrixRotation, ref matrixScale);
@@ -528,8 +536,8 @@ namespace UImGui
 			//ImGuizmoNET.ImGuizmo.DrawCubes(ref view.m00, ref projection.m00, ref matrix.m00, 1); //(Debug)
 
 			//--- Gizmo本体
-			ImGuizmo.Manipulate(ref view.m00, ref projection.m00, mCurrentGizmoOperation, mCurrentGizmoMode, ref matrix.m00);
-			//ImGuizmo.DrawGrid(ref view.m00, ref projection.m00, ref matrix.m00, 50f);
+			if (ImGuizmo.Manipulate(ref view.m00, ref projection.m00, mCurrentGizmoOperation, mCurrentGizmoMode, ref matrix.m00))
+				ImGuizmo.DrawGrid(ref view.m00, ref projection.m00, ref origin.m00, 50f);
 
 
 			//--- 右上のカメラの角度ビュー
