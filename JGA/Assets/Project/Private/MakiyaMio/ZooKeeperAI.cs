@@ -32,7 +32,7 @@ public class ZooKeeperAI : MonoBehaviour
     private NavMeshAgent navMesh;
     private RaycastHit rayhit;
 
-    public static bool flg = false;
+    [SerializeField] private List<Transform> resetPos;  // 元に戻す位置
 
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -91,6 +91,8 @@ public class ZooKeeperAI : MonoBehaviour
     /// </summary>
     private void OnTriggerStay(Collider other)
     {
+        #region ペンギン
+        // ペンギンとの当たり判定
         if (other.CompareTag("Player"))
         {
             var diff = player.transform.position - transform.position;  // 差分
@@ -113,5 +115,6 @@ public class ZooKeeperAI : MonoBehaviour
                 }
             }
         }
+        #endregion
     }
 }

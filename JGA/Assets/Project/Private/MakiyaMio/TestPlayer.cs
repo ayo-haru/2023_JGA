@@ -49,7 +49,6 @@ public class TestPlayer : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             Instantiate(obj, transform.position, Quaternion.identity);
-            ZooKeeperAI.flg = true;
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
