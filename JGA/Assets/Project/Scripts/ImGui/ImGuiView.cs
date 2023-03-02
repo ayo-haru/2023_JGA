@@ -24,6 +24,7 @@ using System;
 using ImGuizmoNET;
 #endif
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
@@ -182,9 +183,9 @@ namespace UImGui
 
 
 			// ヒエラルキービュー
-			if (bShowHierarchy)
+			//if (bShowHierarchy)
 			{
-				ImGui.Begin("Hierarchy", ref _isOpen, ImGuiWindowFlags.MenuBar);
+				ImGui.Begin("Hierarchy", ref bShowHierarchy, ImGuiWindowFlags.MenuBar);
 				{
 					// メニューバー
 					//if (ImGui.BeginMenuBar())
@@ -208,10 +209,10 @@ namespace UImGui
 				ImGui.End();
 			}
 
-			if (bShowInspector)
+			//if (bShowInspector)
 			{
 				// インスペクタビュー
-				ImGui.Begin("Inspector", ref _isOpen, ImGuiWindowFlags.MenuBar);
+				ImGui.Begin("Inspector", ref bShowInspector, ImGuiWindowFlags.MenuBar);
 				{
 					if (SelectObj != null)
 					{
@@ -226,12 +227,23 @@ namespace UImGui
 						if (ImGui.InputText($"##ObjectName", ref ObjectName, uint.MaxValue, ImGuiInputTextFlags.AlwaysOverwrite))
 							SelectObj.name = ObjectName;
 
-						//--- Tag  https://baba-s.hatenablog.com/entry/2014/02/25/000000
-						int Tag = 0;
-						string[] Tags = { $"{SelectObj.tag}" };
-						ImGui.PushItemWidth(-ImGui.GetContentRegionAvail().x * 0.5f);
-						ImGui.Combo("Tag", ref Tag, Tags, Tags.Length);
-						ImGui.PopItemWidth();
+						//--- Tag
+						{
+							int Tag = 0;
+
+							string[] Tags = new string[UnityEditorInternal.InternalEditorUtility.tags.Length];
+							for (int i = 0; i < UnityEditorInternal.InternalEditorUtility.tags.Length; i++)
+							{
+								Tags[i] = UnityEditorInternal.InternalEditorUtility.tags[i];
+								if (Tags[i].Contains(SelectObj.tag))
+									Tag = i;
+							}
+
+							ImGui.PushItemWidth(-ImGui.GetContentRegionAvail().x * 0.5f);
+							if (ImGui.Combo("Tag", ref Tag, Tags, Tags.Length))
+								SelectObj.tag = Tags[Tag];
+							ImGui.PopItemWidth();
+						}
 
 
 						ImGui.SameLine();   // 改行しない
@@ -336,18 +348,11 @@ namespace UImGui
 		private void GetGameObject()
 		{
 			gameObjects.Clear();
-
 			foreach (GameObject obj in UnityEngine.Resources.FindObjectsOfTypeAll(typeof(GameObject)))
 			{
-				// アセットからパスを取得.シーン上に存在するオブジェクトの場合,シーンファイル（.unity）のパスを取得.
-				string path = AssetDatabase.GetAssetOrScenePath(obj);
-				// シーン上に存在するオブジェクトかどうか文字列で判定.
-				bool isScene = path.Contains(".unity");
-				// シーン上に存在するオブジェクトならば処理.
-				if (isScene)
-				{
-					gameObjects.Add(obj);       // 最後
-				}
+				if (obj.scene.name == null || obj.scene.name.Contains($"CustomLightsScene-SceneView"))
+					continue;
+				gameObjects.Add(obj);       // 最後
 			}
 		}
 
@@ -355,6 +360,7 @@ namespace UImGui
 		private void CreateHierarchy(List<GameObject> Objs)
 		{
 			List<GameObject> Hierarchy = new List<GameObject>();
+			Scene current = SceneManager.GetActiveScene();
 
 			for (int i = 0; i < Objs.Count; i++)
 			{
@@ -364,12 +370,29 @@ namespace UImGui
 				}
 			}
 
-			for (int i = 0; i < Hierarchy.Count; i++)
+			while (Hierarchy.Count > 0)
 			{
-				if (Hierarchy[i].name == "AdaptivePerformanceManager")
-					continue;
+				bool open = ImGui.CollapsingHeader($"{current.name}", ImGuiTreeNodeFlags.DefaultOpen);
+				{
+					for (int i = 0; i < Hierarchy.Count; i++)
+					{
+						if (Hierarchy[i].scene != current)
+							continue;
+						if (Hierarchy[i].name == "AdaptivePerformanceManager")
+							continue;
 
-				GetChild(Hierarchy[i].transform);
+						if (open)
+							GetChild(Hierarchy[i].transform);
+
+						Hierarchy[i] = null;
+					}
+					Hierarchy.RemoveAll(x => x == null);
+				}
+
+				if (Hierarchy.Count > 0)
+				{
+					current = Hierarchy[0].scene;
+				}
 			}
 		}
 
