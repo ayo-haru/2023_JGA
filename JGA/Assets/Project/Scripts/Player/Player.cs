@@ -42,6 +42,9 @@ public class Player : MonoBehaviour
 		if (rb == null)
 			rb = GetComponent<Rigidbody>();
 
+		// 回転固定
+		rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+
 		if (audioSource == null)
 			audioSource = GetComponent<AudioSource>();
 
@@ -75,7 +78,8 @@ public class Player : MonoBehaviour
 	{
 		// 制限速度内の場合、移動方向の力を与える
 		if (rb.velocity.magnitude < maxSpeed * (isRun ? runMagnification : 1))
-			rb.AddForce(new Vector3(moveInputValue.x, 0, moveInputValue.y) * moveForce * (isRun ? runMagnification : 1));
+			//rb.AddForce(new Vector3(moveInputValue.x, 0, moveInputValue.y) * moveForce * (isRun ? runMagnification : 1));
+			rb.velocity = new Vector3(moveInputValue.x, 0, moveInputValue.y) * moveForce * (isRun ? runMagnification : 1);
 
 		// 進行方向に向かって回転する
 		if (moveInputValue.normalized != Vector2.zero)
@@ -91,6 +95,13 @@ public class Player : MonoBehaviour
 		}
 
 
+	}
+
+	private void Update()
+	{
+		//// 制限速度内の場合、移動方向の力を与える
+		//if (rb.velocity.magnitude < maxSpeed * (isRun ? runMagnification : 1))
+		//	rb.velocity = new Vector3(moveInputValue.x, 0, moveInputValue.y) * moveForce * (isRun ? runMagnification : 1);
 	}
 
 	/// <summary>
