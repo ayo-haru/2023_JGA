@@ -2,11 +2,12 @@
 // @File	: [StateAttention.cs]
 // @Brief	: 注目中の処理
 // @Author	: Ogusu Yuuko
-// @Editer	: 
+// @Editer	: Ogusu Yuuko
 // @Detail	: 
 // 
 // [Date]
 // 2023/03/02	スクリプト作成
+// 2023/03/03	(小楠)終了処理追加　UI追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -19,6 +20,8 @@ public class StateAttention : AIState
     [SerializeField] private Transform target;
     //回転速度
     [SerializeField,Min(1)] private float rotSpeed = 2.0f;
+    //感情UI
+    [SerializeField] private EmosionUI ui;
 
     private NavMeshAgent agent;
 
@@ -60,6 +63,7 @@ public class StateAttention : AIState
         agent.speed = 0.0f;
 
         //注目中のUIを表示
+        ui.SetEmotion(EEmotion.ATTENSION);
     }
 
     public override void UpdateState()
@@ -68,5 +72,10 @@ public class StateAttention : AIState
         Quaternion rot = Quaternion.LookRotation(target.position - transform.position);
         rot = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * rotSpeed);
         transform.rotation = rot;
+    }
+
+    public override void FinState()
+    {
+        ui.SetEmotion(EEmotion.NONE);
     }
 }

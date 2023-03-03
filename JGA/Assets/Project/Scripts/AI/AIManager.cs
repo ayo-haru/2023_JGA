@@ -8,6 +8,7 @@
 // [Date]
 // 2023/02/27	スクリプト作成
 // 2023/03/02	(小楠)客用のデータ持たせた
+// 2023/03/03	(小楠)ステートの終了処理追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -85,9 +86,14 @@ public class AIManager : MonoBehaviour
     /// <param name="nextState"></param>
     private void ChangeState(EAIState nextState)
     {
+        //ステートの終了処理
+        nodeList[currentState].state.FinState();
+        //ノード切り替え
         int next = GetNodeToState(nextState);
         if (next >= 0) currentState = next;
+        //ステート初期化処理
         if (nodeList[currentState].state) nodeList[currentState].state.InitState();
+        //遷移条件初期化処理
         for(int i = 0; i < nodeList[currentState].transitions.Count; ++i)
         {
             nodeList[currentState].transitions[i].toNodeTransition.InitTransition();
