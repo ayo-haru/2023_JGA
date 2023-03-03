@@ -11,6 +11,7 @@
 // [Date]
 // 2023/02/27	スクリプト作成
 // 2023/02/28	遅延作成
+// 2023/03/02   ズームの処理作成(切替対応済み)
 //=============================================================================ya
 using System.Collections;
 using System.Collections.Generic;
@@ -36,6 +37,8 @@ public class MainCamera : MonoBehaviour
 
     //プレイヤー追従用のプレイヤー取得
     private GameObject playerobj;
+    //プレイヤーの座標変更取得
+    private Vector3 currentPlayerPos;
 	//カメラとプレイヤーの座標の初期
 	private Vector3 offset;
 	//初期FOV格納用
@@ -44,7 +47,7 @@ public class MainCamera : MonoBehaviour
     private float currentFov;
 
     //イージング実行中の現在の割合
-    //private float easingRate;
+    private float easingRate;
     //ズームインアウトの実行中フラグ
     private bool zoomFlg;
 
@@ -63,12 +66,13 @@ public class MainCamera : MonoBehaviour
     [SerializeField] private float smoothTime = 0.1f;
     [Header("最高速度")]
     [SerializeField] private float maxSpeed = 10.0f;
+    [Header("カメラ移動のイージング設定")]
+    [SerializeField] private AnimationCurve moveCurve = null;
+
     [Header("ズームイン倍率")]
     [SerializeField] private float zoomIn = 0.1f;
     [Header("ズームアウト倍率")]
     [SerializeField] private float zoomOut = 0.1f;
-    //[Header("ズームイン、アウトのイージング設定")]
-    //[SerializeField] private AnimationCurve zoomCurve = null;
     [Header("ズームイン、アウトの時間")]
     [SerializeField] private float zoomTime = 1.0f;
     [Header("ズームから戻ってくる時間")]
@@ -122,6 +126,10 @@ public class MainCamera : MonoBehaviour
             fov = -cameraChild.transform.localPosition.z;
             currentFov = -cameraChild.transform.localPosition.z;
         }
+        //イージング用の時間
+        easingRate = 0.0f;
+        //プレイヤーの座標保存
+        currentPlayerPos = playerobj.transform.position;
     }
 
 	/// <summary>
@@ -150,13 +158,28 @@ public class MainCamera : MonoBehaviour
     private void CameraMove()
 	{
         //カメラの座標の更新
-		var targetpos = playerobj.transform.position + offset;
+        var targetpos = playerobj.transform.position + offset;
+        //if (currentPlayerPos != playerobj.transform.position)
+        //{
+        //    easingRate += Time.deltaTime;
+        //    if (easingRate <= 1.0f)
+        //    {
+        //        cameraParent.transform.position = 
+        //            Vector3.Lerp(cameraParent.transform.position, targetpos, moveCurve.Evaluate(easingRate));
+        //    }
+
+        //}
+        //currentPlayerPos = playerobj.transform.position;
+
         var currentVelocity = new Vector3();
+
+
         cameraParent.transform.position = Vector3.SmoothDamp(cameraParent.transform.position,
-														   targetpos,
-														   ref currentVelocity,
+                                                            targetpos,
+                                                           ref currentVelocity,
                                                            smoothTime,
-														   maxSpeed); 
+                                                           maxSpeed);
+
     }
     //ズームインのボタンが押されたときに実行する関数
     private void OnZoomIn(InputAction.CallbackContext context)
