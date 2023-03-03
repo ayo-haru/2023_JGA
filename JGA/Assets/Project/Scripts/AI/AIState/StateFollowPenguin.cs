@@ -9,6 +9,7 @@
 // 2023/02/27	スクリプト作成
 // 2023/02/28	(小楠)ペンギンと一定距離保てるようにした
 // 2023/03/02	(小楠）データの取得方法変更
+// 2023/03/03	(小楠）UI追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ public class StateFollowPenguin : AIState
     //ペンギンのTransform
     [SerializeField] private Transform target;
     private NavMeshAgent agent;
-
+    [SerializeField] private EmosionUI ui;
     private GuestData data;
 
     /// <summary>
@@ -28,8 +29,7 @@ public class StateFollowPenguin : AIState
     /// </summary>
     void Awake()
 	{
-        agent = GetComponent<NavMeshAgent>();
-        data = GetComponent<AIManager>().GetGuestData();
+
     }
 
 	/// <summary>
@@ -58,9 +58,12 @@ public class StateFollowPenguin : AIState
 
     public override void InitState()
     {
-        if (!agent) GetComponent<NavMeshAgent>();
+        if (!agent) agent = GetComponent<NavMeshAgent>();
+        if (!data) data = GetComponent<AIManager>().GetGuestData();
         agent.SetDestination(target.position);
         agent.speed = data.speed;
+
+        ui.SetEmotion(EEmotion.ENJOY);
     }
 
     public override void UpdateState()
@@ -69,5 +72,10 @@ public class StateFollowPenguin : AIState
         agent.speed = (agent.remainingDistance < data.distance) ? 0.0f : data.speed;
 
         agent.SetDestination(target.position);
+    }
+
+    public override void FinState()
+    {
+        ui.SetEmotion(EEmotion.NONE);
     }
 }

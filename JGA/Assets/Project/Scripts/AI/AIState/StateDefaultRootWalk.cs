@@ -8,6 +8,7 @@
 // [Date]
 // 2023/02/28	スクリプト作成
 // 2023/03/02	(小楠）データの取得方法変更
+// 2023/03/03	(小楠）終了処理追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -32,8 +33,6 @@ public class StateDefaultRootWalk : AIState
     /// </summary>
     void Awake()
 	{
-        agent = GetComponent<NavMeshAgent>();
-        data = GetComponent<AIManager>().GetGuestData();
     }
 
 	/// <summary>
@@ -63,6 +62,7 @@ public class StateDefaultRootWalk : AIState
     public override void InitState()
     {
         if (!agent) agent = GetComponent<NavMeshAgent>();
+        if (!data) data = GetComponent<AIManager>().GetGuestData();
         agent.SetDestination(targetList[targetNum].position);
         agent.speed = data.speed;
         fTimer = 0.0f;
@@ -87,6 +87,11 @@ public class StateDefaultRootWalk : AIState
                 ChangeTarget();
             }
         }
+    }
+
+    public override void FinState()
+    {
+        //特になし
     }
     /// <summary>
     /// 目的地の変更

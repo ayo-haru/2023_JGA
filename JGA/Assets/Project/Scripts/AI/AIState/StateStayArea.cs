@@ -2,11 +2,12 @@
 // @File	: [StateStayArea.cs]
 // @Brief	: 指定エリアで待機
 // @Author	: Ogusu Yuuko
-// @Editer	: 
+// @Editer	: Ogusu Yuuko
 // @Detail	: 
 // 
 // [Date]
 // 2023/03/02	スクリプト作成
+// 2023/03/03	(小楠)終了処理追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -25,8 +26,6 @@ public class StateStayArea : AIState
 	/// </summary>
 	void Awake()
 	{
-        agent = GetComponent<NavMeshAgent>();
-        data = GetComponent<AIManager>().GetGuestData();
 	}
 
 	/// <summary>
@@ -55,7 +54,8 @@ public class StateStayArea : AIState
 
     public override void InitState()
     {
-        if (!agent) GetComponent<NavMeshAgent>();
+        if (!agent) agent = GetComponent<NavMeshAgent>();
+        if (!data) data = GetComponent<AIManager>().GetGuestData();
         agent.SetDestination(target.position);
         agent.speed = data.speed;
         isStay = false;
@@ -77,5 +77,10 @@ public class StateStayArea : AIState
             isStay = true;
 
         }
+    }
+
+    public override void FinState()
+    {
+        //特になし
     }
 }

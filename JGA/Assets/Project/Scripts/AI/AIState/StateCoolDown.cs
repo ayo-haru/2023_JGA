@@ -2,11 +2,12 @@
 // @File	: [StateCoolDown.cs]
 // @Brief	: ペンギンから離れそうなときの処理
 // @Author	: Ogusu Yuuko
-// @Editer	: 
+// @Editer	: Ogusu Yuuko
 // @Detail	: 
 // 
 // [Date]
 // 2023/03/03	スクリプト作成
+// 2023/03/03	(小楠)UI追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ public class StateCoolDown : AIState
     [SerializeField,Min(1)] private float rotSpeed = 1.0f;
     [SerializeField] private Transform target;
     private NavMeshAgent agent;
+    [SerializeField] private EmosionUI ui;
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -57,6 +59,7 @@ public class StateCoolDown : AIState
         agent.speed = 0.0f;
 
         //???のアイコンを出す
+        ui.SetEmotion(EEmotion.QUESTION);
     }
 
     public override void UpdateState()
@@ -69,5 +72,10 @@ public class StateCoolDown : AIState
 
         //プレイヤーから離れる
         agent.velocity = dir.normalized;
+    }
+
+    public override void FinState()
+    {
+        ui.SetEmotion(EEmotion.NONE);
     }
 }
