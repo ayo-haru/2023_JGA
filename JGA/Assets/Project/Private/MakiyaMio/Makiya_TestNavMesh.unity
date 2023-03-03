@@ -362,7 +362,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 249393686}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7.95, y: -1, z: -8.36}
+  m_LocalPosition: {x: 7.95, y: -1, z: -7.91}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -549,7 +549,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 402403766}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8.52, y: 0, z: -2.6799998}
+  m_LocalPosition: {x: 8.58, y: 0, z: -2.6799998}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -891,7 +891,7 @@ GameObject:
   m_Component:
   - component: {fileID: 858469255}
   m_Layer: 0
-  m_Name: resetObj
+  m_Name: kanban1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1037,7 +1037,6 @@ GameObject:
   - component: {fileID: 1130583470}
   - component: {fileID: 1130583473}
   - component: {fileID: 1130583472}
-  - component: {fileID: 1130583471}
   m_Layer: 0
   m_Name: Dolphin
   m_TagString: Untagged
@@ -1060,19 +1059,6 @@ Transform:
   m_Father: {fileID: 1462224906}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1130583471
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1130583469}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1130583472
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1174,7 +1160,6 @@ GameObject:
   - component: {fileID: 1531753882}
   - component: {fileID: 1531753885}
   - component: {fileID: 1531753884}
-  - component: {fileID: 1531753883}
   m_Layer: 0
   m_Name: Fish
   m_TagString: Untagged
@@ -1197,19 +1182,6 @@ Transform:
   m_Father: {fileID: 1462224906}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1531753883
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1531753881}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1531753884
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1271,7 +1243,6 @@ GameObject:
   - component: {fileID: 1631605979}
   - component: {fileID: 1631605982}
   - component: {fileID: 1631605981}
-  - component: {fileID: 1631605980}
   m_Layer: 0
   m_Name: Penguin
   m_TagString: Untagged
@@ -1294,19 +1265,6 @@ Transform:
   m_Father: {fileID: 1462224906}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1631605980
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1631605978}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1631605981
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1369,8 +1327,8 @@ GameObject:
   - component: {fileID: 1826462019}
   - component: {fileID: 1826462018}
   - component: {fileID: 1826462017}
-  - component: {fileID: 1826462022}
   - component: {fileID: 1826462023}
+  - component: {fileID: 1826462024}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1386,7 +1344,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1826462016}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -1456,22 +1414,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &1826462022
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1826462016}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!114 &1826462023
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1485,7 +1427,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
-  obj: {fileID: 3736681987764936628, guid: 520c11b725c77904cbd3d5810350bb30, type: 3}
+  obj: {fileID: 6285235501975028921, guid: 1396f98f3ca68a341bf4d8e070bbe3a2, type: 3}
+--- !u!54 &1826462024
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1826462016}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 4
+  m_CollisionDetection: 0
 --- !u!1 &2074618081
 GameObject:
   m_ObjectHideFlags: 0
@@ -1497,7 +1455,6 @@ GameObject:
   - component: {fileID: 2074618082}
   - component: {fileID: 2074618085}
   - component: {fileID: 2074618084}
-  - component: {fileID: 2074618083}
   m_Layer: 0
   m_Name: Bare
   m_TagString: Untagged
@@ -1520,19 +1477,6 @@ Transform:
   m_Father: {fileID: 1462224906}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &2074618083
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2074618081}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &2074618084
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1598,6 +1542,7 @@ GameObject:
   - component: {fileID: 2091774993}
   - component: {fileID: 2091774994}
   - component: {fileID: 2091774995}
+  - component: {fileID: 2091774996}
   m_Layer: 0
   m_Name: ZooKeeperAI
   m_TagString: Untagged
@@ -1703,7 +1648,7 @@ MonoBehaviour:
   - {fileID: 1130583470}
   - {fileID: 1531753882}
   speed: 1.1
-  search: 1.5
+  search: 2
   resetPos:
   - {fileID: 858469255}
 --- !u!195 &2091774994
@@ -1741,3 +1686,19 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &2091774996
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2091774988}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 4
+  m_CollisionDetection: 0

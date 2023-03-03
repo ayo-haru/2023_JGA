@@ -16,6 +16,8 @@ public class TestPlayer : MonoBehaviour
 {
     public float speed = 3.0f;
     [SerializeField] private GameObject obj;
+    private GameObject gimmickObj;
+    public static List<GameObject> gimmickList = new List<GameObject>();
 
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -48,13 +50,17 @@ public class TestPlayer : MonoBehaviour
 	{
         if (Input.GetKeyDown(KeyCode.E))
         {
-            Instantiate(obj, transform.position, Quaternion.identity);
+            gimmickObj = Instantiate(obj, transform.position, Quaternion.identity);
+            gimmickList.Add(gimmickObj);
+            int i = 0;
+            gimmickObj.name = "kanban" + i;
+            i++;
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
             // オブジェクト削除
-            GameObject g = GameObject.Find("kanban(Clone)");
-            Destroy(g);
+            //GameObject g = GameObject.Find("Cube(Clone)");
+            //Destroy(g);
         }
         if (Input.GetKey(KeyCode.W))
         {
