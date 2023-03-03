@@ -13,7 +13,6 @@ using ImGuiNET;
 #if !UIMGUI_REMOVE_IMPLOT
 using System.Linq;
 using System.Collections.Generic;
-using UnityEditor;
 using Unity.VisualScripting;
 using System.Reflection;
 using System;
@@ -23,6 +22,10 @@ using ImGuizmoNET;
 #endif
 using UnityEngine;
 using UnityEngine.SceneManagement;
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditorInternal;
+#endif
 
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
@@ -53,9 +56,18 @@ namespace UImGui
 		private bool bShowInspector;
 
 
+		[SerializeField]
+		private bool bGridDraw;
+
+
+
+
+
 		private Camera mainCamera;
 		private GameObject SelectObj;
-		private string ObjectName;
+		private string SelectName;
+		private Rigidbody SelectRb;
+		private Collider SelectColl;
 
 		[SerializeField]
 		private List<GameObject> gameObjects = new List<GameObject>();
@@ -161,11 +173,18 @@ namespace UImGui
 					if (ImGui.MenuItem("Debug View Exit", "Shift+F12")) { bMode = false; }
 					ImGui.EndMenu();
 				}
-				if (ImGui.BeginMenu("Window"))
+				if (ImGui.BeginMenu("Option"))
 				{
-					if (ImGui.MenuItem("Demo", null, bShowDemoWindow)) { bShowDemoWindow = !bShowDemoWindow; }
-					if (ImGui.MenuItem("Hierarchy", null, bShowHierarchy)) { bShowHierarchy = !bShowHierarchy; }
-					if (ImGui.MenuItem("Inspector", null, bShowInspector)) { bShowInspector = !bShowInspector; }
+					if (ImGui.BeginMenu("Window"))
+					{
+						if (ImGui.MenuItem("Demo", null, bShowDemoWindow)) { bShowDemoWindow = !bShowDemoWindow; }
+						if (ImGui.MenuItem("Hierarchy", null, bShowHierarchy)) { bShowHierarchy = !bShowHierarchy; }
+						if (ImGui.MenuItem("Inspector", null, bShowInspector)) { bShowInspector = !bShowInspector; }
+						ImGui.EndMenu();
+					}
+					if (ImGui.MenuItem("Draw Grid", null, bGridDraw)) { bGridDraw = !bGridDraw; }
+
+
 					ImGui.EndMenu();
 				}
 				if (ImGui.BeginMenu(IconFonts.FontAwesome6.Fish))
@@ -230,45 +249,21 @@ namespace UImGui
 						ImGui.SameLine();   // 改行しない
 
 						//--- Name
-						if (ImGui.InputText($"##ObjectName", ref ObjectName, uint.MaxValue, ImGuiInputTextFlags.AlwaysOverwrite))
-							SelectObj.name = ObjectName;
+						if (ImGui.InputText($"##ObjectName", ref SelectName, uint.MaxValue, ImGuiInputTextFlags.AlwaysOverwrite))
+							SelectObj.name = SelectName;
 
 						//--- Tag
-						{
-							int Tag = 0;
-
-							string[] Tags = UnityEditorInternal.InternalEditorUtility.tags;
-							for (int i = 0; i < Tags.Length; i++)
-							{
-								if (Tags[i].Contains(SelectObj.tag))
-									Tag = i;
-							}
-
-							ImGui.PushItemWidth(-ImGui.GetContentRegionAvail().x * 0.5f);
-							if (ImGui.Combo("Tag", ref Tag, Tags, Tags.Length))
-								SelectObj.tag = Tags[Tag];
-							ImGui.PopItemWidth();
-						}
-
+						ImGui.PushItemWidth(-ImGui.GetContentRegionAvail().x * 0.5f);
+						InspectorTag();
+						ImGui.PopItemWidth();
 
 						ImGui.SameLine();   // 改行しない
 
 
 						//--- Layer
-						{
-							int layer = 0;
-
-							string[] layers = UnityEditorInternal.InternalEditorUtility.layers;
-							for (int i = 0; i < layers.Length; i++)
-							{
-								if (layers[i].Contains(SelectObj.layer.ToString()))
-									layer = i;
-							}
-							ImGui.PushItemWidth(-ImGui.GetContentRegionAvail().x * 0.5f);
-							if (ImGui.Combo("Layer", ref layer, layers, layers.Length))
-								SelectObj.layer = layer;
-							ImGui.PopItemWidth();
-						}
+						ImGui.PushItemWidth(-ImGui.GetContentRegionAvail().x * 0.5f);
+						InspectorLayer();
+						ImGui.PopItemWidth();
 
 						//--- Component
 						UnityEngine.Component[] components = SelectObj.GetComponents<UnityEngine.Component>();
@@ -289,7 +284,7 @@ namespace UImGui
 									// 型を取得
 									Type t = components[i].GetType();
 									// 取得した型のメンバを全取得する
-									var members = t.GetFields(
+									FieldInfo[] members = t.GetFields(
 										BindingFlags.Public |       // パブリックメンバを検索の対象に加える。
 										BindingFlags.NonPublic |    // パブリックでないメンバを検索の対象に加える。
 										BindingFlags.Instance |     // 非静的メンバ（インスタンスメンバ）を検索の対象に加える。
@@ -297,7 +292,7 @@ namespace UImGui
 										BindingFlags.DeclaredOnly   // 継承されたメンバを検索の対象にしない。
 										);
 
-									foreach (var member in members)
+									foreach (FieldInfo member in members)
 									{
 										//--- アクセス修飾子がPublicの場合
 										if (member.IsPublic)
@@ -346,6 +341,7 @@ namespace UImGui
 			}
 		}
 
+#if UNITY_EDITOR
 		protected virtual void OnSceneGUI()
 		{
 			EditorGUI.BeginChangeCheck();
@@ -356,6 +352,47 @@ namespace UImGui
 				SelectObj.transform.position = newTargetPosition;
 				//SelectObj.Update();
 			}
+		}
+#endif
+
+		private void InspectorTag()
+		{
+#if UNITY_EDITOR
+			int Tag = 0;
+
+			string[] Tags = InternalEditorUtility.tags;
+			for (int i = 0; i < Tags.Length; i++)
+			{
+				if (Tags[i].Contains(SelectObj.tag))
+					Tag = i;
+			}
+			if (ImGui.Combo("Tag", ref Tag, Tags, Tags.Length))
+				SelectObj.tag = Tags[Tag];
+#else
+			string tag = SelectObj.tag;
+			if (ImGui.InputText("Tag", ref tag, uint.MaxValue, ImGuiInputTextFlags.AlwaysOverwrite))
+				SelectObj.tag = tag;
+#endif
+		}
+
+		private void InspectorLayer()
+		{
+#if UNITY_EDITOR
+			int layer = 0;
+
+			string[] layers = InternalEditorUtility.layers;
+			for (int i = 0; i < layers.Length; i++)
+			{
+				if (layers[i].Contains(SelectObj.layer.ToString()))
+					layer = i;
+			}
+			if (ImGui.Combo("Layer", ref layer, layers, layers.Length))
+				SelectObj.layer = layer;
+#else
+			string layer = Convert.ToString(SelectObj.layer);
+			if (ImGui.InputText("Tag", ref layer, uint.MaxValue, ImGuiInputTextFlags.AlwaysOverwrite | ImGuiInputTextFlags.CharsDecimal))
+				SelectObj.layer = int.Parse(layer);
+#endif
 		}
 
 		// シーン上のゲームオブジェクト一覧取得
@@ -433,7 +470,11 @@ namespace UImGui
 				{
 					Debug.Log($"ItemClicked:{transform.name}");
 					SelectObj = transform.gameObject;
-					ObjectName = transform.name;
+					SelectName = transform.name;
+					if (SelectObj.TryGetComponent(out Rigidbody rigidbody))
+						SelectRb = rigidbody;
+					if (SelectObj.TryGetComponent(out Collider collider))
+						SelectColl = collider;
 				}
 
 				if (transform.childCount > 0)
@@ -452,7 +493,11 @@ namespace UImGui
 				{
 					Debug.Log($"ItemClicked:{transform.name}");
 					SelectObj = transform.gameObject;
-					ObjectName = transform.name;
+					SelectName = transform.name;
+					if (SelectObj.TryGetComponent(out Rigidbody rigidbody))
+						SelectRb = rigidbody;
+					if (SelectObj.TryGetComponent(out Collider collider))
+						SelectColl = collider;
 				}
 			}
 			if (!transform.gameObject.activeSelf)
@@ -522,7 +567,7 @@ namespace UImGui
 			Matrix4x4 matrix = gameObject.transform.localToWorldMatrix;
 			Matrix4x4 view = mainCamera.worldToCameraMatrix;
 			Matrix4x4 projection = mainCamera.projectionMatrix;
-			Matrix4x4 origin = Matrix4x4.zero;
+			Matrix4x4 origin = Matrix4x4.identity;
 
 			//Vector3 matrixTranslation, matrixRotation, matrixScale;
 			//ImGuizmo.DecomposeMatrixToComponents(ref matrix.m00, ref matrixTranslation, ref matrixRotation, ref matrixScale);
@@ -536,9 +581,20 @@ namespace UImGui
 			//ImGuizmoNET.ImGuizmo.DrawCubes(ref view.m00, ref projection.m00, ref matrix.m00, 1); //(Debug)
 
 			//--- Gizmo本体
-			if (ImGuizmo.Manipulate(ref view.m00, ref projection.m00, mCurrentGizmoOperation, mCurrentGizmoMode, ref matrix.m00))
+			ImGuizmo.Manipulate(ref view.m00, ref projection.m00, mCurrentGizmoOperation, mCurrentGizmoMode, ref matrix.m00);
+
+			//--- グリッド描画
+			if (bGridDraw)
 				ImGuizmo.DrawGrid(ref view.m00, ref projection.m00, ref origin.m00, 50f);
 
+			//--- ドラッグ中
+			if (ImGuizmo.IsUsing())
+			{
+				//if (SelectRb != null)
+				//	SelectRb.
+				//if (SelectColl != null)
+				//	SelectColl = collider;
+			}
 
 			//--- 右上のカメラの角度ビュー
 			ImGuiIOPtr ioPtr = ImGui.GetIO();
@@ -552,7 +608,7 @@ namespace UImGui
 		}
 
 		// コンポーネント別(UnityEngine)処理
-		void ShowUnityComponents(UnityEngine.Component compo)
+		private void ShowUnityComponents(UnityEngine.Component compo)
 		{
 			Type type = compo.GetType();
 			if (type == typeof(Transform))
@@ -624,7 +680,7 @@ namespace UImGui
 		}
 
 		// コンポーネント別処理
-		void ShowComponents(FieldInfo info, object type, bool IsSerializable)
+		private void ShowComponents(FieldInfo info, object type, bool IsSerializable)
 		{
 			Type t = info.FieldType;
 			if (t == typeof(bool))
@@ -671,7 +727,7 @@ namespace UImGui
 
 
 
-		static void ImCombo<T>(T @enum) where T : IComparable
+		private static void ImCombo<T>(T @enum) where T : IComparable
 		{
 			//if (typeof(T) == typeof(Enum))
 			{
@@ -681,7 +737,7 @@ namespace UImGui
 			}
 		}
 
-		static T ImVector<T>(string lavel, T vec, float? speed = 0.01f)
+		private static T ImVector<T>(string lavel, T vec, float? speed = 0.01f)
 		{
 			if (!speed.HasValue)
 				speed = 0.01f;
@@ -720,7 +776,7 @@ namespace UImGui
 			return vec;
 		}
 
-		static T ImCheckBox<T>(string lavel, T @boolean)
+		private static T ImCheckBox<T>(string lavel, T @boolean)
 		{
 			if (typeof(T) == typeof(bool))
 			{
@@ -734,7 +790,7 @@ namespace UImGui
 
 
 
-		void ShowTransform(Transform t)
+		private void ShowTransform(Transform t)
 		{
 			// pos
 			t.localPosition = ImVector("Position", t.localPosition);
@@ -746,7 +802,7 @@ namespace UImGui
 			t.localScale = ImVector("Scale", t.localScale);
 		}
 
-		void ShowCamera(Camera cam)
+		private void ShowCamera(Camera cam)
 		{
 			cam.enabled = ImCheckBox($"##Component{cam.GetType().Name}", cam.enabled);
 
@@ -756,12 +812,12 @@ namespace UImGui
 				cam.clearFlags = (CameraClearFlags)i;
 		}
 
-		void ShowMeshFilter(MeshFilter f)
+		private void ShowMeshFilter(MeshFilter f)
 		{
 			ImGui.Text($"mesh:{f.mesh}");
 		}
 
-		void ShowRigidBody(Rigidbody rb)
+		private void ShowRigidBody(Rigidbody rb)
 		{
 			rb.mass = ImVector("Mass", rb.mass);
 			rb.drag = ImVector("Drag", rb.drag);
@@ -795,7 +851,7 @@ namespace UImGui
 
 		}
 
-		void ShowCollider(UnityEngine.Collider collider)
+		private void ShowCollider(UnityEngine.Collider collider)
 		{
 			ImGui.TextColored(Color.yellow, "Base");
 
@@ -907,7 +963,7 @@ namespace UImGui
 			}
 		}
 
-		void ShowCollider2D(Collider2D collider)
+		private void ShowCollider2D(Collider2D collider)
 		{
 
 		}
