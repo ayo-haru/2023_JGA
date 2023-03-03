@@ -621,6 +621,11 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Scenery
       objectReference: {fileID: 0}
+    - target: {fileID: 2419059699394319424, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 94
+      objectReference: {fileID: 0}
     - target: {fileID: 2945463724795676666, guid: 4f165d9df4d5e6a4c87335e3e44befbd,
         type: 3}
       propertyPath: m_TagString
