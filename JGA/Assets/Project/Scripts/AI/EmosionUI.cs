@@ -2,11 +2,12 @@
 // @File	: [EmosionUI.cs]
 // @Brief	: 感情表示用
 // @Author	: Ogusu Yuuko
-// @Editer	: 
+// @Editer	: Ogusu Yuuko
 // @Detail	: 
 // 
 // [Date]
 // 2023/03/03	スクリプト作成
+// 2023/03/05	(小楠)列挙型の定義を変更 現在の感情を取得する関数を追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -14,10 +15,11 @@ using UnityEngine;
 
 public enum EEmotion
 {
-    NONE,           //なし
-    ATTENSION,      //！
-    ENJOY,          //!!!
-    QUESTION,       //？
+    NONE,               //なし
+    ATTENSION_LOW,      //!
+    ATTENSION_MIDDLE,   //!!
+    ATTENSION_HIGH,     //!!!
+    QUESTION,           //？
     MAX_EMOSION
 }
 
@@ -66,24 +68,32 @@ public class EmosionUI : MonoBehaviour
 
     public void SetEmotion(EEmotion emotion)
     {
-        if (!ui) return;
+        if (!ui || currentEmotion == emotion) return;
 
         currentEmotion = emotion;
 
         switch (currentEmotion)
         {
-            case EEmotion.ATTENSION:
+            case EEmotion.QUESTION:
+                ui.text = "?";
+                break;
+            case EEmotion.ATTENSION_LOW:
                 ui.text = "!";
                 break;
-            case EEmotion.QUESTION:
-                ui.text = "???";
+            case EEmotion.ATTENSION_MIDDLE:
+                ui.text = "!!";
                 break;
-            case EEmotion.ENJOY:
+            case EEmotion.ATTENSION_HIGH:
                 ui.text = "!!!";
                 break;
             default:
                 ui.text = "";
                 break;
         }
+    }
+
+    public EEmotion GetEmotion()
+    {
+        return currentEmotion;
     }
 }
