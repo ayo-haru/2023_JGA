@@ -27,10 +27,12 @@ public class MainCamera : MonoBehaviour
         DEFAULT = 0,
         IN,
         OUT,
+        GUESTOUT,
     }
     //ズームの状況
     ZOOM zoom = ZOOM.DEFAULT;
     ZOOM currentZoom = ZOOM.DEFAULT;
+
 
     //インプットアクション
     private MyContorller gameInput;
@@ -46,11 +48,15 @@ public class MainCamera : MonoBehaviour
     //計算用FOV格納用
     private float currentFov;
 
+    //画面端の座標格納用
+    private Vector3 rightTop;
+    private Vector3 leftBottom;
+
     //イージング実行中の現在の割合
     private float easingRate;
     //ズームインアウトの実行中フラグ
     private bool zoomFlg;
-
+    
 
     //カメラの情報受け取り用
     private CameraManager cameraObj;
@@ -77,6 +83,10 @@ public class MainCamera : MonoBehaviour
     [SerializeField] private float zoomTime = 1.0f;
     [Header("ズームから戻ってくる時間")]
     [SerializeField] private float zoomRetTime = 1.0f;
+    //客が何人いたら引くかを指定できる変数
+    [Header("客が何人いたらズームアウトするか")]
+    [SerializeField] private int guestValue = 5;
+
 
     //テスト用
     [Header("デバッグ用ズームの方式を変更(false FOV , true position)")]
@@ -95,6 +105,10 @@ public class MainCamera : MonoBehaviour
         maincamera = cameraObj.GetTransformObject();
 		cameraParent = cameraObj.GetTransformObject(true);
 		cameraChild = cameraObj.GetTransformObject(false);
+        //スクリーンの端を取る
+        var screenEnd = cameraParent.position.y - playerobj.transform.position.y;
+        rightTop = maincamera.ScreenToWorldPoint(new Vector3(Screen.width,Screen.height,screenEnd));
+        leftBottom = maincamera.ScreenToWorldPoint(new Vector3(0.0f, 0.0f, screenEnd));
 
         gameInput = new MyContorller();
         //インプットアクション設定
@@ -224,10 +238,8 @@ public class MainCamera : MonoBehaviour
     //ズームインとズームアウトを決定動かす処理
     private void ZoomInOut()
 	{
-        //視野角
-        if (!zoomObjChange)
-        {
-            switch (currentZoom)
+      
+        switch (currentZoom)
         {
             case ZOOM.IN:
                 if(currentFov > fov * zoomIn)
@@ -272,61 +284,12 @@ public class MainCamera : MonoBehaviour
                 }
                 break;
         }
-       
-            maincamera.fieldOfView = currentFov;
-        }
 
-        //距離
-        if (zoomObjChange)
-        {
-            switch (currentZoom)
-            {
-                case ZOOM.IN:
-                    if (currentFov > fov * zoomIn)
-                    {
-                        currentFov -= ((fov - zoomIn * fov) / (60.0f * zoomTime));
-                    }
-                    zoom = ZOOM.IN;
-                    break;
-
-                case ZOOM.OUT:
-                    if (currentFov < fov * zoomOut)
-                    {
-                        currentFov += ((zoomOut * fov - fov) / (60.0f * zoomTime));
-                    }
-                    zoom = ZOOM.OUT;
-                    break;
-
-                case ZOOM.DEFAULT:
-                    if (zoom == ZOOM.IN)
-                    {
-                        if (currentFov < fov)
-                        {
-                            currentFov += ((fov - zoomIn * fov) / (60.0f * zoomRetTime));
-                        }
-                        else
-                        {
-                            zoomFlg = false;
-                        }
-                        break;
-                    }
-                    if (zoom == ZOOM.OUT)
-                    {
-                        if (currentFov > fov)
-                        {
-                            currentFov -= ((zoomOut * fov - fov) / (60.0f * zoomRetTime));
-                        }
-                        else
-                        {
-                            zoomFlg = false;
-                        }
-                        break;
-                    }
-                    break;
-            }
-
-            cameraChild.localPosition = new Vector3 (0.0f,0.0f, -currentFov);
-        }
+            if (!zoomObjChange)
+                maincamera.fieldOfView = currentFov;
+            if (zoomObjChange)
+                cameraChild.localPosition = new Vector3(0.0f, 0.0f, -currentFov);
+        
 
     }
 }
