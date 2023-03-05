@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00b025195ba3c784c9fb5da6cd280e9f, type: 3}
   m_Name: GuestDataTest
   m_EditorClassIdentifier: 
-  speed: 2
-  interest: 3
-  reactionArea: 6
+  speed: 1
+  rayLength: 10
+  reactionArea: 15
   distance: 2
+  firstCoolDownTime: 3
+  secondCoolDownTime: 5
   waitTime: 0

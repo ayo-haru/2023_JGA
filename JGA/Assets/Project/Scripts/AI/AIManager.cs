@@ -53,6 +53,10 @@ public class AIManager : MonoBehaviour
         #endregion
         currentState = 0;
         if (nodeList[currentState].state) nodeList[currentState].state.InitState();
+        for (int i = 0; i < nodeList[currentState].transitions.Count; ++i)
+        {
+            nodeList[currentState].transitions[i].toNodeTransition.InitTransition();
+        }
     }
 
 	/// <summary>

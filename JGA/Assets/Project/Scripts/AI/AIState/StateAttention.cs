@@ -8,6 +8,7 @@
 // [Date]
 // 2023/03/02	スクリプト作成
 // 2023/03/03	(小楠)終了処理追加　UI追加
+// 2023/03/05	(小楠)UIの表示を変更
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -63,7 +64,7 @@ public class StateAttention : AIState
         agent.speed = 0.0f;
 
         //注目中のUIを表示
-        ui.SetEmotion(EEmotion.ATTENSION);
+        ui.SetEmotion(EEmotion.QUESTION);
     }
 
     public override void UpdateState()
