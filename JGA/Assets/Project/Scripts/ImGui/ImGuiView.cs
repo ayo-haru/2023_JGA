@@ -20,12 +20,14 @@ using System;
 #if !UIMGUI_REMOVE_IMGUIZMO
 using ImGuizmoNET;
 #endif
-using UnityEngine;
-using UnityEngine.SceneManagement;
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditorInternal;
+#else
+using System.IO;
 #endif
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
@@ -60,8 +62,8 @@ namespace UImGui
 		private bool bGridDraw;
 
 
-
-
+		string[] EditerTags;
+		string[] EditerLayers;
 
 		private Camera mainCamera;
 		private GameObject SelectObj;
@@ -104,6 +106,42 @@ namespace UImGui
 			uImGui.SetCamera(mainCamera);
 
 			GetGameObject();
+
+#if UNITY_EDITOR
+			EditerTags = InternalEditorUtility.tags;
+			EditerLayers = InternalEditorUtility.layers;
+#else
+			FileInfo fi;
+			string pathTags = $"{Application.dataPath}/tags.txt";
+			fi = new FileInfo(pathTags);
+			try
+			{
+				using (StreamReader sr = new StreamReader(fi.OpenRead(), System.Text.Encoding.UTF8))
+				{
+					EditerTags = sr.ReadToEnd().Split('\n');
+				}
+			}
+			catch (Exception e)
+			{
+				Debug.Log(e);
+			}
+
+
+			string pathLayers = $"{Application.dataPath}/layer.txt";
+			fi = new FileInfo(pathLayers);
+			try
+			{
+				using (StreamReader sr = new StreamReader(fi.OpenRead(), System.Text.Encoding.UTF8))
+				{
+					EditerLayers = sr.ReadToEnd().Split('\n');
+				}
+			}
+			catch (Exception e)
+			{
+				Debug.Log(e);
+			}
+#endif
+
 		}
 
 		/// <summary>
@@ -116,14 +154,6 @@ namespace UImGui
 				Debug.Log($"OnHierarchyChange");
 				GetGameObject();
 			}
-
-		}
-
-		/// <summary>
-		/// 最初のフレーム更新の前に呼び出される
-		/// </summary>
-		void Start()
-		{
 
 		}
 
@@ -200,130 +230,10 @@ namespace UImGui
 
 
 			// ヒエラルキービュー
-			//if (bShowHierarchy)
-			{
-				ImGui.Begin("Hierarchy", ref bShowHierarchy, ImGuiWindowFlags.MenuBar);
-				{
-					// メニューバー
-					//if (ImGui.BeginMenuBar())
-					//{
-					//	if (ImGui.BeginMenu("File"))
-					//	{
-					//		if (ImGui.MenuItem("Open..", "Ctrl+O")) { /* Do stuff */ }
-					//		if (ImGui.MenuItem("Save", "Ctrl+S")) { /* Do stuff */ }
-					//		if (ImGui.MenuItem("Close", "Ctrl+W")) { _isOpen = false; }
-					//		ImGui.EndMenu();
-					//	}
-					//	ImGui.EndMenuBar();
-					//}
+			HierarchyView();
 
-					ImGui.BeginChild("GameObjects");
-					{
-						CreateHierarchy(gameObjects);
-					}
-					ImGui.EndChild();
-				}
-				ImGui.End();
-			}
-
-			//if (bShowInspector)
-			{
-				// インスペクタビュー
-				ImGui.Begin("Inspector", ref bShowInspector, ImGuiWindowFlags.MenuBar);
-				{
-					if (SelectObj != null)
-					{
-						//--- アクティブ チェックボックス
-						if (SelectObj.name.Contains("ImGui"))
-						{
-							bool active = true;
-							ImGui.Checkbox("", ref active);
-						}
-						else
-						{
-							bool active = SelectObj.activeSelf;
-							if (ImGui.Checkbox("", ref active))
-								SelectObj.SetActive(!SelectObj.activeSelf);
-						}
-
-						ImGui.SameLine();   // 改行しない
-
-						//--- Name
-						if (ImGui.InputText($"##ObjectName", ref SelectName, uint.MaxValue, ImGuiInputTextFlags.AlwaysOverwrite))
-							SelectObj.name = SelectName;
-
-						//--- Tag
-						ImGui.PushItemWidth(-ImGui.GetContentRegionAvail().x * 0.5f);
-						InspectorTag();
-						ImGui.PopItemWidth();
-
-						ImGui.SameLine();   // 改行しない
-
-
-						//--- Layer
-						ImGui.PushItemWidth(-ImGui.GetContentRegionAvail().x * 0.5f);
-						InspectorLayer();
-						ImGui.PopItemWidth();
-
-						//--- Component
-						UnityEngine.Component[] components = SelectObj.GetComponents<UnityEngine.Component>();
-
-						for (int i = 0; i < components.Length; i++)
-						{
-							if (ImGui.CollapsingHeader($"{components[i].GetType().Name}##{i}", ImGuiTreeNodeFlags.DefaultOpen))
-							{
-								// 名前空間に"UnityEngine"が含まれる場合
-								if (components[i].GetType().FullName.Contains("UnityEngine"))
-								{
-									ShowUnityComponents(components[i]);
-								}
-
-								// その他の場合（アセットや自作のクラス）
-								else
-								{
-									// 型を取得
-									Type t = components[i].GetType();
-									// 取得した型のメンバを全取得する
-									FieldInfo[] members = t.GetFields(
-										BindingFlags.Public |       // パブリックメンバを検索の対象に加える。
-										BindingFlags.NonPublic |    // パブリックでないメンバを検索の対象に加える。
-										BindingFlags.Instance |     // 非静的メンバ（インスタンスメンバ）を検索の対象に加える。
-										BindingFlags.Static |       // 静的メンバを検索の対象に加える。
-										BindingFlags.DeclaredOnly   // 継承されたメンバを検索の対象にしない。
-										);
-
-									foreach (FieldInfo member in members)
-									{
-										//--- アクセス修飾子がPublicの場合
-										if (member.IsPublic)
-										{
-											ShowComponents(member, components[i], false);
-										}
-
-										else
-										{
-											bool IsSerializable;
-											var attributes = member.GetCustomAttributes(true);
-
-											if (attributes.Any(attr => attr is NonSerializedAttribute))
-												IsSerializable = false;
-											else if (member.IsPrivate && !attributes.Any(attr => attr is SerializeField))
-												IsSerializable = false;
-											else
-												IsSerializable = member.FieldType.IsSerializable;
-
-											ShowComponents(member, components[i], IsSerializable);
-										}
-
-									}
-								}
-							}
-						}
-
-					}
-				}
-				ImGui.End();
-			}
+			// インスペクタビュー
+			InspectorView();
 
 			// Gizmo
 			if (SelectObj != null)
@@ -355,46 +265,6 @@ namespace UImGui
 		}
 #endif
 
-		private void InspectorTag()
-		{
-#if UNITY_EDITOR
-			int Tag = 0;
-
-			string[] Tags = InternalEditorUtility.tags;
-			for (int i = 0; i < Tags.Length; i++)
-			{
-				if (Tags[i].Contains(SelectObj.tag))
-					Tag = i;
-			}
-			if (ImGui.Combo("Tag", ref Tag, Tags, Tags.Length))
-				SelectObj.tag = Tags[Tag];
-#else
-			string tag = SelectObj.tag;
-			if (ImGui.InputText("Tag", ref tag, uint.MaxValue, ImGuiInputTextFlags.AlwaysOverwrite))
-				SelectObj.tag = tag;
-#endif
-		}
-
-		private void InspectorLayer()
-		{
-#if UNITY_EDITOR
-			int layer = 0;
-
-			string[] layers = InternalEditorUtility.layers;
-			for (int i = 0; i < layers.Length; i++)
-			{
-				if (layers[i].Contains(SelectObj.layer.ToString()))
-					layer = i;
-			}
-			if (ImGui.Combo("Layer", ref layer, layers, layers.Length))
-				SelectObj.layer = layer;
-#else
-			string layer = Convert.ToString(SelectObj.layer);
-			if (ImGui.InputText("Tag", ref layer, uint.MaxValue, ImGuiInputTextFlags.AlwaysOverwrite | ImGuiInputTextFlags.CharsDecimal))
-				SelectObj.layer = int.Parse(layer);
-#endif
-		}
-
 		// シーン上のゲームオブジェクト一覧取得
 		private void GetGameObject()
 		{
@@ -405,6 +275,193 @@ namespace UImGui
 					continue;
 				gameObjects.Add(obj);       // 最後
 			}
+		}
+
+		private void InspectorView()
+		{
+			ImGui.Begin("Inspector", ref bShowInspector, ImGuiWindowFlags.MenuBar);
+			{
+				if (SelectObj != null)
+				{
+					//--- アクティブ チェックボックス
+					if (SelectObj.name.Contains("ImGui"))
+					{
+						bool active = true;
+						ImGui.Checkbox("", ref active);
+					}
+					else
+					{
+						bool active = SelectObj.activeSelf;
+						if (ImGui.Checkbox("", ref active))
+							SelectObj.SetActive(!SelectObj.activeSelf);
+					}
+
+					ImGui.SameLine();   // 改行しない
+
+					//--- Name
+					if (ImGui.InputText($"##ObjectName", ref SelectName, uint.MaxValue, ImGuiInputTextFlags.AlwaysOverwrite))
+						SelectObj.name = SelectName;
+
+					//--- Tag
+					ImGui.PushItemWidth(-ImGui.GetContentRegionAvail().x * 0.5f);
+					InspectorTag();
+					ImGui.PopItemWidth();
+
+					ImGui.SameLine();   // 改行しない
+
+
+					//--- Layer
+					ImGui.PushItemWidth(-ImGui.GetContentRegionAvail().x * 0.5f);
+					InspectorLayer();
+					ImGui.PopItemWidth();
+
+					//--- Component
+					UnityEngine.Component[] components = SelectObj.GetComponents<UnityEngine.Component>();
+
+					for (int i = 0; i < components.Length; i++)
+					{
+						if (ImGui.CollapsingHeader($"{components[i].GetType().Name}##{i}", ImGuiTreeNodeFlags.DefaultOpen))
+						{
+							// 名前空間に"UnityEngine"が含まれる場合
+							if (components[i].GetType().FullName.Contains("UnityEngine"))
+							{
+								ShowUnityComponents(components[i]);
+							}
+
+							// その他の場合（アセットや自作のクラス）
+							else
+							{
+								// 型を取得
+								Type t = components[i].GetType();
+								// 取得した型のメンバを全取得する
+								FieldInfo[] members = t.GetFields(
+									BindingFlags.Public |       // パブリックメンバを検索の対象に加える。
+									BindingFlags.NonPublic |    // パブリックでないメンバを検索の対象に加える。
+									BindingFlags.Instance |     // 非静的メンバ（インスタンスメンバ）を検索の対象に加える。
+									BindingFlags.Static |       // 静的メンバを検索の対象に加える。
+									BindingFlags.DeclaredOnly   // 継承されたメンバを検索の対象にしない。
+									);
+
+								foreach (FieldInfo member in members)
+								{
+									//--- アクセス修飾子がPublicの場合
+									if (member.IsPublic)
+									{
+										ShowComponents(member, components[i], false);
+									}
+
+									else
+									{
+										bool IsSerializable;
+										var attributes = member.GetCustomAttributes(true);
+
+										if (attributes.Any(attr => attr is NonSerializedAttribute))
+											IsSerializable = false;
+										else if (member.IsPrivate && !attributes.Any(attr => attr is SerializeField))
+											IsSerializable = false;
+										else
+											IsSerializable = member.FieldType.IsSerializable;
+
+										ShowComponents(member, components[i], IsSerializable);
+									}
+
+								}
+							}
+						}
+					}
+
+				}
+			}
+			ImGui.End();
+		}
+
+		private void InspectorTag()
+		{
+			int Tag = 0;
+#if UNITY_EDITOR
+
+			for (int i = 0; i < EditerTags.Length; i++)
+			{
+				if (EditerTags[i].Contains(SelectObj.tag))
+					Tag = i;
+			}
+			if (ImGui.Combo("Tag", ref Tag, EditerTags, EditerTags.Length))
+				SelectObj.tag = EditerTags[Tag];
+#else
+			if (EditerTags.Length > 0)
+			{
+				for (int i = 0; i < EditerTags.Length; i++)
+				{
+					if (EditerTags[i].Contains(SelectObj.tag))
+						Tag = i;
+				}
+				if (ImGui.Combo("Tag", ref Tag, EditerTags, EditerTags.Length))
+					SelectObj.tag = EditerTags[Tag];
+			}
+			else
+			{
+				string tag = SelectObj.tag;
+				if (ImGui.InputText("Tag", ref tag, uint.MaxValue, ImGuiInputTextFlags.AlwaysOverwrite))
+					SelectObj.tag = tag;
+			}
+#endif
+		}
+
+		private void InspectorLayer()
+		{
+			int Layer = 0;
+#if UNITY_EDITOR
+			for (int i = 0; i < EditerLayers.Length; i++)
+			{
+				if (EditerLayers[i].Contains(SelectObj.layer.ToString()))
+					Layer = i;
+			}
+			if (ImGui.Combo("Layer", ref Layer, EditerLayers, EditerLayers.Length))
+				SelectObj.layer = Layer;
+#else
+			if (EditerLayers.Length > 0)
+			{
+				for (int i = 0; i < EditerLayers.Length; i++)
+				{
+					if (EditerLayers[i].Contains(SelectObj.layer.ToString()))
+						Layer = i;
+				}
+				if (ImGui.Combo("Layer", ref Layer, EditerLayers, EditerLayers.Length))
+					SelectObj.layer = Layer;
+			}
+			else
+			{
+				string layer = Convert.ToString(SelectObj.layer);
+				if (ImGui.InputText("Tag", ref layer, uint.MaxValue, ImGuiInputTextFlags.AlwaysOverwrite | ImGuiInputTextFlags.CharsDecimal))
+					SelectObj.layer = int.Parse(layer);
+			}
+#endif
+		}
+
+		private void HierarchyView()
+		{
+			ImGui.Begin("Hierarchy", ref bShowHierarchy, ImGuiWindowFlags.MenuBar);
+			{
+				// メニューバー
+				//if (ImGui.BeginMenuBar())
+				//{
+				//	if (ImGui.BeginMenu("File"))
+				//	{
+				//		if (ImGui.MenuItem("Open..", "Ctrl+O")) { /* Do stuff */ }
+				//		if (ImGui.MenuItem("Save", "Ctrl+S")) { /* Do stuff */ }
+				//		if (ImGui.MenuItem("Close", "Ctrl+W")) { _isOpen = false; }
+				//		ImGui.EndMenu();
+				//	}
+				//	ImGui.EndMenuBar();
+				//}
+
+				ImGui.BeginChild("GameObjects");
+				{
+					CreateHierarchy(gameObjects);
+				}
+				ImGui.EndChild();
+			}
+			ImGui.End();
 		}
 
 		// ヒエラルキーリスト作成
@@ -726,7 +783,7 @@ namespace UImGui
 		}
 
 
-
+		#region ImFields
 		private static void ImCombo<T>(T @enum) where T : IComparable
 		{
 			//if (typeof(T) == typeof(Enum))
@@ -787,9 +844,11 @@ namespace UImGui
 
 			return @boolean;
 		}
+		#endregion
 
 
 
+		#region UnityComponents
 		private void ShowTransform(Transform t)
 		{
 			// pos
@@ -967,6 +1026,10 @@ namespace UImGui
 		{
 
 		}
+
+
+
+		#endregion
 
 	}
 }
