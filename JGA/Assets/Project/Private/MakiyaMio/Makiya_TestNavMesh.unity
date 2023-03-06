@@ -1109,6 +1109,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1130583469}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1322991655
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1322991657}
+  m_Layer: 0
+  m_Name: GimmickObj
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1322991657
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1322991655}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1462224905
 GameObject:
   m_ObjectHideFlags: 0
@@ -1427,7 +1458,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
-  obj: {fileID: 6285235501975028921, guid: 1396f98f3ca68a341bf4d8e070bbe3a2, type: 3}
 --- !u!54 &1826462024
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1539,6 +1569,7 @@ GameObject:
   - component: {fileID: 2091774991}
   - component: {fileID: 2091774990}
   - component: {fileID: 2091774989}
+  - component: {fileID: 2091774997}
   - component: {fileID: 2091774993}
   - component: {fileID: 2091774994}
   - component: {fileID: 2091774995}
@@ -1702,3 +1733,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 4
   m_CollisionDetection: 0
+--- !u!114 &2091774997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2091774988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07d5adba171260d4c9491b72a8d7ee1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gimmickObj:
+  - {fileID: 7007342627476083825, guid: 1396f98f3ca68a341bf4d8e070bbe3a2, type: 3}
+  gimmickList: []
