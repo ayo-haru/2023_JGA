@@ -114,17 +114,11 @@ public class MainCamera : MonoBehaviour
 	{
         //カメラの情報の受け取り
         cameraObj = GameObject.Find("CameraParent").GetComponent<CameraManager>();
-        //プレイヤーを格納
-        playerobj = GameObject.FindGameObjectWithTag("Player");
         //初期化としてカメラの情報を格納
         maincamera = cameraObj.GetTransformObject();
 		cameraParent = cameraObj.GetTransformObject(true);
 		cameraChild = cameraObj.GetTransformObject(false);
 
-        //スクリーンの端を取る
-        var screenEnd = cameraParent.localPosition.y - playerobj.transform.position.y;
-        rightTop = maincamera.ScreenToWorldPoint(new Vector3(Screen.width,Screen.height,screenEnd));
-        leftBottom = maincamera.ScreenToWorldPoint(new Vector3(0.0f, 0.0f, screenEnd));
 
         //客の情報を格納する
         guestObj = GameObject.FindGameObjectsWithTag("Scenery");
@@ -149,8 +143,10 @@ public class MainCamera : MonoBehaviour
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
 	/// </summary>
-	void Start()
-	{
+	void Start() {        
+        //プレイヤーを格納
+        playerobj = GameObject.FindGameObjectWithTag("Player");
+
         //プレイヤーの初期位置とカメラの座標を固定
         offset = cameraParent.transform.position - playerobj.transform.position;
         //初期の視野角を格納
@@ -168,12 +164,17 @@ public class MainCamera : MonoBehaviour
         //easingRate = 0.0f;
         //プレイヤーの座標保存
         currentPlayerPos = playerobj.transform.position;
+
+        //スクリーンの端を取る
+        var screenEnd = cameraParent.localPosition.y - playerobj.transform.position.y;
+        rightTop = maincamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, screenEnd));
+        leftBottom = maincamera.ScreenToWorldPoint(new Vector3(0.0f, 0.0f, screenEnd));
     }
 
-	/// <summary>
-	/// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
-	/// </summary>
-	void FixedUpdate()
+    /// <summary>
+    /// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
+    /// </summary>
+    void FixedUpdate()
 	{
         //一定時間の計算
         scriptStop += Time.deltaTime;
