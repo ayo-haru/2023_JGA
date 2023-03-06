@@ -8,12 +8,46 @@
 // [Date]
 // 2023/03/02	スクリプト作成
 //=============================================================================
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PrefabContainerFinder : MonoBehaviour
 {
+    private static List<PrefabContainer> prefabList = new List<PrefabContainer>();
+
+
+    public static GameObject Find(string _displayName) {
+        Type type = typeof(MySceneManager.GameData);
+        MemberInfo[] members = type.GetMembers(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly);
+
+        //Debug.Log(members.Length);
+
+        foreach (MemberInfo member in members) {
+            //Debug.Log("membername:" +member.MemberType.ToString());
+            if (member.MemberType.ToString().Equals("Field")){
+                PropertyInfo pr = type.GetProperty(member.Name);
+                //Debug.Log(member.Name);
+                var data = pr.GetValue(null);
+
+
+                //Debug.Log("data:"+data);
+                //Debug.Log("member:"+member);
+                //prefabList.Add(data.);
+
+
+                return null;
+            }
+        }
+                return null;
+
+    }
+
+
+
     /// <summary>
     /// IDからプレハブを検索
     /// </summary>

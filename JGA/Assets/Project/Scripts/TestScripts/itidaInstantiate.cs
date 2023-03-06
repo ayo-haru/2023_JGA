@@ -10,6 +10,7 @@ public class itidaInstantiate : MonoBehaviour
     void Start()
     {
         gameObject = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Player.prefab");
+        //PrefabContainerFinder.Find("Player.prefab");
         Instantiate(gameObject);
     }
 
