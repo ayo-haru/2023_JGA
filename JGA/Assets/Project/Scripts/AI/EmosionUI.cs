@@ -76,15 +76,19 @@ public class EmosionUI : MonoBehaviour
         {
             case EEmotion.QUESTION:
                 ui.text = "?";
+                ui.color = Color.white;
                 break;
             case EEmotion.ATTENSION_LOW:
                 ui.text = "!";
+                ui.color = Color.red;
                 break;
             case EEmotion.ATTENSION_MIDDLE:
                 ui.text = "!!";
+                ui.color = Color.red;
                 break;
             case EEmotion.ATTENSION_HIGH:
                 ui.text = "!!!";
+                ui.color = Color.red;
                 break;
             default:
                 ui.text = "";
