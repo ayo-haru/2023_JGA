@@ -6,6 +6,7 @@
 // @Detail	: 参考URL カメラ追従 https://programming.sincoston.com/unity-camera-follow-player/
 //					　スムーズに動くカメラ https://nekojara.city/unity-smooth-damp
 //                    animationカーブ https://kan-kikuchi.hatenablog.com/entry/AnimationCurve_nspector
+//                    コールバック https://nn-hokuson.hatenablog.com/entry/2021/09/02/114100#%E3%82%B3%E3%83%BC%E3%83%AB%E3%83%90%E3%83%83%E3%82%AF%E3%81%A8%E3%81%AF
 //					  
 // 
 // [Date]
@@ -36,7 +37,6 @@ public class MainCamera : MonoBehaviour
 
     //インプットアクション
     private MyContorller gameInput;
-
     //プレイヤー追従用のプレイヤー取得
     private GameObject playerobj;
     //プレイヤーの座標変更取得
@@ -52,11 +52,20 @@ public class MainCamera : MonoBehaviour
     private Vector3 rightTop;
     private Vector3 leftBottom;
 
+    private Vector3 rightBottom;
+    private Vector3 leftTop;
+
+    //客の情報取得用
+    GameObject[] guestObj;
+
     //イージング実行中の現在の割合
     private float easingRate;
     //ズームインアウトの実行中フラグ
     private bool zoomFlg;
-    
+    //現在の客の数
+    private int currentGuestValue;
+    //処理を一定時間ごとに実行させるためのもの
+    private float scriptStop;
 
     //カメラの情報受け取り用
     private CameraManager cameraObj;
@@ -106,9 +115,12 @@ public class MainCamera : MonoBehaviour
 		cameraParent = cameraObj.GetTransformObject(true);
 		cameraChild = cameraObj.GetTransformObject(false);
         //スクリーンの端を取る
-        var screenEnd = cameraParent.position.y - playerobj.transform.position.y;
+        var screenEnd = cameraParent.localPosition.y - playerobj.transform.position.y;
         rightTop = maincamera.ScreenToWorldPoint(new Vector3(Screen.width,Screen.height,screenEnd));
         leftBottom = maincamera.ScreenToWorldPoint(new Vector3(0.0f, 0.0f, screenEnd));
+
+        //客の情報を格納する
+        guestObj = GameObject.FindGameObjectsWithTag("Scenery");
 
         gameInput = new MyContorller();
         //インプットアクション設定
@@ -151,11 +163,41 @@ public class MainCamera : MonoBehaviour
 	/// </summary>
 	void FixedUpdate()
 	{
+        //一定時間の計算
+        scriptStop += Time.deltaTime;
+        if(scriptStop >= 1.0f)
+        {
+            var screenEnd = 30.0f;
+            
+            rightTop = maincamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, screenEnd));
+            leftBottom = maincamera.ScreenToWorldPoint(new Vector3(0, 0, screenEnd));
+            rightBottom = maincamera.ScreenToWorldPoint(new Vector3(Screen.width, 0.0f, screenEnd));
+            leftTop = maincamera.ScreenToWorldPoint(new Vector3(0, Screen.height, screenEnd));
+
+            GuestCount();
+            scriptStop = 0.0f;
+            Debug.Log(currentGuestValue + "人");
+            Debug.Log(rightTop + "右上");
+            Debug.Log(leftBottom + "左下");
+            Debug.Log(rightBottom + "右下");
+            Debug.Log(leftTop + "左うえ");
+        }
+
+
         CameraMove();
         if(zoomFlg)
         {
             ZoomInOut();
         }
+        
+        //ズームすることを伝え計算させる
+        if (currentGuestValue >= guestValue)
+        {
+            currentZoom = ZOOM.OUT;
+            zoomFlg = true;
+        }
+        
+        
     }
 
 	/// <summary>
@@ -290,6 +332,23 @@ public class MainCamera : MonoBehaviour
             if (zoomObjChange)
                 cameraChild.localPosition = new Vector3(0.0f, 0.0f, -currentFov);
         
-
     }
+    /// <summary>
+    /// ゲストの数の増減
+    /// </summary>
+    /// <param name="math">true Add false del</param>
+    public void GuestCount()
+    {
+        var nowGuestCount = 0;
+        for(int i = 0; i < guestObj.Length; i++)
+        {
+            if (guestObj[i].transform.position.x <= rightTop.x && guestObj[i].transform.position.z <= rightTop.z &&
+                guestObj[i].transform.position.x >= leftBottom.x && guestObj[i].transform.position.z >= leftBottom.z)
+            {
+                nowGuestCount++;
+            }
+        }
+        currentGuestValue = nowGuestCount;
+    }
+   
 }
