@@ -15,7 +15,7 @@ using UnityEngine.SceneManagement;
 
 public class TestLoadScene
 {
-#if true
+#if false
 
     private const string ActiveSceneName = "ProtoType";
     // ロードするシーンを検索
