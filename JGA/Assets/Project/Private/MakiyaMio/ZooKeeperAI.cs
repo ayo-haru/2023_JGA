@@ -6,11 +6,14 @@
 // @Detail	: https://yttm-work.jp/unity/unity_0036.html
 //            https://www.sejuku.net/blog/83620
 //            https://www.matatabi-ux.com/entry/2021/03/18/100000 
+//            https://light11.hatenadiary.com/entry/2019/12/10/223519
 //
 // [Date]
 // 2023/02/28	スクリプト作成
 // 2023/02/28	スピードをスライダーで変更可能にした
 // 2023/02/28	Raycastの追加
+// 2023/03/02	オブジェクトのListを追加
+// 2023/03/02   ギミックオブジェクトとの当たり判定処理の作成
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -26,10 +29,17 @@ public class ZooKeeperAI : MonoBehaviour
     private int rootNum = 0;
     [SerializeField, Range(1.1f, 2.0f)] private float speed;    // 飼育員のスピード
     [SerializeField, Range(0.0f, 2.0f)] private float search;   // 飼育員の索敵範囲
-
     private SphereCollider sphereCollider;
+
     private NavMeshAgent navMesh;
     private RaycastHit rayhit;
+
+    private GimmickObj gimmickObj;
+    [SerializeField] private List<Transform> resetPos;          // ギミックオブジェクトを元に戻す位置
+    private bool gimmickFlg = false;    // ギミックオブジェクトに当たったか
+    private bool catchFlg = false;      // ギミックオブジェクトを掴んだか
+    private int resetNum = -1;
+    private int gimmickNum = -1;
 
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -39,6 +49,7 @@ public class ZooKeeperAI : MonoBehaviour
         testPlayer = player.GetComponent<TestPlayer>();
         sphereCollider = this.GetComponent<SphereCollider>();
         navMesh = GetComponent<NavMeshAgent>();
+        gimmickObj = this.GetComponent<GimmickObj>();
     }
 
     /// <summary>
@@ -46,7 +57,7 @@ public class ZooKeeperAI : MonoBehaviour
     /// </summary>
     void Start()
     {
-        speed *= testPlayer.speed;  // ペンギンの移動速度の最低1.1倍~最高2.0倍
+        speed *= testPlayer.speed;      // ペンギンの移動速度の最低1.1倍~最高2.0倍
         navMesh.speed = speed;
         sphereCollider.radius = search; // colliderのradiusを変更する
     }
@@ -56,14 +67,27 @@ public class ZooKeeperAI : MonoBehaviour
 	/// </summary>
 	void FixedUpdate()
 	{
-        if (rootList.Count >= 1)
+        // オブジェクトを元の位置に戻す
+        if(gimmickFlg)
+        {
+            if (navMesh.remainingDistance <= 2.0f    // 目標地点までの距離が0.1ｍ以下になったら到着
+                 && !navMesh.pathPending)            // 経路計算中かどうか（計算中：true　計算完了：false）
+            {
+                gimmickFlg = false;
+                catchFlg = false;
+                Bring();
+                rootNum = Random.Range(0, rootList.Count);
+                navMesh.SetDestination(rootList[rootNum].position); // 目的地の再設定
+            }
+        }
+        else if (rootList.Count >= 1)
         {
             navMesh.SetDestination(rootList[rootNum].position);     // 目的地の設定
             if (navMesh.remainingDistance <= 0.1f    // 目標地点までの距離が0.1ｍ以下になったら到着
                  && !navMesh.pathPending)            // 経路計算中かどうか（計算中：true　計算完了：false）
             {
                 rootNum = Random.Range(0, rootList.Count);
-                navMesh.SetDestination(rootList[rootNum].position);     // 目的地の再設定
+                navMesh.SetDestination(rootList[rootNum].position); // 目的地の再設定
             }
         }
         else
@@ -73,25 +97,52 @@ public class ZooKeeperAI : MonoBehaviour
     }
 
     /// <summary>
-    /// ペンギンと飼育員の当たり判定
+    /// 飼育員とペンギン、ギミックの当たり判定
     /// </summary>
     private void OnCollisionEnter(Collision collision)
     {
+        #region ペンギン
         if(collision.gameObject.tag == "Player")
         {
+            //Debug.Log("捕まえた");
         }
+        #endregion
+
+        #region ギミックオブジェクト
+        if (collision.gameObject.tag == "Interact")
+        {
+            for (int i = 0; i < gimmickObj.gimmickList.Count; i++)
+            {
+                // resetPosのnameと同じ位置に戻す
+                for (int j = 0; j < resetPos.Count; j++)
+                {
+                    if (resetPos[j].name == gimmickObj.gimmickList[i].name)
+                    {
+                        navMesh.SetDestination(resetPos[j].position);   // 目的地をオブジェクトの位置に設定
+                        gimmickFlg = true;
+                        catchFlg = true;
+                        resetNum = j;
+                        gimmickNum = i;
+                        Bring();
+                    }
+                }
+            }
+        }
+        #endregion
     }
 
     /// <summary>
-    /// 飼育員の索敵範囲にペンギンがいるかどうか
+    /// 飼育員の索敵範囲にペンギンがいるか
     /// </summary>
     private void OnTriggerStay(Collider other)
     {
+        #region ペンギン
+        // ペンギンとの当たり判定
         if (other.CompareTag("Player"))
         {
             var diff = player.transform.position - transform.position;  // 差分
-            var distance = diff.magnitude;      // 距離
-            var direction = diff.normalized;    // 方向
+            var distance = diff.magnitude;                              // 距離
+            var direction = diff.normalized;                            // 方向
             
             // rayとコライダーが当たっているか
             if(Physics.Raycast(transform.position, direction, out rayhit, distance))    // rayの開始地点、rayの向き、当たったオブジェクトの情報を格納、rayの発射距離
@@ -105,9 +156,34 @@ public class ZooKeeperAI : MonoBehaviour
                 else
                 {
                     //navMesh.isStopped = true;   // ナビゲーションの停止（true:ナビゲーションOFF　false:ナビゲーションON）
-                    navMesh.SetDestination(rootList[rootNum].position);     // 目的地の設定
+                    navMesh.SetDestination(rootList[rootNum].position); // 目的地の再設定
                 }
             }
         }
+        #endregion
     }
+
+    /// <summary>
+    /// オブジェクトを運ぶ
+    /// </summary>
+    private void Bring()
+    {
+        if (catchFlg)
+        {
+            // 掴む
+            gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().isKinematic = true;   // 物理演算の影響を受けないようにする
+            gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().useGravity = false;
+            gimmickObj.gimmickList[gimmickNum].transform.parent = this.transform;
+        }
+        else
+        {
+            // はなす
+            gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().isKinematic = false;   // 物理演算の影響を受けるようにする
+            gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().useGravity = true;
+            gimmickObj.gimmickList[gimmickNum].transform.parent = null;
+            //gimmickObj.gimmickList[gimmickNum].transform.position = resetPos[resetNum].transform.position;
+            gimmickNum = -1;
+        }
+    }
+
 }
