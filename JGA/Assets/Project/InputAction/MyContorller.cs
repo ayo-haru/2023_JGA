@@ -46,27 +46,18 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Hold"",
+                    ""name"": ""Interact"",
                     ""type"": ""Button"",
-                    ""id"": ""1c36e7c8-82b0-4efd-83f8-10760c67fc12"",
+                    ""id"": ""efa36aaf-772c-4e9f-b7fa-12765d2a4057"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Call"",
+                    ""name"": ""Appeal"",
                     ""type"": ""Button"",
                     ""id"": ""940eb873-700d-4f03-9999-0e1dbcc6276f"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Hit"",
-                    ""type"": ""Button"",
-                    ""id"": ""0a9bc19f-0935-4561-9a38-0db87c7b8cb0"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -142,34 +133,12 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""d3177c22-2999-42d9-aa19-c1a8f83477af"",
-                    ""path"": ""<Gamepad>/buttonWest"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Hold"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""3daa6030-b227-4de9-9b43-1b94e5720ef1"",
-                    ""path"": ""<Keyboard>/c"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Hold"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""b86b9dd1-fd84-466c-b1ee-67955fa0e0c7"",
                     ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Call"",
+                    ""action"": ""Appeal"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -180,40 +149,7 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Call"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""2842caec-e4a6-487b-b969-da5dccc122b3"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Hit"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""24255162-73e6-4565-a2c5-88ea41c0a5e8"",
-                    ""path"": ""<Keyboard>/f"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Hit"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""27e3c455-5159-4a45-a402-45df11e4663e"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Run"",
+                    ""action"": ""Appeal"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -225,6 +161,28 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Run"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b81c6db9-8b26-448a-a4ce-dfc37950a0a6"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""74171726-f7a2-477e-82f7-59f31f2b8a5f"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -307,9 +265,8 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
-        m_Player_Hold = m_Player.FindAction("Hold", throwIfNotFound: true);
-        m_Player_Call = m_Player.FindAction("Call", throwIfNotFound: true);
-        m_Player_Hit = m_Player.FindAction("Hit", throwIfNotFound: true);
+        m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
+        m_Player_Appeal = m_Player.FindAction("Appeal", throwIfNotFound: true);
         // Camera
         m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
         m_Camera_ZoomIn = m_Camera.FindAction("ZoomIn", throwIfNotFound: true);
@@ -375,18 +332,16 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Run;
-    private readonly InputAction m_Player_Hold;
-    private readonly InputAction m_Player_Call;
-    private readonly InputAction m_Player_Hit;
+    private readonly InputAction m_Player_Interact;
+    private readonly InputAction m_Player_Appeal;
     public struct PlayerActions
     {
         private @MyContorller m_Wrapper;
         public PlayerActions(@MyContorller wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Run => m_Wrapper.m_Player_Run;
-        public InputAction @Hold => m_Wrapper.m_Player_Hold;
-        public InputAction @Call => m_Wrapper.m_Player_Call;
-        public InputAction @Hit => m_Wrapper.m_Player_Hit;
+        public InputAction @Interact => m_Wrapper.m_Player_Interact;
+        public InputAction @Appeal => m_Wrapper.m_Player_Appeal;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -402,15 +357,12 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
                 @Run.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
                 @Run.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
                 @Run.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
-                @Hold.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHold;
-                @Hold.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHold;
-                @Hold.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHold;
-                @Call.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCall;
-                @Call.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCall;
-                @Call.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCall;
-                @Hit.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHit;
-                @Hit.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHit;
-                @Hit.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHit;
+                @Interact.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
+                @Interact.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
+                @Interact.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
+                @Appeal.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAppeal;
+                @Appeal.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAppeal;
+                @Appeal.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAppeal;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -421,15 +373,12 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
                 @Run.started += instance.OnRun;
                 @Run.performed += instance.OnRun;
                 @Run.canceled += instance.OnRun;
-                @Hold.started += instance.OnHold;
-                @Hold.performed += instance.OnHold;
-                @Hold.canceled += instance.OnHold;
-                @Call.started += instance.OnCall;
-                @Call.performed += instance.OnCall;
-                @Call.canceled += instance.OnCall;
-                @Hit.started += instance.OnHit;
-                @Hit.performed += instance.OnHit;
-                @Hit.canceled += instance.OnHit;
+                @Interact.started += instance.OnInteract;
+                @Interact.performed += instance.OnInteract;
+                @Interact.canceled += instance.OnInteract;
+                @Appeal.started += instance.OnAppeal;
+                @Appeal.performed += instance.OnAppeal;
+                @Appeal.canceled += instance.OnAppeal;
             }
         }
     }
@@ -479,9 +428,8 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
-        void OnHold(InputAction.CallbackContext context);
-        void OnCall(InputAction.CallbackContext context);
-        void OnHit(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
+        void OnAppeal(InputAction.CallbackContext context);
     }
     public interface ICameraActions
     {
