@@ -119,7 +119,7 @@ public class Player : MonoBehaviour
 			if (moveInputValue.normalized != Vector2.zero)
 			{
 				// 候補1
-				var awd = transform.forward - new Vector3(-moveInputValue.x, transform.position.y, -moveInputValue.y) / 10;
+				var awd = transform.forward - new Vector3(-moveInputValue.x, transform.position.y, -moveInputValue.y) / 2;
 				awd.y = 0;
 				transform.LookAt(transform.position + awd);
 
@@ -139,7 +139,7 @@ public class Player : MonoBehaviour
 			// 進行方向に向かって回転する
 			if (moveInputValue.normalized != Vector2.zero)
 			{
-				var awd = transform.forward - new Vector3(-moveInputValue.x, transform.position.y, -moveInputValue.y) / 10;
+				var awd = transform.forward - new Vector3(-moveInputValue.x, transform.position.y, -moveInputValue.y) / 2;
 				awd.y = 0;
 				transform.LookAt(transform.position + awd);
 			}
