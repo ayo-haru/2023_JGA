@@ -36,6 +36,7 @@ public class ZooKeeperAI : MonoBehaviour
 
     private GimmickObj gimmickObj;
     [SerializeField] private List<Transform> resetPos;          // ギミックオブジェクトを元に戻す位置
+    [SerializeField] private List<bool> bReset;
     private bool gimmickFlg = false;    // ギミックオブジェクトに当たったか
     private bool catchFlg = false;      // ギミックオブジェクトを掴んだか
     private int resetNum = -1;
@@ -66,6 +67,15 @@ public class ZooKeeperAI : MonoBehaviour
             rootNum = Random.Range(0, rootList.Count);
             navMesh.SetDestination(rootList[rootNum].position); // 目的地の設定
         }
+        else
+        {
+            navMesh.isStopped = true;   // ナビゲーションの停止（true:ナビゲーションOFF　false:ナビゲーションON）
+        }
+        // 元の位置にあるかフラグ
+        for (int i = 0; i < resetPos.Count; i++)
+        {
+            bReset.Add(false);
+        }
     }
 
 	/// <summary>
@@ -73,32 +83,7 @@ public class ZooKeeperAI : MonoBehaviour
 	/// </summary>
 	void FixedUpdate()
 	{
-        // オブジェクトを元の位置に戻す
-        if(gimmickFlg)
-        {
-            if (navMesh.remainingDistance <= 2.0f    // 目標地点までの距離が2.0ｍ以下になったら到着
-                 && !navMesh.pathPending)            // 経路計算中かどうか（計算中：true　計算完了：false）
-            {
-                gimmickFlg = false;
-                catchFlg = false;
-                Bring();
-                rootNum = Random.Range(0, rootList.Count);
-                navMesh.SetDestination(rootList[rootNum].position); // 目的地の再設定
-            }
-        }
-        else if (rootList.Count >= 1)
-        {
-            if (navMesh.remainingDistance <= 1.0f    // 目標地点までの距離が1.0ｍ以下になったら到着
-                 && !navMesh.pathPending)            // 経路計算中かどうか（計算中：true　計算完了：false）
-            {
-                rootNum = Random.Range(0, rootList.Count);
-                navMesh.SetDestination(rootList[rootNum].position); // 目的地の再設定
-            }
-        }
-        else
-        {
-            navMesh.isStopped = true;   // ナビゲーションの停止（true:ナビゲーションOFF　false:ナビゲーションON）
-        }
+        Move();
     }
 
     /// <summary>
@@ -114,21 +99,27 @@ public class ZooKeeperAI : MonoBehaviour
         #endregion
 
         #region ギミックオブジェクト
-        if (collision.gameObject.tag == "Interact")
+        if (!gimmickFlg && collision.gameObject.tag == "Interact")
         {
             for (int i = 0; i < gimmickObj.gimmickList.Count; i++)
             {
-                // resetPosのnameと同じ位置に戻す
-                for (int j = 0; j < resetPos.Count; j++)
+                if (!bReset[i]) // 元の位置になかったら
                 {
-                    if (resetPos[j].name == gimmickObj.gimmickList[i].name)
+                    if (collision.gameObject.name == gimmickObj.gimmickList[i].name)
                     {
-                        navMesh.SetDestination(resetPos[j].position);   // 目的地をオブジェクトの位置に設定
-                        gimmickFlg = true;
-                        catchFlg = true;
-                        resetNum = j;
-                        gimmickNum = i;
-                        Bring();
+                        // resetPosのnameと同じ位置に戻す
+                        for (int j = 0; j < resetPos.Count; j++)
+                        {
+                            if (resetPos[j].name == gimmickObj.gimmickList[i].name)
+                            {
+                                navMesh.SetDestination(resetPos[j].position);   // 目的地をオブジェクトの位置に設定
+                                gimmickFlg = true;
+                                catchFlg = true;
+                                resetNum = j;
+                                gimmickNum = i;
+                                Bring();
+                            }
+                        }
                     }
                 }
             }
@@ -172,6 +163,56 @@ public class ZooKeeperAI : MonoBehaviour
             }
         }
         #endregion
+
+        #region ギミックオブジェクト
+        // 索敵範囲にギミックオブジェクトが入ったら目的地をオブジェクトに設定
+        if (!gimmickFlg && other.gameObject.tag == "Interact")
+        {
+            for (int i = 0; i < gimmickObj.gimmickList.Count; i++)
+            {
+                if (!bReset[i]) // 元の位置になかったら
+                {
+                    if (other.gameObject.name == gimmickObj.gimmickList[i].name)
+                    {
+                        navMesh.SetDestination(gimmickObj.gimmickList[i].transform.position);   // 目的地をオブジェクトの位置に設定
+                    }
+                }
+            }
+        }
+        #endregion
+    }
+
+    /// <summary>
+    /// 飼育員の移動
+    /// </summary>
+    private void Move()
+    {
+        // オブジェクトを元の位置に戻す
+        if (gimmickFlg)
+        {
+            if (navMesh.remainingDistance <= 2.0f    // 目標地点までの距離が2.0ｍ以下になったら到着
+                 && !navMesh.pathPending)            // 経路計算中かどうか（計算中：true　計算完了：false）
+            {
+                gimmickFlg = false;
+                catchFlg = false;
+                Bring();
+                rootNum = Random.Range(0, rootList.Count);
+                navMesh.SetDestination(rootList[rootNum].position); // 目的地の再設定
+            }
+        }
+        else if (rootList.Count >= 1)
+        {
+            if (navMesh.remainingDistance <= 1.0f    // 目標地点までの距離が1.0ｍ以下になったら到着
+                 && !navMesh.pathPending)            // 経路計算中かどうか（計算中：true　計算完了：false）
+            {
+                rootNum = Random.Range(0, rootList.Count);
+                navMesh.SetDestination(rootList[rootNum].position); // 目的地の再設定
+            }
+        }
+        else
+        {
+            navMesh.isStopped = true;   // ナビゲーションの停止（true:ナビゲーションOFF　false:ナビゲーションON）
+        }
     }
 
     /// <summary>
@@ -192,6 +233,8 @@ public class ZooKeeperAI : MonoBehaviour
             gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().isKinematic = false;   // 物理演算の影響を受けるようにする
             gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().useGravity = true;
             gimmickObj.gimmickList[gimmickNum].transform.parent = null;
+            gimmickObj.gimmickList[gimmickNum].transform.position = resetPos[resetNum].transform.position;
+            bReset[gimmickNum] = true;
         }
     }
 
