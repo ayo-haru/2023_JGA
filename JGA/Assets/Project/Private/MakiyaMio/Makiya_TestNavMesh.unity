@@ -881,6 +881,37 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0, z: 0}
   m_TimeToStationary: 0.5
+--- !u!1 &727403529
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 727403530}
+  m_Layer: 0
+  m_Name: hako1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &727403530
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 727403529}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -8.1, y: 0.5, z: 13.73}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &858469254
 GameObject:
   m_ObjectHideFlags: 0
@@ -1682,6 +1713,8 @@ MonoBehaviour:
   search: 2
   resetPos:
   - {fileID: 858469255}
+  - {fileID: 727403530}
+  bReset: 
 --- !u!195 &2091774994
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1747,4 +1780,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gimmickObj:
   - {fileID: 7007342627476083825, guid: 1396f98f3ca68a341bf4d8e070bbe3a2, type: 3}
+  - {fileID: 6435940620924721197, guid: bdc4fc778a3b2374189efb637b272fa0, type: 3}
   gimmickList: []
