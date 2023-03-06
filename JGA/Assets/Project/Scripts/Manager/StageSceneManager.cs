@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class StageSceneManager : MonoBehaviour {
+    private GameObject playerObj;
+
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
     /// </summary>
@@ -24,6 +26,8 @@ public class StageSceneManager : MonoBehaviour {
     /// 最初のフレーム更新の前に呼び出される
     /// </summary>
     void Start() {
+        playerObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Player.prefab");
+        Instantiate(gameObject,new Vector3(-102.0f,1.5f,-83.0f),Quaternion.identity);
 
     }
 
