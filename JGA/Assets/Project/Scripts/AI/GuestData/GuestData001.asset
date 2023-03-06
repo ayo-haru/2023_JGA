@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: GuestData001
   m_EditorClassIdentifier: 
   speed: 3
-  interest: 1
+  rayLength: 10
   reactionArea: 6
   distance: 2
+  firstCoolDownTime: 3
+  secondCoolDownTime: 2
   waitTime: 0

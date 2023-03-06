@@ -1001,10 +1001,10 @@ GameObject:
   - component: {fileID: 698637637}
   - component: {fileID: 698637641}
   - component: {fileID: 698637643}
-  - component: {fileID: 698637640}
   - component: {fileID: 698637646}
   - component: {fileID: 698637647}
   - component: {fileID: 698637648}
+  - component: {fileID: 698637649}
   m_Layer: 0
   m_Name: Guest
   m_TagString: Untagged
@@ -1078,7 +1078,7 @@ MonoBehaviour:
     - toNode: 0
       toNodeTransition: {fileID: 698637647}
     - toNode: 3
-      toNodeTransition: {fileID: 698637640}
+      toNodeTransition: {fileID: 698637649}
   - stateNum: 3
     state: {fileID: 698637641}
     transitions: []
@@ -1181,19 +1181,6 @@ MonoBehaviour:
   - {fileID: 494503359}
   - {fileID: 373252040}
   - {fileID: 1748171249}
---- !u!114 &698637640
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 698637627}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa3ef078c33b2a3438f121a9d814507b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 616170651}
 --- !u!114 &698637641
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1261,6 +1248,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d997025eac1278b4f892ba6a583f9b41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &698637649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 698637627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b179b7ecd0800a441bc12fa39bdbd404, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inv: 0
+  target: {fileID: 616170651}
 --- !u!1 &934299863
 GameObject:
   m_ObjectHideFlags: 0

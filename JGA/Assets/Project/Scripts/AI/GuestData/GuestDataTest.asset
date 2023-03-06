@@ -17,5 +17,5 @@ MonoBehaviour:
   reactionArea: 15
   distance: 2
   firstCoolDownTime: 3
-  secondCoolDownTime: 5
+  secondCoolDownTime: 2
   waitTime: 0

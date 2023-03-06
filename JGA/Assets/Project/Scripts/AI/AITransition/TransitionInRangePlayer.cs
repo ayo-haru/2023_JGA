@@ -1,31 +1,30 @@
 //=============================================================================
-// @File	: [TransitionNearTarget.cs]
-// @Brief	: 遷移条件　ターゲットが近づいたら
+// @File	: [TransitionInRangePlayer.cs]
+// @Brief	: 遷移条件　プレイヤーが範囲内にいるか
 // @Author	: Ogusu Yuuko
-// @Editer	: Ogusu Yuuko
+// @Editer	: 
 // @Detail	: 
 // 
 // [Date]
-// 2023/02/28	スクリプト作成
-// 2023/03/02	(小楠)データの取得方法変更
+// 2023/03/05	スクリプト作成
+// 2023/03/06	スクリプト名変えた エラーチェック追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TransitionNearTarget : AITransition
+public class TransitionInRangePlayer : AITransition
 {
-    //指定距離
     private GuestData data;
-    //ターゲットのTransforom
-    [SerializeField] private Transform target;
+    [SerializeField,Tooltip("プレイヤーが範囲外に出たら遷移したい場合はチェックを入れてください")] private bool inv = false;
+    private Transform target;
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
 	/// </summary>
 	void Awake()
 	{
-        data = GetComponent<AIManager>().GetGuestData();
+		
 	}
 
 	/// <summary>
@@ -54,11 +53,17 @@ public class TransitionNearTarget : AITransition
 
     public override void InitTransition()
     {
-        //特になし
+        if (!data) data = GetComponent<AIManager>().GetGuestData();
+        if (!target) target = GameObject.FindWithTag("Player").GetComponent<Transform>();
     }
 
     public override bool IsTransition()
     {
-        return Vector3.Distance(gameObject.transform.position, target.position) < data.reactionArea ? true : false;
+        if (!target)
+        {
+            Debug.LogError("プレイヤーが設定されていません");
+            return false;
+        }
+        return (Vector3.Distance(gameObject.transform.position, target.position) <= data.reactionArea) != inv;
     }
 }

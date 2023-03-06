@@ -2,11 +2,12 @@
 // @File	: [AITransitionAttensionAction.cs]
 // @Brief	: 遷移条件 専用アクションをしたか
 // @Author	: Ogusu Yuuko
-// @Editer	: 
+// @Editer	: Ogusu Yuuko
 // @Detail	: 
 // 
 // [Date]
 // 2023/03/05	スクリプト作成
+// 2023/03/06	(小楠)コントローラのエラー直した
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ public class TransitionAttensionAction : AITransition
     /// </summary>
     void Awake()
 	{
-        
+
     }
 
 	/// <summary>
@@ -58,8 +59,8 @@ public class TransitionAttensionAction : AITransition
     {
         //プレイヤーが専用アクションをしたかフラグを取得して返す
 
-
+        Gamepad input = Gamepad.current;
         //仮で○ボタン押しっぱなしだったらtrueを返す
-        return Input.GetKey(KeyCode.Space) || Gamepad.current.buttonEast.IsPressed();
+        return (input != null) ? input.buttonEast.IsPressed() : false || Input.GetKey(KeyCode.Space);
     }
 }

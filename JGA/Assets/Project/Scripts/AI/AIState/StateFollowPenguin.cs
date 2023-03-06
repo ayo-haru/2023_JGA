@@ -11,6 +11,7 @@
 // 2023/03/02	(小楠）データの取得方法変更
 // 2023/03/03	(小楠）UI追加
 // 2023/03/05	(小楠）UIの表示変更
+// 2023/03/06	(小楠）コントローラのエラー直した　追従の仕様変更
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -79,19 +80,16 @@ public class StateFollowPenguin : AIState
 
     public override void UpdateState()
     {
-        //ペンギンがアピールしているかどうかで、反応する距離やUIの変更を行う
+        Gamepad input = Gamepad.current;
 
         //客が反応したかどうか 専用アクションをしてる　かつ　反応できる範囲に居る
-        if ((Gamepad.current.buttonEast.IsPressed() || Input.GetKey(KeyCode.Space)) && 
-            Vector3.Distance(transform.position,target.position) <= data.reactionArea * ((int)ui.GetEmotion() / (float)EEmotion.ATTENSION_HIGH))
+        if (Vector3.Distance(transform.position,target.position) <= data.reactionArea * ((int)ui.GetEmotion() / (float)EEmotion.ATTENSION_HIGH) &&
+            input != null ? input.buttonEast.IsPressed() : false || Input.GetKey(KeyCode.Space))
         {
-            ui.SetEmotion(EEmotion.ATTENSION_HIGH);
-            fTimer = 0.0f;
-            agent.speed = data.speed;
+             ui.SetEmotion(EEmotion.ATTENSION_HIGH);
+             fTimer = 0.0f;
         }else
         {
-            //反応してないので停止する
-            agent.speed = 0.0f;
             //感情の更新
             switch (ui.GetEmotion()) {
                 case EEmotion.ATTENSION_HIGH:
@@ -100,18 +98,16 @@ public class StateFollowPenguin : AIState
                     float coolDownTime = ui.GetEmotion() == EEmotion.ATTENSION_HIGH ? data.firstCoolDownTime : data.secondCoolDownTime;
                     if(fTimer >= coolDownTime)
                     {
-                        fTimer = 0.0f;
                         ui.SetEmotion(ui.GetEmotion() - 1);
+                        fTimer = 0.0f;
                     }
                     break;
             }
         }
 
-
-
-
+        //感情がMAXの時は追従する
         //ペンギンとの距離が近い場合は移動しない
-        if (agent.remainingDistance < data.distance) agent.speed = 0.0f;
+        agent.speed = (agent.remainingDistance < data.distance) ? 0.0f : (ui.GetEmotion() == EEmotion.ATTENSION_HIGH) ? data.speed : 0.0f;
 
         agent.SetDestination(target.position);
     }
