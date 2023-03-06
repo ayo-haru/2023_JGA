@@ -147,11 +147,15 @@ MonoBehaviour:
   rb: {fileID: 6915197449689093812}
   audioSource: {fileID: 0}
   seCall: {fileID: 8300000, guid: 5d2a7da4e5a38db4fbdbd236554a27eb, type: 3}
+  cameraPrefab: {fileID: 0}
   moveForce: 7
   runMagnification: 1.5
   maxSpeed: 5
+  joyRunZone: 0.8
+  isInteract: 0
   isHold: 0
   isRun: 0
+  bGamePad: 0
   WithinRange: []
 --- !u!82 &6915197449689093805
 AudioSource:

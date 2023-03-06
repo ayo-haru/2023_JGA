@@ -27,15 +27,22 @@ public class Player : MonoBehaviour
 	private float runMagnification = 1.5f;
 	[SerializeField, Tooltip("最高速度")]
 	private float maxSpeed = 5;
+	[SerializeField, Tooltip("ジョイスティックで走り始めるゾーン")]
+	private float joyRunZone = 0.8f;
 
+
+	[SerializeField] private bool isInteract;   // インタラクトフラグ
+	public bool IsInteract { get; set; }        // インタラクトプロパティ
 
 	[SerializeField] private bool isHold;       // つかみフラグ
 	[SerializeField] private bool isRun;        // 走りフラグ
 
+
+	[SerializeField] private bool bGamePad;                      // ゲームパッド接続確認
 	private MyContorller gameInputs;            // キー入力
 	private Vector2 moveInputValue;             // 移動方向
 
-	private Collider HoldObject;                // 掴んでいるオブジェクト：コリジョン
+	private Collider InteractObject;            // 掴んでいるオブジェクト：コリジョン
 	private Rigidbody HoldObjectRb;             // 掴んでいるオブジェクト：重力関連
 	[SerializeField]
 	private List<Collider> WithinRange = new List<Collider>();
@@ -55,6 +62,9 @@ public class Player : MonoBehaviour
 		if (audioSource == null)
 			audioSource = GetComponent<AudioSource>();
 
+		if (cameraPrefab == null)
+			cameraPrefab = Camera.main.transform;
+
 		// seCallの音量クソでかいので小さくする
 		audioSource.volume = 0.2f;
 
@@ -64,12 +74,12 @@ public class Player : MonoBehaviour
 		// Actionイベント登録
 		gameInputs.Player.Move.performed += OnMove;
 		gameInputs.Player.Move.canceled += OnMove;
-		gameInputs.Player.Hit.performed += OnHit;
-		gameInputs.Player.Hold.performed += OnHold;
-		gameInputs.Player.Hold.canceled += OnHold;
+		gameInputs.Player.Appeal.performed += OnAppeal;
+		gameInputs.Player.Appeal.canceled += OnAppeal;
+		gameInputs.Player.Interact.performed += OnInteract;
+		gameInputs.Player.Interact.canceled += OnInteract;
 		gameInputs.Player.Run.performed += OnRun;
 		gameInputs.Player.Run.canceled += OnRun;
-		gameInputs.Player.Call.performed += OnCall;
 
 		// Input Actionを有効化
 		gameInputs.Enable();
@@ -84,27 +94,58 @@ public class Player : MonoBehaviour
 
 	}
 
+	private void Update()
+	{
+		// ゲームパッドが接続されていないとnullになる。
+		if (Gamepad.current == null)
+			bGamePad = false;
+		else
+			bGamePad = true;
+
+		if (isInteract == true)
+			isInteract = false;
+	}
+
 	/// <summary>
 	/// 移動処理
 	/// </summary>
 	private void Move()
 	{
-		// 制限速度内の場合、移動方向の力を与える
-		if (rb.velocity.magnitude < maxSpeed * (isRun ? runMagnification : 1))
-			rb.AddForce(new Vector3(moveInputValue.x, 0, moveInputValue.y) * moveForce * (isRun ? runMagnification : 1));
-		//rb.velocity = new Vector3(moveInputValue.x, 0, moveInputValue.y) * moveForce * (isRun ? runMagnification : 1);
-
-		// 進行方向に向かって回転する
-		if (moveInputValue.normalized != Vector2.zero)
+		if (!bGamePad)
 		{
-			// 候補1
-			var awd = transform.forward - new Vector3(-moveInputValue.x, transform.position.y, -moveInputValue.y) / 10;
-			awd.y = 0;
-			transform.LookAt(transform.position + awd);
+			// 制限速度内の場合、移動方向の力を与える
+			if (rb.velocity.magnitude < maxSpeed * (isRun ? runMagnification : 1))
+				rb.AddForce(new Vector3(moveInputValue.x, 0, moveInputValue.y) * moveForce * (isRun ? runMagnification : 1));
+			//rb.velocity = new Vector3(moveInputValue.x, 0, moveInputValue.y) * moveForce * (isRun ? runMagnification : 1);
 
-			//// 候補2
-			//var vael = new Vector3(moveInputValue.x, transform.position.y, moveInputValue.y) - transform.forward;
-			//transform.Rotate(Vector3.up, vael.magnitude, Space.World);
+			// 進行方向に向かって回転する
+			if (moveInputValue.normalized != Vector2.zero)
+			{
+				// 候補1
+				var awd = transform.forward - new Vector3(-moveInputValue.x, transform.position.y, -moveInputValue.y) / 10;
+				awd.y = 0;
+				transform.LookAt(transform.position + awd);
+
+				//// 候補2
+				//var vael = new Vector3(moveInputValue.x, transform.position.y, moveInputValue.y) - transform.forward;
+				//transform.Rotate(Vector3.up, vael.magnitude, Space.World);
+			}
+		}
+		else
+		{
+			isRun = moveInputValue.magnitude >= joyRunZone;
+
+			// 制限速度内の場合、移動方向の力を与える
+			if (rb.velocity.magnitude < maxSpeed * (isRun ? runMagnification : 1))
+				rb.AddForce(new Vector3(moveInputValue.x, 0, moveInputValue.y) * moveForce * (isRun ? runMagnification : 1));
+
+			// 進行方向に向かって回転する
+			if (moveInputValue.normalized != Vector2.zero)
+			{
+				var awd = transform.forward - new Vector3(-moveInputValue.x, transform.position.y, -moveInputValue.y) / 10;
+				awd.y = 0;
+				transform.LookAt(transform.position + awd);
+			}
 		}
 	}
 
@@ -117,6 +158,22 @@ public class Player : MonoBehaviour
 	}
 
 	/// <summary>
+	/// アピール
+	/// </summary>
+	private void OnAppeal(InputAction.CallbackContext context)
+	{
+		switch (context.phase)
+		{
+			case InputActionPhase.Performed:
+				Debug.Log("アピール");
+				break;
+			case InputActionPhase.Canceled:
+				Debug.Log("アピール終了");
+				break;
+		}
+	}
+
+	/// <summary>
 	/// はたく
 	/// </summary>
 	private void OnHit(InputAction.CallbackContext context)
@@ -125,58 +182,91 @@ public class Player : MonoBehaviour
 	}
 
 	/// <summary>
-	/// つかむ
+	/// インタラクト
 	/// </summary>
-	private void OnHold(InputAction.CallbackContext context)
+	private void OnInteract(InputAction.CallbackContext context)
 	{
 		if (WithinRange.Count == 0)
 			return;
 
+
 		// 押された時
 		if (context.phase == InputActionPhase.Performed)
 		{
-			isHold = !isHold;
+			Debug.Log($"インタラクト");
+			isInteract = true;
+			float length = 10.0f;
 
-			// 掴む処理
-			if (isHold)
+			// プレイヤーに一番近いオブジェクトをインタラクト対象とする
+			foreach (Collider obj in WithinRange)
 			{
-				float length = 10.0f;
+				float distance = Vector3.Distance(transform.position, obj.transform.position);
 
-				// キャッチできる範囲内にある複数のオブジェクトから
-				// 一番近いオブジェクトをキャッチする
-				foreach (Collider obj in WithinRange)
+				if (length > distance)
 				{
-					float distance = Vector3.Distance(transform.position, obj.transform.position);
-
-					if (length > distance)
-					{
-						length = distance;
-						HoldObject = obj;
-					}
-				}
-
-				HoldObject.transform.parent = transform;
-				HoldObject.transform.localPosition = new Vector3(0, 0, HoldObject.transform.localPosition.z);
-				HoldObject.transform.localRotation = Quaternion.identity;
-				if (HoldObject.TryGetComponent(out Rigidbody rigidbody))
-				{
-					HoldObjectRb = rigidbody;
-					HoldObjectRb.useGravity = false;
-					HoldObjectRb.isKinematic = true;
+					length = distance;
+					InteractObject = obj;
 				}
 			}
 
-			// 離す処理
-			else
+			switch (InteractObject/*.tag*/)
 			{
-				HoldObject.transform.parent = null;
-				HoldObjectRb.useGravity = true;
-				HoldObjectRb.isKinematic = false;
-				HoldObject = null;
-				HoldObjectRb = null;
+				//case:holdObject
+				//	OnHold(true);
+				//break;
+
+				// case:HitObject
+				//	OnHit();
+				// break;
+
+				default:
+					break;
+			}
+
+		}
+		else
+		{
+			switch (InteractObject/*.tag*/)
+			{
+				//case:holdObject
+				//	OnHold(false);
+				//break;
+
+				default:
+					break;
 			}
 		}
 
+	}
+
+	/// <summary>
+	/// つかむ
+	/// </summary>
+	private void OnHold(bool isHold)
+	{
+		// 掴む処理
+		if (isHold)
+		{
+			InteractObject.transform.parent = transform;
+			InteractObject.transform.localPosition = new Vector3(0, 0, InteractObject.transform.localPosition.z);
+			InteractObject.transform.localRotation = Quaternion.identity;
+			if (InteractObject.TryGetComponent(out Rigidbody rigidbody))
+			{
+				HoldObjectRb = rigidbody;
+				HoldObjectRb.useGravity = false;
+				HoldObjectRb.isKinematic = true;
+			}
+		}
+
+		// 離す処理
+		else
+		{
+			InteractObject.transform.parent = null;
+			HoldObjectRb.useGravity = true;
+			HoldObjectRb.isKinematic = false;
+			InteractObject = null;
+			HoldObjectRb = null;
+		}
 	}
 
 	/// <summary>
@@ -200,7 +290,7 @@ public class Player : MonoBehaviour
 	/// <summary>
 	/// 鳴く
 	/// </summary>
-	private void OnCall(InputAction.CallbackContext context)
+	private void OnCall()
 	{
 		if (seCall != null)
 			audioSource.PlayOneShot(seCall);
@@ -208,6 +298,8 @@ public class Player : MonoBehaviour
 			Debug.LogError($"seCallが定義されていません。");
 
 	}
+
+
 
 	private void OnGUI()
 	{
@@ -217,11 +309,11 @@ public class Player : MonoBehaviour
 	}
 
 
-
+	#region 衝突判定
 	private void OnCollisionStay(Collision collision)
 	{
 		// Playerと掴んでいるオブジェクトが接触していると、ぶっ飛ぶので離す
-		if (HoldObject == collision.collider)
+		if (InteractObject == collision.collider)
 			collision.transform.localPosition += Vector3.forward / 10;
 	}
 
@@ -234,6 +326,7 @@ public class Player : MonoBehaviour
 	{
 		WithinRange.Remove(other);
 	}
+	#endregion
 
 
 

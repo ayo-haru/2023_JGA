@@ -548,7 +548,7 @@ namespace UImGui
 				// クリックされた時
 				if (ImGui.IsItemActive() && SelectObj != transform.gameObject)
 				{
-					Debug.Log($"ItemClicked:{transform.name}");
+					//Debug.Log($"ItemClicked:{transform.name}");
 					SelectObj = transform.gameObject;
 					SelectName = transform.name;
 					if (SelectObj.TryGetComponent(out Rigidbody rigidbody))
