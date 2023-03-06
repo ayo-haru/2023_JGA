@@ -60,6 +60,12 @@ public class ZooKeeperAI : MonoBehaviour
         speed *= testPlayer.speed;      // ペンギンの移動速度の最低1.1倍~最高2.0倍
         navMesh.speed = speed;
         sphereCollider.radius = search; // colliderのradiusを変更する
+
+        if (rootList.Count >= 1)
+        {
+            rootNum = Random.Range(0, rootList.Count);
+            navMesh.SetDestination(rootList[rootNum].position); // 目的地の設定
+        }
     }
 
 	/// <summary>
@@ -70,7 +76,7 @@ public class ZooKeeperAI : MonoBehaviour
         // オブジェクトを元の位置に戻す
         if(gimmickFlg)
         {
-            if (navMesh.remainingDistance <= 2.0f    // 目標地点までの距離が0.1ｍ以下になったら到着
+            if (navMesh.remainingDistance <= 2.0f    // 目標地点までの距離が2.0ｍ以下になったら到着
                  && !navMesh.pathPending)            // 経路計算中かどうか（計算中：true　計算完了：false）
             {
                 gimmickFlg = false;
@@ -82,8 +88,7 @@ public class ZooKeeperAI : MonoBehaviour
         }
         else if (rootList.Count >= 1)
         {
-            navMesh.SetDestination(rootList[rootNum].position);     // 目的地の設定
-            if (navMesh.remainingDistance <= 0.1f    // 目標地点までの距離が0.1ｍ以下になったら到着
+            if (navMesh.remainingDistance <= 1.0f    // 目標地点までの距離が1.0ｍ以下になったら到着
                  && !navMesh.pathPending)            // 経路計算中かどうか（計算中：true　計算完了：false）
             {
                 rootNum = Random.Range(0, rootList.Count);
@@ -155,8 +160,14 @@ public class ZooKeeperAI : MonoBehaviour
                 }
                 else
                 {
-                    //navMesh.isStopped = true;   // ナビゲーションの停止（true:ナビゲーションOFF　false:ナビゲーションON）
-                    navMesh.SetDestination(rootList[rootNum].position); // 目的地の再設定
+                    if (gimmickFlg) // オブジェクトを運んでいるか
+                    {
+                        navMesh.SetDestination(resetPos[resetNum].position);    // 目的地をオブジェクトの位置に設定
+                    }
+                    else
+                    {
+                        navMesh.SetDestination(rootList[rootNum].position);     // 目的地の再設定
+                    }
                 }
             }
         }
@@ -181,8 +192,6 @@ public class ZooKeeperAI : MonoBehaviour
             gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().isKinematic = false;   // 物理演算の影響を受けるようにする
             gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().useGravity = true;
             gimmickObj.gimmickList[gimmickNum].transform.parent = null;
-            //gimmickObj.gimmickList[gimmickNum].transform.position = resetPos[resetNum].transform.position;
-            gimmickNum = -1;
         }
     }
 
