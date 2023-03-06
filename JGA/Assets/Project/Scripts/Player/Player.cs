@@ -62,9 +62,6 @@ public class Player : MonoBehaviour
 		if (audioSource == null)
 			audioSource = GetComponent<AudioSource>();
 
-		if (cameraPrefab == null)
-			cameraPrefab = Camera.main.transform;
-
 		// seCallの音量クソでかいので小さくする
 		audioSource.volume = 0.2f;
 
