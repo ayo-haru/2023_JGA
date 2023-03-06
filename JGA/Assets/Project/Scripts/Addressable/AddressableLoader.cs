@@ -17,6 +17,7 @@ public class AddressableLoader<T> : MonoBehaviour
 {
     private static T result;
 
+
     /// <summary>
     /// アセットバンドルのローダー
     /// </summary>
