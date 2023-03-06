@@ -57,7 +57,7 @@ public class CameraManager : MonoBehaviour
             }
 
             // パラメータを各種オブジェクトに反映
-            parent.position = parameter.position;
+            parent.localPosition = parameter.position;
             parent.eulerAngles = parameter.angles;
 
             var childPos = child.localPosition;
