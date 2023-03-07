@@ -42,11 +42,17 @@ public class ZooKeeperAI : MonoBehaviour
     private int resetNum = -1;
     private int gimmickNum = -1;
 
+
+    [SerializeField] GameObject ReSpawnZone;    // リスポーンする位置
+
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
     /// </summary>
     void Awake()
     {
+        // インスペクターで設定したリスポーン位置に初期配置する
+        this.gameObject.transform.position = ReSpawnZone.transform.position;
+
         //testPlayer = player.GetComponent<TestPlayer>();
         sphereCollider = this.GetComponent<SphereCollider>();
         navMesh = GetComponent<NavMeshAgent>();
@@ -84,6 +90,12 @@ public class ZooKeeperAI : MonoBehaviour
 	void FixedUpdate()
 	{
         Move();
+    }
+
+    private void Update() {
+        if (MySceneManager.GameData.isCatchPenguin) {
+            ReStart();
+        }
     }
 
     /// <summary>
@@ -236,6 +248,21 @@ public class ZooKeeperAI : MonoBehaviour
             gimmickObj.gimmickList[gimmickNum].transform.position = resetPos[resetNum].transform.position;
             bReset[gimmickNum] = true;
         }
+    }
+
+
+    /// <summary>
+    /// 初期配置に戻す
+    /// </summary>
+    private void ReStart() {
+        // インスペクターで設定したリスポーン位置に再配置する
+        this.gameObject.transform.position = ReSpawnZone.transform.position;
+
+        // フラグの初期化
+        /*
+         * ここじゃないとこで変えるかも
+         */
+        MySceneManager.GameData.isCatchPenguin = false;
     }
 
 }
