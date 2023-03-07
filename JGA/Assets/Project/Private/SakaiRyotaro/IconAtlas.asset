@@ -15,7 +15,7 @@ MonoBehaviour:
   RasterizerFlags: 0
   Fonts:
   - _fontAsset: {fileID: 102900000, guid: df8d0e2b5e65cfe4498c4a1ed5a7ca85, type: 3}
-    Path: NotoSansJP-Regular.otf
+    Path: 
     Config:
       FontDataOwnedByAtlas: 1
       FontNo: 0
@@ -34,7 +34,7 @@ MonoBehaviour:
       EllipsisChar: 65535
       CustomGlyphRanges: []
   - _fontAsset: {fileID: 102900000, guid: e1f1a02419237ff41a02e6efc32a196a, type: 3}
-    Path: fa-regular-400.ttf
+    Path: 
     Config:
       FontDataOwnedByAtlas: 1
       FontNo: 0
