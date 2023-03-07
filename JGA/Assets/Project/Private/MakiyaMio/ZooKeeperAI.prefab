@@ -98,7 +98,7 @@ BoxCollider:
   m_GameObject: {fileID: 2458119765899783899}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1.8451399, z: 1}
   m_Center: {x: 0, y: 0.91346055, z: 0}
@@ -114,8 +114,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07d5adba171260d4c9491b72a8d7ee1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gimmickObj: []
   gimmickList: []
+  resetPos: []
+  bReset: 
 --- !u!114 &2458119765899783878
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,8 +132,6 @@ MonoBehaviour:
   rootList: []
   speed: 1.1
   search: 2
-  resetPos: []
-  bReset: 
   ReSpawnZone: {fileID: 0}
 --- !u!195 &2458119765899783877
 NavMeshAgent:
