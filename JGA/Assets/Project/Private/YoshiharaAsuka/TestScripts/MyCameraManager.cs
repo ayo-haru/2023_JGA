@@ -46,7 +46,12 @@ public class MyCameraManager : MonoBehaviour
     [SerializeField]
 	private Parameter parameter;
 
-	// 追従するオブジェクトの更新処理が終わった後にカメラの更新を行うため、LateUpdate()を使用
+    private void Start()
+    {
+        parameter.trackTarget = GameObject.FindGameObjectWithTag("Player").transform;
+    }
+
+    // 追従するオブジェクトの更新処理が終わった後にカメラの更新を行うため、LateUpdate()を使用
     private void LateUpdate()
     {
 		// カメラ情報が登録されていない、また被写体を登録していないなら処理終了
@@ -62,8 +67,6 @@ public class MyCameraManager : MonoBehaviour
 
 		// カメラのパラメータを各種カメラオブジェクトに反映する
 		SetCameraParam();
-
-	
     }
 
 	private void SetCameraParam()
@@ -88,6 +91,6 @@ public class MyCameraManager : MonoBehaviour
 		parameter.position = Vector3.Lerp(
 			a:parameter.position,
 			b:parameter.trackTarget.position,
-			t:Time.deltaTime * 4f);
+			t:Time.deltaTime * 2f);
     }
 }
