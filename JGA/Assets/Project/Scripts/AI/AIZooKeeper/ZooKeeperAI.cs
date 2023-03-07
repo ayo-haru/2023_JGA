@@ -54,7 +54,8 @@ public class ZooKeeperAI : MonoBehaviour
         //testPlayer = player.GetComponent<TestPlayer>();
         sphereCollider = this.GetComponent<SphereCollider>();
         navMesh = GetComponent<NavMeshAgent>();
-        gimmickObj = this.GetComponent<GimmickObj>();
+        //gimmickObj = this.GetComponent<GimmickObj>();
+        gimmickObj = transform.root.gameObject.GetComponent<GimmickObj>();  // 親オブジェクトのスクリプト取得
     }
 
     /// <summary>
