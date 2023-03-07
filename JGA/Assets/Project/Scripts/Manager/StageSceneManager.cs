@@ -39,5 +39,10 @@ public class StageSceneManager : MonoBehaviour {
          * ・ペンギンが飼育員に捕まったらリスタート
          * ・リスタートがかかったら各オブジェクトをリスタート(初期化)させる
          */
+
+        // プロトタイプ用
+        if (Input.GetKeyDown(KeyCode.Escape)){
+            Application.Quit();
+        }
     }
 }
