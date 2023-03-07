@@ -22,8 +22,8 @@ using UnityEngine.AI;
 
 public class ZooKeeperAI : MonoBehaviour
 {
-    [SerializeField] private GameObject player;
-    private TestPlayer testPlayer;
+    //[SerializeField] private GameObject player;
+    //private TestPlayer testPlayer;
 
     [SerializeField] private List<Transform> rootList;          // 飼育員の巡回ルートのリスト
     private int rootNum = 0;
@@ -47,7 +47,7 @@ public class ZooKeeperAI : MonoBehaviour
     /// </summary>
     void Awake()
     {
-        testPlayer = player.GetComponent<TestPlayer>();
+        //testPlayer = player.GetComponent<TestPlayer>();
         sphereCollider = this.GetComponent<SphereCollider>();
         navMesh = GetComponent<NavMeshAgent>();
         gimmickObj = this.GetComponent<GimmickObj>();
@@ -58,8 +58,8 @@ public class ZooKeeperAI : MonoBehaviour
     /// </summary>
     void Start()
     {
-        speed *= testPlayer.speed;      // ペンギンの移動速度の最低1.1倍~最高2.0倍
-        navMesh.speed = speed;
+        //speed *= testPlayer.speed;      // ペンギンの移動速度の最低1.1倍~最高2.0倍
+        navMesh.speed = 3;
         sphereCollider.radius = search; // colliderのradiusを変更する
 
         if (rootList.Count >= 1)
@@ -136,18 +136,18 @@ public class ZooKeeperAI : MonoBehaviour
         // ペンギンとの当たり判定
         if (other.CompareTag("Player"))
         {
-            var diff = player.transform.position - transform.position;  // 差分
-            var distance = diff.magnitude;                              // 距離
-            var direction = diff.normalized;                            // 方向
-            
+            var pos = transform.position;
+            var distance = pos.magnitude;       // 距離
+            var direction = transform.forward;  // 方向
+
             // rayとコライダーが当たっているか
-            if(Physics.Raycast(transform.position, direction, out rayhit, distance))    // rayの開始地点、rayの向き、当たったオブジェクトの情報を格納、rayの発射距離
+            if(Physics.Raycast(pos, direction, out rayhit, distance))    // rayの開始地点、rayの向き、当たったオブジェクトの情報を格納、rayの発射距離
             {
                 // 当たったオブジェクトがペンギンかどうか
-                if(rayhit.transform.gameObject == player)
+                if(rayhit.collider.gameObject.tag == "Player")
                 {
                     navMesh.isStopped = false;
-                    navMesh.destination = player.transform.position;    // ペンギンを追従
+                    navMesh.destination = other.transform.position;    // ペンギンを追従
                 }
                 else
                 {
