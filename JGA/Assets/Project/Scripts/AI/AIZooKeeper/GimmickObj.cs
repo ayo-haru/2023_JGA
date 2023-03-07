@@ -14,33 +14,48 @@ using UnityEngine;
 
 public class GimmickObj : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> gimmickObj;
-    public List<GameObject> gimmickList;      // ギミックオブジェクトの位置
+    public List<GameObject> gimmickList;
+    public List<Transform> resetPos;          // ギミックオブジェクト初期位置
+    public List<bool> bReset;
+    int x1;
+    int z1;
+    int x2;
+    int z2;
 
-	/// <summary>
-	/// 最初のフレーム更新の前に呼び出される
-	/// </summary>
-	void Start()
+    /// <summary>
+    /// 最初のフレーム更新の前に呼び出される
+    /// </summary>
+    void Start()
 	{
-        for (int i = 0; i < gimmickObj.Count; i++)
+        // 元の位置にあるかフラグ
+        for (int i = 0; i < gimmickList.Count; i++)
         {
-            gimmickList.Add(Instantiate(gimmickObj[i].gameObject, gimmickObj[i].transform.position, Quaternion.identity));
-            gimmickList[i].name = gimmickObj[i].name;   // 名前を同じにする
+            bReset.Add(false);
         }
-	}
+    }
 
 	/// <summary>
 	/// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
 	/// </summary>
 	void FixedUpdate()
 	{
-		
-	}
+        for (int i = 0; i < gimmickList.Count; i++)
+        {
+            x1 = (int)gimmickList[i].transform.position.x;
+            z1 = (int)gimmickList[i].transform.position.z;
+            x2 = (int)resetPos[i].transform.position.x;
+            z2 = (int)resetPos[i].transform.position.z;
+            if(x1 != x2 && z1 != z2)
+            {
+                bReset[i] = false;
+            }
+        }
+    }
 
-	/// <summary>
-	/// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
-	/// </summary>
-	void Update()
+    /// <summary>
+    /// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
+    /// </summary>
+    void Update()
 	{
 		
 	}
