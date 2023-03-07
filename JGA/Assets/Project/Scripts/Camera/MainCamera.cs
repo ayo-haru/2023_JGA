@@ -145,7 +145,8 @@ public class MainCamera : MonoBehaviour
 	/// </summary>
 	void Start() {        
         //プレイヤーを格納
-        playerobj = GameObject.FindGameObjectWithTag("Player");
+        //playerobj = GameObject.FindGameObjectWithTag("Player");
+        playerobj = GameObject.Find("LookPos");
 
         //プレイヤーの初期位置とカメラの座標を固定
         offset = cameraParent.transform.position - playerobj.transform.position;
@@ -206,7 +207,7 @@ public class MainCamera : MonoBehaviour
 	/// </summary>
 	void Update()
 	{
-        
+
     }
     
     /// <summary>

@@ -27,7 +27,7 @@ public class StageSceneManager : MonoBehaviour {
     /// </summary>
     void Start() {
         playerObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Player.prefab");
-        Instantiate(playerObj, new Vector3(-102.0f,1.5f,-83.0f),Quaternion.identity);
+        Instantiate(playerObj, new Vector3(-102.0f,1.5f,-83.0f),Quaternion.Euler(0.0f,5.0f,0.0f));
     }
 
     //void FixedUpdate() {
