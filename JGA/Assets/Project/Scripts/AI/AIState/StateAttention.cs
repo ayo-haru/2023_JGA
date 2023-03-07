@@ -18,7 +18,7 @@ using UnityEngine.AI;
 public class StateAttention : AIState
 {
     //プレイヤー位置
-    [SerializeField] private Transform target;
+    private Transform target;
     //回転速度
     [SerializeField,Min(1)] private float rotSpeed = 2.0f;
     //感情UI
@@ -61,7 +61,8 @@ public class StateAttention : AIState
     public override void InitState()
     {
         if(!agent)agent = GetComponent<NavMeshAgent>();
-        agent.speed = 0.0f;
+        if(agent)agent.speed = 0.0f;
+        if (!target) target = GameObject.FindWithTag("Player").GetComponent<Transform>();
 
         //注目中のUIを表示
         ui.SetEmotion(EEmotion.QUESTION);
@@ -69,10 +70,17 @@ public class StateAttention : AIState
 
     public override void UpdateState()
     {
-        //プレイヤーの方向を向く
-        Quaternion rot = Quaternion.LookRotation(target.position - transform.position);
-        rot = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * rotSpeed);
-        transform.rotation = rot;
+        if (target)
+        {
+            //プレイヤーの方向を向く
+            Quaternion rot = Quaternion.LookRotation(target.position - transform.position);
+            rot = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * rotSpeed);
+            transform.rotation = rot;
+        }else
+        {
+            Debug.LogError("プレイヤーが取得できていません");
+        }
+
     }
 
     public override void FinState()

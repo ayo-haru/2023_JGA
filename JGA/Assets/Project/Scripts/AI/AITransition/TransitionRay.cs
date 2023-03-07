@@ -3,10 +3,11 @@
 // @Brief	: 遷移条件　プレイヤーが視界に入ったか
 // @Author	: Ogusu Yuuko
 // @Editer	: 
-// @Detail	: 
+// @Detail	: https://nekojara.city/unity-object-sight
 // 
 // [Date]
 // 2023/03/05	スクリプト作成
+// 2023/03/07	視界をRayから円錐に変更
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -14,8 +15,10 @@ using UnityEngine;
 
 public class TransitionRay : AITransition
 {
+    private Transform playerTransform;
     private GuestData data;
-    [SerializeField,Range(0,360)] private float angle = 45.0f;
+    [SerializeField,Range(0,360),Tooltip("視線の向き")] private float angle = 45.0f;
+    [SerializeField, Range(0, 180), Tooltip("視野角")] private float viewAngle = 45.0f;
     [SerializeField,Tooltip("プレイヤーが視界から外れた時に遷移したい場合はチェックを入れてください")] private bool inv = false;
 
 	/// <summary>
@@ -53,25 +56,42 @@ public class TransitionRay : AITransition
     public override void InitTransition()
     {
         if(!data)data = GetComponent<AIManager>().GetGuestData();
+        if (!playerTransform) playerTransform = GameObject.FindWithTag("Player").GetComponent<Transform>();
     }
 
     public override bool IsTransition()
     {
-        RaycastHit hit;
-        Vector3 pos = transform.position;
-        Vector3 direction = transform.forward;
+        //プレイヤーが視界内に入っているか
+        // 視線の向き
+        Vector3 dir = transform.forward;
+        dir.y -= angle / 360.0f;
 
-        //お客さんの位置からRayを出すと、お客さんのColliderに当たってしまうので、少しずらしてる
-        pos += direction * 1;
+        // ターゲットまでの向きと距離計算
+        Vector3 targetDir = playerTransform.position - transform.position;
+        float targetDistance = targetDir.magnitude;
 
-        //斜め下に傾ける
-        direction.y -= angle / 360.0f;
+        // cos(θ/2)を計算
+        float cosHalf = Mathf.Cos(viewAngle / 2 * Mathf.Deg2Rad);
+
+        // 自身とターゲットへの向きの内積計算
+        // ターゲットへの向きベクトルを正規化する必要があることに注意
+        float innerProduct = Vector3.Dot(dir, targetDir.normalized);
+
 
         //Rayの可視化
-        Debug.DrawRay(pos, direction * 10, Color.red, 1.0f / 60.0f);
+        //お客さんの位置からRayを出すと、お客さんのColliderに当たってしまうので、少しずらしてる
+        Vector3 pos = transform.position;
+        pos += transform.forward * 1;
+        Debug.DrawRay(pos, dir * 10, Color.red, 1.0f / 60.0f);
 
-        //何も当たらなかった場合
-        if (!Physics.Raycast(pos, direction, out hit, data.rayLength)) return inv;
+        // 視界判定 
+        if ((innerProduct > cosHalf && targetDistance < data.rayLength) == inv) return false;
+
+        //視界に入っていた場合プレイヤーに向かってRayを飛ばして、当たったら障害物に隠れていないので、trueを返す
+        RaycastHit hit;
+
+        //客からプレイヤーに向けて例を飛ばす
+        Physics.Raycast(pos, targetDir, out hit, data.rayLength);
 
         //プレイヤーと当たったか判定
         return (hit.collider.gameObject.tag == "Player") != inv;
