@@ -14,6 +14,7 @@
 // 2023/02/28	Raycastの追加
 // 2023/03/02	オブジェクトのListを追加
 // 2023/03/02   ギミックオブジェクトとの当たり判定処理の作成
+// 2023/03/08   ギアニメーション追加、Move()に記述(吉原)
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ public class ZooKeeperAI : MonoBehaviour
     //[SerializeField] private GameObject player;
     //private TestPlayer testPlayer;
 
+    [SerializeField] private Animator animator;
     [SerializeField] private List<Transform> rootList;          // 飼育員の巡回ルートのリスト
     private int rootNum = 0;
     [SerializeField, Range(1.1f, 50.0f)] private float speed;    // 飼育員のスピード
@@ -63,6 +65,7 @@ public class ZooKeeperAI : MonoBehaviour
     /// </summary>
     void Start()
     {
+        animator = GetComponent<Animator>();
         navMesh.speed = speed;
         sphereCollider.radius = search; // colliderのradiusを変更する
 
@@ -196,6 +199,11 @@ public class ZooKeeperAI : MonoBehaviour
         // オブジェクトを元の位置に戻す
         if (gimmickFlg)
         {
+            // プロトタイプ用-------------------
+            // 歩行アニメーション再生
+            animator.SetBool("isWalk", true);
+            //--------------------------------
+
             if (navMesh.remainingDistance <= 2.0f    // 目標地点までの距離が2.0ｍ以下になったら到着
                  && !navMesh.pathPending)            // 経路計算中かどうか（計算中：true　計算完了：false）
             {
@@ -215,6 +223,11 @@ public class ZooKeeperAI : MonoBehaviour
         }
         else if (rootList.Count >= 1)
         {
+            // プロトタイプ用-------------------
+            // 歩行アニメーション再生
+            animator.SetBool("isWalk", true);
+            //--------------------------------
+
             if (navMesh.remainingDistance <= 1.0f    // 目標地点までの距離が1.0ｍ以下になったら到着
                  && !navMesh.pathPending)            // 経路計算中かどうか（計算中：true　計算完了：false）
             {
@@ -232,6 +245,11 @@ public class ZooKeeperAI : MonoBehaviour
         else
         {
             navMesh.isStopped = true;   // ナビゲーションの停止（true:ナビゲーションOFF　false:ナビゲーションON）
+
+            // プロトタイプ用-------------------
+            // 歩行アニメーション再生
+            animator.SetBool("isWalk", false);
+            //--------------------------------
         }
     }
 
@@ -265,12 +283,6 @@ public class ZooKeeperAI : MonoBehaviour
     private void ReStart() {
         // インスペクターで設定したリスポーン位置に再配置する
         this.gameObject.transform.position = ReSpawnZone.transform.position;
-
-        // フラグの初期化
-        /*
-         * ここじゃないとこで変えるかも
-         */
-        MySceneManager.GameData.isCatchPenguin = false;
     }
 
 }

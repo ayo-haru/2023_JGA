@@ -5197,7 +5197,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   audioSource: {fileID: 0}
-  seCall: {fileID: 0}
+  seCall: {fileID: 8300000, guid: 5d2a7da4e5a38db4fbdbd236554a27eb, type: 3}
   anim: {fileID: 0}
   moveForce: 250
   runMagnification: 1

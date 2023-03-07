@@ -735,7 +735,6 @@ GameObject:
   - component: {fileID: 5396560914150009841}
   - component: {fileID: 5396560914150009845}
   - component: {fileID: 5396560914150009842}
-  - component: {fileID: 5396560914150009843}
   m_Layer: 0
   m_Name: ZooKeeperAnim
   m_TagString: Untagged
@@ -806,7 +805,7 @@ BoxCollider:
   m_GameObject: {fileID: 1960879353178395162}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1.8451399, z: 1}
   m_Center: {x: 0, y: 0.91346055, z: 0}
@@ -860,23 +859,7 @@ MonoBehaviour:
   rootList: []
   speed: 1.1
   search: 2
-  resetPos: []
-  bReset: 
   ReSpawnZone: {fileID: 0}
---- !u!114 &5396560914150009843
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1960879353178395162}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07d5adba171260d4c9491b72a8d7ee1a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gimmickObj: []
-  gimmickList: []
 --- !u!1 &1960879353178395164
 GameObject:
   m_ObjectHideFlags: 0
