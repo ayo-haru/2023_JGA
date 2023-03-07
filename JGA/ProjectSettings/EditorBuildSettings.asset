@@ -11,7 +11,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Project/Private/SakaiRyotaro/Sample.unity
     guid: f6e51681bd7ee404dab6577104bd502d
-  - enabled: 1
+  - enabled: 0
     path: Assets/Project/Private/YoshiharaAsuka/CameraMove1.unity
     guid: b8455c28f34111344a6690d2c85b1643
   - enabled: 1

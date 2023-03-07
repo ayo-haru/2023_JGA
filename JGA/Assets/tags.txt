@@ -7,3 +7,4 @@ Player
 GameController
 Interact
 Scenery
+Target

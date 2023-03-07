@@ -15,5 +15,5 @@ MonoBehaviour:
   list:
   - displayName: Player.prefab
     ID: 0
-    prefab: {fileID: 6915197449689093813, guid: c1e67d0513e35e647b21c89ab29787e4,
+    prefab: {fileID: 6903381975108728195, guid: 5586ea2c0ee038e4ba2d458cda7b7fac,
       type: 3}
