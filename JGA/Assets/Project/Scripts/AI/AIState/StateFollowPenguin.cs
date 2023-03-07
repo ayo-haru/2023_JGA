@@ -12,6 +12,7 @@
 // 2023/03/03	(小楠）UI追加
 // 2023/03/05	(小楠）UIの表示変更
 // 2023/03/06	(小楠）コントローラのエラー直した　追従の仕様変更
+// 2023/03/07	(小楠）プレイヤーの方向向くようにした
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -84,7 +85,7 @@ public class StateFollowPenguin : AIState
 
         //客が反応したかどうか 専用アクションをしてる　かつ　反応できる範囲に居る
         if (Vector3.Distance(transform.position,target.position) <= data.reactionArea * ((int)ui.GetEmotion() / (float)EEmotion.ATTENSION_HIGH) &&
-            input != null ? input.buttonEast.IsPressed() : false || Input.GetKey(KeyCode.Space))
+            (input != null ? input.buttonEast.IsPressed() : false || Input.GetKey(KeyCode.Space)))
         {
              ui.SetEmotion(EEmotion.ATTENSION_HIGH);
              fTimer = 0.0f;
@@ -108,8 +109,12 @@ public class StateFollowPenguin : AIState
         //感情がMAXの時は追従する
         //ペンギンとの距離が近い場合は移動しない
         agent.speed = (agent.remainingDistance < data.distance) ? 0.0f : (ui.GetEmotion() == EEmotion.ATTENSION_HIGH) ? data.speed : 0.0f;
-
         agent.SetDestination(target.position);
+
+        //プレイヤーの方向を向く
+        Quaternion rot = Quaternion.LookRotation(target.position - transform.position);
+        rot = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime);
+        transform.rotation = rot;
     }
 
     public override void FinState()
