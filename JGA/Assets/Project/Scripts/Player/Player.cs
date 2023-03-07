@@ -34,6 +34,7 @@ public class Player : MonoBehaviour
 
 	[SerializeField] private bool isInteract;   // インタラクトフラグ
 	public bool IsInteract { get; set; }        // インタラクトプロパティ
+	private bool delay;
 
 	[SerializeField] private bool isHold;       // つかみフラグ
 	[SerializeField] private bool isRun;        // 走りフラグ
@@ -104,8 +105,13 @@ public class Player : MonoBehaviour
 		else
 			bGamePad = true;
 
-		if (isInteract == true)
-			isInteract = false;
+		if (isInteract)
+		{
+			if (!delay)
+				delay = true;
+			else
+				isInteract = false;
+		}
 
 
 		anim.SetBool("move", moveInputValue.normalized != Vector2.zero);
