@@ -30,6 +30,12 @@ public class Player : MonoBehaviour
 	private float maxSpeed = 5;
 	[SerializeField, Tooltip("ジョイスティックで走り始めるゾーン")]
 	private float joyRunZone = 0.8f;
+	[SerializeField, Tooltip("鳴く間隔の最小値"), Range(0.0f, 30.0f)]
+	private float callMin = 0.5f;
+	[SerializeField, Tooltip("鳴く間隔の最大値"), Range(0.0f, 30.0f)]
+	private float callMax = 5.0f;
+	[SerializeField]
+	private float callInterval = 0;
 
 
 	[SerializeField] private bool isInteract;   // インタラクトフラグ
@@ -38,6 +44,7 @@ public class Player : MonoBehaviour
 
 	[SerializeField] private bool isHold;       // つかみフラグ
 	[SerializeField] private bool isRun;        // 走りフラグ
+	[SerializeField] private bool isAppeal;     // アピールフラグ
 
 
 	[SerializeField] private bool bGamePad;                      // ゲームパッド接続確認
@@ -116,6 +123,19 @@ public class Player : MonoBehaviour
 			}
 		}
 
+		if (isAppeal)
+		{
+			if (callInterval > 0)
+			{
+				callInterval -= Time.deltaTime;
+			}
+			else
+			{
+				callInterval = Random.Range(callMin, callMax);
+				OnCall();
+			}
+		}
+
 
 		anim.SetBool("move", moveInputValue.normalized != Vector2.zero);
 		anim.SetBool("run", isRun);
@@ -181,13 +201,14 @@ public class Player : MonoBehaviour
 		{
 			case InputActionPhase.Performed:
 				Debug.Log("アピール");
-				anim.SetBool("Appeal", true);
+				isAppeal = true;
 				break;
 			case InputActionPhase.Canceled:
 				Debug.Log("アピール終了");
-				anim.SetBool("Appeal", false);
+				isAppeal = false;
 				break;
 		}
+		anim.SetBool("Appeal", isAppeal);
 	}
 
 	/// <summary>
