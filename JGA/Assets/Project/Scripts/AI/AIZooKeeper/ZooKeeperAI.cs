@@ -23,9 +23,6 @@ using UnityEngine.AI;
 
 public class ZooKeeperAI : MonoBehaviour
 {
-    //[SerializeField] private GameObject player;
-    //private TestPlayer testPlayer;
-
     [SerializeField] private Animator animator;
     [SerializeField] private List<Transform> rootList;          // 飼育員の巡回ルートのリスト
     private int rootNum = 0;
@@ -53,10 +50,8 @@ public class ZooKeeperAI : MonoBehaviour
         // インスペクターで設定したリスポーン位置に初期配置する
         this.gameObject.transform.position = ReSpawnZone.transform.position;
 
-        //testPlayer = player.GetComponent<TestPlayer>();
         sphereCollider = this.GetComponent<SphereCollider>();
         navMesh = GetComponent<NavMeshAgent>();
-        //gimmickObj = this.GetComponent<GimmickObj>();
         gimmickObj = transform.root.gameObject.GetComponent<GimmickObj>();  // 親オブジェクトのスクリプト取得
     }
 
@@ -117,18 +112,12 @@ public class ZooKeeperAI : MonoBehaviour
                     if (collision.gameObject.name == gimmickObj.gimmickList[i].name)
                     {
                         // resetPosのnameと同じ位置に戻す
-                        for (int j = 0; j < gimmickObj.resetPos.Count; j++)
-                        {
-                            if (gimmickObj.resetPos[j].name == gimmickObj.gimmickList[i].name)
-                            {
-                                navMesh.SetDestination(gimmickObj.resetPos[j].position);   // 目的地をオブジェクトの位置に設定
-                                gimmickFlg = true;
-                                catchFlg = true;
-                                resetNum = j;
-                                gimmickNum = i;
-                                Bring();
-                            }
-                        }
+                        navMesh.SetDestination(gimmickObj.resetPos[i].position);   // 目的地をオブジェクトの位置に設定
+                        gimmickFlg = true;
+                        catchFlg = true;
+                        resetNum = i;
+                        gimmickNum = i;
+                        Bring();
                     }
                 }
             }
