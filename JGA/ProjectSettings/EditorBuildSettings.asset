@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Project/Scenes/ProtoType/ProtoType.unity
+    guid: 79b9af10cd3a67642ace36aaa85cd587
+  - enabled: 1
     path: Assets/Project/Scenes/InitializeScene.unity
     guid: a440afc7f9f394a45b9c9af0733e2dfb
   - enabled: 0
@@ -14,9 +17,6 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Project/Private/YoshiharaAsuka/CameraMove1.unity
     guid: b8455c28f34111344a6690d2c85b1643
-  - enabled: 1
-    path: Assets/Project/Scenes/ProtoType/ProtoType.unity
-    guid: 79b9af10cd3a67642ace36aaa85cd587
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: d988ba3f438543143b87a8925593af1d,
       type: 2}
