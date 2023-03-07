@@ -190,8 +190,13 @@ public class MainCamera : MonoBehaviour
             scriptStop = 0.0f;
         }
 
-        CameraMove();
-        if(zoomFlg)
+        cameraParent.position = Vector3.Lerp(
+    a: cameraParent.position,
+    b: playerobj.transform.position,
+    t: Time.deltaTime * 2f);
+
+        //CameraMove();
+        if (zoomFlg)
         {
             ZoomInOut();
         }
