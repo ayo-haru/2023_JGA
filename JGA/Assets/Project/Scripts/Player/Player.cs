@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
 	[SerializeField] private Rigidbody rb;
 	[SerializeField] private AudioSource audioSource;
 	[SerializeField] private AudioClip seCall;          // ＳＥ：鳴き声
+	[SerializeField] private Animator anim;             // Animatorへの参照
 
 	[Header("ステータス")]
 	[SerializeField, Tooltip("追加速度")]
@@ -62,6 +63,10 @@ public class Player : MonoBehaviour
 		if (audioSource == null)
 			audioSource = GetComponent<AudioSource>();
 
+		if (anim == null)
+			anim = GetComponent<Animator>();
+
+
 		// seCallの音量クソでかいので小さくする
 		audioSource.volume = 0.2f;
 
@@ -101,6 +106,10 @@ public class Player : MonoBehaviour
 
 		if (isInteract == true)
 			isInteract = false;
+
+
+		anim.SetBool("move", moveInputValue.normalized != Vector2.zero);
+		anim.SetBool("run", isRun);
 	}
 
 	/// <summary>
@@ -163,9 +172,11 @@ public class Player : MonoBehaviour
 		{
 			case InputActionPhase.Performed:
 				Debug.Log("アピール");
+				anim.SetBool("Appeal", true);
 				break;
 			case InputActionPhase.Canceled:
 				Debug.Log("アピール終了");
+				anim.SetBool("Appeal", false);
 				break;
 		}
 	}
@@ -295,16 +306,6 @@ public class Player : MonoBehaviour
 			Debug.LogError($"seCallが定義されていません。");
 
 	}
-
-
-
-	private void OnGUI()
-	{
-		GUILayout.Label($"");   // imgui回避
-		GUILayout.Label($"isRun:{isRun}");
-		GUILayout.Label($"isHold:{isHold}");
-	}
-
 
 	#region 衝突判定
 	private void OnCollisionStay(Collision collision)
