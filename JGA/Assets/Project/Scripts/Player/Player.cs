@@ -2,11 +2,12 @@
 // @File	: [Player.cs]
 // @Brief	: 
 // @Author	: Sakai Ryotaro
-// @Editer	: 
+// @Editer	: Ichida Mai
 // @Detail	: 
 // 
 // [Date]
 // 2023/02/25	スクリプト作成
+// 2023/03/08	リスポーンするよ
 //=============================================================================
 using System.Collections.Generic;
 using UnityEngine;
@@ -56,6 +57,7 @@ public class Player : MonoBehaviour
 	[SerializeField]
 	private List<Collider> WithinRange = new List<Collider>();
 
+	private GameObject respawnZone;				// リスポーン位置プレハブ設定用
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -73,6 +75,11 @@ public class Player : MonoBehaviour
 
 		if (anim == null)
 			anim = GetComponent<Animator>();
+
+		respawnZone = GameObject.Find("PlayerSpawn");
+		if(respawnZone == null) {
+			Debug.LogError("<color=red>プレイヤーのリスポーン位置が見つかりません[Player.cs]</color>");
+        }
 
 
 		// seCallの音量クソでかいので小さくする
@@ -111,6 +118,12 @@ public class Player : MonoBehaviour
 			bGamePad = false;
 		else
 			bGamePad = true;
+
+        // リスタート
+        if (MySceneManager.GameData.isCatchPenguin) {
+			ReStart();
+			return;
+        }
 
 		if (isInteract)
 		{
@@ -356,9 +369,8 @@ public class Player : MonoBehaviour
 	}
 	#endregion
 
-
-
-
-
-
+	public void ReStart() {
+		// インスペクターで設定したリスポーン位置に再配置する
+		this.gameObject.transform.position = respawnZone.transform.position;
+	}
 }

@@ -14,6 +14,10 @@ using UnityEngine;
 
 public class StageSceneManager : MonoBehaviour {
     private GameObject playerObj;
+    private GameObject playerInstance;
+    private Player _Player;
+
+    private bool isOnce;    // 実行されたら一回だけ呼ぶ処理の一回だけの判定に使う
 
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -27,7 +31,7 @@ public class StageSceneManager : MonoBehaviour {
     /// </summary>
     void Start() {
         playerObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Player.prefab");
-        Instantiate(playerObj, new Vector3(-102.0f,1.5f,-83.0f),Quaternion.Euler(0.0f,5.0f,0.0f));
+        playerInstance = Instantiate(playerObj, new Vector3(-102.0f,1.5f,-83.0f),Quaternion.Euler(0.0f,5.0f,0.0f));
     }
 
     //void FixedUpdate() {
@@ -36,13 +40,22 @@ public class StageSceneManager : MonoBehaviour {
 
     void Update() {
         /*
-         * ・ペンギンが飼育員に捕まったらリスタート
          * ・リスタートがかかったら各オブジェクトをリスタート(初期化)させる
          */
 
         // プロトタイプ用
         if (Input.GetKeyDown(KeyCode.Escape)){
-            Application.Quit();
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;//ゲームプレイ終了
+#else
+    Application.Quit();//ゲームプレイ終了
+#endif
+        }
+    }
+
+    private void LateUpdate() {
+        if (MySceneManager.GameData.isCatchPenguin) {
+            MySceneManager.GameData.isCatchPenguin = false;
         }
     }
 }
