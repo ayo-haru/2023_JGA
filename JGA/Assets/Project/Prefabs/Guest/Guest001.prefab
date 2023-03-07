@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7104924354389222853}
   - component: {fileID: 7104924354389222850}
   - component: {fileID: 7104924354389222851}
+  - component: {fileID: 4466092708089433874}
   - component: {fileID: 7104924354389222848}
   - component: {fileID: 7104924354389222845}
   - component: {fileID: 7104924354389222849}
@@ -40,7 +41,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -5.76, y: 1.79, z: -10.06}
   m_LocalScale: {x: 3, y: 3, z: 3}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7104924355581747489}
   - {fileID: 7104924354928013150}
@@ -97,6 +98,26 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!95 &4466092708089433874
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7104924354389222842}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: a605200f385f8d549820729661fcf551, type: 3}
+  m_Controller: {fileID: 9100000, guid: 0f046a6c46dba244f83bbd5a4b3eb9cd, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
 --- !u!136 &7104924354389222848
 CapsuleCollider:
   m_ObjectHideFlags: 0
