@@ -136,12 +136,12 @@ public class ZooKeeperAI : MonoBehaviour
         // ペンギンとの当たり判定
         if (other.CompareTag("Player"))
         {
-            var pos = transform.position;
-            var distance = pos.magnitude;       // 距離
-            var direction = transform.forward;  // 方向
+            var pos = other.transform.position - transform.position;
+            var distance = pos.magnitude;   // 距離
+            var direction = pos.normalized; // 方向
 
             // rayとコライダーが当たっているか
-            if(Physics.Raycast(pos, direction, out rayhit, distance))    // rayの開始地点、rayの向き、当たったオブジェクトの情報を格納、rayの発射距離
+            if(Physics.Raycast(transform.position, direction, out rayhit, distance))    // rayの開始地点、rayの向き、当たったオブジェクトの情報を格納、rayの発射距離
             {
                 // 当たったオブジェクトがペンギンかどうか
                 if(rayhit.collider.gameObject.tag == "Player")
