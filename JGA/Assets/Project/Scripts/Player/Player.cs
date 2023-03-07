@@ -33,7 +33,7 @@ public class Player : MonoBehaviour
 
 
 	[SerializeField] private bool isInteract;   // インタラクトフラグ
-	public bool IsInteract { get; set; }        // インタラクトプロパティ
+	public bool IsInteract { get { return isInteract; } set { isInteract = value; } }        // インタラクトプロパティ
 	private bool delay;
 
 	[SerializeField] private bool isHold;       // つかみフラグ
@@ -110,7 +110,10 @@ public class Player : MonoBehaviour
 			if (!delay)
 				delay = true;
 			else
+			{
+				delay = false;
 				isInteract = false;
+			}
 		}
 
 
