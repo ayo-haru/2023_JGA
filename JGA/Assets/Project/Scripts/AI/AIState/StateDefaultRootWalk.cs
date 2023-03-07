@@ -63,7 +63,18 @@ public class StateDefaultRootWalk : AIState
     {
         if (!agent) agent = GetComponent<NavMeshAgent>();
         if (!data) data = GetComponent<AIManager>().GetGuestData();
-        agent.SetDestination(targetList[targetNum].position);
+
+        /*
+         * 突貫工事で目的地のリストが0だったらナビメッシュを止めるようにした
+         * ゆうこちゃん確認してこれで大丈夫だったらこのコメント消して処理そのままでも大丈夫だし
+         * 目的地のリスト0の時の対応をどっかでしてるんだったら直してほしいたのまい
+         */
+        if (targetList.Count == 0) {
+            agent.isStopped = true;
+        } else {
+            agent.SetDestination(targetList[targetNum].position);
+        }
+
         agent.speed = data.speed;
         fTimer = 0.0f;
     }
