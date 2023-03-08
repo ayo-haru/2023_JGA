@@ -1121,7 +1121,7 @@ Transform:
   m_Children:
   - {fileID: 5129905211277484897}
   m_Father: {fileID: 5129905211277484869}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5129905211277131579
 GameObject:
@@ -1293,6 +1293,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5129905211277484869}
   - component: {fileID: 5129905211267632309}
+  - component: {fileID: 8033082081783589090}
   - component: {fileID: -55731136592042090}
   - component: {fileID: -2769939408721501398}
   - component: {fileID: -158907827978241553}
@@ -1322,10 +1323,10 @@ Transform:
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children:
+  - {fileID: 6233812088458537247}
   - {fileID: 5129905211277484893}
   - {fileID: 5129905211277484891}
   - {fileID: 5129905211277484825}
-  - {fileID: 6233812088458537247}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1349,6 +1350,28 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!195 &8033082081783589090
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5129905211277131621}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!114 &-55731136592042090
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1911,7 +1934,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5129905211277484869}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!137 &5129905211271918197
 SkinnedMeshRenderer:
@@ -2045,7 +2068,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5129905211277484869}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!137 &5129905211271918199
 SkinnedMeshRenderer:
@@ -2264,7 +2287,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5129905211277484869}
-  m_RootOrder: 3
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &8652013421810289018
 MeshRenderer:

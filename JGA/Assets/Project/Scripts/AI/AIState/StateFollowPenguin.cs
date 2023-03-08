@@ -13,6 +13,7 @@
 // 2023/03/05	(小楠）UIの表示変更
 // 2023/03/06	(小楠）コントローラのエラー直した　追従の仕様変更
 // 2023/03/07	(小楠）プレイヤーの方向向くようにした
+// 2023/03/08	(小楠）アニメーションの処理追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -31,6 +32,8 @@ public class StateFollowPenguin : AIState
     private GuestData data;
 
     private float fTimer = 0.0f;
+
+    private Animator animator;
 
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -77,6 +80,8 @@ public class StateFollowPenguin : AIState
         ui.SetEmotion(EEmotion.ATTENSION_HIGH);
 
         fTimer = 0.0f;
+
+        if (!animator) animator = GetComponent<Animator>();
     }
 
     public override void UpdateState()
@@ -115,6 +120,8 @@ public class StateFollowPenguin : AIState
         Quaternion rot = Quaternion.LookRotation(target.position - transform.position);
         rot = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime);
         transform.rotation = rot;
+
+        if (animator) animator.SetBool("isWalk", (agent.speed > 0.0f) ? true : false);
     }
 
     public override void FinState()

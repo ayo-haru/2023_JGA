@@ -8,6 +8,7 @@
 // [Date]
 // 2023/03/02	スクリプト作成
 // 2023/03/03	(小楠)終了処理追加
+// 2023/03/08	(小楠)アニメーションの制御追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -21,6 +22,8 @@ public class StateStayArea : AIState
     private GuestData data;
     //目的地に着いたか
     private bool isStay = false;
+
+    private Animator animator;
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
 	/// </summary>
@@ -59,6 +62,8 @@ public class StateStayArea : AIState
         agent.SetDestination(target.position);
         agent.speed = data.speed;
         isStay = false;
+        if (!animator) animator = GetComponent<Animator>();
+        if (animator) animator.SetBool("isWalk", true);
     }
 
     public override void UpdateState()
@@ -70,7 +75,7 @@ public class StateStayArea : AIState
         if (agent.remainingDistance < 1.0f)
         {
             //待機アニメーションの再生
-
+            if (animator) animator.SetBool("isWalk", false);
             //移動停止
             agent.speed = 0.0f;
 

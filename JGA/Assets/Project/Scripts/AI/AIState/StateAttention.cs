@@ -9,6 +9,7 @@
 // 2023/03/02	スクリプト作成
 // 2023/03/03	(小楠)終了処理追加　UI追加
 // 2023/03/05	(小楠)UIの表示を変更
+// 2023/03/08	(小楠)アニメーションの処理を追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -25,6 +26,8 @@ public class StateAttention : AIState
     [SerializeField] private EmosionUI ui;
 
     private NavMeshAgent agent;
+
+    private Animator animator;
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -66,6 +69,9 @@ public class StateAttention : AIState
 
         //注目中のUIを表示
         ui.SetEmotion(EEmotion.QUESTION);
+
+        if(!animator) animator = GetComponent<Animator>();
+        if (animator) animator.SetBool("isWalk", false);
     }
 
     public override void UpdateState()

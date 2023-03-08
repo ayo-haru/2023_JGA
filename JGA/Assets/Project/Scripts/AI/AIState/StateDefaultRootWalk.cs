@@ -9,6 +9,7 @@
 // 2023/02/28	スクリプト作成
 // 2023/03/02	(小楠）データの取得方法変更
 // 2023/03/03	(小楠）終了処理追加
+// 2023/03/08	(小楠）アニメーション追加。ターゲットリストが0の時のエラー直した
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -27,6 +28,8 @@ public class StateDefaultRootWalk : AIState
     private NavMeshAgent agent;
 
     private GuestData data;
+
+    private Animator animator;
 
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -64,23 +67,18 @@ public class StateDefaultRootWalk : AIState
         if (!agent) agent = GetComponent<NavMeshAgent>();
         if (!data) data = GetComponent<AIManager>().GetGuestData();
 
-        /*
-         * 突貫工事で目的地のリストが0だったらナビメッシュを止めるようにした
-         * ゆうこちゃん確認してこれで大丈夫だったらこのコメント消して処理そのままでも大丈夫だし
-         * 目的地のリスト0の時の対応をどっかでしてるんだったら直してほしいたのまい
-         */
-        if (targetList.Count == 0) {
-            agent.isStopped = true;
-        } else {
-            agent.SetDestination(targetList[targetNum].position);
-        }
+        if(targetList.Count > 0) agent.SetDestination(targetList[targetNum].position);
 
         agent.speed = data.speed;
         fTimer = 0.0f;
+
+        if (!animator) animator = GetComponent<Animator>();
+        if (animator) animator.SetBool("isWalk", true);
     }
 
     public override void UpdateState()
     {
+        if (targetList.Count <= 0) return;
         if (agent.pathPending) return;
 
         //目的地までの経路がない場合は目的地の変更
@@ -91,6 +89,7 @@ public class StateDefaultRootWalk : AIState
         //待機時間
         if (agent.remainingDistance < 1.0f)
         {
+            if (animator) animator.SetBool("isWalk", false);
             fTimer += Time.deltaTime;
 
             if (data.waitTime <= fTimer)
@@ -109,8 +108,10 @@ public class StateDefaultRootWalk : AIState
     /// </summary>
     public void ChangeTarget()
     {
+        if(targetList.Count <= 0) return;
         targetNum = (targetNum + 1) % targetList.Count;
         agent.SetDestination(targetList[targetNum].position);
         fTimer = 0.0f;
+        if (animator) animator.SetBool("isWalk", true);
     }
 }
