@@ -203,7 +203,7 @@ public class ZooKeeperAI : MonoBehaviour
             animator.SetBool("isWalk", true);
             //--------------------------------
 
-            if (navMesh.remainingDistance <= 1.0f    // 目標地点までの距離が1.0ｍ以下になったら到着
+            if (navMesh.remainingDistance <= 2.0f    // 目標地点までの距離が2.0ｍ以下になったら到着
                  && !navMesh.pathPending)            // 経路計算中かどうか（計算中：true　計算完了：false）
             {
                 gimmickFlg = false;
