@@ -14,13 +14,13 @@ using UnityEngine;
 
 public class GimmickObj : MonoBehaviour
 {
-    public List<GameObject> gimmickList;
-    public List<Transform> resetPos;          // ギミックオブジェクト初期位置
-    public List<bool> bReset;
-    int x1;
-    int z1;
-    int x2;
-    int z2;
+    public List<GameObject> gimmickList;    // ギミックオブジェクトリスト
+    public List<Transform> resetPos;        // ギミックオブジェクト初期位置
+    public List<bool> bReset;               // 元の位置にあるかフラグ
+    private int x1;
+    private int z1;
+    private int x2;
+    private int z2;
 
     /// <summary>
     /// 最初のフレーム更新の前に呼び出される
@@ -30,7 +30,18 @@ public class GimmickObj : MonoBehaviour
         // 元の位置にあるかフラグ
         for (int i = 0; i < gimmickList.Count; i++)
         {
-            bReset.Add(false);
+            x1 = (int)gimmickList[i].transform.position.x;
+            z1 = (int)gimmickList[i].transform.position.z;
+            x2 = (int)resetPos[i].transform.position.x;
+            z2 = (int)resetPos[i].transform.position.z;
+            if (x1 != x2 || z1 != z2)
+            {
+                bReset.Add(false);  // 元の位置にない
+            }
+            else
+            {
+                bReset.Add(true);   // 元の位置にある
+            }
         }
     }
 
@@ -39,24 +50,17 @@ public class GimmickObj : MonoBehaviour
 	/// </summary>
 	void FixedUpdate()
 	{
+        // オブジェクトが元の位置にあるか
         for (int i = 0; i < gimmickList.Count; i++)
         {
             x1 = (int)gimmickList[i].transform.position.x;
             z1 = (int)gimmickList[i].transform.position.z;
             x2 = (int)resetPos[i].transform.position.x;
             z2 = (int)resetPos[i].transform.position.z;
-            if(x1 != x2 && z1 != z2)
+            if(x1 != x2 || z1 != z2)
             {
                 bReset[i] = false;
             }
         }
     }
-
-    /// <summary>
-    /// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
-    /// </summary>
-    void Update()
-	{
-		
-	}
 }
