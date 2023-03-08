@@ -43,7 +43,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2924694992481555128}
   m_Layer: 0
-  m_Name: CardboardBox01
+  m_Name: CardboardBox_ResetPos
   m_TagString: Interact
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -80,7 +80,7 @@ GameObject:
   - component: {fileID: 2538955521447451285}
   - component: {fileID: 3108026515764471357}
   m_Layer: 0
-  m_Name: CardboardBox01
+  m_Name: CardboardBox_Gimick
   m_TagString: Interact
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

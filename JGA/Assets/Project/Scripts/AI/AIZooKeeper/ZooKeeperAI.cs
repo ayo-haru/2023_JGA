@@ -28,6 +28,8 @@ public class ZooKeeperAI : MonoBehaviour
     private int rootNum = 0;
     [SerializeField, Range(1.1f, 50.0f)] private float speed;   // 飼育員のスピード
     [SerializeField, Range(0.0f, 50.0f)] private float search;  // 飼育員の索敵範囲
+    private float normalSpeed;  // 巡回している時の速さ
+    private float seekSpeed;    // ペンギンを追いかけている時の速さ
     private SphereCollider sphereCollider;
 
     private NavMeshAgent navMesh;
@@ -64,6 +66,7 @@ public class ZooKeeperAI : MonoBehaviour
         navMesh.speed = speed;
         sphereCollider.radius = search; // colliderのradiusを変更する
 
+        // 巡回ルートに要素があるか
         if (rootList.Count >= 1)
         {
             rootNum = 0;
@@ -144,7 +147,7 @@ public class ZooKeeperAI : MonoBehaviour
                 // 当たったオブジェクトがペンギンかどうか
                 if(rayhit.collider.gameObject.tag == "Player")
                 {
-                    navMesh.isStopped = false;
+                    //navMesh.isStopped = false;
                     navMesh.destination = other.transform.position;    // ペンギンを追従
                 }
                 else
