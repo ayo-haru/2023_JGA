@@ -23,12 +23,18 @@ public class Player : MonoBehaviour
 	[SerializeField] private Animator anim;             // Animatorへの参照
 
 	[Header("ステータス")]
-	[SerializeField, Tooltip("追加速度")]
+	[SerializeField, Tooltip("歩行時速度")]
 	private float moveForce = 7;
-	[SerializeField, Tooltip("走る際の倍率")]
-	private float runMagnification = 1.5f;
-	[SerializeField, Tooltip("最高速度")]
-	private float maxSpeed = 5;
+	[SerializeField, Tooltip("アピール時速度")]
+	private float appealForce = 8.75f;
+	[SerializeField, Tooltip("疾走時速度")]
+	private float runForce = 10.5f;
+	[SerializeField, Tooltip("歩行時最高速度")]
+	private float maxMoveSpeed = 5;
+	[SerializeField, Tooltip("アピール時最高速度")]
+	private float maxAppealSpeed = 6.25f;
+	[SerializeField, Tooltip("疾走時最高速度")]
+	private float maxRunSpeed = 7.5f;
 	[SerializeField, Tooltip("ジョイスティックで走り始めるゾーン")]
 	private float joyRunZone = 0.8f;
 	[SerializeField, Tooltip("鳴く間隔の最小値"), Range(0.0f, 30.0f)]
@@ -39,8 +45,12 @@ public class Player : MonoBehaviour
 	private float callInterval = 0;
 
 
-	[SerializeField] private bool isInteract;   // インタラクトフラグ
-	public bool IsInteract { get { return isInteract; } set { isInteract = value; } }        // インタラクトプロパティ
+	[SerializeField] private Vector3 _vForce;
+	public Vector3 vForce { get { return _vForce; } }
+
+
+	[SerializeField] private bool _IsInteract;   // インタラクトフラグ
+	public bool IsInteract { get { return _IsInteract; } set { _IsInteract = value; } }        // インタラクトプロパティ
 	private bool delay;
 
 	[SerializeField] private bool isHold;       // つかみフラグ
@@ -48,16 +58,16 @@ public class Player : MonoBehaviour
 	[SerializeField] private bool isAppeal;     // アピールフラグ
 
 
-	[SerializeField] private bool bGamePad;                      // ゲームパッド接続確認
-	private MyContorller gameInputs;            // キー入力
+	[SerializeField] private bool bGamePad;     // ゲームパッド接続確認フラグ
+	private MyContorller gameInputs;            // 方向キー入力取得
 	private Vector2 moveInputValue;             // 移動方向
 
 	private Collider InteractObject;            // 掴んでいるオブジェクト：コリジョン
 	private Rigidbody HoldObjectRb;             // 掴んでいるオブジェクト：重力関連
 	[SerializeField]
-	private List<Collider> WithinRange = new List<Collider>();
+	private List<Collider> WithinRange = new List<Collider>();  // インタラクト範囲内にあるオブジェクトリスト
 
-	private GameObject respawnZone;				// リスポーン位置プレハブ設定用
+	private Transform respawnZone;              // リスポーン位置プレハブ設定用
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -76,10 +86,11 @@ public class Player : MonoBehaviour
 		if (anim == null)
 			anim = GetComponent<Animator>();
 
-		respawnZone = GameObject.Find("PlayerSpawn");
-		if(respawnZone == null) {
+		var respawn = GameObject.Find("PlayerSpawn");
+		if (respawn == null)
 			Debug.LogError("<color=red>プレイヤーのリスポーン位置が見つかりません[Player.cs]</color>");
-        }
+		else
+			respawnZone = respawn.transform;
 
 
 		// seCallの音量クソでかいので小さくする
@@ -119,20 +130,21 @@ public class Player : MonoBehaviour
 		else
 			bGamePad = true;
 
-        // リスタート
-        if (MySceneManager.GameData.isCatchPenguin) {
+		// リスタート
+		if (MySceneManager.GameData.isCatchPenguin)
+		{
 			ReStart();
 			return;
-        }
+		}
 
-		if (isInteract)
+		if (_IsInteract)
 		{
 			if (!delay)
 				delay = true;
 			else
 			{
 				delay = false;
-				isInteract = false;
+				_IsInteract = false;
 			}
 		}
 
@@ -161,38 +173,52 @@ public class Player : MonoBehaviour
 	{
 		if (!bGamePad)
 		{
+			float force;
+
+			if (isAppeal)
+				force = appealForce;
+			else if (isRun)
+				force = runForce;
+			else
+				force = moveForce;
+
 			// 制限速度内の場合、移動方向の力を与える
-			if (rb.velocity.magnitude < maxSpeed * (isRun ? runMagnification : 1))
-				rb.AddForce(new Vector3(moveInputValue.x, 0, moveInputValue.y) * moveForce * (isRun ? runMagnification : 1));
-			//rb.velocity = new Vector3(moveInputValue.x, 0, moveInputValue.y) * moveForce * (isRun ? runMagnification : 1);
+			_vForce = new Vector3(moveInputValue.x, 0, moveInputValue.y) * force;
+			if (rb.velocity.magnitude < (isRun ? maxRunSpeed : maxMoveSpeed))
+				rb.AddForce(_vForce);
 
 			// 進行方向に向かって回転する
 			if (moveInputValue.normalized != Vector2.zero)
 			{
-				// 候補1
-				var awd = transform.forward - new Vector3(-moveInputValue.x, transform.position.y, -moveInputValue.y) / 2;
-				awd.y = 0;
-				transform.LookAt(transform.position + awd);
-
-				//// 候補2
-				//var vael = new Vector3(moveInputValue.x, transform.position.y, moveInputValue.y) - transform.forward;
-				//transform.Rotate(Vector3.up, vael.magnitude, Space.World);
+				var fw = transform.forward - new Vector3(-moveInputValue.x, transform.position.y, -moveInputValue.y) / 2;
+				fw.y = 0;
+				transform.LookAt(transform.position + fw);
 			}
 		}
 		else
 		{
 			isRun = moveInputValue.magnitude >= joyRunZone;
 
+			float force;
+
+			if (isAppeal)
+				force = appealForce;
+			else if (isRun)
+				force = runForce;
+			else
+				force = moveForce;
+
 			// 制限速度内の場合、移動方向の力を与える
-			if (rb.velocity.magnitude < maxSpeed * (isRun ? runMagnification : 1))
-				rb.AddForce(new Vector3(moveInputValue.x, 0, moveInputValue.y) * moveForce * (isRun ? runMagnification : 1));
+			_vForce = new Vector3(moveInputValue.x, 0, moveInputValue.y) * force;
+			if (rb.velocity.magnitude < (isRun ? maxRunSpeed : maxMoveSpeed))
+				rb.AddForce(_vForce);
 
 			// 進行方向に向かって回転する
 			if (moveInputValue.normalized != Vector2.zero)
 			{
-				var awd = transform.forward - new Vector3(-moveInputValue.x, transform.position.y, -moveInputValue.y) / 2;
-				awd.y = 0;
-				transform.LookAt(transform.position + awd);
+				var fw = transform.forward - new Vector3(-moveInputValue.x, transform.position.y, -moveInputValue.y) / 2;
+				fw.y = 0;
+				transform.LookAt(transform.position + fw);
 			}
 		}
 	}
@@ -245,7 +271,7 @@ public class Player : MonoBehaviour
 		if (context.phase == InputActionPhase.Performed)
 		{
 			Debug.Log($"インタラクト");
-			isInteract = true;
+			_IsInteract = true;
 			float length = 10.0f;
 
 			// プレイヤーに一番近いオブジェクトをインタラクト対象とする
@@ -369,8 +395,9 @@ public class Player : MonoBehaviour
 	}
 	#endregion
 
-	public void ReStart() {
+	public void ReStart()
+	{
 		// インスペクターで設定したリスポーン位置に再配置する
-		this.gameObject.transform.position = respawnZone.transform.position;
+		this.gameObject.transform.position = respawnZone.position;
 	}
 }
