@@ -23,15 +23,24 @@ using UnityEngine.AI;
 
 public class ZooKeeperAI : MonoBehaviour
 {
+    private enum Status
+    {
+        returnObj,      // オブジェクトを元に戻す
+        notReturnObj,   // オブジェクトを元に戻さない
+    }
+    [SerializeField] Status status; // プルダウン化
+
     [SerializeField] private Animator animator;
     [SerializeField] private List<Transform> rootList;          // 飼育員の巡回ルートのリスト
     private int rootNum = 0;
-    [SerializeField, Range(1.1f, 50.0f)] private float speed;   // 飼育員のスピード
-    [SerializeField, Range(0.0f, 50.0f)] private float search;  // 飼育員の索敵範囲
-    private float normalSpeed;  // 巡回している時の速さ
-    private float seekSpeed;    // ペンギンを追いかけている時の速さ
+    [SerializeField, Range(1.1f, 50.0f)] private float speed;       // 飼育員のスピード
+    [SerializeField, Range(1.1f, 2.0f)] private float chaseSpeed;   // 飼育員の追いかけるスピード
+    [SerializeField, Range(0.0f, 50.0f)] private float search;      // 飼育員の索敵範囲
+    [SerializeField] private bool chaseNow = false;    // ペンギンを追いかけているフラグ
     private SphereCollider sphereCollider;
 
+    private Transform playerPos;
+    private Player player;
     private NavMeshAgent navMesh;
     private RaycastHit rayhit;
 
@@ -45,6 +54,15 @@ public class ZooKeeperAI : MonoBehaviour
     [SerializeField] GameObject ReSpawnZone;    // リスポーンする位置
 
     /// <summary>
+    /// Inspectorから自身の値が変更されたときに自動で呼ばれる
+    /// </summary>
+    private void OnValidate()
+    {
+        sphereCollider = this.GetComponent<SphereCollider>();
+        sphereCollider.radius = search; // colliderのradiusを変更する
+    }
+
+    /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
     /// </summary>
     void Awake()
@@ -52,7 +70,10 @@ public class ZooKeeperAI : MonoBehaviour
         // インスペクターで設定したリスポーン位置に初期配置する
         this.gameObject.transform.position = ReSpawnZone.transform.position;
 
-        sphereCollider = this.GetComponent<SphereCollider>();
+        if (sphereCollider == null)
+        {
+            sphereCollider = this.GetComponent<SphereCollider>();
+        }
         navMesh = GetComponent<NavMeshAgent>();
         gimmickObj = transform.root.gameObject.GetComponent<GimmickObj>();  // 親オブジェクトのスクリプト取得
     }
@@ -63,8 +84,19 @@ public class ZooKeeperAI : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
+        playerPos = GameObject.FindWithTag("Player").GetComponent<Transform>();
+        player = GameObject.FindWithTag("Player").GetComponent<Player>();
         navMesh.speed = speed;
-        sphereCollider.radius = search; // colliderのradiusを変更する
+        //sphereCollider.radius = search; // colliderのradiusを変更する
+        
+        // オブジェクトを元に戻す/戻さない
+        //switch (status)
+        //{
+        //    case Status.returnObj:
+        //        break;
+        //    case Status.notReturnObj:
+        //        break;
+        //}
 
         // 巡回ルートに要素があるか
         if (rootList.Count >= 1)
@@ -83,7 +115,17 @@ public class ZooKeeperAI : MonoBehaviour
 	/// </summary>
 	void FixedUpdate()
 	{
+        // ペンギンを追いかけているか
+        if(chaseNow)
+        {
+            navMesh.speed = chaseSpeed; // * player.スピード
+        }
+        else
+        {
+            navMesh.speed = speed;
+        }
         Move();
+        Ray();
     }
 
     private void Update() {
@@ -106,7 +148,7 @@ public class ZooKeeperAI : MonoBehaviour
         #endregion
 
         #region ギミックオブジェクト
-        if (!gimmickFlg && collision.gameObject.tag == "Interact")
+        if (status == Status.returnObj && !gimmickFlg && collision.gameObject.tag == "Interact")
         {
             for (int i = 0; i < gimmickObj.gimmickList.Count; i++)
             {
@@ -133,48 +175,9 @@ public class ZooKeeperAI : MonoBehaviour
     /// </summary>
     private void OnTriggerStay(Collider other)
     {
-        #region ペンギン
-        // ペンギンとの当たり判定
-        if (other.CompareTag("Player"))
-        {
-            var pos = other.transform.position - transform.position;
-            var distance = pos.magnitude;   // 距離
-            var direction = pos.normalized; // 方向
-
-            // rayとコライダーが当たっているか
-            if(Physics.Raycast(transform.position, direction, out rayhit, distance))    // rayの開始地点、rayの向き、当たったオブジェクトの情報を格納、rayの発射距離
-            {
-                // 当たったオブジェクトがペンギンかどうか
-                if(rayhit.collider.gameObject.tag == "Player")
-                {
-                    //navMesh.isStopped = false;
-                    navMesh.destination = other.transform.position;    // ペンギンを追従
-                }
-                else
-                {
-                    if (gimmickFlg) // オブジェクトを運んでいるか
-                    {
-                        navMesh.SetDestination(gimmickObj.resetPos[resetNum].position);    // 目的地をオブジェクトの位置に設定
-                    }
-                    else
-                    {
-                        if (rootList.Count >= 1)
-                        {
-                            navMesh.SetDestination(rootList[rootNum].position);     // 目的地の再設定
-                        }
-                        else
-                        {
-                            navMesh.isStopped = true;   // ナビゲーションの停止（true:ナビゲーションOFF　false:ナビゲーションON）
-                        }
-                    }
-                }
-            }
-        }
-        #endregion
-
         #region ギミックオブジェクト
         // 索敵範囲にギミックオブジェクトが入ったら目的地をオブジェクトに設定
-        if (!gimmickFlg && other.gameObject.tag == "Interact")
+        if (status == Status.returnObj && !gimmickFlg && other.gameObject.tag == "Interact")
         {
             for (int i = 0; i < gimmickObj.gimmickList.Count; i++)
             {
@@ -209,6 +212,7 @@ public class ZooKeeperAI : MonoBehaviour
                 gimmickFlg = false;
                 catchFlg = false;
                 Bring();
+                // リストの順番に巡回する
                 if (rootList.Count - 1 > rootNum)
                 {
                     rootNum += 1;
@@ -230,7 +234,8 @@ public class ZooKeeperAI : MonoBehaviour
             if (navMesh.remainingDistance <= 1.0f    // 目標地点までの距離が1.0ｍ以下になったら到着
                  && !navMesh.pathPending)            // 経路計算中かどうか（計算中：true　計算完了：false）
             {
-                if(rootList.Count - 1 > rootNum)
+                // リストの順番に巡回する
+                if (rootList.Count - 1 > rootNum)
                 {
                     rootNum += 1;
                 }
@@ -275,6 +280,55 @@ public class ZooKeeperAI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Rayを飛ばす
+    /// </summary>
+    private void Ray()
+    {
+        var pos = playerPos.transform.position - transform.position;
+        var distance = 10.0f;               // 距離
+        var direction = transform.forward;  // 方向
+        float angle = 45.0f;
+        float targetAngle = Vector3.Angle(this.transform.forward, pos);
+        Debug.DrawRay(transform.position, direction * distance, Color.red);
+
+        if (targetAngle < angle)
+        {
+            // rayが当たっているか
+            if (Physics.Raycast(transform.position, direction, out rayhit, distance))    // rayの開始地点、rayの向き、当たったオブジェクトの情報を格納、rayの発射距離
+            {
+                // 当たったオブジェクトがペンギンかどうか
+                if (rayhit.collider.gameObject.tag == "Player")
+                {
+                    Debug.Log("Hit");
+                    chaseNow = true;
+                    navMesh.destination = playerPos.transform.position;    // ペンギンを追従
+                }
+                else
+                {
+                    if (gimmickFlg) // オブジェクトを運んでいるか
+                    {
+                        navMesh.SetDestination(gimmickObj.resetPos[resetNum].position);    // 目的地をオブジェクトの位置に設定
+                    }
+                    else
+                    {
+                        if (rootList.Count >= 1)
+                        {
+                            navMesh.SetDestination(rootList[rootNum].position);     // 目的地の再設定
+                        }
+                        else
+                        {
+                            navMesh.isStopped = true;   // ナビゲーションの停止（true:ナビゲーションOFF　false:ナビゲーションON）
+                        }
+                    }
+                }
+            }
+            else
+            {
+                chaseNow = false;
+            }
+        }
+    }
 
     /// <summary>
     /// 初期配置に戻す
