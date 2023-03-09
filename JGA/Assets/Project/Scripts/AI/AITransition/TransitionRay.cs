@@ -8,6 +8,7 @@
 // [Date]
 // 2023/03/05	スクリプト作成
 // 2023/03/07	視界をRayから円錐に変更
+// 2023/03/10	視界を位置を調整
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ public class TransitionRay : AITransition
     [SerializeField,Range(0,360),Tooltip("視線の向き")] private float angle = 45.0f;
     [SerializeField, Range(0, 180), Tooltip("視野角")] private float viewAngle = 45.0f;
     [SerializeField,Tooltip("プレイヤーが視界から外れた時に遷移したい場合はチェックを入れてください")] private bool inv = false;
+    [SerializeField] private Transform eyesPos; //目の位置
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -63,11 +65,11 @@ public class TransitionRay : AITransition
     {
         //プレイヤーが視界内に入っているか
         // 視線の向き
-        Vector3 dir = transform.forward;
+        Vector3 dir = eyesPos.forward;
         dir.y -= angle / 360.0f;
 
         // ターゲットまでの向きと距離計算
-        Vector3 targetDir = playerTransform.position - transform.position;
+        Vector3 targetDir = playerTransform.position - eyesPos.position;
         float targetDistance = targetDir.magnitude;
 
         // cos(θ/2)を計算
@@ -79,9 +81,7 @@ public class TransitionRay : AITransition
 
 
         //Rayの可視化
-        //お客さんの位置からRayを出すと、お客さんのColliderに当たってしまうので、少しずらしてる
-        Vector3 pos = transform.position;
-        pos += transform.forward * 1;
+        Vector3 pos = eyesPos.position;
         Debug.DrawRay(pos, dir * 10, Color.red, 1.0f / 60.0f);
 
         // 視界判定 
