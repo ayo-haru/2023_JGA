@@ -12,6 +12,7 @@
 // 2023/02/27	スクリプト作成
 // 2023/02/28	遅延作成
 // 2023/03/02   ズームの処理作成(切替対応済み)
+// 2023/03/10   客の人数でズームアウトする処理の変更
 //=============================================================================ya
 using DG.Tweening.Core.Easing;
 using System.Collections;
@@ -57,6 +58,7 @@ public class MainCamera : MonoBehaviour
 
     //客の情報取得用
     GameObject[] guestObj;
+    
 
     //カメラの範囲取得用
     //映っているものの範囲
@@ -65,7 +67,9 @@ public class MainCamera : MonoBehaviour
     Plane[] planes;
 
     //イージング実行中の現在の割合
-    //private float easingRate;
+    private float easingRate;
+    //Lerpの数値を割合として保存する
+    private float lerpRate;
     //ズームインアウトの実行中フラグ
     private bool zoomFlg;
     //現在の客の数
@@ -87,17 +91,20 @@ public class MainCamera : MonoBehaviour
     [SerializeField] private float smoothTime = 0.1f;
     [Header("最高速度")]
     [SerializeField] private float maxSpeed = 10.0f;
-    //[Header("カメラ移動のイージング設定")]
-    //[SerializeField] private AnimationCurve moveCurve = null;
+    
 
     [Header("ズームイン倍率")]
     [SerializeField] private float zoomIn = 0.1f;
     [Header("ズームアウト倍率")]
     [SerializeField] private float zoomOut = 0.1f;
-    [Header("ズームイン、アウトの時間")]
+    [Header("キー入力のズームイン、アウトの時間")]
     [SerializeField] private float zoomTime = 1.0f;
     [Header("ズームから戻ってくる時間")]
     [SerializeField] private float zoomRetTime = 1.0f;
+    [Header("カメラズームののイージング設定")]
+    [SerializeField] private AnimationCurve moveCurve = null;
+    [Header("客の人数でズームアウトする時間")]
+    [SerializeField] private float guestZoomOut = 1.0f;
     //客が何人いたら引くかを指定できる変数
     [Header("客が何人いたらズームアウトするか")]
     [SerializeField] private int guestValue = 5;
@@ -121,7 +128,13 @@ public class MainCamera : MonoBehaviour
 
 
         //客の情報を格納する
-        guestObj = GameObject.FindGameObjectsWithTag("Scenery");
+        var guestParent = GameObject.Find("Guests");
+        guestObj = new GameObject[guestParent.transform.childCount];
+
+        for (int i = 0; i < guestParent.transform.childCount; i++)
+        {
+            guestObj[i] = guestParent.transform.GetChild(i).gameObject;
+        }
 
         //客の範囲取得
         boundGuest = new Bounds[guestObj.Length];
@@ -162,7 +175,8 @@ public class MainCamera : MonoBehaviour
             currentFov = -cameraChild.transform.localPosition.z;
         }
         //イージング用の時間
-        //easingRate = 0.0f;
+        easingRate = 0.0f;
+        lerpRate = 0.0f;
         //プレイヤーの座標保存
         currentPlayerPos = playerobj.transform.position;
 
@@ -179,7 +193,8 @@ public class MainCamera : MonoBehaviour
 	{
         //一定時間の計算
         scriptStop += Time.deltaTime;
-        if(scriptStop >= 1.0f)
+        
+        if (scriptStop >= 1.0f)
         {
             GuestCount();
             if (currentGuestValue >= guestValue)
@@ -200,10 +215,6 @@ public class MainCamera : MonoBehaviour
         {
             ZoomInOut();
         }
-        
-        //ズームすることを伝え計算させる
-
-      
 
     }
 
@@ -310,7 +321,14 @@ public class MainCamera : MonoBehaviour
                 }
                 if (currentFov < fov * zoomOut)
                 {
-                    currentFov += ((zoomOut * fov - fov) / (60.0f * zoomTime));
+                    //ズームのイージング
+                    easingRate += 1.0f / (60.0f * guestZoomOut);
+                    lerpRate = moveCurve.Evaluate(easingRate);
+                    if (easingRate >= 1.0f)
+                    {
+                        easingRate = 0.0f;
+                    }
+                    currentFov = Mathf.Lerp(fov, fov * zoomOut, lerpRate);
                 }
                 zoom = ZOOM.GUESTOUT;
                 break;
@@ -364,7 +382,6 @@ public class MainCamera : MonoBehaviour
     /// <summary>
     /// ゲストの数の増減
     /// </summary>
-    /// <param name="math">true Add false del</param>
     public void GuestCount()
     {
         var nowGuestCount = 0;
