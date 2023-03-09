@@ -20,6 +20,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEditor;
 
 public class ZooKeeperAI : MonoBehaviour
 {
@@ -38,9 +39,9 @@ public class ZooKeeperAI : MonoBehaviour
     [SerializeField, Range(0.0f, 50.0f)] private float search;      // 飼育員の索敵範囲
     [SerializeField] private bool chaseNow = false;    // ペンギンを追いかけているフラグ
     private SphereCollider sphereCollider;
+    private float angle = 45.0f;
 
     private Transform playerPos;
-    private Player player;
     private NavMeshAgent navMesh;
     private RaycastHit rayhit;
 
@@ -85,7 +86,6 @@ public class ZooKeeperAI : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         playerPos = GameObject.FindWithTag("Player").GetComponent<Transform>();
-        player = GameObject.FindWithTag("Player").GetComponent<Player>();
         navMesh.speed = speed;
         //sphereCollider.radius = search; // colliderのradiusを変更する
         
@@ -116,9 +116,9 @@ public class ZooKeeperAI : MonoBehaviour
 	void FixedUpdate()
 	{
         // ペンギンを追いかけているか
-        if(chaseNow)
+        if (chaseNow)
         {
-            navMesh.speed = chaseSpeed; // * player.スピード
+            navMesh.speed = chaseSpeed;
         }
         else
         {
@@ -167,6 +167,20 @@ public class ZooKeeperAI : MonoBehaviour
             }
         }
         #endregion
+
+        #region ペンギンブース
+        if (collision.gameObject.name == "PenguinBooth")
+        {
+            if (rootList.Count >= 1)
+            {
+                navMesh.SetDestination(rootList[rootNum].position);     // 目的地の再設定
+            }
+            else
+            {
+                navMesh.isStopped = true;   // ナビゲーションの停止（true:ナビゲーションOFF　false:ナビゲーションON）
+            }
+        }
+        #endregion
     }
 
     /// <summary>
@@ -180,14 +194,13 @@ public class ZooKeeperAI : MonoBehaviour
             var pos = other.transform.position - transform.position;
             var distance = 10.0f;               // 距離
             var direction = transform.forward;  // 方向
-            float angle = 45.0f;
             float targetAngle = Vector3.Angle(this.transform.forward, pos);
             Debug.DrawRay(transform.position, pos * distance, Color.red);
 
             // 視界の角度内に収まっているかどうか
             if (targetAngle < angle)
             {
-                // rayが当たっているか
+                // Rayが当たっているか
                 if (Physics.Raycast(transform.position, pos, out rayhit, distance))    // rayの開始地点、rayの向き、当たったオブジェクトの情報を格納、rayの発射距離
                 {
                     // 当たったオブジェクトがペンギンかどうか
@@ -197,9 +210,30 @@ public class ZooKeeperAI : MonoBehaviour
                         navMesh.destination = other.transform.position;    // ペンギンを追従
                     }
                 }
+                else
+                {
+                    // Ray当たってない
+                    chaseNow = false;
+                    if (gimmickFlg) // オブジェクトを運んでいるか
+                    {
+                        navMesh.SetDestination(gimmickObj.resetPos[resetNum].position);    // 目的地をオブジェクトの位置に設定
+                    }
+                    else
+                    {
+                        if (rootList.Count >= 1)
+                        {
+                            navMesh.SetDestination(rootList[rootNum].position);     // 目的地の再設定
+                        }
+                        else
+                        {
+                            navMesh.isStopped = true;   // ナビゲーションの停止（true:ナビゲーションOFF　false:ナビゲーションON）
+                        }
+                    }
+                }
             }
             else
             {
+                // 範囲外
                 chaseNow = false;
                 if (gimmickFlg) // オブジェクトを運んでいるか
                 {
@@ -351,6 +385,17 @@ public class ZooKeeperAI : MonoBehaviour
             gimmickObj.gimmickList[gimmickNum].transform.position = gimmickObj.resetPos[resetNum].transform.position;
             gimmickObj.bReset[gimmickNum] = true;
         }
+    }
+
+    /// <summary>
+    /// 視界範囲内（扇状視界）を可視化
+    /// </summary>
+    private void OnDrawGizmos()
+    {
+        Handles.color = new Color(0, 0, 1, 0.3f);
+        Handles.DrawSolidArc(transform.position, Vector3.up, 
+            Quaternion.Euler(0f, -angle, 0f) * transform.forward, angle * 2.0f, 10.0f);
+                                                                                //↑distance
     }
 
     /// <summary>
