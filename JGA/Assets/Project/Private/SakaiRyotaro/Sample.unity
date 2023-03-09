@@ -130,14 +130,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 275277329, guid: 5586ea2c0ee038e4ba2d458cda7b7fac, type: 3}
-      propertyPath: seCall
-      value: 
-      objectReference: {fileID: 8300000, guid: 5d2a7da4e5a38db4fbdbd236554a27eb, type: 3}
-    - target: {fileID: 275277329, guid: 5586ea2c0ee038e4ba2d458cda7b7fac, type: 3}
-      propertyPath: runForce
-      value: 375
-      objectReference: {fileID: 0}
     - target: {fileID: 6903381975108728195, guid: 5586ea2c0ee038e4ba2d458cda7b7fac,
         type: 3}
       propertyPath: m_Name

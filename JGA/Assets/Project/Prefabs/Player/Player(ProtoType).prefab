@@ -5200,13 +5200,17 @@ MonoBehaviour:
   seCall: {fileID: 8300000, guid: 5d2a7da4e5a38db4fbdbd236554a27eb, type: 3}
   anim: {fileID: 0}
   moveForce: 250
-  runMagnification: 1
-  maxSpeed: 500
+  appealForce: 312.5
+  runForce: 375
+  maxMoveSpeed: 5
+  maxAppealSpeed: 6.25
+  maxRunSpeed: 7.5
   joyRunZone: 0.8
   callMin: 0.5
   callMax: 5
   callInterval: 0
-  isInteract: 0
+  _vForce: {x: 0, y: 0, z: 0}
+  _IsInteract: 0
   isHold: 0
   isRun: 0
   isAppeal: 0
