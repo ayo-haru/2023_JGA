@@ -125,7 +125,6 @@ public class ZooKeeperAI : MonoBehaviour
             navMesh.speed = speed;
         }
         Move();
-        Ray();
     }
 
     private void Update() {
@@ -175,6 +174,52 @@ public class ZooKeeperAI : MonoBehaviour
     /// </summary>
     private void OnTriggerStay(Collider other)
     {
+        #region ペンギン
+        if(other.gameObject.tag == "Player")
+        {
+            var pos = other.transform.position - transform.position;
+            var distance = 10.0f;               // 距離
+            var direction = transform.forward;  // 方向
+            float angle = 45.0f;
+            float targetAngle = Vector3.Angle(this.transform.forward, pos);
+            Debug.DrawRay(transform.position, pos * distance, Color.red);
+
+            // 視界の角度内に収まっているかどうか
+            if (targetAngle < angle)
+            {
+                // rayが当たっているか
+                if (Physics.Raycast(transform.position, pos, out rayhit, distance))    // rayの開始地点、rayの向き、当たったオブジェクトの情報を格納、rayの発射距離
+                {
+                    // 当たったオブジェクトがペンギンかどうか
+                    if(rayhit.collider == other)
+                    {
+                        chaseNow = true;
+                        navMesh.destination = other.transform.position;    // ペンギンを追従
+                    }
+                }
+            }
+            else
+            {
+                chaseNow = false;
+                if (gimmickFlg) // オブジェクトを運んでいるか
+                {
+                    navMesh.SetDestination(gimmickObj.resetPos[resetNum].position);    // 目的地をオブジェクトの位置に設定
+                }
+                else
+                {
+                    if (rootList.Count >= 1)
+                    {
+                        navMesh.SetDestination(rootList[rootNum].position);     // 目的地の再設定
+                    }
+                    else
+                    {
+                        navMesh.isStopped = true;   // ナビゲーションの停止（true:ナビゲーションOFF　false:ナビゲーションON）
+                    }
+                }
+            }
+        }
+        #endregion
+
         #region ギミックオブジェクト
         // 索敵範囲にギミックオブジェクトが入ったら目的地をオブジェクトに設定
         if (status == Status.returnObj && !gimmickFlg && other.gameObject.tag == "Interact")
@@ -187,6 +232,34 @@ public class ZooKeeperAI : MonoBehaviour
                     {
                         navMesh.SetDestination(gimmickObj.gimmickList[i].transform.position);   // 目的地をオブジェクトの位置に設定
                     }
+                }
+            }
+        }
+        #endregion
+    }
+
+    /// <summary>
+    /// 飼育員の索敵範囲外のとき
+    /// </summary>
+    private void OnTriggerExit(Collider other)
+    {
+        #region ペンギン
+        if (other.gameObject.tag == "Player")
+        {
+            chaseNow = false;
+            if (gimmickFlg) // オブジェクトを運んでいるか
+            {
+                navMesh.SetDestination(gimmickObj.resetPos[resetNum].position);    // 目的地をオブジェクトの位置に設定
+            }
+            else
+            {
+                if (rootList.Count >= 1)
+                {
+                    navMesh.SetDestination(rootList[rootNum].position);     // 目的地の再設定
+                }
+                else
+                {
+                    navMesh.isStopped = true;   // ナビゲーションの停止（true:ナビゲーションOFF　false:ナビゲーションON）
                 }
             }
         }
@@ -277,56 +350,6 @@ public class ZooKeeperAI : MonoBehaviour
             gimmickObj.gimmickList[gimmickNum].transform.parent = null;
             gimmickObj.gimmickList[gimmickNum].transform.position = gimmickObj.resetPos[resetNum].transform.position;
             gimmickObj.bReset[gimmickNum] = true;
-        }
-    }
-
-    /// <summary>
-    /// Rayを飛ばす
-    /// </summary>
-    private void Ray()
-    {
-        var pos = playerPos.transform.position - transform.position;
-        var distance = 10.0f;               // 距離
-        var direction = transform.forward;  // 方向
-        float angle = 45.0f;
-        float targetAngle = Vector3.Angle(this.transform.forward, pos);
-        Debug.DrawRay(transform.position, direction * distance, Color.red);
-
-        if (targetAngle < angle)
-        {
-            // rayが当たっているか
-            if (Physics.Raycast(transform.position, direction, out rayhit, distance))    // rayの開始地点、rayの向き、当たったオブジェクトの情報を格納、rayの発射距離
-            {
-                // 当たったオブジェクトがペンギンかどうか
-                if (rayhit.collider.gameObject.tag == "Player")
-                {
-                    Debug.Log("Hit");
-                    chaseNow = true;
-                    navMesh.destination = playerPos.transform.position;    // ペンギンを追従
-                }
-                else
-                {
-                    if (gimmickFlg) // オブジェクトを運んでいるか
-                    {
-                        navMesh.SetDestination(gimmickObj.resetPos[resetNum].position);    // 目的地をオブジェクトの位置に設定
-                    }
-                    else
-                    {
-                        if (rootList.Count >= 1)
-                        {
-                            navMesh.SetDestination(rootList[rootNum].position);     // 目的地の再設定
-                        }
-                        else
-                        {
-                            navMesh.isStopped = true;   // ナビゲーションの停止（true:ナビゲーションOFF　false:ナビゲーションON）
-                        }
-                    }
-                }
-            }
-            else
-            {
-                chaseNow = false;
-            }
         }
     }
 
