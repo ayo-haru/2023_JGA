@@ -15,6 +15,7 @@
 // 2023/03/02	オブジェクトのListを追加
 // 2023/03/02   ギミックオブジェクトとの当たり判定処理の作成
 // 2023/03/08   ギアニメーション追加、Move()に記述(吉原)
+// 2023/03/10   Rayで追従する処理追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -29,17 +30,18 @@ public class ZooKeeperAI : MonoBehaviour
         returnObj,      // オブジェクトを元に戻す
         notReturnObj,   // オブジェクトを元に戻さない
     }
-    [SerializeField] Status status; // プルダウン化
+    [SerializeField] Status status; // ステータスをプルダウン化
 
     [SerializeField] private Animator animator;
     [SerializeField] private List<Transform> rootList;          // 飼育員の巡回ルートのリスト
     private int rootNum = 0;
-    [SerializeField, Range(1.1f, 50.0f)] private float speed;       // 飼育員のスピード
-    [SerializeField, Range(1.1f, 2.0f)] private float chaseSpeed;   // 飼育員の追いかけるスピード
-    [SerializeField, Range(0.0f, 50.0f)] private float search;      // 飼育員の索敵範囲
+    [SerializeField, Range(1.1f, 50.0f)] private float speed;           // 飼育員のスピード
+    [SerializeField, Range(1.1f, 2.0f)] private float chaseSpeed;       // 飼育員の追いかけるスピード
+    [SerializeField, Range(0.0f, 50.0f)] private float search;          // 飼育員の索敵範囲
+    [SerializeField, Range(1.0f, 180.0f)] private float searchAngle;    // 飼育員の索敵範囲の角度
     [SerializeField] private bool chaseNow = false;    // ペンギンを追いかけているフラグ
     private SphereCollider sphereCollider;
-    private float angle = 45.0f;
+    //private float angle = 45.0f;
 
     private Transform playerPos;
     private NavMeshAgent navMesh;
@@ -118,7 +120,7 @@ public class ZooKeeperAI : MonoBehaviour
         // ペンギンを追いかけているか
         if (chaseNow)
         {
-            navMesh.speed = chaseSpeed;
+            navMesh.speed = speed * chaseSpeed; // 巡回スピード * 追いかける速さ
         }
         else
         {
@@ -198,7 +200,7 @@ public class ZooKeeperAI : MonoBehaviour
             Debug.DrawRay(transform.position, pos * distance, Color.red);
 
             // 視界の角度内に収まっているかどうか
-            if (targetAngle < angle)
+            if (targetAngle < searchAngle)
             {
                 // Rayが当たっているか
                 if (Physics.Raycast(transform.position, pos, out rayhit, distance))    // rayの開始地点、rayの向き、当たったオブジェクトの情報を格納、rayの発射距離
@@ -372,6 +374,9 @@ public class ZooKeeperAI : MonoBehaviour
         if (catchFlg)
         {
             // 掴む
+            //-----------------------------
+            // ここで掴むアニメーションで動くと思う
+            //-----------------------------
             gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().isKinematic = true;   // 物理演算の影響を受けないようにする
             gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().useGravity = false;
             gimmickObj.gimmickList[gimmickNum].transform.parent = this.transform;
@@ -379,6 +384,9 @@ public class ZooKeeperAI : MonoBehaviour
         else
         {
             // はなす
+            //-----------------------------
+            // ここではなすアニメーションで動くと思う
+            //-----------------------------
             gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().isKinematic = false;   // 物理演算の影響を受けるようにする
             gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().useGravity = true;
             gimmickObj.gimmickList[gimmickNum].transform.parent = null;
@@ -394,7 +402,7 @@ public class ZooKeeperAI : MonoBehaviour
     {
         Handles.color = new Color(0, 0, 1, 0.3f);
         Handles.DrawSolidArc(transform.position, Vector3.up, 
-            Quaternion.Euler(0f, -angle, 0f) * transform.forward, angle * 2.0f, 10.0f);
+            Quaternion.Euler(0f, -searchAngle, 0f) * transform.forward, searchAngle * 2.0f, 10.0f);
                                                                                 //↑distance
     }
 
