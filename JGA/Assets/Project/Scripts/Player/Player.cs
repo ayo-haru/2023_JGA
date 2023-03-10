@@ -224,38 +224,30 @@ public class Player : MonoBehaviour
 	}
 
 	/// <summary>
+	/// 走る
+	/// </summary>
+	private void OnRun(InputAction.CallbackContext context)
+	{
+		switch (context.phase)
+		{
+			// 押された時
+			case InputActionPhase.Performed:
+				isRun = true;
+				break;
+			// 離された時
+			case InputActionPhase.Canceled:
+				isRun = false;
+				break;
+		}
+	}
+
+
+	/// <summary>
 	/// 移動方向取得
 	/// </summary>
 	private void OnMove(InputAction.CallbackContext context)
 	{
 		moveInputValue = context.ReadValue<Vector2>();
-	}
-
-	/// <summary>
-	/// アピール
-	/// </summary>
-	private void OnAppeal(InputAction.CallbackContext context)
-	{
-		switch (context.phase)
-		{
-			case InputActionPhase.Performed:
-				Debug.Log("アピール");
-				isAppeal = true;
-				break;
-			case InputActionPhase.Canceled:
-				Debug.Log("アピール終了");
-				isAppeal = false;
-				break;
-		}
-		anim.SetBool("Appeal", isAppeal);
-	}
-
-	/// <summary>
-	/// はたく
-	/// </summary>
-	private void OnHit(InputAction.CallbackContext context)
-	{
-		Debug.Log($"はたく");
 	}
 
 	/// <summary>
@@ -270,7 +262,6 @@ public class Player : MonoBehaviour
 		// 押された時
 		if (context.phase == InputActionPhase.Performed)
 		{
-			Debug.Log($"インタラクト");
 			_IsInteract = true;
 			float length = 10.0f;
 
@@ -286,28 +277,28 @@ public class Player : MonoBehaviour
 				}
 			}
 
-			switch (InteractObject/*.tag*/)
+			switch (InteractObject.tag)
 			{
-				//case:holdObject
-				//	OnHold(true);
-				//break;
+				case "holdObject":
+					OnHold(true);
+					break;
 
-				// case:HitObject
-				//	OnHit();
-				// break;
+				case "HitObject":
+					OnHit();
+					break;
 
 				default:
 					break;
 			}
 
 		}
-		else
+		else if (HoldObjectRb != null)
 		{
-			switch (InteractObject/*.tag*/)
+			switch (HoldObjectRb.tag)
 			{
-				//case:holdObject
-				//	OnHold(false);
-				//break;
+				case "holdObject":
+					OnHold(false);
+					break;
 
 				default:
 					break;
@@ -325,7 +316,7 @@ public class Player : MonoBehaviour
 		if (isHold)
 		{
 			InteractObject.transform.parent = transform;
-			InteractObject.transform.localPosition = new Vector3(0, 0, InteractObject.transform.localPosition.z);
+			InteractObject.transform.localPosition = new Vector3(0, 0.5f, InteractObject.transform.localPosition.z);
 			InteractObject.transform.localRotation = Quaternion.identity;
 			if (InteractObject.TryGetComponent(out Rigidbody rigidbody))
 			{
@@ -347,21 +338,30 @@ public class Player : MonoBehaviour
 	}
 
 	/// <summary>
-	/// 走る
+	/// はたく
 	/// </summary>
-	private void OnRun(InputAction.CallbackContext context)
+	private void OnHit()
+	{
+		//Debug.Log($"はたく");
+	}
+
+	/// <summary>
+	/// アピール
+	/// </summary>
+	private void OnAppeal(InputAction.CallbackContext context)
 	{
 		switch (context.phase)
 		{
-			// 押された時
 			case InputActionPhase.Performed:
-				isRun = true;
+				Debug.Log("アピール");
+				isAppeal = true;
 				break;
-			// 離された時
 			case InputActionPhase.Canceled:
-				isRun = false;
+				Debug.Log("アピール終了");
+				isAppeal = false;
 				break;
 		}
+		anim.SetBool("Appeal", isAppeal);
 	}
 
 	/// <summary>
