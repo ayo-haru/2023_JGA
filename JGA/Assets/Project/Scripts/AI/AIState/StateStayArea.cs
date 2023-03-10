@@ -61,6 +61,7 @@ public class StateStayArea : AIState
         if (!data) data = GetComponent<AIManager>().GetGuestData();
         agent.SetDestination(target.position);
         agent.speed = data.speed;
+        agent.stoppingDistance = data.reactionArea;
         isStay = false;
         if (!animator) animator = GetComponent<Animator>();
         if (animator) animator.SetBool("isWalk", true);
@@ -72,7 +73,7 @@ public class StateStayArea : AIState
 
         if (agent.pathPending) return;
         //指定位置に着いたら
-        if (agent.remainingDistance < 1.0f)
+        if (agent.remainingDistance <= data.reactionArea)
         {
             //待機アニメーションの再生
             if (animator) animator.SetBool("isWalk", false);
@@ -86,6 +87,6 @@ public class StateStayArea : AIState
 
     public override void FinState()
     {
-        //特になし
+        agent.stoppingDistance = 0.0f;
     }
 }

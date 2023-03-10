@@ -75,6 +75,7 @@ public class StateFollowPenguin : AIState
         if (!target) target = player.GetComponent<Transform>();
         agent.SetDestination(target.position);
         agent.speed = data.speed;
+        agent.stoppingDistance = data.distance;
 
         //UIの表示
         ui.SetEmotion(EEmotion.ATTENSION_HIGH);
@@ -113,7 +114,7 @@ public class StateFollowPenguin : AIState
 
         //感情がMAXの時は追従する
         //ペンギンとの距離が近い場合は移動しない
-        agent.speed = (agent.remainingDistance < data.distance) ? 0.0f : (ui.GetEmotion() == EEmotion.ATTENSION_HIGH) ? data.speed : 0.0f;
+        agent.speed = (ui.GetEmotion() == EEmotion.ATTENSION_HIGH) ? data.speed : 0.0f;
         agent.SetDestination(target.position);
 
         //プレイヤーの方向を向く
@@ -121,11 +122,12 @@ public class StateFollowPenguin : AIState
         rot = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime);
         transform.rotation = rot;
 
-        if (animator) animator.SetBool("isWalk", (agent.speed > 0.0f) ? true : false);
+        if (animator) animator.SetBool("isWalk", (agent.velocity.magnitude > 0.0f) ? true : false);
     }
 
     public override void FinState()
     {
         ui.SetEmotion(EEmotion.NONE);
+        agent.stoppingDistance = 0.0f;
     }
 }
