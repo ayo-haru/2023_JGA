@@ -10,6 +10,7 @@
 // 2023/03/02	(小楠）データの取得方法変更
 // 2023/03/03	(小楠）終了処理追加
 // 2023/03/08	(小楠）アニメーション追加。ターゲットリストが0の時のエラー直した
+// 2023/03/10	(小楠）追跡範囲の変更。目的地の方向くようにした
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -70,6 +71,7 @@ public class StateDefaultRootWalk : AIState
         if(targetList.Count > 0) agent.SetDestination(targetList[targetNum].position);
 
         agent.speed = data.speed;
+        agent.stoppingDistance = data.reactionArea;
         fTimer = 0.0f;
 
         if (!animator) animator = GetComponent<Animator>();
@@ -87,10 +89,14 @@ public class StateDefaultRootWalk : AIState
             ChangeTarget();
         }
         //待機時間
-        if (agent.remainingDistance < 1.0f)
+        if (agent.remainingDistance <= data.reactionArea)
         {
             if (animator) animator.SetBool("isWalk", false);
             fTimer += Time.deltaTime;
+
+            //目的地の方を向く
+            Quaternion rot = Quaternion.LookRotation(targetList[targetNum].position - transform.position);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime);
 
             if (data.waitTime <= fTimer)
             {
@@ -101,14 +107,16 @@ public class StateDefaultRootWalk : AIState
 
     public override void FinState()
     {
-        //特になし
+        agent.stoppingDistance = 0.0f;
     }
     /// <summary>
     /// 目的地の変更
     /// </summary>
     public void ChangeTarget()
     {
-        if(targetList.Count <= 0) return;
+        //ターゲットが1つ以下の場合は処理しない
+        if(targetList.Count <= 1) return;
+
         targetNum = (targetNum + 1) % targetList.Count;
         agent.SetDestination(targetList[targetNum].position);
         fTimer = 0.0f;
