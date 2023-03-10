@@ -63,7 +63,8 @@ public class CardboardBox : MonoBehaviour
                 rb.isKinematic = false;
                 Vector3 vec = (transform.position + new Vector3(0.0f, topvector, 0.0f) - other.transform.position).normalized;
                 rb.velocity = vec * blowpower;
-                rb.AddTorque(vec * blowpower / 2);
+                vec = (transform.position - other.transform.position).normalized;
+                rb.AddTorque(vec * blowpower);
             }
         }
     }
@@ -71,7 +72,7 @@ public class CardboardBox : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         // はたかれてから止まるまでの間にオブジェクトにぶつかったら音を鳴らす
-        if(rb.IsSleeping())
+        if(!rb.IsSleeping())
         {
             Debug.Log("音鳴ったよ");
             IsSound = true;
