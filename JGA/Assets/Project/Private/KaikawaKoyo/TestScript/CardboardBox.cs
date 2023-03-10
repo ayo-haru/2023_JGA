@@ -65,6 +65,8 @@ public class CardboardBox : MonoBehaviour
                 rb.velocity = vec * blowpower;
                 vec = (transform.position - other.transform.position).normalized;
                 rb.AddTorque(vec * blowpower);
+                // ここで音を鳴らすよ
+
             }
         }
     }
@@ -74,7 +76,9 @@ public class CardboardBox : MonoBehaviour
         // はたかれてから止まるまでの間にオブジェクトにぶつかったら音を鳴らす
         if(!rb.IsSleeping())
         {
-            Debug.Log("音鳴ったよ");
+            // ここで音を鳴らすよ
+
+
             IsSound = true;
         }
     }
