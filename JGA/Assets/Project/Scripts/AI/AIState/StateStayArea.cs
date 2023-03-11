@@ -10,6 +10,7 @@
 // 2023/03/03	(小楠)終了処理追加
 // 2023/03/08	(小楠)アニメーションの制御追加
 // 2023/03/11	(小楠)目的地の方を向くようにした、目的地との距離を調整
+// 2023/03/11	(小楠）navmeshagentの目的地をちょっとずらして、お客さんをばらけるようにした
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -18,13 +19,17 @@ using UnityEngine.AI;
 
 public class StateStayArea : AIState
 {
+    //ナビメッシュエージェント
     private NavMeshAgent agent;
+    //待機位置のTransform
     [SerializeField] Transform target;
+    //お客さん用データ
     private GuestData data;
     //目的地に着いたか
     private bool isStay = false;
-
+    //アニメーター
     private Animator animator;
+
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
 	/// </summary>
@@ -58,12 +63,18 @@ public class StateStayArea : AIState
 
     public override void InitState()
     {
+        //ナビメッシュエージェント、データ取得
         if (!agent) agent = GetComponent<NavMeshAgent>();
         if (!data) data = GetComponent<AIManager>().GetGuestData();
-        agent.SetDestination(target.position);
+
+        //ナビメッシュエージェントの設定
+        agent.SetDestination(target.position + new Vector3(Random.Range(-5.0f, 5.0f), 0.0f, Random.Range(-5.0f, 5.0f)));
         agent.speed = data.speed;
         agent.stoppingDistance = Random.Range(1.0f,data.cageDistance);
+
         isStay = false;
+
+        //アニメーション初期化
         if (!animator) animator = GetComponent<Animator>();
         if (animator) animator.SetBool("isWalk", true);
     }
@@ -85,8 +96,6 @@ public class StateStayArea : AIState
         {
             //待機アニメーションの再生
             if (animator) animator.SetBool("isWalk", false);
-            //移動停止
-            //agent.speed = 0.0f;
 
             isStay = true;
 

@@ -14,6 +14,7 @@
 // 2023/03/06	(小楠）コントローラのエラー直した　追従の仕様変更
 // 2023/03/07	(小楠）プレイヤーの方向向くようにした
 // 2023/03/08	(小楠）アニメーションの処理追加
+// 2023/03/11	(小楠）navmeshagentの目的地をちょっとずらして、お客さんをばらけるようにした
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -27,13 +28,18 @@ public class StateFollowPenguin : AIState
     private GameObject player;
     //ペンギンのTransform
     private Transform target;
+    //ナビメッシュエージェント
     private NavMeshAgent agent;
+    //感情UI
     [SerializeField] private EmosionUI ui;
+    //お客さん用データ
     private GuestData data;
-
+    //感情の変化時間計算用
     private float fTimer = 0.0f;
-
+    //アニメーター
     private Animator animator;
+    //目的地の位置調節用
+    private Vector3 posOffset;
 
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -69,20 +75,25 @@ public class StateFollowPenguin : AIState
 
     public override void InitState()
     {
+        //オブジェクト、コンポーネントの取得
         if (!agent) agent = GetComponent<NavMeshAgent>();
         if (!data) data = GetComponent<AIManager>().GetGuestData();
         if (!player) player = GameObject.FindWithTag("Player");
         if (!target) target = player.GetComponent<Transform>();
+        if (!animator) animator = GetComponent<Animator>();
+
+        //ナビメッシュエージェントの設定
         agent.SetDestination(target.position);
         agent.speed = data.speed;
         agent.stoppingDistance = data.distance;
+
+        //プレイヤーの位置からどれだけずらすかを乱数で設定
+        posOffset = new Vector3(Random.Range(-5.0f,5.0f), 0.0f,Random.Range(-5.0f,5.0f));
 
         //UIの表示
         ui.SetEmotion(EEmotion.ATTENSION_HIGH);
 
         fTimer = 0.0f;
-
-        if (!animator) animator = GetComponent<Animator>();
     }
 
     public override void UpdateState()
@@ -113,15 +124,15 @@ public class StateFollowPenguin : AIState
         }
 
         //!!!,!!の時は追従する
-        //ペンギンとの距離が近い場合は移動しない
         agent.speed = (ui.GetEmotion() >= EEmotion.ATTENSION_MIDDLE) ? data.speed : 0.0f;
-        agent.SetDestination(target.position);
+        agent.SetDestination(target.position + posOffset);
 
         //プレイヤーの方向を向く
         Quaternion rot = Quaternion.LookRotation(target.position - transform.position);
         rot = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime);
         transform.rotation = rot;
 
+        //アニメーション更新
         if (animator) animator.SetBool("isWalk", (agent.velocity.magnitude > 0.0f) ? true : false);
     }
 

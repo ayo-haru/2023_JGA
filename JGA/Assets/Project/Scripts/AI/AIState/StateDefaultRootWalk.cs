@@ -26,11 +26,11 @@ public class StateDefaultRootWalk : AIState
     private int targetNum = 0;
     //待機時間カウント用
     private float fTimer = 0.0f;
-
+    //ナビメッシュエージェント
     private NavMeshAgent agent;
-
+    //お客さん用のデータ
     private GuestData data;
-
+    //アニメーター
     private Animator animator;
 
     /// <summary>
@@ -66,15 +66,19 @@ public class StateDefaultRootWalk : AIState
 
     public override void InitState()
     {
+        //ナビメッシュ取得
         if (!agent) agent = GetComponent<NavMeshAgent>();
+        //データ取得
         if (!data) data = GetComponent<AIManager>().GetGuestData();
 
+        //ナビメッシュエージェントの設定
         if(targetList.Count > 0) agent.SetDestination(targetList[targetNum].position);
-
         agent.speed = data.speed;
         agent.stoppingDistance = Random.Range(1,data.cageDistance);
+
         fTimer = 0.0f;
 
+        //アニメーション初期化
         if (!animator) animator = GetComponent<Animator>();
         if (animator) animator.SetBool("isWalk", true);
     }
@@ -93,17 +97,18 @@ public class StateDefaultRootWalk : AIState
         if (agent.remainingDistance <= agent.stoppingDistance)
         {
             if (animator) animator.SetBool("isWalk", false);
+
             fTimer += Time.deltaTime;
+            if (data.waitTime <= fTimer)
+            {
+                ChangeTarget();
+            }
 
             //目的地の方を向く
             //できれば、動物の方を向くようにしたい
             Quaternion rot = Quaternion.LookRotation(targetList[targetNum].position - transform.position);
             transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime);
 
-            if (data.waitTime <= fTimer)
-            {
-                ChangeTarget();
-            }
         }
     }
 
