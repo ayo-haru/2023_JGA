@@ -303,6 +303,7 @@ GameObject:
   - component: {fileID: 195019798}
   - component: {fileID: 195019797}
   - component: {fileID: 195019801}
+  - component: {fileID: 195019802}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -404,6 +405,26 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &195019802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 195019796}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 1
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+  outlineMaskMaterial: {fileID: 2100000, guid: 106f3ff43a17d4967a2b64c7a92e49ec, type: 2}
+  outlineFillMaterial: {fileID: 2100000, guid: 311313efa011949e98b6761d652ad13c, type: 2}
 --- !u!4 &292274364 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7013362251430728592, guid: 6c48ae1620ef1e6468b1a7473519eca9,
@@ -455,6 +476,7 @@ GameObject:
   - component: {fileID: 684057093}
   - component: {fileID: 684057092}
   - component: {fileID: 684057096}
+  - component: {fileID: 684057097}
   m_Layer: 0
   m_Name: SoccerBall
   m_TagString: Untagged
@@ -556,6 +578,26 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &684057097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 684057091}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 1
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+  outlineMaskMaterial: {fileID: 2100000, guid: 106f3ff43a17d4967a2b64c7a92e49ec, type: 2}
+  outlineFillMaterial: {fileID: 2100000, guid: 311313efa011949e98b6761d652ad13c, type: 2}
 --- !u!1 &1120106506
 GameObject:
   m_ObjectHideFlags: 0
@@ -765,7 +807,7 @@ PrefabInstance:
     - target: {fileID: 8599324878914811704, guid: 4247cb08408a41143aaccf91f79a1c63,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.7
+      value: 3.16
       objectReference: {fileID: 0}
     - target: {fileID: 8599324878914811704, guid: 4247cb08408a41143aaccf91f79a1c63,
         type: 3}
@@ -940,6 +982,7 @@ GameObject:
   - component: {fileID: 1834969489}
   - component: {fileID: 1834969488}
   - component: {fileID: 1834969487}
+  - component: {fileID: 1834969492}
   m_Layer: 0
   m_Name: Cube (1)
   m_TagString: holdObject
@@ -1041,6 +1084,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1834969492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1834969486}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 1
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+  outlineMaskMaterial: {fileID: 2100000, guid: 106f3ff43a17d4967a2b64c7a92e49ec, type: 2}
+  outlineFillMaterial: {fileID: 2100000, guid: 311313efa011949e98b6761d652ad13c, type: 2}
 --- !u!1001 &6915197449381663067
 PrefabInstance:
   m_ObjectHideFlags: 0
