@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4189761060716294367}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: CardboardBox01
   m_TagString: Interact
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2924694992481555128}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: CardboardBox_ResetPos
   m_TagString: Interact
   m_Icon: {fileID: 0}
@@ -79,7 +79,7 @@ GameObject:
   - component: {fileID: 8143569338007488113}
   - component: {fileID: 2538955521447451285}
   - component: {fileID: 3108026515764471357}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: CardboardBox_Gimick
   m_TagString: Interact
   m_Icon: {fileID: 0}
