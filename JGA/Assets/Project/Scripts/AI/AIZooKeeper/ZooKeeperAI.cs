@@ -192,6 +192,22 @@ public class ZooKeeperAI : MonoBehaviour
         #endregion
     }
 
+    private void OnCollisionExit(Collision collision)
+    {
+        #region ギミックオブジェクト
+        // オブジェクトを持っている時にオブジェクトが飛んで行ったら
+        if (catchFlg && collision.gameObject.tag == "Interact")
+        {
+            gimmickFlg = false;
+            catchFlg = false;
+            gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().isKinematic = false;   // 物理演算の影響を受けるようにする
+            gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().useGravity = true;
+            gimmickObj.gimmickList[gimmickNum].transform.parent = null;
+            //navMesh.SetDestination(gimmickObj.gimmickList[gimmickNum].transform.position);   // 目的地をオブジェクトの位置に設定
+        }
+        #endregion
+    }
+
     /// <summary>
     /// 飼育員の索敵範囲にペンギンがいるか
     /// </summary>
@@ -314,14 +330,14 @@ public class ZooKeeperAI : MonoBehaviour
     private void Move()
     {
         // オブジェクトを元の位置に戻す
-        if (gimmickFlg)
+        if (gimmickFlg && catchFlg)
         {
             // プロトタイプ用-------------------
             // 歩行アニメーション再生
             animator.SetBool("isWalk", true);
             //--------------------------------
 
-            if (navMesh.remainingDistance <= 2.0f    // 目標地点までの距離が2.0ｍ以下になったら到着
+            if (navMesh.remainingDistance <= 1.5f    // 目標地点までの距離が2.0ｍ以下になったら到着
                  && !navMesh.pathPending)            // 経路計算中かどうか（計算中：true　計算完了：false）
             {
                 gimmickFlg = false;
@@ -389,7 +405,6 @@ public class ZooKeeperAI : MonoBehaviour
             gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().useGravity = true;
             gimmickObj.gimmickList[gimmickNum].transform.parent = null;
             gimmickObj.gimmickList[gimmickNum].transform.position = gimmickObj.resetPos[resetNum].transform.position;
-            //gimmickObj.bReset[gimmickNum] = true;
         }
     }
 
