@@ -9,10 +9,12 @@
 // 2023/02/27	スクリプト作成
 // 2023/03/02	(小楠)客用のデータ持たせた
 // 2023/03/03	(小楠)ステートの終了処理追加
+// 2023/03/11	(小楠)乱数の初期化を追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class AIManager : MonoBehaviour
 {
@@ -57,6 +59,8 @@ public class AIManager : MonoBehaviour
         {
             nodeList[currentState].transitions[i].toNodeTransition.InitTransition();
         }
+        //乱数初期化
+        UnityEngine.Random.InitState(DateTime.Now.Millisecond);
     }
 
 	/// <summary>
@@ -102,6 +106,8 @@ public class AIManager : MonoBehaviour
         {
             nodeList[currentState].transitions[i].toNodeTransition.InitTransition();
         }
+        //乱数初期化
+        UnityEngine.Random.InitState(DateTime.Now.Millisecond);
     }
 
     /// <summary>

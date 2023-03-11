@@ -112,9 +112,9 @@ public class StateFollowPenguin : AIState
             }
         }
 
-        //感情がMAXの時は追従する
+        //!!!,!!の時は追従する
         //ペンギンとの距離が近い場合は移動しない
-        agent.speed = (ui.GetEmotion() == EEmotion.ATTENSION_HIGH) ? data.speed : 0.0f;
+        agent.speed = (ui.GetEmotion() >= EEmotion.ATTENSION_MIDDLE) ? data.speed : 0.0f;
         agent.SetDestination(target.position);
 
         //プレイヤーの方向を向く

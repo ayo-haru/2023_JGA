@@ -62,7 +62,7 @@ public class StateStayArea : AIState
         if (!data) data = GetComponent<AIManager>().GetGuestData();
         agent.SetDestination(target.position);
         agent.speed = data.speed;
-        agent.stoppingDistance = Random.Range(1,data.cageDistance);
+        agent.stoppingDistance = Random.Range(1.0f,data.cageDistance);
         isStay = false;
         if (!animator) animator = GetComponent<Animator>();
         if (animator) animator.SetBool("isWalk", true);
