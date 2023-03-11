@@ -87,10 +87,8 @@ public class MainCamera : MonoBehaviour
 	private Transform cameraChild;
 
     //基本的にメインカメラのみで設定するところ
-    [Header("到着までの大体の時間")]
-    [SerializeField] private float smoothTime = 0.1f;
-    [Header("最高速度")]
-    [SerializeField] private float maxSpeed = 10.0f;
+    [Header("遅延の数値(0に近いほど遅延がデカい。基本は1)")]
+    [SerializeField] private float smoothMove = 1.0f;
     
 
     [Header("ズームイン倍率")]
@@ -226,12 +224,11 @@ public class MainCamera : MonoBehaviour
     /// </summary>
     private void CameraMove()
 	{
-
-        cameraParent.position = Vector3.Lerp(
-        a: cameraParent.position,
-        b: playerobj.transform.position,
-        t: Time.deltaTime * 5f);
-
+            cameraParent.position = Vector3.Lerp(
+            a: cameraParent.position,
+            b: playerobj.transform.position,
+            t: Time.deltaTime * smoothMove);
+       
     }
     //ズームインのボタンが押されたときに実行する関数
     private void OnZoomIn(InputAction.CallbackContext context)
