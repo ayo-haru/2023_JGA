@@ -130,6 +130,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 275277329, guid: 5586ea2c0ee038e4ba2d458cda7b7fac, type: 3}
+      propertyPath: appealForce
+      value: 332.5
+      objectReference: {fileID: 0}
     - target: {fileID: 6903381975108728195, guid: 5586ea2c0ee038e4ba2d458cda7b7fac,
         type: 3}
       propertyPath: m_Name
@@ -306,7 +310,7 @@ GameObject:
   - component: {fileID: 195019802}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Interact
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -479,7 +483,7 @@ GameObject:
   - component: {fileID: 684057097}
   m_Layer: 0
   m_Name: SoccerBall
-  m_TagString: Untagged
+  m_TagString: Interact
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1104,6 +1108,32 @@ MonoBehaviour:
   bakeValues: []
   outlineMaskMaterial: {fileID: 2100000, guid: 106f3ff43a17d4967a2b64c7a92e49ec, type: 2}
   outlineFillMaterial: {fileID: 2100000, guid: 311313efa011949e98b6761d652ad13c, type: 2}
+--- !u!1 &2144520100 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8599324878914811697, guid: 4247cb08408a41143aaccf91f79a1c63,
+    type: 3}
+  m_PrefabInstance: {fileID: 1438177530}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2144520108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2144520100}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 1
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+  outlineMaskMaterial: {fileID: 2100000, guid: 106f3ff43a17d4967a2b64c7a92e49ec, type: 2}
+  outlineFillMaterial: {fileID: 2100000, guid: 311313efa011949e98b6761d652ad13c, type: 2}
 --- !u!1001 &6915197449381663067
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1194,7 +1224,7 @@ PrefabInstance:
         type: 3}
       propertyPath: _camera
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1806883027}
     - target: {fileID: 8323915648899601957, guid: 46166a0e18a0e4e4f920091d2790bdf8,
         type: 3}
       propertyPath: m_RootOrder
