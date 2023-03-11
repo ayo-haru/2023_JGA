@@ -110,6 +110,12 @@ public class Outline : MonoBehaviour
 
 		// Apply material properties immediately
 		needsUpdate = true;
+
+
+		if (outlineMode != Mode.OutlineVisible)
+			outlineMode = Mode.OutlineVisible;
+
+		this.enabled = false;
 	}
 
 	void OnEnable()
