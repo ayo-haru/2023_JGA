@@ -64,6 +64,7 @@ public class Player : MonoBehaviour
 
 	private Collider InteractObject;            // 掴んでいるオブジェクト：コリジョン
 	private Rigidbody HoldObjectRb;             // 掴んでいるオブジェクト：重力関連
+	private Outline InteractOutline;            // 掴んでいるオブジェクト：アウトライン
 	[SerializeField]
 	private List<Collider> WithinRange = new List<Collider>();  // インタラクト範囲内にあるオブジェクトリスト
 
@@ -164,6 +165,37 @@ public class Player : MonoBehaviour
 
 		anim.SetBool("move", moveInputValue.normalized != Vector2.zero);
 		anim.SetBool("run", isRun);
+
+
+		float length;
+		if (InteractOutline != null)
+			length = Vector3.Distance(transform.position, InteractOutline.transform.position);
+		else
+			length = 10.0f;
+
+		// プレイヤーに一番近いオブジェクトをインタラクト対象とする
+		foreach (Collider obj in WithinRange)
+		{
+			if (InteractOutline != null && obj == InteractOutline.gameObject)
+			{
+				InteractOutline.enabled = true;
+				continue;
+			}
+
+			float distance = Vector3.Distance(transform.position, obj.transform.position);
+
+			if (length > distance)
+			{
+				length = distance;
+				if (obj.TryGetComponent(out Outline outline))
+				{
+					if (InteractOutline != null)
+						InteractOutline.enabled = false;
+					InteractOutline = outline;
+					InteractOutline.enabled = true;
+				}
+			}
+		}
 	}
 
 	/// <summary>
@@ -387,11 +419,17 @@ public class Player : MonoBehaviour
 	private void OnTriggerEnter(Collider other)
 	{
 		WithinRange.Add(other);
+
+		if (WithinRange.Count == 1 && other.TryGetComponent(out Outline outline))
+			outline.enabled = true;
 	}
 
 	private void OnTriggerExit(Collider other)
 	{
 		WithinRange.Remove(other);
+
+		if (other.TryGetComponent(out Outline outline))
+			outline.enabled = false;
 	}
 	#endregion
 
