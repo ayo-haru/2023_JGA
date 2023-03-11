@@ -9,6 +9,7 @@
 // 2023/03/02	スクリプト作成
 // 2023/03/03	(小楠)終了処理追加
 // 2023/03/08	(小楠)アニメーションの制御追加
+// 2023/03/11	(小楠)目的地の方を向くようにした、目的地との距離を調整
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -61,7 +62,7 @@ public class StateStayArea : AIState
         if (!data) data = GetComponent<AIManager>().GetGuestData();
         agent.SetDestination(target.position);
         agent.speed = data.speed;
-        agent.stoppingDistance = data.reactionArea;
+        agent.stoppingDistance = Random.Range(1,data.cageDistance);
         isStay = false;
         if (!animator) animator = GetComponent<Animator>();
         if (animator) animator.SetBool("isWalk", true);
@@ -69,16 +70,23 @@ public class StateStayArea : AIState
 
     public override void UpdateState()
     {
-        if (isStay) return;
+        if (isStay)
+        {
+            //目的地の方を向く
+            //できれば、動物の方を向くようにしたい
+            Quaternion rot = Quaternion.LookRotation(target.position - transform.position);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime);
+            return;
+        }
 
         if (agent.pathPending) return;
         //指定位置に着いたら
-        if (agent.remainingDistance <= data.reactionArea)
+        if (agent.remainingDistance <= agent.stoppingDistance)
         {
             //待機アニメーションの再生
             if (animator) animator.SetBool("isWalk", false);
             //移動停止
-            agent.speed = 0.0f;
+            //agent.speed = 0.0f;
 
             isStay = true;
 

@@ -11,6 +11,7 @@
 // 2023/03/03	(小楠）終了処理追加
 // 2023/03/08	(小楠）アニメーション追加。ターゲットリストが0の時のエラー直した
 // 2023/03/10	(小楠）追跡範囲の変更。目的地の方向くようにした
+// 2023/03/11	(小楠）目的地との距離を調整
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -71,7 +72,7 @@ public class StateDefaultRootWalk : AIState
         if(targetList.Count > 0) agent.SetDestination(targetList[targetNum].position);
 
         agent.speed = data.speed;
-        agent.stoppingDistance = data.reactionArea;
+        agent.stoppingDistance = Random.Range(1,data.cageDistance);
         fTimer = 0.0f;
 
         if (!animator) animator = GetComponent<Animator>();
@@ -89,12 +90,13 @@ public class StateDefaultRootWalk : AIState
             ChangeTarget();
         }
         //待機時間
-        if (agent.remainingDistance <= data.reactionArea)
+        if (agent.remainingDistance <= agent.stoppingDistance)
         {
             if (animator) animator.SetBool("isWalk", false);
             fTimer += Time.deltaTime;
 
             //目的地の方を向く
+            //できれば、動物の方を向くようにしたい
             Quaternion rot = Quaternion.LookRotation(targetList[targetNum].position - transform.position);
             transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime);
 

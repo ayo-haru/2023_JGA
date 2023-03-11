@@ -19,3 +19,4 @@ MonoBehaviour:
   firstCoolDownTime: 3
   secondCoolDownTime: 2
   waitTime: 10
+  cageDistance: 10
