@@ -205,12 +205,7 @@ public class MainCamera : MonoBehaviour
             scriptStop = 0.0f;
         }
 
-        cameraParent.position = Vector3.Lerp(
-    a: cameraParent.position,
-    b: playerobj.transform.position,
-    t: Time.deltaTime * 2f);
-
-        //CameraMove();
+        CameraMove();
         if (zoomFlg)
         {
             ZoomInOut();
@@ -231,17 +226,11 @@ public class MainCamera : MonoBehaviour
     /// </summary>
     private void CameraMove()
 	{
-        //カメラの座標の更新
-        var targetpos = playerobj.transform.position + offset;
 
-        var currentVelocity = new Vector3();
-
-
-        cameraParent.transform.position = Vector3.SmoothDamp(cameraParent.transform.position,
-                                                            targetpos,
-                                                           ref currentVelocity,
-                                                           smoothTime,
-                                                           maxSpeed);
+        cameraParent.position = Vector3.Lerp(
+        a: cameraParent.position,
+        b: playerobj.transform.position,
+        t: Time.deltaTime * 5f);
 
     }
     //ズームインのボタンが押されたときに実行する関数
