@@ -315,7 +315,7 @@ public class Player : MonoBehaviour
 					OnHold(true);
 					break;
 
-				case "HitObject":
+				case "Interact":
 					OnHit();
 					break;
 
@@ -374,7 +374,16 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void OnHit()
 	{
-		//Debug.Log($"はたく");
+		//var rigidbody = InteractObject.GetComponent<Rigidbody>();
+		//float blowpower = 10.0f;    // 吹っ飛ぶ強さ
+		//float topvector = 0.1f;    // 吹っ飛ぶ強さ
+
+		//// プレイヤーが範囲内にいる時にインタラクトフラグがTrueになったらふき飛ぶよ
+		//rigidbody.isKinematic = false;
+		//Vector3 vec = (InteractObject.transform.position + new Vector3(0.0f, topvector, 0.0f) - transform.position).normalized;
+		//rigidbody.velocity = vec * blowpower;
+		//vec = (InteractObject.transform.position - transform.position).normalized;
+		//rigidbody.AddTorque(vec * blowpower);
 	}
 
 	/// <summary>
@@ -418,6 +427,9 @@ public class Player : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
+		if (other.tag != "holdObject" && other.tag != "Interact")
+			return;
+
 		WithinRange.Add(other);
 
 		if (WithinRange.Count == 1 && other.TryGetComponent(out Outline outline))
