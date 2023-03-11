@@ -2,11 +2,12 @@
 // @File	: [GuestData.cs]
 // @Brief	: 客のデータ
 // @Author	: Ogusu Yuuko
-// @Editer	: 
+// @Editer	: Ogusu Yuuko
 // @Detail	: 
 // 
 // [Date]
 // 2023/03/02	スクリプト作成
+// 2023/03/11	(小楠)ケージとの距離を追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -28,4 +29,6 @@ public class GuestData : ScriptableObject
     [Range(1, 5)] public float secondCoolDownTime = 5.0f;
     //待機時間
     [Min(0)] public float waitTime = 0;
+    //ケージとの距離（最大値）
+    [Min(1)] public float cageDistance = 10.0f;
 }
