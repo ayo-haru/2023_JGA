@@ -39,6 +39,7 @@ public class ZooKeeperAI : MonoBehaviour
     [SerializeField, Range(1.1f, 2.0f)] private float chaseSpeed;       // 飼育員の追いかけるスピード
     [SerializeField, Range(0.0f, 50.0f)] private float search;          // 飼育員の索敵範囲
     [SerializeField, Range(1.0f, 180.0f)] private float searchAngle;    // 飼育員の索敵範囲の角度
+    [SerializeField, Range(1.0f, 50.0f)] private float searchDistance;  // 飼育員の索敵範囲の距離
     [SerializeField] private bool chaseNow = false;    // ペンギンを追いかけているフラグ
     private SphereCollider sphereCollider;
     //private float angle = 45.0f;
@@ -200,16 +201,15 @@ public class ZooKeeperAI : MonoBehaviour
         if(other.gameObject.tag == "Player")
         {
             var pos = other.transform.position - transform.position;
-            var distance = 10.0f;               // 距離
             var direction = transform.forward;  // 方向
             float targetAngle = Vector3.Angle(this.transform.forward, pos);
-            Debug.DrawRay(transform.position, pos * distance, Color.red);
+            Debug.DrawRay(transform.position, pos * searchDistance, Color.red);
 
             // 視界の角度内に収まっているかどうか
             if (targetAngle < searchAngle)
             {
                 // Rayが当たっているか
-                if (Physics.Raycast(transform.position, pos, out rayhit, distance))    // rayの開始地点、rayの向き、当たったオブジェクトの情報を格納、rayの発射距離
+                if (Physics.Raycast(transform.position, pos, out rayhit, searchDistance))    // rayの開始地点、rayの向き、当たったオブジェクトの情報を格納、rayの発射距離
                 {
                     // 当たったオブジェクトがペンギンかどうか
                     if(rayhit.collider == other)
@@ -326,16 +326,8 @@ public class ZooKeeperAI : MonoBehaviour
             {
                 gimmickFlg = false;
                 catchFlg = false;
+                gimmickObj.bReset[gimmickNum] = true;
                 Bring();
-                // リストの順番に巡回する
-                if (rootList.Count - 1 > rootNum)
-                {
-                    rootNum += 1;
-                }
-                else
-                {
-                    rootNum = 0;
-                }
                 navMesh.SetDestination(rootList[rootNum].position); // 目的地の再設定
             }
         }
@@ -387,7 +379,7 @@ public class ZooKeeperAI : MonoBehaviour
             gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().useGravity = false;
             gimmickObj.gimmickList[gimmickNum].transform.parent = this.transform;
         }
-        else
+        else if(gimmickObj.bReset[gimmickNum])
         {
             // はなす
             //-----------------------------
@@ -397,7 +389,7 @@ public class ZooKeeperAI : MonoBehaviour
             gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().useGravity = true;
             gimmickObj.gimmickList[gimmickNum].transform.parent = null;
             gimmickObj.gimmickList[gimmickNum].transform.position = gimmickObj.resetPos[resetNum].transform.position;
-            gimmickObj.bReset[gimmickNum] = true;
+            //gimmickObj.bReset[gimmickNum] = true;
         }
     }
 
@@ -408,8 +400,7 @@ public class ZooKeeperAI : MonoBehaviour
     {
         Handles.color = new Color(0, 0, 1, 0.3f);
         Handles.DrawSolidArc(transform.position, Vector3.up, 
-            Quaternion.Euler(0f, -searchAngle, 0f) * transform.forward, searchAngle * 2.0f, 10.0f);
-                                                                                //↑distance
+            Quaternion.Euler(0f, -searchAngle, 0f) * transform.forward, searchAngle * 2.0f, searchDistance);
     }
 
     /// <summary>
