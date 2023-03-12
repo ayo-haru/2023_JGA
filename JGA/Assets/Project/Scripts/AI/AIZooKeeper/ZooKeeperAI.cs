@@ -251,7 +251,7 @@ public class ZooKeeperAI : MonoBehaviour
 
         #region ギミックオブジェクト
         // 索敵範囲にギミックオブジェクトが入ったら目的地をオブジェクトに設定
-        if (status == Status.returnObj && !gimmickFlg && other.gameObject.tag == "Interact")
+        if (status == Status.returnObj && other.gameObject.tag == "Interact")
         {
             for (int i = 0; i < gimmickObj.gimmickList.Count; i++)
             {
@@ -262,26 +262,41 @@ public class ZooKeeperAI : MonoBehaviour
                     float objAngle = Vector3.Angle(this.transform.forward, posObj);
                     Debug.DrawRay(transform.position, posObj * searchDistance, Color.black);
 
-                    // Rayが当たっているか
-                    if (Physics.Raycast(transform.position, posObj, out rayhit, searchDistance))    // rayの開始地点、rayの向き、当たったオブジェクトの情報を格納、rayの発射距離
+                    // 視界の角度内に収まっているかどうか
+                    if (objAngle < searchAngle)
                     {
-                        if (rayhit.collider == other && !chaseNow)
+                        // Rayが当たっているか
+                        if (Physics.Raycast(transform.position, posObj, out rayhit, searchDistance))    // rayの開始地点、rayの向き、当たったオブジェクトの情報を格納、rayの発射距離
                         {
-                            navMesh.SetDestination(gimmickObj.gimmickList[i].transform.position);   // 目的地をオブジェクトの位置に設定
-                            gimmickFlg = true;
-                            resetNum = i;
-                            gimmickNum = i;
+                            if (rayhit.collider.tag == "Interact" && !chaseNow && !gimmickFlg)
+                            {
+                                navMesh.SetDestination(gimmickObj.gimmickList[i].transform.position);   // 目的地をオブジェクトの位置に設定
+                                gimmickFlg = true;
+                                resetNum = i;
+                                gimmickNum = i;
+                            }
+                        }
+                        else
+                        {
+                            gimmickFlg = false;
+                            if (catchFlg)
+                            {
+                                catchFlg = false;
+                                gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().isKinematic = false;   // 物理演算の影響を受けるようにする
+                                gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().useGravity = true;
+                                gimmickObj.gimmickList[gimmickNum].transform.parent = null;
+                            }
                         }
                     }
                     else
                     {
                         gimmickFlg = false;
-                        if(catchFlg)
+                        if (catchFlg)
                         {
+                            catchFlg = false;
                             gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().isKinematic = false;   // 物理演算の影響を受けるようにする
                             gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().useGravity = true;
                             gimmickObj.gimmickList[gimmickNum].transform.parent = null;
-                            catchFlg = false;
                         }
                     }
                 }
@@ -329,7 +344,6 @@ public class ZooKeeperAI : MonoBehaviour
             gimmickObj.gimmickList[gimmickNum].transform.parent = null;
             catchFlg = false;
             gimmickFlg = false;
-            //navMesh.SetDestination(gimmickObj.gimmickList[gimmickNum].transform.position);   // 目的地をオブジェクトの位置に設定
         }
         #endregion
     }
@@ -370,7 +384,7 @@ public class ZooKeeperAI : MonoBehaviour
                 }
             }
         }
-        else if (rootList.Count >= 1)
+        else if (rootList.Count >= 1 && !catchFlg)
         {
             // プロトタイプ用-------------------
             // 歩行アニメーション再生
@@ -417,7 +431,6 @@ public class ZooKeeperAI : MonoBehaviour
             gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().isKinematic = true;   // 物理演算の影響を受けないようにする
             gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().useGravity = false;
             gimmickObj.gimmickList[gimmickNum].transform.parent = this.transform;
-            // resetPosのnameと同じ位置に戻す
             navMesh.SetDestination(gimmickObj.resetPos[gimmickNum].position);   // 目的地をオブジェクトの位置に設定
         }
         else if(gimmickObj.bReset[gimmickNum])
