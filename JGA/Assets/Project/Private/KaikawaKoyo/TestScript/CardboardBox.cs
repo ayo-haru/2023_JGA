@@ -26,7 +26,6 @@ public class CardboardBox : MonoBehaviour
     private float objectsize;
 
     public bool IsSound { get; set; }   // 音が鳴ったフラグ
-    private bool delay;
 
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
