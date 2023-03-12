@@ -2,22 +2,23 @@
 // @File	: [TransitionInteract.cs]
 // @Brief	: 遷移条件　ペンギンが近くにいてかつインタラクトしたら
 // @Author	: Ogusu Yuuko
-// @Editer	: 
+// @Editer	: Ogusu Yuuko
 // @Detail	: 
 // 
 // [Date]
 // 2023/03/07	スクリプト作成
+// 2023/03/13	(小楠)インタラクトフラグ取得
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class TransitionInteract : AITransition
 {
     private GameObject player;
     private Transform playerTransform;
     private GuestData data;
+    private GameObject[] interactObjecs;
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -53,26 +54,39 @@ public class TransitionInteract : AITransition
 
     public override void InitTransition()
     {
+        //コンポーネント、オブジェクトの取得
         if (!player) player = GameObject.FindWithTag("Player");
         if (!playerTransform && player) playerTransform = player.GetComponent<Transform>();
         if (!data) data = GetComponent<AIManager>().GetGuestData();
+        if (interactObjecs == null) interactObjecs = GameObject.FindGameObjectsWithTag("Interact");
     }
 
     public override bool IsTransition()
     {
-        if(!player || !playerTransform || !data)
+        #region エラーチェック
+        if (!player || !playerTransform || !data)
         {
             Debug.LogError("データが取得されていません");
             return false;
         }
-        //プレイヤーがインタラクトをしたかフラグを取得して返す
-        //仮で□ボタンかFキー押しっぱなしだったらtrueを返す
+        if((interactObjecs == null) ? true : interactObjecs.Length <= 0)
+        {
+            Debug.LogError("インタラクトオブジェクトがありません");
+            return false;
+        }
+        #endregion
 
         //プレイヤーが範囲内に居るか
         if (Vector3.Distance(transform.position, playerTransform.position) > data.reactionArea) return false;
 
-        //インタラクトされたか
-        Gamepad input = Gamepad.current;
-        return (input != null) ? input.buttonWest.IsPressed() : false || Input.GetKey(KeyCode.F);
+        //範囲内にあるインタラクトオブジェクトのフラグが立っているか
+        for(int i = 0; i < interactObjecs.Length; ++i)
+        {
+            if (Vector3.Distance(transform.position, interactObjecs[i].transform.position) > data.reactionArea) continue;
+            CardboardBox cardboardBox = interactObjecs[i].GetComponent<CardboardBox>();
+            if (!cardboardBox) continue;
+            if (cardboardBox.IsSound) return true;
+        }
+        return false;
     }
 }
