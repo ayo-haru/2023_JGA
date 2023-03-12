@@ -8,15 +8,15 @@
 // [Date]
 // 2023/03/05	スクリプト作成
 // 2023/03/06	(小楠)コントローラのエラー直した
+// 2023/03/12	(小楠)プレイヤーからアピールフラグ取得できるようになった
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class TransitionAttensionAction : AITransition
 {
-    private GameObject player;
+    private Player player;
 
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -52,15 +52,17 @@ public class TransitionAttensionAction : AITransition
 
     public override void InitTransition()
     {
-        if (!player) player = GameObject.FindWithTag("Player");
+        if (!player) player = GameObject.FindWithTag("Player").GetComponent<Player>();
     }
 
     public override bool IsTransition()
     {
+        if (!player)
+        {
+            Debug.LogError("プレイヤーが取得できていません");
+            return false;
+        }
         //プレイヤーが専用アクションをしたかフラグを取得して返す
-
-        Gamepad input = Gamepad.current;
-        //仮で○ボタン押しっぱなしだったらtrueを返す
-        return (input != null) ? input.buttonEast.IsPressed() : false || Input.GetKey(KeyCode.Space);
+        return player.IsAppeal;
     }
 }

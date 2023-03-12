@@ -15,19 +15,21 @@
 // 2023/03/07	(小楠）プレイヤーの方向向くようにした
 // 2023/03/08	(小楠）アニメーションの処理追加
 // 2023/03/11	(小楠）navmeshagentの目的地をちょっとずらして、お客さんをばらけるようにした
+// 2023/03/12	(小楠）プレイヤーからアピールフラグ取得した
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.InputSystem;
 
 public class StateFollowPenguin : AIState
 {
     //ペンギン
-    private GameObject player;
+    private GameObject penguin;
     //ペンギンのTransform
     private Transform target;
+    //ペンギンのスクリプト
+    private Player player;
     //ナビメッシュエージェント
     private NavMeshAgent agent;
     //感情UI
@@ -78,8 +80,9 @@ public class StateFollowPenguin : AIState
         //オブジェクト、コンポーネントの取得
         if (!agent) agent = GetComponent<NavMeshAgent>();
         if (!data) data = GetComponent<AIManager>().GetGuestData();
-        if (!player) player = GameObject.FindWithTag("Player");
-        if (!target) target = player.GetComponent<Transform>();
+        if (!penguin) penguin = GameObject.FindWithTag("Player");
+        if (!target && penguin) target = penguin.GetComponent<Transform>();
+        if (!player && penguin) player = penguin.GetComponent<Player>();
         if (!animator) animator = GetComponent<Animator>();
 
         //ナビメッシュエージェントの設定
@@ -98,11 +101,10 @@ public class StateFollowPenguin : AIState
 
     public override void UpdateState()
     {
-        Gamepad input = Gamepad.current;
 
         //客が反応したかどうか 専用アクションをしてる　かつ　反応できる範囲に居る
-        if (Vector3.Distance(transform.position,target.position) <= data.reactionArea * ((int)ui.GetEmotion() / (float)EEmotion.ATTENSION_HIGH) &&
-            (input != null ? input.buttonEast.IsPressed() : false || Input.GetKey(KeyCode.Space)))
+        if (Vector3.Distance(transform.position, target.position + posOffset) <= data.reactionArea * ((int)ui.GetEmotion() / (float)EEmotion.ATTENSION_HIGH) &&
+            player.IsAppeal)
         {
              ui.SetEmotion(EEmotion.ATTENSION_HIGH);
              fTimer = 0.0f;
@@ -129,8 +131,7 @@ public class StateFollowPenguin : AIState
 
         //プレイヤーの方向を向く
         Quaternion rot = Quaternion.LookRotation(target.position - transform.position);
-        rot = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime);
-        transform.rotation = rot;
+        transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime);
 
         //アニメーション更新
         if (animator) animator.SetBool("isWalk", (agent.velocity.magnitude > 0.0f) ? true : false);
