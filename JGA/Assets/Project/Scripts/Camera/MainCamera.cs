@@ -237,7 +237,11 @@ public class MainCamera : MonoBehaviour
         {
             return;
         }
-
+        if(MySceneManager.GameData.isCatchPenguin)
+        {
+            cameraParent.position = playerobj.transform.position;
+            return;
+        }
         //==============================================================
         //端＋指定した距離にプレイヤーが入っていたらカメラを止める
         if (fieldLeftEdge.position.x + edgeDistance >= playerobj.transform.position.x ||
@@ -275,7 +279,7 @@ public class MainCamera : MonoBehaviour
         if(fieldLeftEdge.position.x + edgeDistance <= playerobj.transform.position.x &&
             fieldRightEdge.position.x - edgeDistance >= playerobj.transform.position.x &&
             fieldUpEdge.position.z - edgeDistance >= playerobj.transform.position.z &&
-             fieldBottomEdge.position.z + edgeDistance <= playerobj.transform.position.z)
+            fieldBottomEdge.position.z + edgeDistance <= playerobj.transform.position.z)
         {
             cameraParent.position = Vector3.Lerp(
             a: cameraParent.position,

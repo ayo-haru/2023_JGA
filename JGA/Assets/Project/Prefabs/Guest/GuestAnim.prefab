@@ -1306,7 +1306,7 @@ GameObject:
   - component: {fileID: -7525295860995111489}
   m_Layer: 0
   m_Name: GuestAnim
-  m_TagString: Untagged
+  m_TagString: Guest
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1484,6 +1484,7 @@ MonoBehaviour:
   angle: 45
   viewAngle: 45
   inv: 0
+  eyesPos: {fileID: 0}
 --- !u!114 &-8768451862882126006
 MonoBehaviour:
   m_ObjectHideFlags: 0
