@@ -15,6 +15,7 @@
 // 2023/03/10   客の人数でズームアウトする処理の変更
 //=============================================================================ya
 using DG.Tweening.Core.Easing;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -49,12 +50,7 @@ public class MainCamera : MonoBehaviour
     //計算用FOV格納用
     private float currentFov;
 
-    //画面端の座標格納用
-    private Vector3 rightTop;
-    private Vector3 leftBottom;
-
-    private Vector3 rightBottom;
-    private Vector3 leftTop;
+    
 
     //客の情報取得用
     GameObject[] guestObj;
@@ -89,7 +85,21 @@ public class MainCamera : MonoBehaviour
     //基本的にメインカメラのみで設定するところ
     [Header("遅延の数値(0に近いほど遅延がデカい。基本は1)")]
     [SerializeField] private float smoothMove = 1.0f;
-    
+
+    //画面端の座標格納用
+    [Header("フィールド左端")]
+    [SerializeField] private Transform fieldLeftEdge = null;
+    [Header("フィールド右端")]
+    [SerializeField] private Transform fieldRightEdge = null;
+    [Header("フィールド上端")]
+    [SerializeField] private Transform fieldUpEdge = null;
+    [Header("フィールド下端")]
+    [SerializeField] private Transform fieldBottomEdge = null;
+
+    //画面端から何メートルでカメラを止まるようにするか
+    [Header("画面端何メートルでカメラを停止させるか")]
+    [SerializeField] private float edgeDistance = 5.0f;
+
 
     [Header("ズームイン倍率")]
     [SerializeField] private float zoomIn = 0.1f;
@@ -103,6 +113,8 @@ public class MainCamera : MonoBehaviour
     [SerializeField] private AnimationCurve moveCurve = null;
     [Header("客の人数でズームアウトする時間")]
     [SerializeField] private float guestZoomOut = 1.0f;
+    [Header("客のズームから戻ってくる時間")]
+    [SerializeField] private float guestRetTime = 1.0f;
     //客が何人いたら引くかを指定できる変数
     [Header("客が何人いたらズームアウトするか")]
     [SerializeField] private int guestValue = 5;
@@ -178,10 +190,7 @@ public class MainCamera : MonoBehaviour
         //プレイヤーの座標保存
         currentPlayerPos = playerobj.transform.position;
 
-        //スクリーンの端を取る
-        var screenEnd = cameraParent.localPosition.y - playerobj.transform.position.y;
-        rightTop = maincamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, screenEnd));
-        leftBottom = maincamera.ScreenToWorldPoint(new Vector3(0.0f, 0.0f, screenEnd));
+
     }
 
     /// <summary>
@@ -224,11 +233,57 @@ public class MainCamera : MonoBehaviour
     /// </summary>
     private void CameraMove()
 	{
+        if(fieldLeftEdge == null || fieldRightEdge == null || fieldUpEdge == null || fieldBottomEdge == null)
+        {
+            return;
+        }
+
+        //==============================================================
+        //端＋指定した距離にプレイヤーが入っていたらカメラを止める
+        if (fieldLeftEdge.position.x + edgeDistance >= playerobj.transform.position.x ||
+            fieldRightEdge.position.x - edgeDistance <= playerobj.transform.position.x)
+        {
+            if (fieldUpEdge.position.z - edgeDistance <= playerobj.transform.position.z ||
+            fieldBottomEdge.position.z + edgeDistance >= playerobj.transform.position.z)
+            {
+                return;
+            }
+                var z = Mathf.Lerp(
+                    a: cameraParent.position.z,
+                    b: playerobj.transform.position.z,
+                    t: Time.deltaTime * smoothMove);
+
+            cameraParent.position = new Vector3(cameraParent.position.x, cameraParent.position.y, z);
+
+        }
+        if(fieldUpEdge.position.z - edgeDistance <= playerobj.transform.position.z ||
+             fieldBottomEdge.position.z + edgeDistance >= playerobj.transform.position.z)
+        {
+            if (fieldLeftEdge.position.x + edgeDistance >= playerobj.transform.position.x ||
+            fieldRightEdge.position.x - edgeDistance <= playerobj.transform.position.x)
+            {
+                return;
+            }
+                var x = Mathf.Lerp(
+                    a: cameraParent.position.x,
+                    b: playerobj.transform.position.x,
+                    t: Time.deltaTime * smoothMove);
+
+            cameraParent.position = new Vector3(x, cameraParent.position.y, cameraParent.position.z);
+        }
+
+        if(fieldLeftEdge.position.x + edgeDistance <= playerobj.transform.position.x &&
+            fieldRightEdge.position.x - edgeDistance >= playerobj.transform.position.x &&
+            fieldUpEdge.position.z - edgeDistance >= playerobj.transform.position.z &&
+             fieldBottomEdge.position.z + edgeDistance <= playerobj.transform.position.z)
+        {
             cameraParent.position = Vector3.Lerp(
             a: cameraParent.position,
             b: playerobj.transform.position,
             t: Time.deltaTime * smoothMove);
-       
+        }
+        //==============================================================
+
     }
     //ズームインのボタンが押されたときに実行する関数
     private void OnZoomIn(InputAction.CallbackContext context)
@@ -348,7 +403,7 @@ public class MainCamera : MonoBehaviour
                 {
                     if (currentFov > fov)
                     {
-                        currentFov -= ((zoomOut * fov - fov) / (60.0f * zoomRetTime));
+                        currentFov -= ((zoomOut * fov - fov) / (60.0f * guestRetTime));
                     }
                     else
                     {
@@ -376,9 +431,10 @@ public class MainCamera : MonoBehaviour
         for (int i = 0; i < guestObj.Length; i++)
         {
             boundGuest[i].center = guestObj[i].transform.position;
+            boundGuest[i].size *= 0.1f;
         }
         planes = GeometryUtility.CalculateFrustumPlanes(maincamera);
-
+        
         //一つ一つ判定数を計算する
         for (int i = 0; i < guestObj.Length; i++)
         {
