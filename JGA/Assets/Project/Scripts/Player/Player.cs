@@ -55,8 +55,8 @@ public class Player : MonoBehaviour
 
 	[SerializeField] private bool isHold;       // つかみフラグ
 	[SerializeField] private bool isRun;        // 走りフラグ
-	[SerializeField] private bool isAppeal;     // アピールフラグ
-
+	[SerializeField] private bool _IsAppeal;     // アピールフラグ
+	public bool IsAppeal { get { return _IsAppeal; } }
 
 	[SerializeField] private bool bGamePad;     // ゲームパッド接続確認フラグ
 	private MyContorller gameInputs;            // 方向キー入力取得
@@ -149,7 +149,7 @@ public class Player : MonoBehaviour
 			}
 		}
 
-		if (isAppeal)
+		if (_IsAppeal)
 		{
 			if (callInterval > 0)
 			{
@@ -207,7 +207,7 @@ public class Player : MonoBehaviour
 		{
 			float force;
 
-			if (isAppeal)
+			if (_IsAppeal)
 				force = appealForce;
 			else if (isRun)
 				force = runForce;
@@ -233,7 +233,7 @@ public class Player : MonoBehaviour
 
 			float force;
 
-			if (isAppeal)
+			if (_IsAppeal)
 				force = appealForce;
 			else if (isRun)
 				force = runForce;
@@ -395,14 +395,14 @@ public class Player : MonoBehaviour
 		{
 			case InputActionPhase.Performed:
 				Debug.Log("アピール");
-				isAppeal = true;
+				_IsAppeal = true;
 				break;
 			case InputActionPhase.Canceled:
 				Debug.Log("アピール終了");
-				isAppeal = false;
+				_IsAppeal = false;
 				break;
 		}
-		anim.SetBool("Appeal", isAppeal);
+		anim.SetBool("Appeal", _IsAppeal);
 	}
 
 	/// <summary>
