@@ -130,10 +130,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 275277329, guid: 5586ea2c0ee038e4ba2d458cda7b7fac, type: 3}
-      propertyPath: appealForce
-      value: 332.5
-      objectReference: {fileID: 0}
     - target: {fileID: 6903381975108728195, guid: 5586ea2c0ee038e4ba2d458cda7b7fac,
         type: 3}
       propertyPath: m_Name
