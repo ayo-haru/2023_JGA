@@ -5214,7 +5214,7 @@ MonoBehaviour:
   seCall: {fileID: 8300000, guid: 5d2a7da4e5a38db4fbdbd236554a27eb, type: 3}
   anim: {fileID: 0}
   moveForce: 250
-  appealForce: 312.5
+  appealForce: 342.5
   runForce: 375
   maxMoveSpeed: 5
   maxAppealSpeed: 6.25
@@ -5227,7 +5227,7 @@ MonoBehaviour:
   _IsInteract: 0
   isHold: 0
   isRun: 0
-  isAppeal: 0
+  _IsAppeal: 0
   bGamePad: 0
   WithinRange: []
 --- !u!1 &6903381975108728197

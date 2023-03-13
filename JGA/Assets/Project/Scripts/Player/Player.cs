@@ -205,18 +205,27 @@ public class Player : MonoBehaviour
 	{
 		if (!bGamePad)
 		{
-			float force;
+			float force, max;
 
 			if (_IsAppeal)
+			{
 				force = appealForce;
+				max = maxAppealSpeed;
+			}
 			else if (isRun)
+			{
 				force = runForce;
+				max = maxRunSpeed;
+			}
 			else
+			{
 				force = moveForce;
+				max = maxMoveSpeed;
+			}
 
 			// 制限速度内の場合、移動方向の力を与える
 			_vForce = new Vector3(moveInputValue.x, 0, moveInputValue.y) * force;
-			if (rb.velocity.magnitude < (isRun ? maxRunSpeed : maxMoveSpeed))
+			if (rb.velocity.magnitude < max)
 				rb.AddForce(_vForce);
 
 			// 進行方向に向かって回転する
@@ -231,18 +240,27 @@ public class Player : MonoBehaviour
 		{
 			isRun = moveInputValue.magnitude >= joyRunZone;
 
-			float force;
+			float force, max;
 
 			if (_IsAppeal)
+			{
 				force = appealForce;
+				max = maxAppealSpeed;
+			}
 			else if (isRun)
+			{
 				force = runForce;
+				max = maxRunSpeed;
+			}
 			else
+			{
 				force = moveForce;
+				max = maxMoveSpeed;
+			}
 
 			// 制限速度内の場合、移動方向の力を与える
 			_vForce = new Vector3(moveInputValue.x, 0, moveInputValue.y) * force;
-			if (rb.velocity.magnitude < (isRun ? maxRunSpeed : maxMoveSpeed))
+			if (rb.velocity.magnitude < max)
 				rb.AddForce(_vForce);
 
 			// 進行方向に向かって回転する
