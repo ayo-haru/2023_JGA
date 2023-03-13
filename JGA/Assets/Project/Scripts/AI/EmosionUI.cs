@@ -8,6 +8,7 @@
 // [Date]
 // 2023/03/03	スクリプト作成
 // 2023/03/05	(小楠)列挙型の定義を変更 現在の感情を取得する関数を追加
+// 2023/03/13	(小楠)ペンギンエアリア着いた時の感情を追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -16,10 +17,11 @@ using UnityEngine;
 public enum EEmotion
 {
     NONE,               //なし
+    QUESTION,           //？
     ATTENSION_LOW,      //!
     ATTENSION_MIDDLE,   //!!
     ATTENSION_HIGH,     //!!!
-    QUESTION,           //？
+    HIGH_TENSION,       // \|/
     MAX_EMOSION
 }
 
@@ -27,6 +29,7 @@ public class EmosionUI : MonoBehaviour
 {
     private EEmotion currentEmotion = EEmotion.NONE;    //現在の感情
     private TextMesh ui;
+    private float fTimer;       //点滅用タイマー
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -41,7 +44,7 @@ public class EmosionUI : MonoBehaviour
 	/// </summary>
 	void Start()
 	{
-		
+        fTimer = 0.0f;
 	}
 
 	/// <summary>
@@ -64,6 +67,17 @@ public class EmosionUI : MonoBehaviour
         Vector3 dir = Camera.main.transform.position;
         dir.y = transform.position.y;
         transform.LookAt(dir);
+
+        //uiの点滅処理
+        if(ui.text == "\\ /")
+        {
+            fTimer += 1.0f;
+            if(fTimer >= 120.0f)
+            {
+                fTimer = 0.0f;
+            }
+            ui.color = (fTimer >= 60.0f) ? new Color(1.0f,1.0f,1.0f,0.0f) : new Color(1.0f,1.0f,1.0f,1.0f);
+        }
     }
 
     public void SetEmotion(EEmotion emotion)
@@ -89,6 +103,10 @@ public class EmosionUI : MonoBehaviour
             case EEmotion.ATTENSION_HIGH:
                 ui.text = "!!!";
                 ui.color = Color.red;
+                break;
+            case EEmotion.HIGH_TENSION:
+                ui.text = "\\ /";
+                ui.color = Color.white;
                 break;
             default:
                 ui.text = "";

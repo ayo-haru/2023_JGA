@@ -29,6 +29,8 @@ public class StateStayArea : AIState
     private bool isStay = false;
     //アニメーター
     private Animator animator;
+    //感情ui
+    [SerializeField] EmosionUI ui;
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -77,6 +79,9 @@ public class StateStayArea : AIState
         //アニメーション初期化
         if (!animator) animator = GetComponent<Animator>();
         if (animator) animator.SetBool("isWalk", true);
+
+        //ui設定
+        ui.SetEmotion(EEmotion.NONE);
     }
 
     public override void UpdateState()
@@ -96,7 +101,8 @@ public class StateStayArea : AIState
         {
             //待機アニメーションの再生
             if (animator) animator.SetBool("isWalk", false);
-
+            //ui設定
+            ui.SetEmotion(EEmotion.HIGH_TENSION);
             isStay = true;
 
         }
@@ -105,5 +111,6 @@ public class StateStayArea : AIState
     public override void FinState()
     {
         agent.stoppingDistance = 0.0f;
+        ui.SetEmotion(EEmotion.NONE);
     }
 }
