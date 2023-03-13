@@ -138,10 +138,13 @@ public class Player : MonoBehaviour
 			return;
 		}
 
+		// インタラクトして１フレーム経過後
 		if (_IsInteract)
 		{
 			if (!delay)
+			{
 				delay = true;
+			}
 			else
 			{
 				delay = false;
@@ -149,6 +152,7 @@ public class Player : MonoBehaviour
 			}
 		}
 
+		// アピール中のランダム鳴き
 		if (_IsAppeal)
 		{
 			if (callInterval > 0)
@@ -162,37 +166,50 @@ public class Player : MonoBehaviour
 			}
 		}
 
-
+		// アニメーション
 		anim.SetBool("move", moveInputValue.normalized != Vector2.zero);
 		anim.SetBool("run", isRun);
 
 
 		float length;
 		if (InteractOutline != null)
-			length = Vector3.Distance(transform.position, InteractOutline.transform.position);
-		else
-			length = 10.0f;
-
-		// プレイヤーに一番近いオブジェクトをインタラクト対象とする
-		foreach (Collider obj in WithinRange)
 		{
-			if (InteractOutline != null && obj == InteractOutline.gameObject)
-			{
-				InteractOutline.enabled = true;
-				continue;
-			}
+			length = Vector3.Distance(transform.position, InteractOutline.transform.position);
+		}
+		else
+		{
+			length = 10.0f;
+		}
 
-			float distance = Vector3.Distance(transform.position, obj.transform.position);
 
-			if (length > distance)
+		if (WithinRange.Count == 0 && InteractOutline != null)
+		{
+			InteractOutline.enabled = false;
+			InteractOutline = null;
+		}
+		// プレイヤーに一番近いオブジェクトをインタラクト対象とする
+		else
+		{
+			foreach (Collider obj in WithinRange)
 			{
-				length = distance;
-				if (obj.TryGetComponent(out Outline outline))
+				if (InteractOutline != null && obj == InteractOutline.gameObject)
 				{
-					if (InteractOutline != null)
-						InteractOutline.enabled = false;
-					InteractOutline = outline;
 					InteractOutline.enabled = true;
+					continue;
+				}
+
+				float distance = Vector3.Distance(transform.position, obj.transform.position);
+
+				if (length > distance)
+				{
+					length = distance;
+					if (obj.TryGetComponent(out Outline outline))
+					{
+						if (InteractOutline != null)
+							InteractOutline.enabled = false;
+						InteractOutline = outline;
+						InteractOutline.enabled = true;
+					}
 				}
 			}
 		}
@@ -313,46 +330,56 @@ public class Player : MonoBehaviour
 		if (context.phase == InputActionPhase.Performed)
 		{
 			_IsInteract = true;
-			float length = 10.0f;
 
-			// プレイヤーに一番近いオブジェクトをインタラクト対象とする
-			foreach (Collider obj in WithinRange)
+			// もし掴んでいたら離す
+			if (HoldObjectRb != null)
 			{
-				float distance = Vector3.Distance(transform.position, obj.transform.position);
-
-				if (length > distance)
-				{
-					length = distance;
-					InteractObject = obj;
-				}
+				OnHold(false);
+				Debug.Log($"Holded");
 			}
-
-			switch (InteractObject.tag)
+			else
 			{
-				case "holdObject":
-					OnHold(true);
-					break;
+				// 現在のインタラクト対象を登録
+				if (InteractOutline != null)
+				{
+					InteractObject = InteractOutline.GetComponent<Collider>();
+				}
+				else
+				{
+					float length = 10.0f;
 
-				case "Interact":
-					OnHit();
-					break;
+					// プレイヤーに一番近いオブジェクトをインタラクト対象とする
+					foreach (Collider obj in WithinRange)
+					{
+						float distance = Vector3.Distance(transform.position, obj.transform.position);
 
-				default:
-					break;
+						if (length > distance)
+						{
+							length = distance;
+							InteractObject = obj;
+						}
+					}
+				}
+
+				switch (InteractObject.tag)
+				{
+					case "holdObject":
+						OnHold(true);
+						break;
+
+					case "Interact":
+						OnHit();
+						break;
+
+					default:
+						break;
+				}
 			}
 
 		}
 		else if (HoldObjectRb != null)
 		{
-			switch (HoldObjectRb.tag)
-			{
-				case "holdObject":
-					OnHold(false);
-					break;
-
-				default:
-					break;
-			}
+			OnHold(false);
 		}
 
 	}
@@ -392,16 +419,18 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void OnHit()
 	{
-		//var rigidbody = InteractObject.GetComponent<Rigidbody>();
-		//float blowpower = 10.0f;    // 吹っ飛ぶ強さ
-		//float topvector = 0.1f;    // 吹っ飛ぶ強さ
+		var rigidbody = InteractObject.GetComponent<Rigidbody>();
+		float blowpower = 10.0f;    // 吹っ飛ぶ強さ
+		float topvector = 0.1f;    // 吹っ飛ぶ強さ
 
-		//// プレイヤーが範囲内にいる時にインタラクトフラグがTrueになったらふき飛ぶよ
-		//rigidbody.isKinematic = false;
-		//Vector3 vec = (InteractObject.transform.position + new Vector3(0.0f, topvector, 0.0f) - transform.position).normalized;
-		//rigidbody.velocity = vec * blowpower;
-		//vec = (InteractObject.transform.position - transform.position).normalized;
-		//rigidbody.AddTorque(vec * blowpower);
+		// プレイヤーが範囲内にいる時にインタラクトフラグがTrueになったらふき飛ぶよ
+		rigidbody.isKinematic = false;
+		Vector3 vec = (InteractObject.transform.position + new Vector3(0.0f, topvector, 0.0f) - transform.position).normalized;
+		rigidbody.velocity = vec * blowpower;
+		vec = (InteractObject.transform.position - transform.position).normalized;
+		rigidbody.AddTorque(vec * blowpower);
+
+		InteractObject.GetComponent<AudioSource>().Play();
 	}
 
 	/// <summary>

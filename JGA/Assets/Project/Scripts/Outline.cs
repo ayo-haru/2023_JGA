@@ -99,11 +99,11 @@ public class Outline : MonoBehaviour
 		renderers = GetComponentsInChildren<Renderer>();
 
 		// Instantiate outline materials
-		if (outlineMaskMaterial == null) Instantiate(Resources.Load<Material>(@"Project/Materials/OutlineMask"));
-		if (outlineFillMaterial == null) Instantiate(Resources.Load<Material>(@"Project/Materials/OutlineFill"));
+		//if (outlineMaskMaterial == null) Instantiate(Resources.Load<Material>(@"Project/Materials/OutlineMask"));
+		//if (outlineFillMaterial == null) Instantiate(Resources.Load<Material>(@"Project/Materials/OutlineFill"));
 
-		outlineMaskMaterial.name = "OutlineMask (Instance)";
-		outlineFillMaterial.name = "OutlineFill (Instance)";
+		outlineMaskMaterial.name = "OutlineMask";
+		outlineFillMaterial.name = "OutlineFill";
 
 		// Retrieve or generate smooth normals
 		LoadSmoothNormals();
