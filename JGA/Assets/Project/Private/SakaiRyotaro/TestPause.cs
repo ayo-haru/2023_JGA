@@ -3,7 +3,7 @@
 // @Brief	: 
 // @Author	: Sakai Ryotaro
 // @Editer	: 
-// @Detail	: 
+// @Detail	: ポーズマネージャーの使用例だす
 // 
 // [Date]
 // 2023/03/12	スクリプト作成

@@ -21,6 +21,10 @@ MonoBehaviour:
     m_Address: CharacterData
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 311313efa011949e98b6761d652ad13c
+    m_Address: Assets/Project/Materials/OutlineFill.mat
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 6490bc5112e0d74469e157e8c2cc9fd5, type: 2}
   m_SchemaSet:
