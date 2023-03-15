@@ -25,6 +25,10 @@ MonoBehaviour:
     m_Address: Assets/Project/Materials/OutlineFill.mat
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 76af525794e1139488366eec27283470
+    m_Address: UIData
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 6490bc5112e0d74469e157e8c2cc9fd5, type: 2}
   m_SchemaSet:

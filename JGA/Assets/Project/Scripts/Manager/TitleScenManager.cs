@@ -25,7 +25,7 @@ public class TitleScenManager : BaseSceneManager
     void Update()
 	{
         if (Input.GetKey(KeyCode.Return)) {
-			MySceneManager.SceneChange(MySceneManager.SceneState.SCENE_GAME);
+			SceneChange(MySceneManager.SceneState.SCENE_GAME);
         }
 	}
 }

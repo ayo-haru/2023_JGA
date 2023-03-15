@@ -1,5 +1,5 @@
 //=============================================================================
-// @File	: [FadeInOut.cs]
+// @File	: [FadeManager.cs]
 // @Brief	: 
 // @Author	: Ichida Mai
 // @Editer	: 
@@ -13,9 +13,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FadeInOut : MonoBehaviour
+public class FadeManager : MonoBehaviour
 {
-	enum eFade {
+	public enum eFade {
 		Default,
 		FadeIn,
 		FadeOut
@@ -28,12 +28,12 @@ public class FadeInOut : MonoBehaviour
 	private Image image;
 	private float alpha;
 
-	private eFade fadeMode;
+	private static eFade fadeMode;
 
-	/// <summary>
-	/// 最初のフレーム更新の前に呼び出される
-	/// </summary>
-	void Start()
+    /// <summary>
+    /// 最初のフレーム更新の前に呼び出される
+    /// </summary>
+    void Start()
 	{
 		fadeMode = eFade.Default;
 		alpha = 0.0f;
@@ -46,9 +46,11 @@ public class FadeInOut : MonoBehaviour
 	/// </summary>
 	void Update()
 	{
-        if (MySceneManager.GameData.isCatchPenguin) {
-			fadeMode = eFade.FadeOut;
+        if (MySceneManager.GameData.isCatchPenguin) {	// ペンギンを捕まえたらフェードアウト開始
+			StartFade();
 		}
+
+		Debug.Log("ふぇーどした");
 
         if (fadeMode != eFade.Default) {
 			if (fadeMode == eFade.FadeOut) {
@@ -66,5 +68,13 @@ public class FadeInOut : MonoBehaviour
 			}
 			image.color = new Color(0.0f, 0.0f, 0.0f, alpha);
         }
+	}
+
+	public static void StartFade() {
+        fadeMode = eFade.FadeOut;
+    }
+
+	public static eFade GetState() {
+		return fadeMode;
 	}
 }

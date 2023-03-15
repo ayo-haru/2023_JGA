@@ -18,6 +18,8 @@ public class BaseSceneManager : MonoBehaviour
     protected GameObject canvasObj;
     protected Canvas canvas;
 
+    private GameObject fadePanel;
+
     protected void Init() {
         //----- キャンバスが見つからなかったらキャンバスを作成する -----
         canvasObj = GameObject.Find("Canvas");
@@ -32,6 +34,18 @@ public class BaseSceneManager : MonoBehaviour
             canvasObj.AddComponent<CanvasScaler>();
             canvasObj.AddComponent<GraphicRaycaster>();
         }
+        // キャンバスの設定
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+
+        // UIのマネージャーを設定する
+        gameObject.AddComponent<UIManager>();
     }
 
+
+    protected void SceneChange(MySceneManager.SceneState _nextScene) {
+        FadeManager.StartFade();
+        //if (FadeManager.GetState() != FadeManager.eFade.FadeIn && FadeManager.GetState() != FadeManager.eFade.FadeOut) {
+            MySceneManager.SceneChange(_nextScene);
+        //}
+    }
 }
