@@ -16,8 +16,10 @@ using UnityEngine;
 
 public class TransitionAttensionAction : AITransition
 {
+    //プレイヤー用のスクリプト
     private Player player;
 
+#if false
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
     /// </summary>
@@ -49,7 +51,7 @@ public class TransitionAttensionAction : AITransition
 	{
 		
 	}
-
+#endif
     public override void InitTransition()
     {
         if (!player) player = GameObject.FindWithTag("Player").GetComponent<Player>();
@@ -57,12 +59,20 @@ public class TransitionAttensionAction : AITransition
 
     public override bool IsTransition()
     {
-        if (!player)
-        {
-            Debug.LogError("プレイヤーが取得できていません");
-            return false;
-        }
+        //エラーチェック
+        if (!ErrorCheck()) return false;
+
         //プレイヤーが専用アクションをしたかフラグを取得して返す
         return player.IsAppeal;
+    }
+
+    public override bool ErrorCheck()
+    {
+        if (!player)
+        {
+            Debug.LogError("プレイヤー用スクリプトが取得できていません");
+            return false;
+        }
+        return true;
     }
 }

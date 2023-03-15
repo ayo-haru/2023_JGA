@@ -20,11 +20,11 @@ public class StateCoolDown : AIState
     [SerializeField] private Transform target;
     private NavMeshAgent agent;
     [SerializeField] private EmosionUI ui;
-
-	/// <summary>
-	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
-	/// </summary>
-	void Awake()
+#if false
+    /// <summary>
+    /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
+    /// </summary>
+    void Awake()
 	{
 		
 	}
@@ -52,7 +52,7 @@ public class StateCoolDown : AIState
 	{
 		
 	}
-
+#endif
     public override void InitState()
     {
         if (!agent) agent = GetComponent<NavMeshAgent>();
@@ -77,5 +77,10 @@ public class StateCoolDown : AIState
     public override void FinState()
     {
         ui.SetEmotion(EEmotion.NONE);
+    }
+
+    public override bool ErrorCheck()
+    {
+        return true;
     }
 }

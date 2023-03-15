@@ -30,12 +30,13 @@ public class StateStayArea : AIState
     //アニメーター
     private Animator animator;
     //感情ui
-    [SerializeField] EmosionUI ui;
+    [SerializeField] private EmosionUI ui;
 
-	/// <summary>
-	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
-	/// </summary>
-	void Awake()
+#if false
+    /// <summary>
+    /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
+    /// </summary>
+    void Awake()
 	{
 	}
 
@@ -62,12 +63,16 @@ public class StateStayArea : AIState
 	{
 		
 	}
-
+#endif
     public override void InitState()
     {
-        //ナビメッシュエージェント、データ取得
+        //コンポーネント、データ取得
         if (!agent) agent = GetComponent<NavMeshAgent>();
         if (!data) data = GetComponent<AIManager>().GetGuestData();
+        if (!animator) animator = GetComponent<Animator>();
+
+        //エラーチェック
+        if (!ErrorCheck()) return;
 
         //ナビメッシュエージェントの設定
         agent.SetDestination(target.position + new Vector3(Random.Range(-5.0f, 5.0f), 0.0f, Random.Range(-5.0f, 5.0f)));
@@ -77,8 +82,7 @@ public class StateStayArea : AIState
         isStay = false;
 
         //アニメーション初期化
-        if (!animator) animator = GetComponent<Animator>();
-        if (animator) animator.SetBool("isWalk", true);
+        animator.SetBool("isWalk", true);
 
         //ui設定
         ui.SetEmotion(EEmotion.NONE);
@@ -86,6 +90,9 @@ public class StateStayArea : AIState
 
     public override void UpdateState()
     {
+        //エラーチェック
+        if (!ErrorCheck()) return;
+
         if (isStay)
         {
             //目的地の方を向く
@@ -100,7 +107,7 @@ public class StateStayArea : AIState
         if (agent.remainingDistance <= agent.stoppingDistance)
         {
             //待機アニメーションの再生
-            if (animator) animator.SetBool("isWalk", false);
+            animator.SetBool("isWalk", false);
             //ui設定
             ui.SetEmotion(EEmotion.HIGH_TENSION);
             isStay = true;
@@ -110,7 +117,38 @@ public class StateStayArea : AIState
 
     public override void FinState()
     {
-        agent.stoppingDistance = 0.0f;
-        ui.SetEmotion(EEmotion.NONE);
+        if(agent)agent.stoppingDistance = 0.0f;
+        if(ui)ui.SetEmotion(EEmotion.NONE);
+    }
+
+    public override bool ErrorCheck()
+    {
+        bool bError = true;
+        if (!agent)
+        {
+            Debug.LogError("ナビメッシュエージェントが取得されていません");
+            bError = false;
+        }
+        if (!target)
+        {
+            Debug.LogError("待機位置が設定されていません");
+            bError = false;
+        }
+        if (!data)
+        {
+            Debug.LogError("ゲスト用データが取得されていません");
+            bError = false;
+        }
+        if (!animator)
+        {
+            Debug.LogError("アニメーターが取得されていません");
+            bError = false;
+        }
+        if (!ui)
+        {
+            Debug.LogError("感情UIが設定されていません");
+            bError = false;
+        }
+        return bError;
     }
 }

@@ -28,7 +28,7 @@ public class StateAroundWalk : AIState
     private NavMeshAgent agent;
 
     private GuestData data;
-
+#if false
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
     /// </summary>
@@ -60,7 +60,7 @@ public class StateAroundWalk : AIState
 	{
 		
 	}
-
+#endif
     public override void InitState()
     {
         if (!agent) agent = GetComponent<NavMeshAgent>();
@@ -95,6 +95,11 @@ public class StateAroundWalk : AIState
     public override void FinState()
     {
         //特になし
+    }
+
+    public override bool ErrorCheck()
+    {
+        return true;
     }
     /// <summary>
     /// 目的地変更

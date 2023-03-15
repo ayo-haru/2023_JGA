@@ -42,7 +42,7 @@ public class StateFollowPenguin : AIState
     private Animator animator;
     //目的地の位置調節用
     private Vector3 posOffset;
-
+#if false
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
     /// </summary>
@@ -74,7 +74,7 @@ public class StateFollowPenguin : AIState
 	{
 		
 	}
-
+#endif
     public override void InitState()
     {
         //オブジェクト、コンポーネントの取得
@@ -84,6 +84,9 @@ public class StateFollowPenguin : AIState
         if (!target && penguin) target = penguin.GetComponent<Transform>();
         if (!player && penguin) player = penguin.GetComponent<Player>();
         if (!animator) animator = GetComponent<Animator>();
+
+        //エラーチェック
+        if (!ErrorCheck()) return;
 
         //ナビメッシュエージェントの設定
         agent.SetDestination(target.position);
@@ -101,6 +104,7 @@ public class StateFollowPenguin : AIState
 
     public override void UpdateState()
     {
+        if (!ErrorCheck()) return;
 
         //客が反応したかどうか 専用アクションをしてる　かつ　反応できる範囲に居る
         if (Vector3.Distance(transform.position, target.position + posOffset) <= data.reactionArea * ((int)ui.GetEmotion() / (float)EEmotion.ATTENSION_HIGH) &&
@@ -134,12 +138,55 @@ public class StateFollowPenguin : AIState
         transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime);
 
         //アニメーション更新
-        if (animator) animator.SetBool("isWalk", (agent.velocity.magnitude > 0.0f) ? true : false);
+        animator.SetBool("isWalk", (agent.velocity.magnitude > 0.0f) ? true : false);
     }
 
     public override void FinState()
     {
-        ui.SetEmotion(EEmotion.NONE);
-        agent.stoppingDistance = 0.0f;
+        if(ui)ui.SetEmotion(EEmotion.NONE);
+        if(agent)agent.stoppingDistance = 0.0f;
+    }
+
+    public override bool ErrorCheck()
+    {
+        bool bError = true;
+
+        if (!penguin)
+        {
+            Debug.LogError("プレイヤーが取得できてません");
+            bError = false;
+        }
+        if (!target)
+        {
+            Debug.LogError("プレイヤーのトランスフォームが取得できてません");
+            bError = false;
+        }
+        if (!player)
+        {
+            Debug.LogError("プレイヤー用スクリプトが取得できてません");
+            bError = false;
+        }
+        if (!agent)
+        {
+            Debug.LogError("ナビメッシュエージェントが取得できてません");
+            bError = false;
+        }
+        if (!ui)
+        {
+            Debug.LogError("感情UIが設定されていません");
+            bError = false;
+        }
+        if (!data)
+        {
+            Debug.LogError("ゲスト用データがが取得できてません");
+            bError = false;
+        }
+        if (!animator)
+        {
+            Debug.LogError("アニメータが取得できてません");
+            bError = false;
+        }
+
+        return bError;
     }
 }

@@ -15,15 +15,14 @@ using UnityEngine;
 
 public class TransitionInteract : AITransition
 {
-    private GameObject player;
     private Transform playerTransform;
     private GuestData data;
     private GameObject[] interactObjecs;
-
-	/// <summary>
-	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
-	/// </summary>
-	void Awake()
+#if false
+    /// <summary>
+    /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
+    /// </summary>
+    void Awake()
 	{
 		
 	}
@@ -51,30 +50,19 @@ public class TransitionInteract : AITransition
 	{
 		
 	}
-
+#endif
     public override void InitTransition()
     {
         //コンポーネント、オブジェクトの取得
-        if (!player) player = GameObject.FindWithTag("Player");
-        if (!playerTransform && player) playerTransform = player.GetComponent<Transform>();
+        if (!playerTransform) playerTransform = GameObject.FindWithTag("Player").GetComponent<Transform>();
         if (!data) data = GetComponent<AIManager>().GetGuestData();
         if (interactObjecs == null) interactObjecs = GameObject.FindGameObjectsWithTag("Interact");
     }
 
     public override bool IsTransition()
     {
-        #region エラーチェック
-        if (!player || !playerTransform || !data)
-        {
-            Debug.LogError("データが取得されていません");
-            return false;
-        }
-        if((interactObjecs == null) ? true : interactObjecs.Length <= 0)
-        {
-            Debug.LogError("インタラクトオブジェクトがありません");
-            return false;
-        }
-        #endregion
+        //エラーチェック
+        if (!ErrorCheck()) return false;
 
         //プレイヤーが範囲内に居るか
         if (Vector3.Distance(transform.position, playerTransform.position) > data.reactionArea) return false;
@@ -88,5 +76,28 @@ public class TransitionInteract : AITransition
             if (cardboardBox.IsSound) return true;
         }
         return false;
+    }
+
+    public override bool ErrorCheck()
+    {
+        bool bError = true;
+        if (!playerTransform)
+        {
+            Debug.LogError("プレイヤーのトランスフォームが取得されていません");
+            bError = false;
+        }
+        if (!data)
+        {
+            Debug.LogError("ゲスト用データが取得されていません");
+            bError = false;
+        }
+
+        if ((interactObjecs == null) ? true : interactObjecs.Length <= 0)
+        {
+            Debug.LogError("インタラクトオブジェクトがありません");
+            bError = false;
+        }
+
+        return bError;
     }
 }
