@@ -12,6 +12,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UniRx;
+using UniRx.Triggers;
+using ImGuizmoNET;
+using UnityEngine.InputSystem.Utilities;
 
 public class BaseSceneManager : MonoBehaviour
 {
@@ -21,6 +25,7 @@ public class BaseSceneManager : MonoBehaviour
     private GameObject fadePanel;
 
     protected void Init() {
+
         //----- キャンバスが見つからなかったらキャンバスを作成する -----
         canvasObj = GameObject.Find("Canvas");
         if (canvasObj) {
@@ -43,9 +48,19 @@ public class BaseSceneManager : MonoBehaviour
 
 
     protected void SceneChange(MySceneManager.SceneState _nextScene) {
-        FadeManager.StartFade();
+        FadeManager.StartFadeOut();
+
+        //MySceneManager.SceneChange(_nextScene);
+
+        StartCoroutine(DelaySceneChange(_nextScene));
+
         //if (FadeManager.GetState() != FadeManager.eFade.FadeIn && FadeManager.GetState() != FadeManager.eFade.FadeOut) {
-            MySceneManager.SceneChange(_nextScene);
         //}
+    }
+
+    IEnumerator DelaySceneChange(MySceneManager.SceneState _nextScene) {
+        yield return new WaitUntil(() => FadeManager.fadeMode == FadeManager.eFade.FadeIn);
+        MySceneManager.SceneChange(_nextScene);
+        Debug.Log(_nextScene);
     }
 }

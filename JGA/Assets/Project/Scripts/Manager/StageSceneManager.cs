@@ -12,7 +12,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StageSceneManager : MonoBehaviour {
+public class StageSceneManager : BaseSceneManager {
     private GameObject playerObj;
     private GameObject playerInstance;
     private Player _Player;
@@ -23,6 +23,7 @@ public class StageSceneManager : MonoBehaviour {
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
     /// </summary>
     void Awake() {
+        Init();
         Application.targetFrameRate = 60;       // FPSを60に固定
     }
 

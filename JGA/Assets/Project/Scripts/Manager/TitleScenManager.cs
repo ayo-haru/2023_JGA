@@ -24,7 +24,7 @@ public class TitleScenManager : BaseSceneManager
     /// </summary>
     void Update()
 	{
-        if (Input.GetKey(KeyCode.Return)) {
+        if (Input.GetKeyUp(KeyCode.Return)) {
 			SceneChange(MySceneManager.SceneState.SCENE_GAME);
         }
 	}
