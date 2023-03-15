@@ -50,11 +50,10 @@ public class ZooKeeperAI : MonoBehaviour
 
     private GimmickObj gimmickObj;
     private GameObject parentObj;
-    private bool gimmickFlg = false;    // ギミックオブジェクトに当たったか
-    private bool catchFlg = false;      // ギミックオブジェクトを掴んだか
+    public bool gimmickFlg = false;    // ギミックオブジェクトに当たったか
+    public bool catchFlg = false;      // ギミックオブジェクトを掴んだか
     private int resetNum = -1;
     private int gimmickNum = -1;
-
 
     [SerializeField] GameObject ReSpawnZone;    // リスポーンする位置
 
@@ -197,33 +196,12 @@ public class ZooKeeperAI : MonoBehaviour
                         navMesh.isStopped = false;   // ナビゲーションの停止（true:ナビゲーションOFF　false:ナビゲーションON）
                         // オブジェクトを置く
                         gimmickFlg = false;
-                        catchFlg = false;
-                        Bring();
+                        if (catchFlg)   // オブジェクトを持ってる時
+                        {
+                            catchFlg = false;
+                            Bring();
+                        }
                         navMesh.destination = other.transform.position;    // ペンギンを追従
-                    }
-                }
-                else
-                {
-                    // Ray当たってない
-                    chaseNow = false;
-                    if (gimmickFlg && !catchFlg)
-                    {
-                        navMesh.SetDestination(gimmickObj.gimmickList[gimmickNum].transform.position);   // 目的地をオブジェクトの位置に設定
-                    }
-                    if (catchFlg) // オブジェクトを運んでいるか
-                    {
-                        navMesh.SetDestination(gimmickObj.resetPos[resetNum].position);    // 目的地をオブジェクトの位置に設定
-                    }
-                    else if (!gimmickFlg)
-                    {
-                        if (rootList.Count >= 1)
-                        {
-                            navMesh.SetDestination(rootList[rootNum].position);     // 目的地の再設定
-                        }
-                        else
-                        {
-                            navMesh.isStopped = true;   // ナビゲーションの停止（true:ナビゲーションOFF　false:ナビゲーションON）
-                        }
                     }
                 }
             }
@@ -282,17 +260,6 @@ public class ZooKeeperAI : MonoBehaviour
                                     gimmickFlg = true;
                                     resetNum = i;
                                     gimmickNum = i;
-                                }
-                            }
-                            else
-                            {
-                                gimmickFlg = false;
-                                if (catchFlg)
-                                {
-                                    catchFlg = false;
-                                    gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().isKinematic = false;   // 物理演算の影響を受けるようにする
-                                    gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().useGravity = true;
-                                    gimmickObj.gimmickList[gimmickNum].transform.parent = parentObj.transform;
                                 }
                             }
                         }
@@ -362,6 +329,7 @@ public class ZooKeeperAI : MonoBehaviour
     /// </summary>
     private void Move()
     {
+        #region 移動
         // オブジェクトを元の位置に戻す
         if (gimmickFlg)
         {
@@ -399,8 +367,7 @@ public class ZooKeeperAI : MonoBehaviour
             // 歩行アニメーション再生
             animator.SetBool("isWalk", true);
             //--------------------------------
-
-            if (navMesh.remainingDistance <= 1.0f    // 目標地点までの距離が1.0ｍ以下になったら到着
+            if (navMesh.remainingDistance <= 2.0f    // 目標地点までの距離が2.0ｍ以下になったら到着
                  && !navMesh.pathPending)            // 経路計算中かどうか（計算中：true　計算完了：false）
             {
                 // リストの順番に巡回する
@@ -424,6 +391,7 @@ public class ZooKeeperAI : MonoBehaviour
             animator.SetBool("isWalk", false);
             //--------------------------------
         }
+        #endregion
     }
 
     /// <summary>
@@ -431,6 +399,7 @@ public class ZooKeeperAI : MonoBehaviour
     /// </summary>
     private void Bring()
     {
+        #region 運ぶ
         if (catchFlg && gimmickFlg)
         {
             // 掴む
@@ -456,6 +425,7 @@ public class ZooKeeperAI : MonoBehaviour
                 gimmickObj.gimmickList[gimmickNum].transform.position = gimmickObj.resetPos[resetNum].transform.position;
             }
         }
+        #endregion
     }
 
     /// <summary>
