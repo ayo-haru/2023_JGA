@@ -17,6 +17,7 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager> {
     // ゲーム内で使うデータを持つクラス
     public static class GameData {
         public static PrefabContainer characterDatas;
+        public static PrefabContainer UIDatas;
         public static bool isCatchPenguin;
     }
 
@@ -41,6 +42,7 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager> {
     private void Awake() {
         Application.targetFrameRate = 60;       // FPSを60に固定
         GameData.characterDatas = AddressableLoader<PrefabContainer>.Load("CharacterData");
+        GameData.UIDatas = AddressableLoader<PrefabContainer>.Load("UIData");
 
         GameData.isCatchPenguin = false;
     }
