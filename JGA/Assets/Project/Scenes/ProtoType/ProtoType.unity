@@ -13081,6 +13081,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Guest001
       objectReference: {fileID: 0}
+    - target: {fileID: 7104924354389222842, guid: 2540e751739d9204692ca7c8b186fced,
+        type: 3}
+      propertyPath: m_TagString
+      value: Guest
+      objectReference: {fileID: 0}
     - target: {fileID: 7104924354389222852, guid: 2540e751739d9204692ca7c8b186fced,
         type: 3}
       propertyPath: targetList.Array.size
@@ -14163,6 +14168,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Guest002
+      objectReference: {fileID: 0}
+    - target: {fileID: 7104924354389222842, guid: 2540e751739d9204692ca7c8b186fced,
+        type: 3}
+      propertyPath: m_TagString
+      value: Guest
       objectReference: {fileID: 0}
     - target: {fileID: 7104924354389222852, guid: 2540e751739d9204692ca7c8b186fced,
         type: 3}
