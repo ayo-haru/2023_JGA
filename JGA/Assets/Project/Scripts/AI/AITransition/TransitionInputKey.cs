@@ -26,11 +26,11 @@ public class TransitionInputKey : AITransition
 	{
         bInput = false;
 	}
-
-	/// <summary>
-	/// 最初のフレーム更新の前に呼び出される
-	/// </summary>
-	void Start()
+#if false
+    /// <summary>
+    /// 最初のフレーム更新の前に呼び出される
+    /// </summary>
+    void Start()
 	{
 		
 	}
@@ -42,7 +42,7 @@ public class TransitionInputKey : AITransition
 	{
 		
 	}
-
+#endif
 	/// <summary>
 	/// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
 	/// </summary>
@@ -68,5 +68,10 @@ public class TransitionInputKey : AITransition
             return true;
         }
         return false;
+    }
+
+    public override bool ErrorCheck()
+    {
+        return true;
     }
 }

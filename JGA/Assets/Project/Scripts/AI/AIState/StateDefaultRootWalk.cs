@@ -32,7 +32,7 @@ public class StateDefaultRootWalk : AIState
     private GuestData data;
     //アニメーター
     private Animator animator;
-
+#if false
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
     /// </summary>
@@ -63,29 +63,33 @@ public class StateDefaultRootWalk : AIState
 	{
 		
 	}
-
+#endif
     public override void InitState()
     {
-        //ナビメッシュ取得
+        //データ、コンポーネント取得
         if (!agent) agent = GetComponent<NavMeshAgent>();
-        //データ取得
         if (!data) data = GetComponent<AIManager>().GetGuestData();
+        if (!animator) animator = GetComponent<Animator>();
+
+        //エラーチェック
+        if (!ErrorCheck()) return;
 
         //ナビメッシュエージェントの設定
-        if(targetList.Count > 0) agent.SetDestination(targetList[targetNum].position);
+        agent.SetDestination(targetList[targetNum].position);
         agent.speed = data.speed;
         agent.stoppingDistance = Random.Range(1,data.cageDistance);
 
         fTimer = 0.0f;
 
         //アニメーション初期化
-        if (!animator) animator = GetComponent<Animator>();
-        if (animator) animator.SetBool("isWalk", true);
+        animator.SetBool("isWalk", true);
     }
 
     public override void UpdateState()
     {
-        if (targetList.Count <= 0) return;
+        //エラーチェック
+        if (!ErrorCheck()) return;
+
         if (agent.pathPending) return;
 
         //目的地までの経路がない場合は目的地の変更
@@ -96,7 +100,7 @@ public class StateDefaultRootWalk : AIState
         //待機時間
         if (agent.remainingDistance <= agent.stoppingDistance)
         {
-            if (animator) animator.SetBool("isWalk", false);
+            animator.SetBool("isWalk", false);
 
             fTimer += Time.deltaTime;
             if (data.waitTime <= fTimer)
@@ -114,8 +118,35 @@ public class StateDefaultRootWalk : AIState
 
     public override void FinState()
     {
-        agent.stoppingDistance = 0.0f;
+        if(agent)agent.stoppingDistance = 0.0f;
     }
+
+    public override bool ErrorCheck()
+    {
+        bool bError = true;
+        if((targetList == null) ? true : targetList.Count <= 0)
+        {
+            Debug.LogError("目的地のリストがありません");
+            bError = false;
+        }
+        if (!agent)
+        {
+            Debug.LogError("ナビメッシュエージェントが取得されていません");
+            bError = false;
+        }
+        if (!data)
+        {
+            Debug.LogError("ゲスト用データが取得されていません");
+            bError = false;
+        }
+        if (!animator)
+        {
+            Debug.LogError("アニメータが取得されていません");
+            bError = false;
+        }
+        return bError;
+    }
+
     /// <summary>
     /// 目的地の変更
     /// </summary>
@@ -127,6 +158,6 @@ public class StateDefaultRootWalk : AIState
         targetNum = (targetNum + 1) % targetList.Count;
         agent.SetDestination(targetList[targetNum].position);
         fTimer = 0.0f;
-        if (animator) animator.SetBool("isWalk", true);
+        animator.SetBool("isWalk", true);
     }
 }

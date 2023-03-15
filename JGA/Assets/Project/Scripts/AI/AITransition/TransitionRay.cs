@@ -22,11 +22,11 @@ public class TransitionRay : AITransition
     [SerializeField, Range(0, 180), Tooltip("視野角")] private float viewAngle = 45.0f;
     [SerializeField,Tooltip("プレイヤーが視界から外れた時に遷移したい場合はチェックを入れてください")] private bool inv = false;
     [SerializeField] private Transform eyesPos; //目の位置
-
-	/// <summary>
-	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
-	/// </summary>
-	void Awake()
+#if false
+    /// <summary>
+    /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
+    /// </summary>
+    void Awake()
 	{
 		
 	}
@@ -54,7 +54,7 @@ public class TransitionRay : AITransition
 	{
 		
 	}
-
+#endif
     public override void InitTransition()
     {
         if(!data)data = GetComponent<AIManager>().GetGuestData();
@@ -63,6 +63,8 @@ public class TransitionRay : AITransition
 
     public override bool IsTransition()
     {
+        if (!ErrorCheck()) return false;
+
         //プレイヤーが視界内に入っているか
         // 視線の向き
         Vector3 dir = eyesPos.forward;
@@ -95,5 +97,26 @@ public class TransitionRay : AITransition
 
         //プレイヤーと当たったか判定
         return (hit.collider.gameObject.tag == "Player") != inv;
+    }
+
+    public override bool ErrorCheck()
+    {
+        bool bError = true;
+        if (!eyesPos)
+        {
+            Debug.LogError("目の位置が設定されていません");
+            bError = false;
+        }
+        if (!data)
+        {
+            Debug.LogError("ゲスト用データが取得されていません");
+            bError = false;
+        }
+        if (!playerTransform)
+        {
+            Debug.LogError("プレイヤーのトランスフォームが取得されていません");
+            bError = false;
+        }
+        return bError;
     }
 }

@@ -16,10 +16,11 @@ public class TransitionTimeLimit : AITransition
 {
     [SerializeField,Min(0)] private float timeLimit = 1.0f;
     private float fTimer = 0.0f;
-	/// <summary>
-	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
-	/// </summary>
-	void Awake()
+#if false
+    /// <summary>
+    /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
+    /// </summary>
+    void Awake()
 	{
 		
 	}
@@ -47,7 +48,7 @@ public class TransitionTimeLimit : AITransition
 	{
 		
 	}
-
+#endif
     public override void InitTransition()
     {
         fTimer = 0.0f;
@@ -58,5 +59,10 @@ public class TransitionTimeLimit : AITransition
         fTimer += Time.deltaTime;
 
         return fTimer >= timeLimit;
+    }
+
+    public override bool ErrorCheck()
+    {
+        return true;
     }
 }

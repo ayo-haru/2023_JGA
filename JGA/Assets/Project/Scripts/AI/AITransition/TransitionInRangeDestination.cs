@@ -1,25 +1,27 @@
 //=============================================================================
-// @File	: [TransitionInRangeOther.cs]
-// @Brief	: 遷移条件　ターゲット(プレイヤー以外)が範囲内に居るか
+// @File	: [TransitionInRangeDestination.cs]
+// @Brief	: 遷移条件　目的地が範囲内にあるか
 // @Author	: Ogusu Yuuko
 // @Editer	: 
-// @Detail	: プレイヤーが範囲内に居るか判定したい場合はTransitionInRangePlayer.csを使ってください
+// @Detail	: 
 // 
 // [Date]
-// 2023/03/06	スクリプト作成
+// 2023/03/15	スクリプト作成
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
-public class TransitionInRangeOther : AITransition
+public class TransitionInRangeDestination : AITransition
 {
     //ゲスト用データ
     private GuestData data;
+    //ナビメッシュエージェント
+    private NavMeshAgent agent;
     //遷移条件反転用フラグ
-    [SerializeField,Tooltip("ターゲットが範囲外に出たら遷移したい場合はチェックを入れてください")] private bool inv = false;
-    //目的地のトランスフォーム
-    [SerializeField]private Transform target;
+    [SerializeField,Tooltip("目的地から離れた場合に遷移したいときはチェック入れてください")] private bool inv;
+
 #if false
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -56,6 +58,7 @@ public class TransitionInRangeOther : AITransition
     public override void InitTransition()
     {
         if (!data) data = GetComponent<AIManager>().GetGuestData();
+        if (!agent) agent = GetComponent<NavMeshAgent>();
     }
 
     public override bool IsTransition()
@@ -63,24 +66,22 @@ public class TransitionInRangeOther : AITransition
         //エラーチェック
         if (!ErrorCheck()) return false;
 
-        return (Vector3.Distance(gameObject.transform.position, target.position) <= data.reactionArea) != inv;
+        return (Vector3.Distance(gameObject.transform.position, agent.destination) <= data.reactionArea) != inv;
     }
 
     public override bool ErrorCheck()
     {
         bool bError = true;
-
         if (!data)
         {
             Debug.LogError("ゲスト用データが取得されていません");
             bError = false;
         }
-        if (!target)
+        if (!agent)
         {
-            Debug.LogError("目的地のトランストームが設定されていません");
+            Debug.LogError("ナビメッシュエージェントが取得されていません");
             bError = false;
         }
-
         return bError;
     }
 }

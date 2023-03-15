@@ -15,14 +15,18 @@ using UnityEngine;
 
 public class TransitionInRangePlayer : AITransition
 {
+    //お客さん用データ
     private GuestData data;
+    //遷移条件反転用フラグ
     [SerializeField,Tooltip("プレイヤーが範囲外に出たら遷移したい場合はチェックを入れてください")] private bool inv = false;
+    //プレイヤーのトランスフォーム
     private Transform target;
 
-	/// <summary>
-	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
-	/// </summary>
-	void Awake()
+#if false
+    /// <summary>
+    /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
+    /// </summary>
+    void Awake()
 	{
 		
 	}
@@ -50,7 +54,7 @@ public class TransitionInRangePlayer : AITransition
 	{
 		
 	}
-
+#endif
     public override void InitTransition()
     {
         if (!data) data = GetComponent<AIManager>().GetGuestData();
@@ -59,11 +63,26 @@ public class TransitionInRangePlayer : AITransition
 
     public override bool IsTransition()
     {
+        //エラーチェック
+        if (!ErrorCheck()) return false;
+
+        return (Vector3.Distance(gameObject.transform.position, target.position) <= data.reactionArea) != inv;
+    }
+
+    public override bool ErrorCheck()
+    {
+        bool bError = true;
         if (!target)
         {
-            Debug.LogError("プレイヤーが設定されていません");
-            return false;
+            Debug.LogError("プレイヤーのトランスフォームが取得されていません");
+            bError = false;
         }
-        return (Vector3.Distance(gameObject.transform.position, target.position) <= data.reactionArea) != inv;
+        if (!data)
+        {
+            Debug.LogError("ゲスト用データが取得されていません");
+            bError = false;
+        }
+
+        return bError;
     }
 }

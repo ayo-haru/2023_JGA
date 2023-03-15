@@ -24,15 +24,15 @@ public class StateAttention : AIState
     [SerializeField,Min(1)] private float rotSpeed = 2.0f;
     //感情UI
     [SerializeField] private EmosionUI ui;
-
+    //ナビメッシュエージェント
     private NavMeshAgent agent;
-
+    //アニメーター
     private Animator animator;
-
-	/// <summary>
-	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
-	/// </summary>
-	void Awake()
+#if false
+    /// <summary>
+    /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
+    /// </summary>
+    void Awake()
 	{
         
 	}
@@ -60,37 +60,62 @@ public class StateAttention : AIState
 	{
 		
 	}
-
+#endif
     public override void InitState()
     {
+        //コンポーネント取得
         if(!agent)agent = GetComponent<NavMeshAgent>();
-        if(agent)agent.speed = 0.0f;
         if (!target) target = GameObject.FindWithTag("Player").GetComponent<Transform>();
-
-        //注目中のUIを表示
-        ui.SetEmotion(EEmotion.QUESTION);
-
         if(!animator) animator = GetComponent<Animator>();
-        if (animator) animator.SetBool("isWalk", false);
+
+        //エラーチェック
+        if (!ErrorCheck()) return;
+
+        agent.speed = 0.0f;
+        ui.SetEmotion(EEmotion.QUESTION);
+        animator.SetBool("isWalk", false);
     }
 
     public override void UpdateState()
     {
-        if (target)
-        {
-            //プレイヤーの方向を向く
-            Quaternion rot = Quaternion.LookRotation(target.position - transform.position);
-            rot = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * rotSpeed);
-            transform.rotation = rot;
-        }else
-        {
-            Debug.LogError("プレイヤーが取得できていません");
-        }
+        //エラーチェック
+        if (!ErrorCheck()) return;
+
+        //プレイヤーの方向を向く
+        Quaternion rot = Quaternion.LookRotation(target.position - transform.position);
+        transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * rotSpeed);
 
     }
 
     public override void FinState()
     {
-        ui.SetEmotion(EEmotion.NONE);
+        if(ui)ui.SetEmotion(EEmotion.NONE);
+    }
+
+    public override bool ErrorCheck()
+    {
+        bool bError = true;
+        if (!target)
+        {
+            Debug.LogError("プレイヤーのトランスフォームが取得されていません");
+            bError = false;
+        }
+        if (!ui)
+        {
+            Debug.LogError("感情UIが設定されていません");
+            bError = false;
+        }
+        if (!agent)
+        {
+            Debug.LogError("ナビメッシュエージェントが取得されていません");
+            bError = false;
+        }
+        if (!animator)
+        {
+            Debug.LogError("アニメータが取得されていません");
+            bError = false;
+        }
+
+        return bError;
     }
 }

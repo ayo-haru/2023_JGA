@@ -8,6 +8,7 @@
 // [Date]
 // 2023/02/27	スクリプト作成
 // 2023/03/03	(小楠)終了処理を追加
+// 2023/03/15	(小楠)エラーチェック用の関数を追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -27,4 +28,9 @@ public abstract class AIState : MonoBehaviour
     /// ステートの終了処理
     /// </summary>
     public abstract void FinState();
+    /// <summary>
+    /// エラーチェック
+    /// </summary>
+    /// <returns></returns>
+    public abstract bool ErrorCheck();
 }
