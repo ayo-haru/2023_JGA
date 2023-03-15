@@ -8,6 +8,7 @@ TagManager:
   - Scenery
   - Target
   - holdObject
+  - Guest
   layers:
   - Default
   - TransparentFX

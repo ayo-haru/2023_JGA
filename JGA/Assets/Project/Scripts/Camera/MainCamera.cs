@@ -82,6 +82,9 @@ public class MainCamera : MonoBehaviour
 	//距離格納用
 	private Transform cameraChild;
 
+    //カメラの初期位置格納用
+    private Vector3 firstCamPos;
+
     //基本的にメインカメラのみで設定するところ
     [Header("遅延の数値(0に近いほど遅延がデカい。基本は1)")]
     [SerializeField] private float smoothMove = 1.0f;
@@ -136,15 +139,8 @@ public class MainCamera : MonoBehaviour
 		cameraParent = cameraObj.GetTransformObject(true);
 		cameraChild = cameraObj.GetTransformObject(false);
 
-
         //客の情報を格納する
-        var guestParent = GameObject.Find("Guests");
-        guestObj = new GameObject[guestParent.transform.childCount];
-
-        for (int i = 0; i < guestParent.transform.childCount; i++)
-        {
-            guestObj[i] = guestParent.transform.GetChild(i).gameObject;
-        }
+        guestObj = GameObject.FindGameObjectsWithTag("Guest");
 
         //客の範囲取得
         boundGuest = new Bounds[guestObj.Length];
@@ -168,9 +164,8 @@ public class MainCamera : MonoBehaviour
 	/// </summary>
 	void Start() {        
         //プレイヤーを格納
-        //playerobj = GameObject.FindGameObjectWithTag("Player");
         playerobj = GameObject.Find("LookPos");
-
+        firstCamPos = playerobj.transform.position;
         //プレイヤーの初期位置とカメラの座標を固定
         offset = cameraParent.transform.position - playerobj.transform.position;
         //初期の視野角を格納
@@ -187,9 +182,6 @@ public class MainCamera : MonoBehaviour
         //イージング用の時間
         easingRate = 0.0f;
         lerpRate = 0.0f;
-        //プレイヤーの座標保存
-        currentPlayerPos = playerobj.transform.position;
-
 
     }
 
@@ -225,7 +217,10 @@ public class MainCamera : MonoBehaviour
 	/// </summary>
 	void Update()
 	{
-
+        if (MySceneManager.GameData.isCatchPenguin)
+        {
+            cameraParent.position = firstCamPos;
+        }
     }
     
     /// <summary>
@@ -237,11 +232,7 @@ public class MainCamera : MonoBehaviour
         {
             return;
         }
-        if(MySceneManager.GameData.isCatchPenguin)
-        {
-            cameraParent.position = playerobj.transform.position;
-            return;
-        }
+       
         //==============================================================
         //端＋指定した距離にプレイヤーが入っていたらカメラを止める
         if (fieldLeftEdge.position.x + edgeDistance >= playerobj.transform.position.x ||
