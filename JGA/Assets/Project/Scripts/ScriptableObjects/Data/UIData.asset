@@ -16,3 +16,7 @@ MonoBehaviour:
   - displayName: FadePanel.prefab
     ID: 0
     prefab: {fileID: 20710088090004641, guid: 45222f80e5aff5446a777f09fae81c20, type: 3}
+  - displayName: PausePanel.prefab
+    ID: 1
+    prefab: {fileID: 1477891532903698541, guid: e44de80c06a7ee1499e6b9f022b8e9f7,
+      type: 3}

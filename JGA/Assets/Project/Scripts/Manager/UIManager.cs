@@ -29,8 +29,14 @@ public class UIManager : MonoBehaviour
         GameObject _fadePanel = PrefabContainerFinder.Find(MySceneManager.GameData.UIDatas, "FadePanel.prefab");
         fadePanel = Instantiate(_fadePanel);
 
-       fadePanel.transform.parent =  canvas.transform;
-    }
+		fadePanel.transform.parent = canvas.transform;
+
+		//GameObject _pausePanel = PrefabContainerFinder.Find(MySceneManager.GameData.UIDatas, "PausePanel.prefab");
+		//pausePanel = Instantiate(_pausePanel);
+
+		//pausePanel.transform.parent = canvas.transform;
+		//pausePanel.SetActive(false);
+	}
 
 	/// <summary>
 	/// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
