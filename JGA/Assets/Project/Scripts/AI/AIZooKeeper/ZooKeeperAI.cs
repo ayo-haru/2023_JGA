@@ -204,6 +204,30 @@ public class ZooKeeperAI : MonoBehaviour
                         navMesh.destination = other.transform.position;    // ペンギンを追従
                     }
                 }
+                else
+                {
+                    // Ray当たってない
+                    chaseNow = false;
+                    if (gimmickFlg && !catchFlg)
+                    {
+                        navMesh.SetDestination(gimmickObj.gimmickList[gimmickNum].transform.position);   // 目的地をオブジェクトの位置に設定
+                    }
+                    if (catchFlg) // オブジェクトを運んでいるか
+                    {
+                        navMesh.SetDestination(gimmickObj.resetPos[resetNum].position);    // 目的地をオブジェクトの位置に設定
+                    }
+                    else if (!gimmickFlg)
+                    {
+                        if (rootList.Count >= 1)
+                        {
+                            navMesh.SetDestination(rootList[rootNum].position);     // 目的地の再設定
+                        }
+                        else
+                        {
+                            navMesh.isStopped = true;   // ナビゲーションの停止（true:ナビゲーションOFF　false:ナビゲーションON）
+                        }
+                    }
+                }
             }
             else
             {
@@ -260,6 +284,17 @@ public class ZooKeeperAI : MonoBehaviour
                                     gimmickFlg = true;
                                     resetNum = i;
                                     gimmickNum = i;
+                                }
+                            }
+                            else
+                            {
+                                gimmickFlg = false;
+                                if (catchFlg)
+                                {
+                                    catchFlg = false;
+                                    gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().isKinematic = false;   // 物理演算の影響を受けるようにする
+                                    gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().useGravity = true;
+                                    gimmickObj.gimmickList[gimmickNum].transform.parent = parentObj.transform;
                                 }
                             }
                         }
