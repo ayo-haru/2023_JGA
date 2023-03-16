@@ -24,7 +24,12 @@ public class CardboardBox : MonoBehaviour
 	private float topvector = 0.1f;    // 上方向のベクトル調整値
 	private float objectsize;
 
-	public bool IsSound { get; set; }   // 音が鳴ったフラグ
+    [SerializeField]
+    private bool Kinematic;
+    [SerializeField]
+    private bool Sleeping;
+
+    public bool IsSound { get; set; }   // 音が鳴ったフラグ
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -60,6 +65,9 @@ public class CardboardBox : MonoBehaviour
 		{
 			rb.isKinematic = true;
 		}
+
+        Kinematic = rb.isKinematic;
+        Sleeping = rb.IsSleeping();
 	}
 
 	private void OnCollisionEnter(Collision collision)
