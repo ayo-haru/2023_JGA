@@ -7,6 +7,7 @@
 // 
 // [Date]
 // 2023/02/27	スクリプト作成
+// 2023/03/16	スポーン地点をPlayerRespwanに変更(吉原)
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ public class StageSceneManager : BaseSceneManager {
     private GameObject playerObj;
     private GameObject playerInstance;
     private Player _Player;
+    [SerializeField] GameObject playerRespawn;
 
     private bool isOnce;    // 実行されたら一回だけ呼ぶ処理の一回だけの判定に使う
 
@@ -31,8 +33,15 @@ public class StageSceneManager : BaseSceneManager {
     /// 最初のフレーム更新の前に呼び出される
     /// </summary>
     void Start() {
+        playerRespawn = GameObject.Find("PlayerSpawn");
         playerObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Player.prefab");
-        playerInstance = Instantiate(playerObj, new Vector3(-102.0f,1.5f,-83.0f),Quaternion.Euler(0.0f,5.0f,0.0f));
+        playerInstance = Instantiate(
+            playerObj, 
+            new Vector3(
+                playerRespawn.transform.position.x,
+                playerRespawn.transform.position.y, 
+                playerRespawn.transform.position.z), 
+            Quaternion.Euler(0.0f,5.0f,0.0f));
     }
 
     //void FixedUpdate() {
