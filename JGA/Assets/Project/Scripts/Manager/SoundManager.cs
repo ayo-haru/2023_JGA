@@ -43,7 +43,7 @@ public class SoundManager : MonoBehaviour
 				return;
 			}
 		}
-		Debug.LogError("<color=red>指定されたオブジェクトが見つかりません</color>(SoundManager.Play)\n");
+		Debug.LogError($"<color=red>指定されたオブジェクトが見つかりません</color>({audioSource})\n");
 	}
 
 	/// <summary>

@@ -10,6 +10,7 @@
 // 2023/03/10	はたかれる以外で動かないように。音鳴ったフラグの作成。
 // 2023/03/11	音の実装。
 // 2023/03/13	吹っ飛ばし処理をPlayer.csへ輸送しやした（酒井）
+// 2023/03/16	音の再生方法を変更
 //=============================================================================
 using UnityEngine;
 
@@ -17,6 +18,8 @@ public class CardboardBox : MonoBehaviour
 {
 	private Rigidbody rb;
 	private AudioSource sound;
+	[SerializeField]
+	private AudioClip clip;
 
 	[SerializeField, Tooltip("吹っ飛ぶ強さ")]
 	private float blowpower = 10.0f;    // 吹っ飛ぶ強さ
@@ -24,12 +27,12 @@ public class CardboardBox : MonoBehaviour
 	private float topvector = 0.1f;    // 上方向のベクトル調整値
 	private float objectsize;
 
-    [SerializeField]
-    private bool Kinematic;
-    [SerializeField]
-    private bool Sleeping;
+	[SerializeField]
+	private bool Kinematic;
+	[SerializeField]
+	private bool Sleeping;
 
-    public bool IsSound { get; set; }   // 音が鳴ったフラグ
+	public bool IsSound { get; set; }   // 音が鳴ったフラグ
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -66,8 +69,8 @@ public class CardboardBox : MonoBehaviour
 			rb.isKinematic = true;
 		}
 
-        Kinematic = rb.isKinematic;
-        Sleeping = rb.IsSleeping();
+		Kinematic = rb.isKinematic;
+		Sleeping = rb.IsSleeping();
 	}
 
 	private void OnCollisionEnter(Collision collision)
@@ -76,7 +79,7 @@ public class CardboardBox : MonoBehaviour
 		if (!rb.IsSleeping())
 		{
 			// ここで音を鳴らすよ
-			sound.Play();
+			SoundManager.Play(sound, clip);
 		}
 	}
 }
