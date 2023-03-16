@@ -14,12 +14,16 @@ using UnityEngine.InputSystem;
 
 public class PauseManager : SingletonMonoBehaviour<PauseManager>
 {
-	protected override bool dontDestroyOnLoad { get { return true; } }
+	protected override bool dontDestroyOnLoad
+	{ get { return true; } }
 
 	private static Subject<string> pauseSubject = new Subject<string>();
 	private static Subject<string> resumeSubject = new Subject<string>();
 
-	private static bool isPaused = false;
+	private static bool _isPaused = false;
+
+	public static bool isPaused
+	{ get { return _isPaused; } set { _isPaused = value; } }
 
 	private MyContorller gameInputs;            // 方向キー入力取得
 
@@ -47,9 +51,9 @@ public class PauseManager : SingletonMonoBehaviour<PauseManager>
 
 	private void Pause(InputAction.CallbackContext context)
 	{
-		isPaused = !isPaused;
+		_isPaused = !_isPaused;
 
-		if (isPaused)
+		if (_isPaused)
 		{
 			Pause();
 		}
@@ -61,25 +65,11 @@ public class PauseManager : SingletonMonoBehaviour<PauseManager>
 
 	public static void Pause()
 	{
-		//isPaused = true;
-
 		pauseSubject.OnNext("pause");
 	}
 
 	public static void Resume()
 	{
-		//isPaused = false;
-
 		resumeSubject.OnNext("resume");
 	}
-
-	/// <summary>
-	/// ポーズ中かどうか
-	/// </summary>
-	/// <returns></returns>
-	public static bool IsPaused()
-	{
-		return isPaused;
-	}
 }
-
