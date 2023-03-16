@@ -30,7 +30,8 @@ public class PenguinsData : ScriptableObject
 
         public float swimSpeed;
 
-
+        public float minIdleTime;
+        public float maxIdleTime;
     }
     
 
