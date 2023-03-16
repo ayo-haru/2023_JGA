@@ -457,11 +457,7 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void OnCall()
 	{
-		if (seCall != null)
-			audioSource.PlayOneShot(seCall);
-		else
-			Debug.LogError($"seCallが定義されていません。");
-
+		SoundManager.Play(audioSource, seCall);
 	}
 
 	#region 衝突判定
