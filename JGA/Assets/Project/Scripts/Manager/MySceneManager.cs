@@ -27,6 +27,11 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 		public static SoundData SEDatas;
 	}
 
+	public static class Effect
+	{
+		public static EffectData effectDatas;
+	}
+
 	// このクラスを持つオブジェクトは消えない
 	protected override bool dontDestroyOnLoad { get { return true; } }
 
@@ -38,7 +43,7 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 	};
 
 	private static string[] sceneName = {   // シーン名(実際に作ったシーンの名前入れてね)
-        "Title",
+		"Title",
 		"ProtoType"
 	};
 
@@ -56,6 +61,9 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 
 		Sound.BGMDatas = AddressableLoader<SoundData>.Load("BGMData");
 		Sound.SEDatas = AddressableLoader<SoundData>.Load("SEData");
+
+		Effect.effectDatas = AddressableLoader<EffectData>.Load("EffectData");
+
 	}
 
 	private void Start()
@@ -79,9 +87,9 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 	public static void SceneReload()
 	{
 		/*
-         * 一応作ってみたんだけどInitializeSceneは再読み込みされないのでちょっとどうしようかなって感じ
-         * 本格的に使うならつくろかなーなんて
-         */
+		 * 一応作ってみたんだけどInitializeSceneは再読み込みされないのでちょっとどうしようかなって感じ
+		 * 本格的に使うならつくろかなーなんて
+		 */
 
 
 		// 現在のSceneを取得
