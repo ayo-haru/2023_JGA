@@ -35,6 +35,18 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager> {
         "ProtoType"
     };
 
+    //----- 飼育員、客のルートに使用 -----
+    public enum eRoot {
+        NONE = 0,
+        PENGUIN,
+        BEAR,
+        ELEPHANT,
+        LION,
+        POLAR,
+        BIRD,
+
+        OTHER
+    }
 
 
 
