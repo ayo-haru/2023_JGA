@@ -19,7 +19,14 @@ public static class SceneLauncher
 		EditorSceneManager.OpenScene("Assets/Project/Scenes/Sample001.unity", OpenSceneMode.Single);
 	}
 
-    [MenuItem("Launcher/InitializeScene", priority = 1)]
+	[MenuItem("Launcher/Title", priority = 1)]
+	public static void OpenTitleScene()
+	{
+		EditorSceneManager.OpenScene("Assets/Project/Scenes/Title/Title.unity", OpenSceneMode.Single);
+	}
+
+
+	[MenuItem("Launcher/InitializeScene", priority = 2)]
 	public static void OpenInitializeScene()
     {
 		EditorSceneManager.OpenScene("Assets/Project/Scenes/InitializeScene.unity", OpenSceneMode.Single);
