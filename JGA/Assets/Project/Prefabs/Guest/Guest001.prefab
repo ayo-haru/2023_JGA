@@ -1921,7 +1921,7 @@ MonoBehaviour:
     transitions:
     - toNode: 1
       toNodeTransition: {fileID: 7104924354389222863}
-    - toNode: 2
+    - toNode: 1
       toNodeTransition: {fileID: 7104924354389222867}
   - stateNum: 1
     state: {fileID: 7104924354389222858}
