@@ -207,8 +207,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6327b9be9aef2644494b183154ba7a0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  clip: {fileID: 8300000, guid: 8d0d678e29082c440b70bcc191b30a34, type: 3}
   blowpower: 10
   topvector: 1
+  Kinematic: 0
+  Sleeping: 0
 --- !u!208 &1060428547702418537
 NavMeshObstacle:
   m_ObjectHideFlags: 0

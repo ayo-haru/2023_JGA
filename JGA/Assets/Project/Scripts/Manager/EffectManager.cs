@@ -31,9 +31,9 @@ public class EffectManager : MonoBehaviour
 
 		for (int i = 0; i < list.Length; i++)
 		{
-			if (list[i].displayName == displayName)
+			if (list[i].name == displayName)
 			{
-				return Instantiate(list[i].prefab, pos, quaternion.Value);
+				return Instantiate(list[i], pos, quaternion.Value);
 			}
 		}
 
@@ -67,7 +67,7 @@ public class EffectManager : MonoBehaviour
 			return null;
 		}
 
-		return Instantiate(list[ID].prefab, pos, quaternion.Value);
+		return Instantiate(list[ID], pos, quaternion.Value);
 	}
 
 	/// <summary>
@@ -86,9 +86,9 @@ public class EffectManager : MonoBehaviour
 
 		for (int i = 0; i < list.Length; i++)
 		{
-			if (list[i].prefab == prefab)
+			if (list[i] == prefab)
 			{
-				return Instantiate(list[i].prefab, pos, quaternion.Value);
+				return Instantiate(list[i], pos, quaternion.Value);
 			}
 		}
 		Debug.LogError($"<color=red>指定されたオブジェクトが見つかりません</color>({prefab})\n");
