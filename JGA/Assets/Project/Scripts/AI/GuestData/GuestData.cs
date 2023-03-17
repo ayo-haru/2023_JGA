@@ -13,7 +13,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "CreateGestData")]
+[CreateAssetMenu(menuName = "ScriptableObject/CreateGestData")]
 public class GuestData : ScriptableObject
 {
     //移動速度

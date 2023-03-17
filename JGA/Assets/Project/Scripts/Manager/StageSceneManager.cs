@@ -16,10 +16,10 @@ using UnityEngine;
 public class StageSceneManager : BaseSceneManager {
     private GameObject playerObj;
     private GameObject playerInstance;
-    private Player _Player;
     [SerializeField] GameObject playerRespawn;
 
-    private bool isOnce;    // 実行されたら一回だけ呼ぶ処理の一回だけの判定に使う
+
+
 
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -33,6 +33,7 @@ public class StageSceneManager : BaseSceneManager {
     /// 最初のフレーム更新の前に呼び出される
     /// </summary>
     void Start() {
+        //----- プレイヤーの生成 -----
         playerRespawn = GameObject.Find("PlayerSpawn");
         playerObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Player.prefab");
         playerInstance = Instantiate(
@@ -42,6 +43,14 @@ public class StageSceneManager : BaseSceneManager {
                 playerRespawn.transform.position.y, 
                 playerRespawn.transform.position.z), 
             Quaternion.Euler(0.0f,5.0f,0.0f));
+
+        //----- 飼育員の生成 -----
+
+
+
+        //----- 客の生成 -----
+
+
     }
 
     //void FixedUpdate() {
