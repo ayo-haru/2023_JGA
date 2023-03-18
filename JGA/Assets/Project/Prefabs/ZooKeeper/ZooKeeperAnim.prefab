@@ -820,7 +820,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 2
+  m_Radius: 15
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!195 &5396560914150009845
 NavMeshAgent:
@@ -856,15 +856,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8349bb4f8e0bf9846a22ec7a8fba34a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  status: 0
   animator: {fileID: 0}
-  rootList: []
-  speed: 1.1
-  chaseSpeed: 1.1
-  search: 2
-  searchAngle: 45
-  searchDistance: 10
   chaseNow: 0
+  gimmickFlg: 0
+  catchFlg: 0
   ReSpawnZone: {fileID: 0}
 --- !u!1 &1960879353178395164
 GameObject:

@@ -23,7 +23,13 @@ public class ZooKeeperData : ScriptableObject{
         [Header("飼育員の名前\n(初期位置のﾌﾟﾚﾊﾌﾞの名前はName+Spawnになる)")]
         public string name = "Zookeeper";
         [Header("飼育員の巡回ルート")]
-        public MySceneManager.eRoot[] roots; 
+        public MySceneManager.eRoot[] roots;
+        [HideInInspector]　// 巡回ルートのトランスフォーム
+        public List<Transform> rootTransforms;
+        [HideInInspector] // スポーン位置のトランスフォーム
+        public Transform respawnTF;
+        [Header("オブジェクトをもとに戻す人か戻さない人か")]
+        public ZooKeeperAI.Status status;
         [Header("飼育員のスピード")]
         [Range(1.1f, 50.0f)] public float speed = 5.0f;
         [Header("飼育員の追いかけるスピード")]
@@ -37,5 +43,5 @@ public class ZooKeeperData : ScriptableObject{
     }
 
     [SerializeField]
-    public Data[] list = { new Data {name = "Zookeeper",  speed = 5.0f, chaseSpeed = 1.1f, search = 15.0f ,searchAngle = 45.0f, searchDistance = 10.0f } };
+    public Data[] list = { new Data {name = "Zookeeper", status = ZooKeeperAI.Status.returnObj ,speed = 5.0f, chaseSpeed = 1.1f, search = 15.0f ,searchAngle = 45.0f, searchDistance = 10.0f } };
 }

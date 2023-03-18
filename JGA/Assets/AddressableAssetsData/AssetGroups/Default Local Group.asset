@@ -37,6 +37,10 @@ MonoBehaviour:
     m_Address: BGMData
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: b8d0f7bcc608b334f8b85951ed881cba
+    m_Address: ZooKeeperData
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 6490bc5112e0d74469e157e8c2cc9fd5, type: 2}
   m_SchemaSet:

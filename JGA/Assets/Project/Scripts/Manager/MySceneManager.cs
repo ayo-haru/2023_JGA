@@ -16,8 +16,14 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 	// ゲーム内で使うデータを持つクラス
 	public static class GameData
 	{
+		//---プレハブの登録
 		public static PrefabContainer characterDatas;
 		public static PrefabContainer UIDatas;
+
+		//---データの登録
+		public static ZooKeeperData zooKeeperData;
+
+		//---フラグ
 		public static bool isCatchPenguin;
 	}
 
@@ -54,7 +60,7 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
         BEAR,
         ELEPHANT,
         LION,
-        POLAR,
+        POLARBEAR,
         BIRD,
 
         OTHER
@@ -65,17 +71,23 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 
 	private void Awake()
 	{
-		Application.targetFrameRate = 60;       // FPSを60に固定
+		// FPSを60に固定
+		Application.targetFrameRate = 60;     
+		
+		//----- ScriptableObjectの登録したデータの読み込み -----
+		//---オブジェクト
 		GameData.characterDatas = AddressableLoader<PrefabContainer>.Load("CharacterData");
 		GameData.UIDatas = AddressableLoader<PrefabContainer>.Load("UIData");
-
-		GameData.isCatchPenguin = false;
-
+		//---サウンド
 		Sound.BGMDatas = AddressableLoader<SoundData>.Load("BGMData");
 		Sound.SEDatas = AddressableLoader<SoundData>.Load("SEData");
-
+		//---エフェクト
 		Effect.effectDatas = AddressableLoader<EffectData>.Load("EffectData");
+		//---データ
+		GameData.zooKeeperData = AddressableLoader<ZooKeeperData>.Load("ZooKeeperData");
 
+		//----- 変数初期化 -----
+		GameData.isCatchPenguin = false;
 	}
 
 	private void Start()
