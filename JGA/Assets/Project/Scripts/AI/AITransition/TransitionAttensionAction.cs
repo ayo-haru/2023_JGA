@@ -68,11 +68,7 @@ public class TransitionAttensionAction : AITransition
 
     public override bool ErrorCheck()
     {
-        if (!player)
-        {
-            Debug.LogError("プレイヤー用スクリプトが取得できていません");
-            return false;
-        }
-        return true;
+        if (!player)Debug.LogError("プレイヤー用スクリプトが取得できていません");
+        return player;
     }
 }

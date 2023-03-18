@@ -126,28 +126,12 @@ public class StateDefaultRootWalk : AIState
 
     public override bool ErrorCheck()
     {
-        bool bError = true;
-        if((targetList == null) ? true : targetList.Count <= 0)
-        {
-            Debug.LogError("目的地のリストがありません");
-            bError = false;
-        }
-        if (!agent)
-        {
-            Debug.LogError("ナビメッシュエージェントが取得されていません");
-            bError = false;
-        }
-        if (!data)
-        {
-            Debug.LogError("ゲスト用データが取得されていません");
-            bError = false;
-        }
-        if (!animator)
-        {
-            Debug.LogError("アニメータが取得されていません");
-            bError = false;
-        }
-        return bError;
+        if((targetList == null) ? true : targetList.Count <= 0)Debug.LogError("目的地のリストがありません");
+        if (!agent)Debug.LogError("ナビメッシュエージェントが取得されていません");
+        if (!data)Debug.LogError("ゲスト用データが取得されていません");
+        if (!animator)Debug.LogError("アニメータが取得されていません");
+
+        return ((targetList == null) ? false : targetList.Count > 0) && agent && data && animator;
     }
 
     /// <summary>

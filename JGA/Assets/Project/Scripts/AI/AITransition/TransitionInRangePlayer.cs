@@ -71,18 +71,9 @@ public class TransitionInRangePlayer : AITransition
 
     public override bool ErrorCheck()
     {
-        bool bError = true;
-        if (!target)
-        {
-            Debug.LogError("プレイヤーのトランスフォームが取得されていません");
-            bError = false;
-        }
-        if (!data)
-        {
-            Debug.LogError("ゲスト用データが取得されていません");
-            bError = false;
-        }
+        if (!target)Debug.LogError("プレイヤーのトランスフォームが取得されていません");
+        if (!data)Debug.LogError("ゲスト用データが取得されていません");
 
-        return bError;
+        return target && data;
     }
 }

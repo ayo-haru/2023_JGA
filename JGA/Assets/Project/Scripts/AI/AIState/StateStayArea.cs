@@ -125,33 +125,13 @@ public class StateStayArea : AIState
 
     public override bool ErrorCheck()
     {
-        bool bError = true;
-        if (!agent)
-        {
-            Debug.LogError("ナビメッシュエージェントが取得されていません");
-            bError = false;
-        }
-        if (!target)
-        {
-            Debug.LogError("待機位置が設定されていません");
-            bError = false;
-        }
-        if (!data)
-        {
-            Debug.LogError("ゲスト用データが取得されていません");
-            bError = false;
-        }
-        if (!animator)
-        {
-            Debug.LogError("アニメーターが取得されていません");
-            bError = false;
-        }
-        if (!ui)
-        {
-            Debug.LogError("感情UIが設定されていません");
-            bError = false;
-        }
-        return bError;
+        if (!agent)Debug.LogError("ナビメッシュエージェントが取得されていません");
+        if (!target)Debug.LogError("待機位置が設定されていません");
+        if (!data)Debug.LogError("ゲスト用データが取得されていません");
+        if (!animator)Debug.LogError("アニメーターが取得されていません");
+        if (!ui) Debug.LogError("感情UIが設定されていません");
+
+        return agent && target && data && animator && ui;
     }
     public void GetAnimalTransrom()
     {

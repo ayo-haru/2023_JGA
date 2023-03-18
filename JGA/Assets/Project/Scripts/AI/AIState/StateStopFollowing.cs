@@ -77,18 +77,9 @@ public class StateStopFollowing : AIState
 
     public override bool ErrorCheck()
     {
-        bool bError = true;
+        if (!animator)Debug.LogError("アニメーターが取得されていません");
+        if (!ui)Debug.LogError("感情UIが設定されていません");
 
-        if (!animator)
-        {
-            Debug.LogError("アニメーターが取得されていません");
-            bError = false;
-        }
-        if (!ui)
-        {
-            Debug.LogError("感情UIが設定されていません");
-            bError = false;
-        }
-        return bError;
+        return animator && ui;
     }
 }

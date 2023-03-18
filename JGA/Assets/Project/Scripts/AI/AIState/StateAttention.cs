@@ -94,28 +94,11 @@ public class StateAttention : AIState
 
     public override bool ErrorCheck()
     {
-        bool bError = true;
-        if (!target)
-        {
-            Debug.LogError("プレイヤーのトランスフォームが取得されていません");
-            bError = false;
-        }
-        if (!ui)
-        {
-            Debug.LogError("感情UIが設定されていません");
-            bError = false;
-        }
-        if (!agent)
-        {
-            Debug.LogError("ナビメッシュエージェントが取得されていません");
-            bError = false;
-        }
-        if (!animator)
-        {
-            Debug.LogError("アニメータが取得されていません");
-            bError = false;
-        }
+        if (!target)Debug.LogError("プレイヤーのトランスフォームが取得されていません");
+        if (!ui)Debug.LogError("感情UIが設定されていません");
+        if (!agent)Debug.LogError("ナビメッシュエージェントが取得されていません");
+        if (!animator)Debug.LogError("アニメータが取得されていません");
 
-        return bError;
+        return target && ui && agent && animator;
     }
 }
