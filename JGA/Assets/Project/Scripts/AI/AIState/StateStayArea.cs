@@ -11,6 +11,7 @@
 // 2023/03/08	(小楠)アニメーションの制御追加
 // 2023/03/11	(小楠)目的地の方を向くようにした、目的地との距離を調整
 // 2023/03/11	(小楠）navmeshagentの目的地をちょっとずらして、お客さんをばらけるようにした
+// 2023/03/18	(小楠）動物の方向くようにした
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -23,6 +24,8 @@ public class StateStayArea : AIState
     private NavMeshAgent agent;
     //待機位置のTransform
     [SerializeField] Transform target;
+    //動物のTransform
+    private Transform animal;
     //お客さん用データ
     private GuestData data;
     //目的地に着いたか
@@ -70,7 +73,7 @@ public class StateStayArea : AIState
         if (!agent) agent = GetComponent<NavMeshAgent>();
         if (!data) data = GetComponent<AIManager>().GetGuestData();
         if (!animator) animator = GetComponent<Animator>();
-
+        GetAnimalTransrom();
         //エラーチェック
         if (!ErrorCheck()) return;
 
@@ -95,9 +98,8 @@ public class StateStayArea : AIState
 
         if (isStay)
         {
-            //目的地の方を向く
-            //できれば、動物の方を向くようにしたい
-            Quaternion rot = Quaternion.LookRotation(target.position - transform.position);
+            //動物の方を向く
+            Quaternion rot = Quaternion.LookRotation(((!animal) ? target.position : animal.position) - transform.position);
             transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime);
             return;
         }
@@ -150,5 +152,17 @@ public class StateStayArea : AIState
             bError = false;
         }
         return bError;
+    }
+    public void GetAnimalTransrom()
+    {
+        if (animal != null) return;
+
+        //動物の名前から動物の親オブジェクトを取得
+        int index = target.name.IndexOf("CagePos");
+        if (index < 0) return;
+        GameObject obj = GameObject.Find(target.name.Substring(0, index));
+        if ((!obj) ? true : obj.transform.childCount <= 0) return;
+        //子オブジェクトの中からランダムで1つ動物をanimalsに格納
+        animal = obj.transform.GetChild(Random.Range(0, obj.transform.childCount));   
     }
 }
