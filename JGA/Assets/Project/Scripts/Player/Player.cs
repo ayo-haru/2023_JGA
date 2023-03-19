@@ -25,16 +25,15 @@ public class Player : MonoBehaviour
 	[Header("ステータス")]
 	[SerializeField, Tooltip("歩行時速度")]
 	private float moveForce = 7;
-	[SerializeField, Tooltip("アピール時速度")]
-	private float appealForce = 8.75f;
-	[SerializeField, Tooltip("疾走時速度")]
-	private float runForce = 10.5f;
+	//[SerializeField, Tooltip("アピール時速度")]
+	private float appealForce;
 	[SerializeField, Tooltip("歩行時最高速度")]
 	private float maxMoveSpeed = 5;
-	[SerializeField, Tooltip("アピール時最高速度")]
-	private float maxAppealSpeed = 6.25f;
-	[SerializeField, Tooltip("疾走時最高速度")]
-	private float maxRunSpeed = 7.5f;
+	//[SerializeField, Tooltip("アピール時最高速度")]
+	private float maxAppealSpeed;
+	[SerializeField, Tooltip("疾走速度倍率")]
+	private float runMagnification = 1.5f;
+
 	[SerializeField, Tooltip("ジョイスティックで走り始めるゾーン")]
 	private float joyRunZone = 0.8f;
 	[SerializeField, Tooltip("鳴く間隔の最小値"), Range(0.0f, 30.0f)]
@@ -49,13 +48,13 @@ public class Player : MonoBehaviour
 	public Vector3 vForce { get { return _vForce; } }
 
 
-	[SerializeField] private bool _IsInteract;   // インタラクトフラグ
+	[SerializeField] private bool _IsInteract;  // インタラクトフラグ
 	public bool IsInteract { get { return _IsInteract; } set { _IsInteract = value; } }        // インタラクトプロパティ
 	private bool delay;
 
 	[SerializeField] private bool isHold;       // つかみフラグ
 	[SerializeField] private bool isRun;        // 走りフラグ
-	[SerializeField] private bool _IsAppeal;     // アピールフラグ
+	[SerializeField] private bool _IsAppeal;    // アピールフラグ
 	public bool IsAppeal { get { return _IsAppeal; } }
 
 	[SerializeField] private bool bGamePad;     // ゲームパッド接続確認フラグ
@@ -112,6 +111,10 @@ public class Player : MonoBehaviour
 
 		// Input Actionを有効化
 		gameInputs.Enable();
+
+		// アピール速度設定
+		appealForce = (moveForce + moveForce * runMagnification) / 2;
+		maxAppealSpeed = (maxMoveSpeed + maxMoveSpeed * runMagnification) / 2;
 	}
 
 	/// <summary>
@@ -231,8 +234,8 @@ public class Player : MonoBehaviour
 			}
 			else if (isRun)
 			{
-				force = runForce;
-				max = maxRunSpeed;
+				force = moveForce * runMagnification;
+				max = maxMoveSpeed * runMagnification;
 			}
 			else
 			{
@@ -266,8 +269,8 @@ public class Player : MonoBehaviour
 			}
 			else if (isRun)
 			{
-				force = runForce;
-				max = maxRunSpeed;
+				force = moveForce * runMagnification;
+				max = maxMoveSpeed * runMagnification;
 			}
 			else
 			{
