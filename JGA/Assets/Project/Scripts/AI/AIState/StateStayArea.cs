@@ -1,6 +1,6 @@
 //=============================================================================
 // @File	: [StateStayArea.cs]
-// @Brief	: 指定エリアで待機
+// @Brief	: 指定エリアで待機　　ペンギンエリア以外は使わないでね
 // @Author	: Ogusu Yuuko
 // @Editer	: Ogusu Yuuko
 // @Detail	: 
@@ -12,6 +12,7 @@
 // 2023/03/11	(小楠)目的地の方を向くようにした、目的地との距離を調整
 // 2023/03/11	(小楠）navmeshagentの目的地をちょっとずらして、お客さんをばらけるようにした
 // 2023/03/18	(小楠）動物の方向くようにした
+// 2023/03/19	(小楠）ペンギンエリアに着いたときに客の人数のカウントを追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -114,6 +115,13 @@ public class StateStayArea : AIState
             ui.SetEmotion(EEmotion.HIGH_TENSION);
             isStay = true;
 
+            //ペンギンブースに着いた客の人数を追加
+            GuestNumUI guestNumUI = GameObject.Find("GuestNumUI").GetComponent<GuestNumUI>();
+            if (guestNumUI){
+                guestNumUI.Add();
+            }else{
+                Debug.LogError("客人数表示用UIが取得できませんでした");
+            }
         }
     }
 

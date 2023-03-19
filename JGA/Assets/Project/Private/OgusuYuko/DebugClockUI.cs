@@ -5,6 +5,7 @@ using UnityEngine;
 public class DebugClockUI : MonoBehaviour
 {
     [SerializeField] private ClockUI ui;
+    [SerializeField] private GuestNumUI guestNumUI;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,6 +22,10 @@ public class DebugClockUI : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F2))
         {
             ui.LossTime();
+        }
+        if (Input.GetKeyDown(KeyCode.F3))
+        {
+            guestNumUI.Add();
         }
     }
 }
