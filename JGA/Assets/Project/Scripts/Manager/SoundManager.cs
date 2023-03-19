@@ -8,10 +8,15 @@
 // [Date]
 // 2023/03/16	スクリプト作成
 //=============================================================================
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
+	private static AudioClip BGM;
+	private static List<AudioClip> SEs = new List<AudioClip>();
+
+
 	/// <summary>
 	/// AudioClipから再生
 	/// </summary>
@@ -37,6 +42,7 @@ public class SoundManager : MonoBehaviour
 		{
 			if (BGMs[i].clip == clip)
 			{
+				//BGM = BGMs[i].clip;
 				audioSource.clip = BGMs[i].clip;
 				audioSource.volume = BGMs[i].volume;
 				audioSource.Play();

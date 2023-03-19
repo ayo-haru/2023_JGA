@@ -178,7 +178,7 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""74171726-f7a2-477e-82f7-59f31f2b8a5f"",
-                    ""path"": ""<Keyboard>/f"",
+                    ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
