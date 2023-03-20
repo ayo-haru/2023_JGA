@@ -9,12 +9,34 @@
 // 2023/03/16	スクリプト作成
 //=============================================================================
 using System.Collections.Generic;
+using UniRx;
+using Unity.VisualScripting;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
+	public enum EBGM
+	{
+	}
+	public enum ESE
+	{
+		SE_penguin,
+		SE_CardboardBox,
+		SE_CardboardBox2,
+	}
+
+	private static HashSet<AudioSource> Source = new HashSet<AudioSource>();
 	private static AudioClip BGM;
 	private static List<AudioClip> SEs = new List<AudioClip>();
+
+	private void Awake()
+	{
+		// ポーズ時の動作を登録
+		PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(this.gameObject);
+		PauseManager.OnResumed.Subscribe(x => { Resumed(); }).AddTo(this.gameObject);
+
+	}
 
 
 	/// <summary>
@@ -24,14 +46,16 @@ public class SoundManager : MonoBehaviour
 	/// <param name="clip">音</param>
 	public static void Play(AudioSource audioSource, AudioClip clip)
 	{
-		var SEs = MySceneManager.Sound.SEDatas.list;
+		Source.Add(audioSource);
+		var _SEs = MySceneManager.Sound.SEDatas.list;
 		// SEの場合
-		for (int i = 0; i < SEs.Length; i++)
+		for (int i = 0; i < _SEs.Length; i++)
 		{
-			if (SEs[i].clip == clip)
+			if (_SEs[i].clip == clip)
 			{
-				audioSource.volume = SEs[i].volume;
-				audioSource.PlayOneShot(SEs[i].clip);
+				SEs.Add(_SEs[i].clip);
+				audioSource.volume = _SEs[i].volume;
+				audioSource.PlayOneShot(_SEs[i].clip);
 				return;
 			}
 		}
@@ -42,7 +66,7 @@ public class SoundManager : MonoBehaviour
 		{
 			if (BGMs[i].clip == clip)
 			{
-				//BGM = BGMs[i].clip;
+				BGM = BGMs[i].clip;
 				audioSource.clip = BGMs[i].clip;
 				audioSource.volume = BGMs[i].volume;
 				audioSource.Play();
@@ -53,20 +77,67 @@ public class SoundManager : MonoBehaviour
 	}
 
 	/// <summary>
+	/// AudioClipから再生
+	/// </summary>
+	/// <param name="audioSource">音の再生元</param>
+	/// <param name="id">ID</param>
+	public static void Play(AudioSource audioSource, EBGM eBGM)
+	{
+		Source.Add(audioSource);
+
+		if (MySceneManager.Sound.BGMDatas.list.Length <= (int)eBGM ||
+			MySceneManager.Sound.BGMDatas.list.Length == 0)
+		{
+			Debug.LogError($"無効な値です。({eBGM})");
+			return;
+		}
+
+		SoundData.Sound _BGM = MySceneManager.Sound.BGMDatas.list[((int)eBGM)];
+		BGM = _BGM.clip;
+		audioSource.clip = _BGM.clip;
+		audioSource.volume = _BGM.volume;
+		audioSource.Play();
+	}
+
+	/// <summary>
+	/// AudioClipから再生
+	/// </summary>
+	/// <param name="audioSource">音の再生元</param>
+	/// <param name="id">ID</param>
+	public static void Play(AudioSource audioSource, ESE eSE)
+	{
+		Source.Add(audioSource);
+
+		if (MySceneManager.Sound.SEDatas.list.Length <= (int)eSE ||
+			MySceneManager.Sound.SEDatas.list.Length == 0)
+		{
+			Debug.LogError($"無効な値です。({eSE})");
+			return;
+		}
+
+		SoundData.Sound _SE = MySceneManager.Sound.SEDatas.list[((int)eSE)];
+		SEs.Add(_SE.clip);
+		audioSource.volume = _SE.volume;
+		audioSource.PlayOneShot(_SE.clip);
+	}
+
+	/// <summary>
 	/// 名前から再生
 	/// </summary>
 	/// <param name="audioSource">音の再生元</param>
 	/// <param name="name">音源ファイル名</param>
 	public static void Play(AudioSource audioSource, string name)
 	{
-		var SEs = MySceneManager.Sound.SEDatas.list;
+		Source.Add(audioSource);
+		var _SEs = MySceneManager.Sound.SEDatas.list;
 		// SEの場合
-		for (int i = 0; i < SEs.Length; i++)
+		for (int i = 0; i < _SEs.Length; i++)
 		{
-			if (SEs[i].clip.name == name)
+			if (_SEs[i].clip.name == name)
 			{
-				audioSource.volume = SEs[i].volume;
-				audioSource.PlayOneShot(SEs[i].clip);
+				SEs.Add(_SEs[i].clip);
+				audioSource.volume = _SEs[i].volume;
+				audioSource.PlayOneShot(_SEs[i].clip);
 				return;
 			}
 		}
@@ -77,6 +148,7 @@ public class SoundManager : MonoBehaviour
 		{
 			if (BGMs[i].clip.name == name)
 			{
+				BGM = BGMs[i].clip;
 				audioSource.clip = BGMs[i].clip;
 				audioSource.volume = BGMs[i].volume;
 				audioSource.Play();
@@ -86,7 +158,19 @@ public class SoundManager : MonoBehaviour
 		Debug.LogError("<color=red>指定されたオブジェクトが見つかりません</color>(SoundManager.Play)\n");
 	}
 
+	void Pause()
+	{
+		foreach (var item in Source)
+		{
+			item.Pause();
+		}
+	}
 
-
-
+	void Resumed()
+	{
+		foreach (var item in Source)
+		{
+			item.Play();
+		}
+	}
 }

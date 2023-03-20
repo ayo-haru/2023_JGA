@@ -10,6 +10,7 @@
 // 2023/03/08	リスポーンするよ
 //=============================================================================
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -47,6 +48,9 @@ public class Player : MonoBehaviour
 	[SerializeField] private Vector3 _vForce;
 	public Vector3 vForce { get { return _vForce; } }
 
+	private Vector3 pauseVelocity;
+	private Vector3 pauseAngularVelocity;
+
 
 	[SerializeField] private bool _IsInteract;  // インタラクトフラグ
 	public bool IsInteract { get { return _IsInteract; } set { _IsInteract = value; } }        // インタラクトプロパティ
@@ -74,6 +78,10 @@ public class Player : MonoBehaviour
 	/// </summary>
 	void Awake()
 	{
+		// ポーズ時の動作を登録
+		PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(this.gameObject);
+		PauseManager.OnResumed.Subscribe(x => { Resumed(); }).AddTo(this.gameObject);
+
 		if (rb == null)
 			rb = GetComponent<Rigidbody>();
 
@@ -82,6 +90,7 @@ public class Player : MonoBehaviour
 
 		if (audioSource == null)
 			audioSource = GetComponent<AudioSource>();
+
 
 		if (anim == null)
 			anim = GetComponent<Animator>();
@@ -218,6 +227,28 @@ public class Player : MonoBehaviour
 		}
 	}
 
+	private void Pause()
+	{
+		// 物理
+		pauseVelocity = rb.velocity;
+		pauseAngularVelocity = rb.angularVelocity;
+		rb.isKinematic = true;
+		// アニメーション
+		anim.speed = 0.0f;
+
+		_IsAppeal = false;
+	}
+
+	private void Resumed()
+	{
+		// 物理
+		rb.velocity = pauseVelocity;
+		rb.angularVelocity = pauseAngularVelocity;
+		rb.isKinematic = false;
+		// アニメーション
+		anim.speed = 1.0f;
+	}
+
 	/// <summary>
 	/// 移動処理
 	/// </summary>
@@ -298,6 +329,9 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void OnRun(InputAction.CallbackContext context)
 	{
+		if (PauseManager.isPaused)
+			return;
+
 		switch (context.phase)
 		{
 			// 押された時
@@ -317,6 +351,9 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void OnMove(InputAction.CallbackContext context)
 	{
+		if (PauseManager.isPaused)
+			return;
+
 		moveInputValue = context.ReadValue<Vector2>();
 	}
 
@@ -325,7 +362,7 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void OnInteract(InputAction.CallbackContext context)
 	{
-		if (WithinRange.Count == 0)
+		if (WithinRange.Count == 0 || PauseManager.isPaused)
 			return;
 
 
@@ -441,6 +478,9 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void OnAppeal(InputAction.CallbackContext context)
 	{
+		if (PauseManager.isPaused)
+			return;
+
 		switch (context.phase)
 		{
 			case InputActionPhase.Performed:
