@@ -12,4 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67da3fc384d3d974bb14eb334ab582aa, type: 3}
   m_Name: New Penguins Data
   m_EditorClassIdentifier: 
-  dataList: []
+  dataList:
+  - walkSpeed: 0
+    runSpeed: 0
+    minAppealTime: 0
+    maxAppealTime: 0
+    swimSpeed: 0
+    minIdleTime: 0
+    maxIdleTime: 0
+  rangeList: []

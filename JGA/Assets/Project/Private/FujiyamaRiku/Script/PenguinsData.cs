@@ -17,6 +17,7 @@ using UnityEngine;
 public class PenguinsData : ScriptableObject
 {
     public List<PenguinData> dataList;
+    public List<PenguinRange> rangeList;
 
     [Serializable]
     public class PenguinData
@@ -33,6 +34,13 @@ public class PenguinsData : ScriptableObject
         public float minIdleTime;
         public float maxIdleTime;
     }
-    
+    [Serializable]
+    public class PenguinRange
+    {
+        public Vector3 firstPos;
+        public Vector3 secondPos;
+        public Vector3 thirdPos;
+        public Vector3 endPos;
+    }
 
 }

@@ -1,10 +1,9 @@
 fileFormatVersion: 2
-guid: 7ed4fc88a66b12749ac21c82e7237392
+guid: df180bbb3bdb1024496ea1dcfad3016c
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences:
-  - penguinsData: {fileID: 11400000, guid: 3d81b8c286d701f4b8fadcef04fe4c77, type: 2}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
