@@ -9,6 +9,7 @@
 // 2023/03/03	スクリプト作成
 // 2023/03/05	(小楠)列挙型の定義を変更 現在の感情を取得する関数を追加
 // 2023/03/13	(小楠)ペンギンエアリア着いた時の感情を追加
+// 2023/03/21	(小楠)エフェクト入れた
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ public class EmosionUI : MonoBehaviour
     private EEmotion currentEmotion = EEmotion.NONE;    //現在の感情
     private TextMesh ui;
     private float fTimer;       //点滅用タイマー
-
+    private GameObject effect = null;
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
 	/// </summary>
@@ -60,6 +61,7 @@ public class EmosionUI : MonoBehaviour
 	/// </summary>
 	void Update()
 	{
+        effect.transform.position = gameObject.transform.position;
         if (!ui) return;
         if (ui.text == "") return;
 
@@ -85,24 +87,21 @@ public class EmosionUI : MonoBehaviour
         if (!ui || currentEmotion == emotion) return;
 
         currentEmotion = emotion;
+        if(effect)Destroy(effect);
 
         switch (currentEmotion)
         {
             case EEmotion.QUESTION:
-                ui.text = "?";
-                ui.color = Color.white;
+                effect = EffectManager.Create(transform.position, 4);
                 break;
             case EEmotion.ATTENSION_LOW:
-                ui.text = "!";
-                ui.color = Color.red;
+                effect = EffectManager.Create(transform.position, 1);
                 break;
             case EEmotion.ATTENSION_MIDDLE:
-                ui.text = "!!";
-                ui.color = Color.red;
+                effect = EffectManager.Create(transform.position, 2);
                 break;
             case EEmotion.ATTENSION_HIGH:
-                ui.text = "!!!";
-                ui.color = Color.red;
+                effect = EffectManager.Create(transform.position, 3);
                 break;
             case EEmotion.HIGH_TENSION:
                 ui.text = "\\ /";
