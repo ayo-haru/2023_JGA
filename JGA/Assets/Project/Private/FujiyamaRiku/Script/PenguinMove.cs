@@ -7,7 +7,8 @@
 // 
 // [Date]
 // 2023/03/15	スクリプト作成
-// 2023/03/16			動きのルーチン作成
+// 2023/03/16	動きのルーチン作成
+//
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -26,11 +27,12 @@ public class PenguinMove : MonoBehaviour
 	}
 
 	private MoveType currentMove;
-	private MoveType moveType;
-	private bool moveFlg;
-	private Transform[] cageObj;
-	private Vector3[] cageArea;
+	private MoveType[] moveType;
+	private bool[] moveFlg;
 	private float dir;
+
+	private PenguinsData penguinsData;
+	private float[] moveTime;
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -38,27 +40,23 @@ public class PenguinMove : MonoBehaviour
 	void Awake()
 	{
         currentMove	= MoveType.IDLE;
-		moveType    = MoveType.IDLE;
-		moveFlg = false;
+		moveType    = new MoveType[2];
+		moveFlg = new bool[2];
 		dir = 1.0f;
+		moveTime = new float[2];
+
+		//for (int i = 0; i < cageObj.Length; i++)
+		//{
+		//	cageObj[i] = cageParent.transform.GetChild(i).transform;
+		//}
+
     }
 
-	/// <summary>
-	/// 最初のフレーム更新の前に呼び出される
-	/// </summary>
-	void Start()
+    /// <summary>
+    /// 最初のフレーム更新の前に呼び出される
+    /// </summary>
+    void Start()
 	{
-		var cageParent = GameObject.Find("PenguinCage01");
-		cageObj = new Transform[cageParent.transform.childCount];
-        cageArea = new Vector3[cageParent.transform.childCount];
-
-        for (int i = 0; i < cageObj.Length;i++)
-		{
-			cageObj[i] = cageParent.transform.GetChild(i).transform;
-		}
-		cageArea[0] = cageObj[0].position;
-        cageArea[1] = cageObj[1].position;
-
     }
 
 	/// <summary>
@@ -66,29 +64,33 @@ public class PenguinMove : MonoBehaviour
 	/// </summary>
 	void FixedUpdate()
 	{
-		if(!moveFlg)
+		for (int i = 0; i < moveType.Length; i++)
 		{
-			moveType = (MoveType)Random.Range((int)MoveType.IDLE, (int)MoveType.MAX_MOVE);
-			moveType = MoveType.WALK;
-			moveFlg = true;
-        }
-		switch (moveType) 
-		{
-			case MoveType.IDLE:
-			break;
+			if (!moveFlg[i])
+			{
+				moveType[i] = (MoveType)Random.Range((int)MoveType.IDLE, (int)MoveType.MAX_MOVE);
+                moveType[i] = MoveType.WALK;
+				moveFlg[i] = true;
+			}
+			switch (moveType[i])
+			{
+				case MoveType.IDLE:
+					break;
 
-			case MoveType.WALK:
-				Walk();
-            break;
+				case MoveType.WALK:
+					currentMove = MoveType.WALK;
+					Walk();
+					break;
 
-			case MoveType.RUN:
-            break;
+				case MoveType.RUN:
+					break;
 
-			case MoveType.APPEAL:
-            break;
+				case MoveType.APPEAL:
+					break;
 
-			case MoveType.SWIM:
-            break;
+				case MoveType.SWIM:
+					break;
+			}
 		}
 		Debug.Log(moveType);
 	}
@@ -106,14 +108,6 @@ public class PenguinMove : MonoBehaviour
 		var move = this.transform.position.x + dir * 0.05f;
 		this.transform.position = new Vector3(move, this.transform.position.y, this.transform.position.z);
 
-        if (cageArea[0].x <= this.transform.position.x)
-		{
-			dir = -1.0f;
-        }
-        if (cageArea[1].x >= this.transform.position.x)
-        {
-            dir = 1.0f;
-        }
     }
 
 }
