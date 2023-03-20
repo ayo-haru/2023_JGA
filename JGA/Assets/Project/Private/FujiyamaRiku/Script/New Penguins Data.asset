@@ -13,11 +13,29 @@ MonoBehaviour:
   m_Name: New Penguins Data
   m_EditorClassIdentifier: 
   dataList:
-  - walkSpeed: 0
-    runSpeed: 0
+  - walkSpeed: 3
+    runSpeed: 5
     minAppealTime: 0
     maxAppealTime: 0
     swimSpeed: 0
-    minIdleTime: 0
-    maxIdleTime: 0
-  rangeList: []
+    minIdleTime: 1
+    maxIdleTime: 5
+  - walkSpeed: 2
+    runSpeed: 4
+    minAppealTime: 0
+    maxAppealTime: 0
+    swimSpeed: 0
+    minIdleTime: 2
+    maxIdleTime: 4
+  rangeList:
+  - {x: -112.94, y: 0.1, z: -56.05}
+  - {x: -118.42, y: 0.1, z: -51.57}
+  - {x: -111.6, y: 0.1, z: -41.94}
+  - {x: -131.25, y: 0.1, z: -45.16}
+  - {x: -118.68, y: 0.1, z: -57.39}
+  - {x: -109.39, y: 0.1, z: -48.17}
+  updownList:
+  - builtStone: {x: 0, y: 0, z: 0}
+    downStone: {x: 0, y: 0, z: 0}
+  - builtStone: {x: 0, y: 0, z: 0}
+    downStone: {x: 0, y: 0, z: 0}
