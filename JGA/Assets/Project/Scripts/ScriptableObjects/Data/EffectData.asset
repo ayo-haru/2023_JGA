@@ -13,4 +13,8 @@ MonoBehaviour:
   m_Name: EffectData
   m_EditorClassIdentifier: 
   list:
-  - {fileID: 3772789002969594328, guid: f621483610ad654498c86b6594644fdc, type: 3}
+  - {fileID: 1869466885558260292, guid: 097b8b15bf5154a498039712e35bbe68, type: 3}
+  - {fileID: 8813067386382212495, guid: bba56d46ff304b94991b0f09322eb83f, type: 3}
+  - {fileID: 7208542055734142934, guid: 7e47cb48ad849164287f935e8a48b97d, type: 3}
+  - {fileID: 8261022635052519044, guid: 4471c1e697354ef4cadab5bac7819496, type: 3}
+  - {fileID: 1041615329134232419, guid: ab479a09d9c6de148990129714f15a66, type: 3}

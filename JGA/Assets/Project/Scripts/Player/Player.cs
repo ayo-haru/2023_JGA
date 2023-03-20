@@ -500,6 +500,7 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void OnCall()
 	{
+		EffectManager.Create(transform.position + new Vector3(0, 2, 0), 0);
 		SoundManager.Play(audioSource, seCall);
 	}
 

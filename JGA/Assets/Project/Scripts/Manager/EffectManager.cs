@@ -53,17 +53,11 @@ public class EffectManager : MonoBehaviour
 		if (!quaternion.HasValue)
 			quaternion = Quaternion.identity;
 
-		if (ID < 0)
-		{
-			Debug.LogError($"<color=red>無効な値です。</color>({ID})\n");
-			return null;
-		}
-
 		var list = MySceneManager.Effect.effectDatas.list;
 
-		if (list.Length >= ID)
+		if (list.Length >= ID && ID < 0)
 		{
-			Debug.LogError($"<color=red>無効な値です。</color>({ID} >= list.Length)\n");
+			Debug.LogError($"<color=red>無効な値です。</color>(ID:{ID})\n");
 			return null;
 		}
 

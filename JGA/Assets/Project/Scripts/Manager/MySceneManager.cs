@@ -53,18 +53,19 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 		"ProtoType"
 	};
 
-    //----- 飼育員、客のルートに使用 -----
-    public enum eRoot {
-        NONE = 0,
-        PENGUIN,
-        BEAR,
-        ELEPHANT,
-        LION,
-        POLARBEAR,
-        BIRD,
+	//----- 飼育員、客のルートに使用 -----
+	public enum eRoot
+	{
+		NONE = 0,
+		PENGUIN,
+		BEAR,
+		ELEPHANT,
+		LION,
+		POLARBEAR,
+		BIRD,
 
-        OTHER
-    }
+		OTHER
+	}
 
 
 
@@ -72,8 +73,8 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 	private void Awake()
 	{
 		// FPSを60に固定
-		Application.targetFrameRate = 60;     
-		
+		Application.targetFrameRate = 60;
+
 		//----- ScriptableObjectの登録したデータの読み込み -----
 		//---オブジェクト
 		GameData.characterDatas = AddressableLoader<PrefabContainer>.Load("CharacterData");
@@ -82,7 +83,7 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 		Sound.BGMDatas = AddressableLoader<SoundData>.Load("BGMData");
 		Sound.SEDatas = AddressableLoader<SoundData>.Load("SEData");
 		//---エフェクト
-		//Effect.effectDatas = AddressableLoader<EffectData>.Load("EffectData");
+		Effect.effectDatas = AddressableLoader<EffectData>.Load("EffectData");
 		//---データ
 		GameData.zooKeeperData = AddressableLoader<ZooKeeperData>.Load("ZooKeeperData");
 
