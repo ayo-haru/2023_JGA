@@ -17,11 +17,13 @@ using UnityEngine;
 public class PenguinsData : ScriptableObject
 {
     public List<PenguinData> dataList;
-    public List<PenguinRange> rangeList;
+    public List<Vector3> rangeList;
+    public List<PenguinUpDownData> updownList;
 
     [Serializable]
     public class PenguinData
     {
+        [Header("歩く速度 m/s")]
         public float walkSpeed;
 
         public float runSpeed;
@@ -35,12 +37,9 @@ public class PenguinsData : ScriptableObject
         public float maxIdleTime;
     }
     [Serializable]
-    public class PenguinRange
+    public class PenguinUpDownData
     {
-        public Vector3 firstPos;
-        public Vector3 secondPos;
-        public Vector3 thirdPos;
-        public Vector3 endPos;
+        public Vector3 builtStone;
+        public Vector3 downStone;
     }
-
 }
