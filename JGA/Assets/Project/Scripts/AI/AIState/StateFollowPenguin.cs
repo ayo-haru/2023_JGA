@@ -149,44 +149,14 @@ public class StateFollowPenguin : AIState
 
     public override bool ErrorCheck()
     {
-        bool bError = true;
+        if (!penguin)Debug.LogError("プレイヤーが取得できてません");
+        if (!target)Debug.LogError("プレイヤーのトランスフォームが取得できてません");
+        if (!player)Debug.LogError("プレイヤー用スクリプトが取得できてません");
+        if (!agent)Debug.LogError("ナビメッシュエージェントが取得できてません");
+        if (!ui)Debug.LogError("感情UIが設定されていません");
+        if (!data)Debug.LogError("ゲスト用データがが取得できてません");
+        if (!animator)Debug.LogError("アニメータが取得できてません");
 
-        if (!penguin)
-        {
-            Debug.LogError("プレイヤーが取得できてません");
-            bError = false;
-        }
-        if (!target)
-        {
-            Debug.LogError("プレイヤーのトランスフォームが取得できてません");
-            bError = false;
-        }
-        if (!player)
-        {
-            Debug.LogError("プレイヤー用スクリプトが取得できてません");
-            bError = false;
-        }
-        if (!agent)
-        {
-            Debug.LogError("ナビメッシュエージェントが取得できてません");
-            bError = false;
-        }
-        if (!ui)
-        {
-            Debug.LogError("感情UIが設定されていません");
-            bError = false;
-        }
-        if (!data)
-        {
-            Debug.LogError("ゲスト用データがが取得できてません");
-            bError = false;
-        }
-        if (!animator)
-        {
-            Debug.LogError("アニメータが取得できてません");
-            bError = false;
-        }
-
-        return bError;
+        return penguin && target && player && agent && ui && data && animator;
     }
 }

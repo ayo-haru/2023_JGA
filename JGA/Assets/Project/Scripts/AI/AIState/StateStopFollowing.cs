@@ -1,32 +1,31 @@
 //=============================================================================
-// @File	: [AITransitionAttensionAction.cs]
-// @Brief	: 遷移条件 専用アクションをしたか
+// @File	: [StateStopFollowing.cs]
+// @Brief	: 追従やめる時の処理　立ち止まって？出す
 // @Author	: Ogusu Yuuko
-// @Editer	: Ogusu Yuuko
+// @Editer	: 
 // @Detail	: 
 // 
 // [Date]
-// 2023/03/05	スクリプト作成
-// 2023/03/06	(小楠)コントローラのエラー直した
-// 2023/03/12	(小楠)プレイヤーからアピールフラグ取得できるようになった
+// 2023/03/18	スクリプト作成
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TransitionAttensionAction : AITransition
+public class StateStopFollowing : AIState
 {
-    //プレイヤー用のスクリプト
-    private Player player;
-
+    //アニメーター
+    private Animator animator;
+    //感情UI
+    [SerializeField] private EmosionUI ui;
 #if false
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
     /// </summary>
     void Awake()
 	{
-
-    }
+		
+	}
 
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
@@ -52,23 +51,35 @@ public class TransitionAttensionAction : AITransition
 		
 	}
 #endif
-    public override void InitTransition()
+    public override void InitState()
     {
-        if (!player) player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        //コンポーネント取得
+        if (!animator) animator = GetComponent<Animator>();
+
+        if (!ErrorCheck()) return;
+
+        //アニメーション初期化
+        animator.SetBool("isWalk", false);
+
+        //ui設定
+        ui.SetEmotion(EEmotion.QUESTION);
     }
 
-    public override bool IsTransition()
+    public override void UpdateState()
     {
-        //エラーチェック
-        if (!ErrorCheck()) return false;
+        //特になし
+    }
 
-        //プレイヤーが専用アクションをしたかフラグを取得して返す
-        return player.IsAppeal;
+    public override void FinState()
+    {
+        if (ui) ui.SetEmotion(EEmotion.NONE);
     }
 
     public override bool ErrorCheck()
     {
-        if (!player)Debug.LogError("プレイヤー用スクリプトが取得できていません");
-        return player;
+        if (!animator)Debug.LogError("アニメーターが取得されていません");
+        if (!ui)Debug.LogError("感情UIが設定されていません");
+
+        return animator && ui;
     }
 }

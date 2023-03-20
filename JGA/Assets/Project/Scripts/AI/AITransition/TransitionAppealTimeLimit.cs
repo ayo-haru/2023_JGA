@@ -1,27 +1,29 @@
 //=============================================================================
-// @File	: [TransitionInRangePlayer.cs]
-// @Brief	: 遷移条件　プレイヤーが範囲内にいるか
+// @File	: [TransitionAppealTimeLimit.cs]
+// @Brief	: 遷移条件　感情が最低になってから一定時間アピールがなかったら
 // @Author	: Ogusu Yuuko
 // @Editer	: 
 // @Detail	: 
 // 
 // [Date]
-// 2023/03/05	スクリプト作成
-// 2023/03/06	スクリプト名変えた エラーチェック追加
+// 2023/03/18	スクリプト作成
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TransitionInRangePlayer : AITransition
+public class TransitionAppealTimeLimit : AITransition
 {
-    //お客さん用データ
-    private GuestData data;
-    //遷移条件反転用フラグ
-    [SerializeField,Tooltip("プレイヤーが範囲外に出たら遷移したい場合はチェックを入れてください")] private bool inv = false;
-    //プレイヤーのトランスフォーム
-    private Transform target;
-
+    //制限時間
+    [SerializeField] private float timeLimit = 1.0f;
+    //時間計測用
+    private float fTimer = 0.0f;
+    //反転用フラグ
+    [SerializeField, Tooltip("一定時間アピールしていたら遷移したいときはチェック入れてください")] bool inv = false;
+    //プレイヤー用スクリプト
+    private Player player;
+    //感情ui
+    [SerializeField]private EmosionUI ui;
 #if false
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -55,25 +57,29 @@ public class TransitionInRangePlayer : AITransition
 		
 	}
 #endif
+
     public override void InitTransition()
     {
-        if (!data) data = GetComponent<AIManager>().GetGuestData();
-        if (!target) target = GameObject.FindWithTag("Player").GetComponent<Transform>();
+        if (!player) player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        fTimer = 0.0f;
     }
 
     public override bool IsTransition()
     {
-        //エラーチェック
         if (!ErrorCheck()) return false;
 
-        return (Vector3.Distance(gameObject.transform.position, target.position) <= data.reactionArea) != inv;
+        //タイマーの更新
+        fTimer = (player.IsAppeal == inv && (ui.GetEmotion() == (inv ? EEmotion.ATTENSION_HIGH : EEmotion.ATTENSION_LOW))) ? fTimer + Time.deltaTime : 0.0f;
+
+        return fTimer >= timeLimit;
+
     }
 
     public override bool ErrorCheck()
     {
-        if (!target)Debug.LogError("プレイヤーのトランスフォームが取得されていません");
-        if (!data)Debug.LogError("ゲスト用データが取得されていません");
+        if (!player)Debug.LogError("プレイヤーのスクリプトが取得されていません");
+        if (!ui) Debug.LogError("感情UIが設定されていません");
 
-        return target && data;
+        return player && ui;
     }
 }

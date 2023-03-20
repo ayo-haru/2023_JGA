@@ -20,7 +20,7 @@ public enum EAIState
     GUEST_ATTENSION_PENGUIN,        //客　ペンギンに注目する
     GUEST_FOLLOW_PENGUIN,           //客　ペンギンについていく
     GUEST_STAY_PENGUIN_AREA,        //客　ペンギンブースに着いた
-    GUEST_COOL_DOWN,                //客　ペンギンに飽きかけてる
+    GUEST_STOP_FOLLOW,              //客　追従やめる
 
     MAX_AI_STATE,
 }

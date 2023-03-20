@@ -12,6 +12,7 @@
 // 2023/03/08	(小楠）アニメーション追加。ターゲットリストが0の時のエラー直した
 // 2023/03/10	(小楠）追跡範囲の変更。目的地の方向くようにした
 // 2023/03/11	(小楠）目的地との距離を調整
+// 2023/03/18	(小楠）動物の方向くようにした
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -22,6 +23,8 @@ public class StateDefaultRootWalk : AIState
 {
     //目的地のリスト
     [SerializeField] private List<Transform> targetList;
+    //動物のTransform
+    private List<Transform> animals;
     //現在向かっている目的地
     private int targetNum = 0;
     //待機時間カウント用
@@ -70,6 +73,7 @@ public class StateDefaultRootWalk : AIState
         if (!agent) agent = GetComponent<NavMeshAgent>();
         if (!data) data = GetComponent<AIManager>().GetGuestData();
         if (!animator) animator = GetComponent<Animator>();
+        GetAnimalsTransrom();
 
         //エラーチェック
         if (!ErrorCheck()) return;
@@ -108,9 +112,8 @@ public class StateDefaultRootWalk : AIState
                 ChangeTarget();
             }
 
-            //目的地の方を向く
-            //できれば、動物の方を向くようにしたい
-            Quaternion rot = Quaternion.LookRotation(targetList[targetNum].position - transform.position);
+            //動物の方を向く
+            Quaternion rot = Quaternion.LookRotation(((!animals[targetNum]) ? targetList[targetNum].position : animals[targetNum].position) - transform.position);
             transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime);
 
         }
@@ -123,28 +126,12 @@ public class StateDefaultRootWalk : AIState
 
     public override bool ErrorCheck()
     {
-        bool bError = true;
-        if((targetList == null) ? true : targetList.Count <= 0)
-        {
-            Debug.LogError("目的地のリストがありません");
-            bError = false;
-        }
-        if (!agent)
-        {
-            Debug.LogError("ナビメッシュエージェントが取得されていません");
-            bError = false;
-        }
-        if (!data)
-        {
-            Debug.LogError("ゲスト用データが取得されていません");
-            bError = false;
-        }
-        if (!animator)
-        {
-            Debug.LogError("アニメータが取得されていません");
-            bError = false;
-        }
-        return bError;
+        if((targetList == null) ? true : targetList.Count <= 0)Debug.LogError("目的地のリストがありません");
+        if (!agent)Debug.LogError("ナビメッシュエージェントが取得されていません");
+        if (!data)Debug.LogError("ゲスト用データが取得されていません");
+        if (!animator)Debug.LogError("アニメータが取得されていません");
+
+        return ((targetList == null) ? false : targetList.Count > 0) && agent && data && animator;
     }
 
     /// <summary>
@@ -159,5 +146,26 @@ public class StateDefaultRootWalk : AIState
         agent.SetDestination(targetList[targetNum].position);
         fTimer = 0.0f;
         animator.SetBool("isWalk", true);
+    }
+    /// <summary>
+    /// 動物の位置を取得
+    /// </summary>
+    public void GetAnimalsTransrom()
+    {
+        if (animals != null) return;
+        animals = new List<Transform>();
+
+        for(int i = 0; i < targetList.Count; ++i)
+        {
+            animals.Add(null);
+            //動物の名前から動物の親オブジェクトを取得
+            int index = targetList[targetNum].name.IndexOf("CagePos");
+            if (index < 0) continue;
+            GameObject obj = GameObject.Find(targetList[i].name.Substring(0, index));
+            if ((!obj) ? true : obj.transform.childCount <= 0) continue;
+
+            //子オブジェクトの中からランダムで1つ動物をanimalsに格納
+            animals[i] = obj.transform.GetChild(Random.Range(0,obj.transform.childCount));
+        }
     }
 }

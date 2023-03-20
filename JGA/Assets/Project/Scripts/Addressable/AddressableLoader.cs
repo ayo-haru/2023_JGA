@@ -28,6 +28,10 @@ public class AddressableLoader<T> : MonoBehaviour
         // WaitForCompletionは読み込みが終わるまで待ってくれる
         var handle = Addressables.LoadAssetAsync<T>(_assetPath).WaitForCompletion();
 
+        if(handle == null) {
+            Debug.LogError("<color=red>「" + _assetPath + "」というアドレスは登録されていません。(AddressableLoader.cs)</color>");
+        }
+
         return handle;
     }
 }

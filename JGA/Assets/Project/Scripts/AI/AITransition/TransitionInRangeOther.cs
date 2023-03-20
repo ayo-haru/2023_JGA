@@ -68,19 +68,9 @@ public class TransitionInRangeOther : AITransition
 
     public override bool ErrorCheck()
     {
-        bool bError = true;
+        if (!data)Debug.LogError("ゲスト用データが取得されていません");
+        if (!target)Debug.LogError("目的地のトランストームが設定されていません");
 
-        if (!data)
-        {
-            Debug.LogError("ゲスト用データが取得されていません");
-            bError = false;
-        }
-        if (!target)
-        {
-            Debug.LogError("目的地のトランストームが設定されていません");
-            bError = false;
-        }
-
-        return bError;
+        return data && target;
     }
 }

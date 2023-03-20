@@ -71,17 +71,9 @@ public class TransitionInRangeDestination : AITransition
 
     public override bool ErrorCheck()
     {
-        bool bError = true;
-        if (!data)
-        {
-            Debug.LogError("ゲスト用データが取得されていません");
-            bError = false;
-        }
-        if (!agent)
-        {
-            Debug.LogError("ナビメッシュエージェントが取得されていません");
-            bError = false;
-        }
-        return bError;
+        if (!data)Debug.LogError("ゲスト用データが取得されていません");
+        if (!agent)Debug.LogError("ナビメッシュエージェントが取得されていません");
+
+        return data && agent;
     }
 }

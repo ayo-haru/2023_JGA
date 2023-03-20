@@ -1,6 +1,6 @@
 //=============================================================================
 // @File	: [StateStayArea.cs]
-// @Brief	: 指定エリアで待機
+// @Brief	: 指定エリアで待機　　ペンギンエリア以外は使わないでね
 // @Author	: Ogusu Yuuko
 // @Editer	: Ogusu Yuuko
 // @Detail	: 
@@ -11,6 +11,8 @@
 // 2023/03/08	(小楠)アニメーションの制御追加
 // 2023/03/11	(小楠)目的地の方を向くようにした、目的地との距離を調整
 // 2023/03/11	(小楠）navmeshagentの目的地をちょっとずらして、お客さんをばらけるようにした
+// 2023/03/18	(小楠）動物の方向くようにした
+// 2023/03/19	(小楠）ペンギンエリアに着いたときに客の人数のカウントを追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -23,6 +25,8 @@ public class StateStayArea : AIState
     private NavMeshAgent agent;
     //待機位置のTransform
     [SerializeField] Transform target;
+    //動物のTransform
+    private Transform animal;
     //お客さん用データ
     private GuestData data;
     //目的地に着いたか
@@ -70,7 +74,7 @@ public class StateStayArea : AIState
         if (!agent) agent = GetComponent<NavMeshAgent>();
         if (!data) data = GetComponent<AIManager>().GetGuestData();
         if (!animator) animator = GetComponent<Animator>();
-
+        GetAnimalTransrom();
         //エラーチェック
         if (!ErrorCheck()) return;
 
@@ -95,9 +99,8 @@ public class StateStayArea : AIState
 
         if (isStay)
         {
-            //目的地の方を向く
-            //できれば、動物の方を向くようにしたい
-            Quaternion rot = Quaternion.LookRotation(target.position - transform.position);
+            //動物の方を向く
+            Quaternion rot = Quaternion.LookRotation(((!animal) ? target.position : animal.position) - transform.position);
             transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime);
             return;
         }
@@ -112,6 +115,13 @@ public class StateStayArea : AIState
             ui.SetEmotion(EEmotion.HIGH_TENSION);
             isStay = true;
 
+            //ペンギンブースに着いた客の人数を追加
+            GuestNumUI guestNumUI = GameObject.Find("GuestNumUI").GetComponent<GuestNumUI>();
+            if (guestNumUI){
+                guestNumUI.Add();
+            }else{
+                Debug.LogError("客人数表示用UIが取得できませんでした");
+            }
         }
     }
 
@@ -123,32 +133,24 @@ public class StateStayArea : AIState
 
     public override bool ErrorCheck()
     {
-        bool bError = true;
-        if (!agent)
-        {
-            Debug.LogError("ナビメッシュエージェントが取得されていません");
-            bError = false;
-        }
-        if (!target)
-        {
-            Debug.LogError("待機位置が設定されていません");
-            bError = false;
-        }
-        if (!data)
-        {
-            Debug.LogError("ゲスト用データが取得されていません");
-            bError = false;
-        }
-        if (!animator)
-        {
-            Debug.LogError("アニメーターが取得されていません");
-            bError = false;
-        }
-        if (!ui)
-        {
-            Debug.LogError("感情UIが設定されていません");
-            bError = false;
-        }
-        return bError;
+        if (!agent)Debug.LogError("ナビメッシュエージェントが取得されていません");
+        if (!target)Debug.LogError("待機位置が設定されていません");
+        if (!data)Debug.LogError("ゲスト用データが取得されていません");
+        if (!animator)Debug.LogError("アニメーターが取得されていません");
+        if (!ui) Debug.LogError("感情UIが設定されていません");
+
+        return agent && target && data && animator && ui;
+    }
+    public void GetAnimalTransrom()
+    {
+        if (animal != null) return;
+
+        //動物の名前から動物の親オブジェクトを取得
+        int index = target.name.IndexOf("CagePos");
+        if (index < 0) return;
+        GameObject obj = GameObject.Find(target.name.Substring(0, index));
+        if ((!obj) ? true : obj.transform.childCount <= 0) return;
+        //子オブジェクトの中からランダムで1つ動物をanimalsに格納
+        animal = obj.transform.GetChild(Random.Range(0, obj.transform.childCount));   
     }
 }

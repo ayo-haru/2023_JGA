@@ -2,7 +2,7 @@
 // @File	: [ZooKeeperAI.cs]
 // @Brief	: 飼育員の仮の処理
 // @Author	: MAKIYA MIO
-// @Editer	: 
+// @Editer	: Ichida Mai
 // @Detail	: https://yttm-work.jp/unity/unity_0036.html
 //            https://www.sejuku.net/blog/83620
 //            https://www.matatabi-ux.com/entry/2021/03/18/100000 
@@ -16,6 +16,7 @@
 // 2023/03/02   ギミックオブジェクトとの当たり判定処理の作成
 // 2023/03/08   ギアニメーション追加、Move()に記述(吉原)
 // 2023/03/10   Rayで追従する処理追加
+// 2023/03/19   飼育員をプログラムで配置するためにインスペクターで値決めてたのをScriptableObjectで決めるように変えた(伊地田)
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -25,24 +26,28 @@ using UnityEditor;
 
 public class ZooKeeperAI : MonoBehaviour
 {
-    private enum Status
+    public enum Status
     {
         returnObj,      // オブジェクトを元に戻す
         notReturnObj,   // オブジェクトを元に戻さない
     }
-    [SerializeField] Status status; // ステータスをプルダウン化
 
     [SerializeField] private Animator animator;
-    [SerializeField] private List<Transform> rootList;          // 飼育員の巡回ルートのリスト
+
     private int rootNum = 0;
-    [SerializeField, Range(1.1f, 50.0f)] private float speed;           // 飼育員のスピード
-    [SerializeField, Range(1.1f, 2.0f)] private float chaseSpeed;       // 飼育員の追いかけるスピード
-    [SerializeField, Range(0.0f, 50.0f)] private float search;          // 飼育員の索敵範囲
-    [SerializeField, Range(1.0f, 180.0f)] private float searchAngle;    // 飼育員の索敵範囲の角度
-    [SerializeField, Range(1.0f, 50.0f)] private float searchDistance;  // 飼育員の索敵範囲の距離
+
+    /*
+     * インスペクターで設定してた値はScriptableObjectで設定できるようにしました
+     * ZooKeeperData.csに設定の項目はあるよ。
+     * Assets/Project/Script/AI/ZooKeeperData　にデータのScriptableObjectはあるよ。
+     * 生成は3/19現在StageSceneManager.csのStartでやってます！
+     */
+    private ZooKeeperData.Data data;    // 飼育員用の外部で設定できるパラメーターたち
+
     [SerializeField] private bool chaseNow = false;    // ペンギンを追いかけているフラグ
     private SphereCollider sphereCollider;
     //private float angle = 45.0f;
+
 
     private Transform playerPos;
     private NavMeshAgent navMesh;
@@ -55,15 +60,16 @@ public class ZooKeeperAI : MonoBehaviour
     private int resetNum = -1;
     private int gimmickNum = -1;
 
-    [SerializeField] GameObject ReSpawnZone;    // リスポーンする位置
-
     /// <summary>
     /// Inspectorから自身の値が変更されたときに自動で呼ばれる
     /// </summary>
     private void OnValidate()
     {
         sphereCollider = this.GetComponent<SphereCollider>();
-        sphereCollider.radius = search; // colliderのradiusを変更する
+        /*
+         * 最初からシーン上に配置しないので一回コメントアウトさせていただいた（伊地田）
+         */
+        //sphereCollider.radius = data.search; // colliderのradiusを変更する
     }
 
     /// <summary>
@@ -71,9 +77,6 @@ public class ZooKeeperAI : MonoBehaviour
     /// </summary>
     void Awake()
     {
-        // インスペクターで設定したリスポーン位置に初期配置する
-        this.gameObject.transform.position = ReSpawnZone.transform.position;
-
         if (sphereCollider == null)
         {
             sphereCollider = this.GetComponent<SphereCollider>();
@@ -89,7 +92,7 @@ public class ZooKeeperAI : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         playerPos = GameObject.FindWithTag("Player").GetComponent<Transform>();
-        navMesh.speed = speed;
+        navMesh.speed = data.speed;
         //sphereCollider.radius = search; // colliderのradiusを変更する
         
         // オブジェクトを元に戻す/戻さない
@@ -102,10 +105,10 @@ public class ZooKeeperAI : MonoBehaviour
         //}
 
         // 巡回ルートに要素があるか
-        if (rootList.Count >= 1)
+        if (data.rootTransforms.Count >= 1)
         {
             rootNum = 0;
-            navMesh.SetDestination(rootList[rootNum].position); // 目的地の設定
+            navMesh.SetDestination(data.rootTransforms[rootNum].position); // 目的地の設定
         }
         else
         {
@@ -124,14 +127,14 @@ public class ZooKeeperAI : MonoBehaviour
             //-----------------------------
             // ここで走るアニメーションで動くと思う
             //-----------------------------
-            navMesh.speed = speed * chaseSpeed; // 巡回スピード * 追いかける速さ
+            navMesh.speed = data.speed * data.chaseSpeed; // 巡回スピード * 追いかける速さ
         }
         else
         {
             //-----------------------------
             // ここで歩くアニメーションで動くと思う
             //-----------------------------
-            navMesh.speed = speed;
+            navMesh.speed = data.speed;
         }
         Move();
     }
@@ -158,9 +161,9 @@ public class ZooKeeperAI : MonoBehaviour
         #region ペンギンブース
         if (collision.gameObject.name == "PenguinBooth")
         {
-            if (rootList.Count >= 1)
+            if (data.rootTransforms.Count >= 1)
             {
-                navMesh.SetDestination(rootList[rootNum].position);     // 目的地の再設定
+                navMesh.SetDestination(data.rootTransforms[rootNum].position);     // 目的地の再設定
             }
             else
             {
@@ -181,13 +184,13 @@ public class ZooKeeperAI : MonoBehaviour
             var pos = other.transform.position - transform.position;
             var direction = transform.forward;  // 方向
             float targetAngle = Vector3.Angle(this.transform.forward, pos);
-            Debug.DrawRay(transform.position, pos * searchDistance, Color.red);
+            Debug.DrawRay(transform.position, pos * data.searchDistance, Color.red);
 
             // 視界の角度内に収まっているかどうか
-            if (targetAngle < searchAngle)
+            if (targetAngle < data.searchAngle)
             {
                 // Rayが当たっているか
-                if (Physics.Raycast(transform.position, pos, out rayhit, searchDistance))    // rayの開始地点、rayの向き、当たったオブジェクトの情報を格納、rayの発射距離
+                if (Physics.Raycast(transform.position, pos, out rayhit, data.searchDistance))    // rayの開始地点、rayの向き、当たったオブジェクトの情報を格納、rayの発射距離
                 {
                     // 当たったオブジェクトがペンギンかどうか
                     if(rayhit.collider == other)
@@ -218,9 +221,9 @@ public class ZooKeeperAI : MonoBehaviour
                     }
                     else if (!gimmickFlg)
                     {
-                        if (rootList.Count >= 1)
+                        if (data.rootTransforms.Count >= 1)
                         {
-                            navMesh.SetDestination(rootList[rootNum].position);     // 目的地の再設定
+                            navMesh.SetDestination(data.rootTransforms[rootNum].position);     // 目的地の再設定
                         }
                         else
                         {
@@ -243,9 +246,9 @@ public class ZooKeeperAI : MonoBehaviour
                 }
                 else if(!gimmickFlg)
                 {
-                    if (rootList.Count >= 1)
+                    if (data.rootTransforms.Count >= 1)
                     {
-                        navMesh.SetDestination(rootList[rootNum].position);     // 目的地の再設定
+                        navMesh.SetDestination(data.rootTransforms[rootNum].position);     // 目的地の再設定
                     }
                     else
                     {
@@ -258,7 +261,7 @@ public class ZooKeeperAI : MonoBehaviour
 
         #region ギミックオブジェクト
         // 索敵範囲にギミックオブジェクトが入ったら目的地をオブジェクトに設定
-        if (status == Status.returnObj && other.gameObject.tag == "Interact" && !chaseNow)
+        if (data.status == Status.returnObj && other.gameObject.tag == "Interact" && !chaseNow)
         {
             for (int i = 0; i < gimmickObj.gimmickList.Count; i++)
             {
@@ -269,13 +272,13 @@ public class ZooKeeperAI : MonoBehaviour
                         var posObj = other.transform.position - transform.position;
                         var directionObj = transform.forward;  // 方向
                         float objAngle = Vector3.Angle(this.transform.forward, posObj);
-                        Debug.DrawRay(transform.position, posObj * searchDistance, Color.black);
+                        Debug.DrawRay(transform.position, posObj * data.searchDistance, Color.black);
 
                         // 視界の角度内に収まっているかどうか
-                        if (objAngle < searchAngle)
+                        if (objAngle < data.searchAngle)
                         {
                             // Rayが当たっているか
-                            if (Physics.Raycast(transform.position, posObj, out rayhit, searchDistance))    // rayの開始地点、rayの向き、当たったオブジェクトの情報を格納、rayの発射距離
+                            if (Physics.Raycast(transform.position, posObj, out rayhit, data.searchDistance))    // rayの開始地点、rayの向き、当たったオブジェクトの情報を格納、rayの発射距離
                             {
                                 if (rayhit.collider.tag == "Interact"&& !gimmickFlg)
                                 {
@@ -335,9 +338,9 @@ public class ZooKeeperAI : MonoBehaviour
             }
             else
             {
-                if (rootList.Count >= 1)
+                if (data.rootTransforms.Count >= 1)
                 {
-                    navMesh.SetDestination(rootList[rootNum].position);     // 目的地の再設定
+                    navMesh.SetDestination(data.rootTransforms[rootNum].position);     // 目的地の再設定
                 }
                 else
                 {
@@ -392,11 +395,11 @@ public class ZooKeeperAI : MonoBehaviour
                     catchFlg = false;
                     gimmickObj.bReset[gimmickNum] = true;
                     Bring();
-                    navMesh.SetDestination(rootList[rootNum].position); // 目的地の再設定
+                    navMesh.SetDestination(data.rootTransforms[rootNum].position); // 目的地の再設定
                 }
             }
         }
-        else if (rootList.Count >= 1 && !catchFlg)
+        else if (data.rootTransforms.Count >= 1 && !catchFlg)
         {
             // プロトタイプ用-------------------
             // 歩行アニメーション再生
@@ -406,7 +409,7 @@ public class ZooKeeperAI : MonoBehaviour
                  && !navMesh.pathPending)            // 経路計算中かどうか（計算中：true　計算完了：false）
             {
                 // リストの順番に巡回する
-                if (rootList.Count - 1 > rootNum)
+                if (data.rootTransforms.Count - 1 > rootNum)
                 {
                     rootNum += 1;
                 }
@@ -414,7 +417,7 @@ public class ZooKeeperAI : MonoBehaviour
                 {
                     rootNum = 0;
                 }
-                navMesh.SetDestination(rootList[rootNum].position); // 目的地の再設定
+                navMesh.SetDestination(data.rootTransforms[rootNum].position); // 目的地の再設定
             }
         }
         else
@@ -470,7 +473,7 @@ public class ZooKeeperAI : MonoBehaviour
     {
         Handles.color = new Color(0, 0, 1, 0.3f);
         Handles.DrawSolidArc(transform.position, Vector3.up, 
-            Quaternion.Euler(0f, -searchAngle, 0f) * transform.forward, searchAngle * 2.0f, searchDistance);
+            Quaternion.Euler(0f, -data.searchAngle, 0f) * transform.forward, data.searchAngle * 2.0f, data.searchDistance);
     }
 
     /// <summary>
@@ -478,7 +481,14 @@ public class ZooKeeperAI : MonoBehaviour
     /// </summary>
     private void ReStart() {
         // インスペクターで設定したリスポーン位置に再配置する
-        this.gameObject.transform.position = ReSpawnZone.transform.position;
+        this.gameObject.transform.position = data.respawnTF.position;
     }
 
+    /// <summary>
+    /// 外部で設定したデータを流し込む
+    /// </summary>
+    /// <param name="_data"></param>
+    public void SetData(ZooKeeperData.Data _data) {
+        data = _data;
+    }
 }

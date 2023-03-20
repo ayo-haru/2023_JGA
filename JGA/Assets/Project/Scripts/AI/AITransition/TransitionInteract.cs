@@ -80,24 +80,10 @@ public class TransitionInteract : AITransition
 
     public override bool ErrorCheck()
     {
-        bool bError = true;
-        if (!playerTransform)
-        {
-            Debug.LogError("プレイヤーのトランスフォームが取得されていません");
-            bError = false;
-        }
-        if (!data)
-        {
-            Debug.LogError("ゲスト用データが取得されていません");
-            bError = false;
-        }
+        if (!playerTransform)Debug.LogError("プレイヤーのトランスフォームが取得されていません");
+        if (!data)Debug.LogError("ゲスト用データが取得されていません");
+        if ((interactObjecs == null) ? true : interactObjecs.Length <= 0)Debug.LogError("インタラクトオブジェクトがありません");
 
-        if ((interactObjecs == null) ? true : interactObjecs.Length <= 0)
-        {
-            Debug.LogError("インタラクトオブジェクトがありません");
-            bError = false;
-        }
-
-        return bError;
+        return playerTransform && data && ((interactObjecs == null) ? false : interactObjecs.Length > 0);
     }
 }

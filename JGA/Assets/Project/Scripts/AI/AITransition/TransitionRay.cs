@@ -101,22 +101,10 @@ public class TransitionRay : AITransition
 
     public override bool ErrorCheck()
     {
-        bool bError = true;
-        if (!eyesPos)
-        {
-            Debug.LogError("目の位置が設定されていません");
-            bError = false;
-        }
-        if (!data)
-        {
-            Debug.LogError("ゲスト用データが取得されていません");
-            bError = false;
-        }
-        if (!playerTransform)
-        {
-            Debug.LogError("プレイヤーのトランスフォームが取得されていません");
-            bError = false;
-        }
-        return bError;
+        if (!eyesPos)Debug.LogError("目の位置が設定されていません");
+        if (!data)Debug.LogError("ゲスト用データが取得されていません");
+        if (!playerTransform)Debug.LogError("プレイヤーのトランスフォームが取得されていません");
+
+        return eyesPos && data && playerTransform;
     }
 }

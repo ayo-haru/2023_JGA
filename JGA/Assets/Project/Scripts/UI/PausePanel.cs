@@ -16,6 +16,12 @@ public class PausePanel : MonoBehaviour
 {
 	[SerializeField]
 	private Button backButton;
+	[SerializeField]
+	private Button OpitonButton;
+	[SerializeField]
+	private Button TitleButton;
+	[SerializeField]
+	private Button ExitButton;
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -28,6 +34,7 @@ public class PausePanel : MonoBehaviour
 
 		// ボタンの処理を登録
 		backButton.onClick.AddListener(Back);
+		TitleButton.onClick.AddListener(ChangeTitle);
 
 		if (gameObject.activeSelf)
 			gameObject.SetActive(false);
@@ -47,5 +54,10 @@ public class PausePanel : MonoBehaviour
 	{
 		Resumed();
 		PauseManager.isPaused = false;
+	}
+
+	private void ChangeTitle()
+	{
+		//SceneChange(MySceneManager.SceneState.SCENE_TITLE);
 	}
 }
