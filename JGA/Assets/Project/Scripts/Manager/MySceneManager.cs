@@ -82,7 +82,7 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 		Sound.BGMDatas = AddressableLoader<SoundData>.Load("BGMData");
 		Sound.SEDatas = AddressableLoader<SoundData>.Load("SEData");
 		//---エフェクト
-		Effect.effectDatas = AddressableLoader<EffectData>.Load("EffectData");
+		//Effect.effectDatas = AddressableLoader<EffectData>.Load("EffectData");
 		//---データ
 		GameData.zooKeeperData = AddressableLoader<ZooKeeperData>.Load("ZooKeeperData");
 

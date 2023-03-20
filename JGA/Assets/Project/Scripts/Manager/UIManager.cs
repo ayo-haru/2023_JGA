@@ -21,12 +21,13 @@ public class UIManager : MonoBehaviour
 
 
 
-	/// <summary>
-	/// 最初のフレーム更新の前に呼び出される
-	/// </summary>
-	void Start()
+    /// <summary>
+    /// 最初のフレーム更新の前に呼び出される
+    /// </summary>
+    void Start()
 	{
         canvas = GameObject.Find("Canvas");
+
 
        // GameObject _fadePanel = PrefabContainerFinder.Find(MySceneManager.GameData.UIDatas, "FadePanel.prefab");
        // fadePanel = Instantiate(_fadePanel);
@@ -39,6 +40,6 @@ public class UIManager : MonoBehaviour
 	/// </summary>
 	void Update()
 	{
-		
+
 	}
 }

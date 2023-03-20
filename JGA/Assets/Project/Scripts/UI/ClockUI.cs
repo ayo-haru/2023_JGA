@@ -49,12 +49,14 @@ public class ClockUI : MonoBehaviour
         }
         if (startHour == finishHour) ++finishHour;
         openingHours = (finishHour - startHour) * 60;
-	}
+        
+        bStart = false;
+        }
 
-	/// <summary>
-	/// 最初のフレーム更新の前に呼び出される
-	/// </summary>
-	void Start()
+    /// <summary>
+    /// 最初のフレーム更新の前に呼び出される
+    /// </summary>
+    void Start()
 	{
         hours = startHour;
         minutes = 0;
@@ -63,7 +65,6 @@ public class ClockUI : MonoBehaviour
         fTimer = 0.0f;
         nCount = 0;
 
-        bStart = false;
     }
 
 	/// <summary>

@@ -28,7 +28,7 @@ MonoBehaviour:
     searchAngle: 45
     searchDistance: 10
   - name: ZooKeeper02
-    roots: 
+    roots: 0500000002000000
     rootTransforms: []
     respawnTF: {fileID: 0}
     status: 0
