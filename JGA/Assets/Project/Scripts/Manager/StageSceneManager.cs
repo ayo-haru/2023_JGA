@@ -70,8 +70,9 @@ public class StageSceneManager : BaseSceneManager {
             }
 
             // 設定された定数から実際のpositionを入れる
+            _list[i].rootTransforms = new List<Transform>();
             for (int j = 0; j < _list[i].roots.Length; j++) {
-                _list[i].rootTransforms[i] = zooKeeperRootPos[(int)_list[i].roots[j]];
+                _list[i].rootTransforms.Add(zooKeeperRootPos[(int)_list[i].roots[j]]);
             }
 
             // 生成
