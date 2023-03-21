@@ -10,6 +10,7 @@
 // 2023/03/05	(小楠)列挙型の定義を変更 現在の感情を取得する関数を追加
 // 2023/03/13	(小楠)ペンギンエアリア着いた時の感情を追加
 // 2023/03/21	(小楠)エフェクト入れた
+// 2023/03/21	(小楠)エラー直した
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -61,7 +62,7 @@ public class EmosionUI : MonoBehaviour
 	/// </summary>
 	void Update()
 	{
-        effect.transform.position = gameObject.transform.position;
+        if(effect)effect.transform.position = gameObject.transform.position;
         if (!ui) return;
         if (ui.text == "") return;
 
