@@ -9,6 +9,7 @@
 // 2023/03/15	スクリプト作成
 // 2023/03/16	動きのルーチン作成
 // 2023/03/20	動きの方式を変更
+// 2023/03/21	動きがなるべくかぶらないように乱数にて終了地点の調整
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -27,7 +28,6 @@ public class PenguinMove : MonoBehaviour
 		MAX_MOVE
 	}
 
-	//
 	private MoveType currentMove;
 	//現在の動き
 	private MoveType moveType;
@@ -35,10 +35,13 @@ public class PenguinMove : MonoBehaviour
 	private bool moveFlg;
 	//動きのデータの情報の数値
 	private int movedata;
-	//動きのインデックス
+	//動きの数値
 	private int currentMoveIndex;
-	//現在の動きのインデックス
+	//現在の動きの数値
 	private int moveIndex;
+
+	//終了地点を格納しておく変数
+	private Vector3 endPos;
 
 	//ペンギンの総合データ
     [SerializeField]private PenguinsData penguinsData;
@@ -62,9 +65,14 @@ public class PenguinMove : MonoBehaviour
     /// </summary>
     void Start()
 	{
+		
 		currentMoveIndex = Random.Range(0, penguinsData.rangeList.Count);
-		moveIndex = currentMoveIndex;
-        this.transform.position = penguinsData.rangeList[moveIndex];
+        moveIndex = currentMoveIndex;
+
+		//初期地点を少しランダムにする。
+        
+        this.transform.position = CircleRandamaiser(moveIndex);
+
     }
 
 	/// <summary>
@@ -117,6 +125,7 @@ public class PenguinMove : MonoBehaviour
 
 	private void Idle()
 	{
+		//〇秒～〇秒の間でアイドルする。
         moveTime += Time.deltaTime;
 
 		if (moveTime >= 1.0f)
@@ -129,12 +138,14 @@ public class PenguinMove : MonoBehaviour
 
 	private void Walk()
 	{
+        //速度を決定してその速度で終了地点まで動く
         this.transform.position = Vector3.MoveTowards(	this.transform.position,
-														penguinsData.rangeList[currentMoveIndex],
+														endPos,
 														penguinsData.dataList[movedata].walkSpeed * Time.deltaTime);
-
-		if(this.transform.position == penguinsData.rangeList[currentMoveIndex])
+		//最期まで動いたら初期化し、アイドルに移る
+		if(this.transform.position == endPos)
 		{
+			//最終地点の座標に行かないように記憶しておく
 			moveIndex = currentMoveIndex;
 			moveType = MoveType.IDLE;
         }
@@ -143,35 +154,61 @@ public class PenguinMove : MonoBehaviour
 
 	private void Run()
 	{
-        this.transform.position = Vector3.MoveTowards(this.transform.position,
-                                                        penguinsData.rangeList[currentMoveIndex],
+		//速度を決定してその速度で終了地点まで動く
+        this.transform.position = Vector3.MoveTowards(	this.transform.position,
+                                                        endPos,
                                                         penguinsData.dataList[movedata].runSpeed * Time.deltaTime);
-
-        if (this.transform.position == penguinsData.rangeList[currentMoveIndex])
+        //最期まで動いたら初期化し、アイドルに移る
+        if (this.transform.position == endPos)
         {
+            //最終地点の座標に行かないように記憶しておく
             moveIndex = currentMoveIndex;
             moveType = MoveType.IDLE;
         }
     }
-
+	//動きを決める関数
 	private void MoveEnter()
 	{
+		//動き決定の範囲
         moveType = (MoveType)Random.Range((int)MoveType.IDLE, (int)MoveType.RUN + 1);
         moveFlg = true;
+		//次の動きが歩きになったとき
 		if(moveType == MoveType.WALK)
 		{
+			//終了地点がなるべくかぶらないようにするため違う場所になるまで回す。
 			while (currentMoveIndex == moveIndex)
 			{
 				currentMoveIndex = Random.Range(0, penguinsData.rangeList.Count);
 			}
-        }
+			//終了地点が決まったらランダムで若干ずらす。
+			endPos = CircleRandamaiser(currentMoveIndex);
+
+		}
+        //次の動きが走りになったとき
         if (moveType == MoveType.RUN)
 		{
+            //終了地点がなるべくかぶらないようにするため違う場所になるまで回す。
             while (currentMoveIndex == moveIndex)
             {
                 currentMoveIndex = Random.Range(0, penguinsData.rangeList.Count);
             }
+            //終了地点が決まったらランダムで若干ずらす。
+            endPos = CircleRandamaiser(currentMoveIndex);
         }
+    }
+
+    //0から半径分の範囲を取るためそれを指定された座標と計算することで若干位置をずらせる。
+    private Vector3 CircleRandamaiser(int index)
+	{
+		var retVector = new Vector3();
+		//範囲を決める。
+        var startPoint = Random.insideUnitCircle * penguinsData.rangeArea;
+
+        //決めた範囲分動かした場所を決定し返す
+        retVector = new Vector3(penguinsData.rangeList[index].x + startPoint.x,
+                                penguinsData.rangeList[index].y,
+                                penguinsData.rangeList[index].z + startPoint.y);
+		return retVector;
     }
 
 }

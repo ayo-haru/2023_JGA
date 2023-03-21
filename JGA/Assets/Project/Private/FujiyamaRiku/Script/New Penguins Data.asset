@@ -39,3 +39,4 @@ MonoBehaviour:
     downStone: {x: 0, y: 0, z: 0}
   - builtStone: {x: 0, y: 0, z: 0}
     downStone: {x: 0, y: 0, z: 0}
+  rangeArea: 3
