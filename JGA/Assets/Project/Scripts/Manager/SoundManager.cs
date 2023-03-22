@@ -60,6 +60,9 @@ public class SoundManager : MonoBehaviour
 	/// <param name="clip">音</param>
 	public static void Play(AudioSource audioSource, AudioClip clip)
 	{
+		if (audioSource == null || clip == null)
+			Debug.LogError($"<color=red>指定されたオブジェクトがNULLです</color>\n");
+
 		Source.Add(audioSource);
 		var _SEs = MySceneManager.Sound.SEDatas.list;
 		// SEの場合
@@ -97,6 +100,9 @@ public class SoundManager : MonoBehaviour
 	/// <param name="id">ID</param>
 	public static void Play(AudioSource audioSource, EBGM eBGM)
 	{
+		if (audioSource == null)
+			Debug.LogError($"<color=red>指定されたオブジェクトがNULLです</color>\n");
+
 		Source.Add(audioSource);
 
 		if (MySceneManager.Sound.BGMDatas.list.Length <= (int)eBGM ||
@@ -120,6 +126,9 @@ public class SoundManager : MonoBehaviour
 	/// <param name="id">ID</param>
 	public static void Play(AudioSource audioSource, ESE eSE)
 	{
+		if (audioSource == null)
+			Debug.LogError($"<color=red>指定されたオブジェクトがNULLです</color>\n");
+
 		Source.Add(audioSource);
 
 		if (MySceneManager.Sound.SEDatas.list.Length <= (int)eSE ||
@@ -142,6 +151,9 @@ public class SoundManager : MonoBehaviour
 	/// <param name="name">音源ファイル名</param>
 	public static void Play(AudioSource audioSource, string name)
 	{
+		if (audioSource == null || string.IsNullOrEmpty(name))
+			Debug.LogError($"<color=red>指定されたオブジェクトがNULLです</color>\n");
+
 		Source.Add(audioSource);
 		var _SEs = MySceneManager.Sound.SEDatas.list;
 		// SEの場合

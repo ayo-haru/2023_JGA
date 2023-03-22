@@ -21,19 +21,26 @@ public class Player : MonoBehaviour
 	[SerializeField] private Rigidbody rb;
 	[SerializeField] private AudioSource audioSource;
 	[SerializeField] private AudioClip seCall;          // ＳＥ：鳴き声
+	[SerializeField] private AudioClip seHit;           // ＳＥ：はたく
+	[SerializeField] private AudioClip seHold;          // ＳＥ：つかむ
 	[SerializeField] private Animator anim;             // Animatorへの参照
 
 	[Header("ステータス")]
 	[SerializeField, Tooltip("歩行時速度")]
 	private float moveForce = 7;
-	//[SerializeField, Tooltip("アピール時速度")]
-	private float appealForce;
 	[SerializeField, Tooltip("歩行時最高速度")]
 	private float maxMoveSpeed = 5;
-	//[SerializeField, Tooltip("アピール時最高速度")]
-	private float maxAppealSpeed;
 	[SerializeField, Tooltip("疾走速度倍率")]
 	private float runMagnification = 1.5f;
+
+	//[SerializeField, Tooltip("疾走時速度")]
+	private float runForce;
+	//[SerializeField, Tooltip("疾走時最高速度")]
+	private float maxRunSpeed;
+	//[SerializeField, Tooltip("アピール時速度")]
+	private float appealForce;
+	//[SerializeField, Tooltip("アピール時最高速度")]
+	private float maxAppealSpeed;
 
 	[SerializeField, Tooltip("ジョイスティックで走り始めるゾーン")]
 	private float joyRunZone = 0.8f;
@@ -122,8 +129,10 @@ public class Player : MonoBehaviour
 		gameInputs.Enable();
 
 		// アピール速度設定
-		appealForce = (moveForce + moveForce * runMagnification) / 2;
-		maxAppealSpeed = (maxMoveSpeed + maxMoveSpeed * runMagnification) / 2;
+		runForce = moveForce * runMagnification;
+		maxRunSpeed = maxMoveSpeed * runMagnification;
+		appealForce = (moveForce + runForce) / 2;
+		maxAppealSpeed = (maxMoveSpeed + maxRunSpeed) / 2;
 	}
 
 	/// <summary>
@@ -265,8 +274,8 @@ public class Player : MonoBehaviour
 			}
 			else if (isRun)
 			{
-				force = moveForce * runMagnification;
-				max = maxMoveSpeed * runMagnification;
+				force = runForce;
+				max = maxRunSpeed;
 			}
 			else
 			{
@@ -300,8 +309,8 @@ public class Player : MonoBehaviour
 			}
 			else if (isRun)
 			{
-				force = moveForce * runMagnification;
-				max = maxMoveSpeed * runMagnification;
+				force = runForce;
+				max = maxRunSpeed;
 			}
 			else
 			{
@@ -441,6 +450,7 @@ public class Player : MonoBehaviour
 				HoldObjectRb.useGravity = false;
 				HoldObjectRb.isKinematic = true;
 			}
+			//SoundManager.Play(audioSource, SoundManager.ESE.);
 		}
 
 		// 離す処理
@@ -470,7 +480,9 @@ public class Player : MonoBehaviour
 		vec = (InteractObject.transform.position - transform.position).normalized;
 		rigidbody.AddTorque(vec * blowpower);
 
-		InteractObject.GetComponent<AudioSource>().Play();
+		//InteractObject.GetComponent<AudioSource>().Play();
+
+		//SoundManager.Play(audioSource, SoundManager.ESE.);
 	}
 
 	/// <summary>
@@ -484,11 +496,11 @@ public class Player : MonoBehaviour
 		switch (context.phase)
 		{
 			case InputActionPhase.Performed:
-				Debug.Log("アピール");
+				//Debug.Log("アピール");
 				_IsAppeal = true;
 				break;
 			case InputActionPhase.Canceled:
-				Debug.Log("アピール終了");
+				//Debug.Log("アピール終了");
 				_IsAppeal = false;
 				break;
 		}
