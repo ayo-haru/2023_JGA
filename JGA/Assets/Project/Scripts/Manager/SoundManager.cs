@@ -18,11 +18,17 @@ public class SoundManager : MonoBehaviour
 {
 	public enum EBGM
 	{
+		TITLE_001,
 
 	}
 	public enum ESE
 	{
 		PENGUIN_VOICE,
+		PENGUIN_CATCH,
+		PENGUIN_HIT_001,
+		PENGUIN_WALK_001,
+		PENGUIN_RUN_001,
+
 		HOURCE_WALK_001,
 		HOURCE_RUN_001,
 
@@ -38,6 +44,9 @@ public class SoundManager : MonoBehaviour
 		HUMAN_RUN_001,
 		HUMAN_RUN_002,
 		HUMAN_RUN_003,
+
+		SELECT_001,
+		SELECT_002,
 	}
 
 	private static HashSet<AudioSource> Source = new HashSet<AudioSource>();
