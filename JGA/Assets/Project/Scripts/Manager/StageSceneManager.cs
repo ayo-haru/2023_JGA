@@ -25,10 +25,29 @@ public class StageSceneManager : BaseSceneManager {
     private Transform[] zooKeeperRootPos;
     private List<Transform> GuestRootPos;
 
-    GameObject countUI;
+    GameObject clockUI;
     ClockUI _ClockUI;
 
     private bool isSceneChangeOnce;
+
+
+
+    // デバッグ用チェック
+    [Space(100)]
+    [Header("---デバッグ用！スポーンさせるかどうか---\n"
+        +"そのうちこの項目たちは消しちゃう。\n" +
+        "スポーンさせないやつはチェック外してや")]
+    [Header("プレイヤースポーン")]
+    [SerializeField]
+    private bool isPlayerSpawn = true;
+    [Header("飼育員スポーン")]
+    [SerializeField]
+    private bool isZKSpawn = true;
+    [Header("客スポーン")]
+    [SerializeField]
+    private bool isGuestSpawn = true;
+
+
 
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -52,45 +71,57 @@ public class StageSceneManager : BaseSceneManager {
     /// 最初のフレーム更新の前に呼び出される
     /// </summary>
     void Start() {
-        //----- プレイヤーの生成 -----
-        playerRespawn = GameObject.Find("PlayerSpawn");
-        playerObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Player.prefab");
-        playerInstance = Instantiate(playerObj,playerRespawn.transform.position,Quaternion.Euler(0.0f,5.0f,0.0f));
+        if (isPlayerSpawn) {
+            //----- プレイヤーの生成 -----
+            playerRespawn = GameObject.Find("PlayerSpawn");
+            playerObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Player.prefab");
+            playerInstance = Instantiate(playerObj, playerRespawn.transform.position, Quaternion.Euler(0.0f, 5.0f, 0.0f));
+        }
 
-        //----- 飼育員の生成 -----
-        ZooKeeperData.Data[] _list = MySceneManager.GameData.zooKeeperData.list;    // 設定された人数分を生成する
-        GameObject zooKeeperObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "ZooKeeper.prefab");   // 生成するオブジェクト
-        GameObject parent = GameObject.Find("ZooKeepers");  //  生成するときの親にするオブジェクト
-        for (int i = 0; i < _list.Length; i++) {
-            GameObject spawnPos = GameObject.Find(_list[i].name + "Spawn"); // 生成位置を名前で取得する
-            if (spawnPos == null) { // 存在するか
-                Debug.LogError(_list[i].name + "のスポーン位置が見つかりませんでした。(StageSceneManager.cs)");    // 存在しないのでメッセージ出す
-            } else {
-                _list[i].respawnTF = spawnPos.GetComponent<Transform>();    // 存在してたので位置を取得
+        if (isZKSpawn) {
+            //----- 飼育員の生成 -----
+            ZooKeeperData.Data[] _list = MySceneManager.GameData.zooKeeperData.list;    // 設定された人数分を生成する
+            GameObject zooKeeperObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "ZooKeeper.prefab");   // 生成するオブジェクト
+            GameObject parent = GameObject.Find("ZooKeepers");  //  生成するときの親にするオブジェクト
+            for (int i = 0; i < _list.Length; i++) {
+                GameObject spawnPos = GameObject.Find(_list[i].name + "Spawn"); // 生成位置を名前で取得する
+                if (spawnPos == null) { // 存在するか
+                    Debug.LogError(_list[i].name + "のスポーン位置が見つかりませんでした。(StageSceneManager.cs)");    // 存在しないのでメッセージ出す
+                } else {
+                    _list[i].respawnTF = spawnPos.GetComponent<Transform>();    // 存在してたので位置を取得
+                }
+
+                // 設定された定数から実際のpositionを入れる
+                _list[i].rootTransforms = new List<Transform>();
+                for (int j = 0; j < _list[i].roots.Length; j++) {
+                    _list[i].rootTransforms.Add(zooKeeperRootPos[(int)_list[i].roots[j]]);
+                }
+
+                // 生成
+                GameObject zooKeeperInstace = Instantiate(zooKeeperObj, spawnPos.transform.position, Quaternion.identity);
+                zooKeeperInstace.transform.parent = parent.transform;   // 親を設定
+
+                // データをZooKeeperAI.csに流し込む
+                zooKeeperInstace.GetComponent<ZooKeeperAI>().SetData(_list[i]);
+
             }
-
-            // 設定された定数から実際のpositionを入れる
-            _list[i].rootTransforms = new List<Transform>();
-            for (int j = 0; j < _list[i].roots.Length; j++) {
-                _list[i].rootTransforms.Add(zooKeeperRootPos[(int)_list[i].roots[j]]);
-            }
-
-            // 生成
-            GameObject zooKeeperInstace = Instantiate(zooKeeperObj, spawnPos.transform.position, Quaternion.identity);
-            zooKeeperInstace.transform.parent = parent.transform;   // 親を設定
-
-            // データをZooKeeperAI.csに流し込む
-            zooKeeperInstace.GetComponent<ZooKeeperAI>().SetData(_list[i]);
-                
         }
 
 
         //----- 客の生成 -----
+        if (isGuestSpawn) {
 
-        countUI = GameObject.Find("ClockUI");
-        _ClockUI = countUI.GetComponent<ClockUI>();
+        }
 
-        _ClockUI.CountStart();
+
+        clockUI = GameObject.Find("ClockUI");
+        if (clockUI) {
+            _ClockUI = clockUI.GetComponent<ClockUI>();
+
+            _ClockUI.CountStart();
+        } else {
+            Debug.LogError("ClockUIがシーン上にありません");
+        }
     }
 
     //void FixedUpdate() {
@@ -102,10 +133,12 @@ public class StageSceneManager : BaseSceneManager {
          * ・リスタートがかかったら各オブジェクトをリスタート(初期化)させる
          */
 
-        if (_ClockUI.IsFinish()) {
-            if (!isSceneChangeOnce) {
-                SceneChange(MySceneManager.SceneState.SCENE_TITLE);
-                isSceneChangeOnce= true;
+        if (clockUI) {
+            if (_ClockUI.IsFinish()) {
+                if (!isSceneChangeOnce) {
+                    SceneChange(MySceneManager.SceneState.SCENE_TITLE);
+                    isSceneChangeOnce = true;
+                }
             }
         }
 
