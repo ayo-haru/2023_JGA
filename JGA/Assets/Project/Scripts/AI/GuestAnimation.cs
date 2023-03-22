@@ -7,10 +7,12 @@
 // 
 // [Date]
 // 2023/03/21	スクリプト作成
+// 2023/03/22	ポーズの処理追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
 public class GuestAnimation : MonoBehaviour
 {
@@ -23,8 +25,10 @@ public class GuestAnimation : MonoBehaviour
 	/// </summary>
 	void Awake()
 	{
-		
-	}
+        //ポーズ時の動作を登録
+        PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(gameObject);
+        PauseManager.OnResumed.Subscribe(x => { Resumed(); }).AddTo(gameObject);
+    }
 
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
@@ -40,6 +44,7 @@ public class GuestAnimation : MonoBehaviour
 	/// </summary>
 	void FixedUpdate()
 	{
+        if (PauseManager.isPaused) return;
         if (!animator || !audioSource) return;
         if (isWalk == animator.GetBool("isWalk")) return;
 
@@ -67,5 +72,17 @@ public class GuestAnimation : MonoBehaviour
             audioSource.Stop();
         }
         
+    }
+
+    private void Pause()
+    {
+        audioSource.Stop();
+        animator.speed = 0.0f;
+    }
+
+    private void Resumed()
+    {
+        animator.speed = 1.0f;
+        WalkAnimation();
     }
 }

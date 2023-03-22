@@ -31,7 +31,7 @@ public class TitleScenManager : BaseSceneManager
 
     private Vector3 mousePos;
     //フェードパネル
-    [SerializeField] private Image fadePanel;
+    [SerializeField] private Image fadePanelImage;
 
     private enum ETitleSelect {TITLESELECT_START,TITLESELECT_OPTION,TITLESELECT_EXIT,MAX_TITLESELECT};
     private ETitleSelect select = ETitleSelect.TITLESELECT_START;
@@ -120,14 +120,14 @@ public class TitleScenManager : BaseSceneManager
         {
             //マウスカーソル非表示
             Cursor.visible = false;
-            fadePanel.raycastTarget = true;
+            fadePanelImage.raycastTarget = true;
             ControllerChangeSelect(select);
         }
         else//コントローラ→マウス
         {
             //マウスカーソル表示
             Cursor.visible = true;
-            fadePanel.raycastTarget = false;
+            fadePanelImage.raycastTarget = false;
             ControllerResetSelect();
         }
 

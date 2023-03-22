@@ -863,6 +863,11 @@ PrefabInstance:
       propertyPath: optionButton
       value: 
       objectReference: {fileID: 262525679}
+    - target: {fileID: 5730447064661370268, guid: a368f146237d0754da913e9493219054,
+        type: 3}
+      propertyPath: fadePanelImage
+      value: 
+      objectReference: {fileID: 617481727}
     - target: {fileID: 5730447064661370269, guid: a368f146237d0754da913e9493219054,
         type: 3}
       propertyPath: m_RootOrder
