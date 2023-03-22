@@ -13,7 +13,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using UniRx;
 
 public class ClockUI : MonoBehaviour
 {
@@ -37,8 +36,7 @@ public class ClockUI : MonoBehaviour
     [SerializeField,Range(0,22)] private int startHour = 9;
     //終了時間
     [SerializeField,Range(1, 23)] private int finishHour = 17;
-    //ポーズ用フラグ
-    private bool bPause = false;
+
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
 	/// </summary>
@@ -55,11 +53,6 @@ public class ClockUI : MonoBehaviour
         openingHours = (finishHour - startHour) * 60;
         
         bStart = false;
-        bPause = false;
-
-        //ポーズ時の動作を登録
-        PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(gameObject);
-        PauseManager.OnResumed.Subscribe(x => { Resumed(); }).AddTo(gameObject);
     }
 
     /// <summary>
@@ -81,7 +74,7 @@ public class ClockUI : MonoBehaviour
 	/// </summary>
 	void FixedUpdate()
 	{
-        if (!bStart || IsFinish() || bPause) return;
+        if (!bStart || IsFinish() || PauseManager.isPaused) return;
 
         //時間を更新
         fTimer += Time.deltaTime;
@@ -146,14 +139,5 @@ public class ClockUI : MonoBehaviour
     public void CountStop()
     {
         bStart = false;
-    }
-
-    private void Pause()
-    {
-        bPause = true;
-    }
-    private void Resumed()
-    {
-        bPause = false;
     }
 }

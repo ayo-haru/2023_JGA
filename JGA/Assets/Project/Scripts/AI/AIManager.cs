@@ -10,11 +10,14 @@
 // 2023/03/02	(小楠)客用のデータ持たせた
 // 2023/03/03	(小楠)ステートの終了処理追加
 // 2023/03/11	(小楠)乱数の初期化を追加
+// 2023/03/23	(小楠)ポーズの処理追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UniRx;
+using UnityEngine.AI;
 
 public class AIManager : MonoBehaviour
 {
@@ -25,13 +28,17 @@ public class AIManager : MonoBehaviour
 
     //使用する客データ
     [SerializeField] private GuestData data;
+    //ナビメッシュエージェント
+    private NavMeshAgent agent;
 
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
     /// </summary>
     void Awake()
 	{
-
+        //ポーズ時の動作を登録
+        PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(gameObject);
+        PauseManager.OnResumed.Subscribe(x => { Resumed(); }).AddTo(gameObject);
     }
 
 	/// <summary>
@@ -68,6 +75,7 @@ public class AIManager : MonoBehaviour
 	/// </summary>
 	void FixedUpdate()
 	{
+        if (PauseManager.isPaused) return;
         //ステートの切り替え
         for (int i = 0; i < nodeList[currentState].transitions.Count; ++i)
         {
@@ -130,5 +138,18 @@ public class AIManager : MonoBehaviour
     public GuestData GetGuestData()
     {
         return data;
+    }
+
+    private void Pause()
+    {
+        if (!agent) agent = GetComponent<NavMeshAgent>();
+        if (agent) agent.isStopped = true;
+        
+    }
+
+    private void Resumed()
+    {
+        if (!agent) agent = GetComponent<NavMeshAgent>();
+        if (agent) agent.isStopped = false;
     }
 }
