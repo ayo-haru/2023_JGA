@@ -10,10 +10,22 @@
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
+using static Unity.VisualScripting.Member;
 
 public class EffectManager : MonoBehaviour
 {
+	private static HashSet<ParticleSystem> Particles = new HashSet<ParticleSystem>();
+
+	private void Awake()
+	{
+		// ポーズ時の動作を登録
+		PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(this.gameObject);
+		PauseManager.OnResumed.Subscribe(x => { Resumed(); }).AddTo(this.gameObject);
+
+	}
+
 	/// <summary>
 	/// エフェクト生成 - 名前
 	/// </summary>
@@ -33,7 +45,9 @@ public class EffectManager : MonoBehaviour
 		{
 			if (list[i].name == displayName)
 			{
-				return Instantiate(list[i], pos, quaternion.Value);
+				var obj = Instantiate(list[i], pos, quaternion.Value);
+				Particles.Add(obj.GetComponent<ParticleSystem>());
+				return obj;
 			}
 		}
 
@@ -61,7 +75,9 @@ public class EffectManager : MonoBehaviour
 			return null;
 		}
 
-		return Instantiate(list[ID], pos, quaternion.Value);
+		var obj = Instantiate(list[ID], pos, quaternion.Value);
+		Particles.Add(obj.GetComponent<ParticleSystem>());
+		return obj;
 	}
 
 	/// <summary>
@@ -82,10 +98,29 @@ public class EffectManager : MonoBehaviour
 		{
 			if (list[i] == prefab)
 			{
-				return Instantiate(list[i], pos, quaternion.Value);
+				var obj = Instantiate(list[i], pos, quaternion.Value);
+				Particles.Add(obj.GetComponent<ParticleSystem>());
+				return obj;
 			}
 		}
 		Debug.LogError($"<color=red>指定されたオブジェクトが見つかりません</color>({prefab})\n");
 		return null;
 	}
+
+	void Pause()
+	{
+		foreach (var item in Particles)
+		{
+			item.Pause();
+		}
+	}
+
+	void Resumed()
+	{
+		foreach (var item in Particles)
+		{
+			item.Play();
+		}
+	}
+
 }
