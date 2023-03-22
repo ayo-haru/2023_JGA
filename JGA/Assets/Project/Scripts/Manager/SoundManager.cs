@@ -87,7 +87,7 @@ public class SoundManager : MonoBehaviour
 				return;
 			}
 		}
-		Debug.LogError($"<color=red>指定されたオブジェクトが見つかりません</color>({audioSource})\n");
+		Debug.LogError($"<color=red>指定されたオブジェクトが見つかりません</color>AudioSource:[{audioSource}], AudioClip:[{clip}]\n");
 	}
 
 	/// <summary>
