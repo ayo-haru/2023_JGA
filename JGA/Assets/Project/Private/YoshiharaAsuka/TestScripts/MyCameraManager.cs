@@ -48,7 +48,7 @@ public class MyCameraManager : MonoBehaviour
 
     private void Start()
     {
-        //parameter.trackTarget = GameObject.FindGameObjectWithTag("Player").transform;
+        parameter.trackTarget = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     // 追従するオブジェクトの更新処理が終わった後にカメラの更新を行うため、LateUpdate()を使用
