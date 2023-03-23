@@ -30,6 +30,8 @@ public class PenguinsData : ScriptableObject
         public float walkSpeed;
         [Header("走る速度 m/s")]
         public float runSpeed;
+        [Header("回転する速度(角度)")]
+        public float rotateAngle;
         [Header("アピールの最小時間")]
         public float minAppealTime;
         [Header("アピールの最大時間")]
@@ -40,6 +42,7 @@ public class PenguinsData : ScriptableObject
         public float minIdleTime;
         [Header("アイドルの最大時間")]
         public float maxIdleTime;
+
     }
     [Serializable]
     public class PenguinUpDownData

@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UniRx;
 
 public class MainCamera : MonoBehaviour
 {
@@ -50,7 +51,8 @@ public class MainCamera : MonoBehaviour
     //計算用FOV格納用
     private float currentFov;
 
-    
+    //ポーズ用のフラグ
+    private bool pauseFlg;
 
     //客の情報取得用
     GameObject[] guestObj;
@@ -132,6 +134,10 @@ public class MainCamera : MonoBehaviour
     /// </summary>
     void Awake()
 	{
+        //ポーズ用
+        PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(gameObject);
+        PauseManager.OnResumed.Subscribe(x => { ReGame(); }).AddTo(gameObject);
+
         //カメラの情報の受け取り
         cameraObj = GameObject.Find("CameraParent").GetComponent<CameraManager>();
         //初期化としてカメラの情報を格納
@@ -217,6 +223,10 @@ public class MainCamera : MonoBehaviour
 	/// </summary>
 	void Update()
 	{
+        if (pauseFlg)
+        {
+            return;
+        }
         if (MySceneManager.GameData.isCatchPenguin)
         {
             cameraParent.position = firstCamPos;
@@ -232,7 +242,10 @@ public class MainCamera : MonoBehaviour
         {
             return;
         }
-       
+        if(pauseFlg)
+         {
+             return;
+         }
         //==============================================================
         //端＋指定した距離にプレイヤーが入っていたらカメラを止める
         if (fieldLeftEdge.position.x + edgeDistance >= playerobj.transform.position.x ||
@@ -331,7 +344,10 @@ public class MainCamera : MonoBehaviour
     //ズームインとズームアウトを決定動かす処理
     private void ZoomInOut()
 	{
-      
+        if (pauseFlg)
+        {
+            return;
+        }
         switch (currentZoom)
         {
             case ZOOM.IN:
@@ -442,4 +458,13 @@ public class MainCamera : MonoBehaviour
         currentGuestValue = nowGuestCount;
     }
    
+    private void Pause()
+    {
+        pauseFlg = true;
+    }
+
+    private void ReGame()
+    {
+        pauseFlg = false;
+    }
 }
