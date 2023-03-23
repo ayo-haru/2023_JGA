@@ -15,6 +15,7 @@ MonoBehaviour:
   dataList:
   - walkSpeed: 3
     runSpeed: 5
+    rotateSpeed: 5
     minAppealTime: 0
     maxAppealTime: 0
     swimSpeed: 0
@@ -22,6 +23,7 @@ MonoBehaviour:
     maxIdleTime: 5
   - walkSpeed: 2
     runSpeed: 4
+    rotateSpeed: 0
     minAppealTime: 0
     maxAppealTime: 0
     swimSpeed: 0

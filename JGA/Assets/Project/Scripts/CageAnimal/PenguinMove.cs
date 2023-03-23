@@ -14,21 +14,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
 public class PenguinMove : MonoBehaviour
 {
 	enum MoveType
 	{
-		IDLE,
+		
 		WALK,
 		RUN,
+        IDLE,
+        TURN,
 		JUMP,
 		APPEAL,
 		SWIM,
 		MAX_MOVE
 	}
 
-	private MoveType currentMove;
+	private MoveType currentMoveType;
 	//現在の動き
 	private MoveType moveType;
 	//動いているかどうか
@@ -48,16 +51,22 @@ public class PenguinMove : MonoBehaviour
 	//動いてるときの時間
 	private float moveTime;
 
-	/// <summary>
-	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
-	/// </summary>
-	void Awake()
+	//ポーズ用フラグ
+	private bool pauseFlg;
+
+    /// <summary>
+    /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
+    /// </summary>
+    void Awake()
 	{
-        currentMove	= MoveType.IDLE;
+        currentMoveType = MoveType.IDLE;
 		moveType    = MoveType.IDLE;
 		moveFlg = false;
 		moveTime = 0.0f;
 		movedata = Random.Range(0, penguinsData.dataList.Count);
+
+        PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(gameObject);
+        PauseManager.OnResumed.Subscribe(x => { ReGame(); }).AddTo(gameObject);
     }
 
     /// <summary>
@@ -80,48 +89,53 @@ public class PenguinMove : MonoBehaviour
 	/// </summary>
 	void FixedUpdate()
 	{
-		
-			if (!moveFlg)
-			{
-				MoveEnter();
-            }
-			switch (moveType)
-			{
-				case MoveType.IDLE:
-					currentMove = MoveType.IDLE;
-					Idle();
-                    break;
+        if (pauseFlg)
+        {
+            return;
+        }
+        if (!moveFlg)
+        {
+            MoveEnter();
+        }
+        switch (currentMoveType)
+        {
+            case MoveType.IDLE:
+                Idle();
+                break;
 
-				case MoveType.WALK:
-					currentMove = MoveType.WALK;
-					Walk();
-					break;
+            case MoveType.WALK:
+                Walk();
+                break;
 
-				case MoveType.RUN:
-					currentMove = MoveType.RUN;
-					Run();
-					break;
+            case MoveType.RUN:
+                Run();
+                break;
+            case MoveType.TURN:
+                Turn();
+                break;
+            case MoveType.JUMP:
+                moveFlg = false;
+                break;
 
-				case MoveType.JUMP:
-					break;
+            case MoveType.APPEAL:
+                moveFlg = false;
+                break;
 
-				case MoveType.APPEAL:
-					break;
+            case MoveType.SWIM:
+                moveFlg = false;
+                break;
+        }
 
-				case MoveType.SWIM:
-					break;
-			}
-		
-		Debug.Log(moveType);
-	}
+        Debug.Log(currentMoveType);
+    }
 
 	/// <summary>
 	/// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
 	/// </summary>
 	void Update()
 	{
-		
-	}
+        
+    }
 
 	private void Idle()
 	{
@@ -132,6 +146,13 @@ public class PenguinMove : MonoBehaviour
 		{
             moveIndex = currentMoveIndex;
             moveTime = 0.0f;
+            if(moveType == MoveType.TURN)
+            {
+                currentMoveType = (MoveType)Random.Range((int)MoveType.WALK, (int)MoveType.RUN + 1);
+                return;
+            }
+            //一通りの処理を終えたら行動を書き込む
+            moveType= MoveType.IDLE;
             moveFlg = false;
         }
     }
@@ -147,13 +168,15 @@ public class PenguinMove : MonoBehaviour
 		{
 			//最終地点の座標に行かないように記憶しておく
 			moveIndex = currentMoveIndex;
-			moveType = MoveType.IDLE;
+            currentMoveType = MoveType.IDLE;
+            moveType= MoveType.WALK;
         }
 
     }
 
 	private void Run()
 	{
+
 		//速度を決定してその速度で終了地点まで動く
         this.transform.position = Vector3.MoveTowards(	this.transform.position,
                                                         endPos,
@@ -163,29 +186,35 @@ public class PenguinMove : MonoBehaviour
         {
             //最終地点の座標に行かないように記憶しておく
             moveIndex = currentMoveIndex;
-            moveType = MoveType.IDLE;
+            currentMoveType = MoveType.IDLE;
+            moveType= MoveType.RUN;
+        }
+    }
+
+	private void Turn()
+	{
+        var endRot = Quaternion.LookRotation(endPos - this.transform.position);
+        var befRot = this.transform.rotation;
+        this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, endRot, penguinsData.dataList[movedata].rotateAngle);
+
+		if (befRot == this.transform.rotation)
+		{
+            moveIndex = currentMoveIndex;
+            currentMoveType = MoveType.IDLE;
+            moveType= MoveType.TURN;
         }
     }
 	//動きを決める関数
 	private void MoveEnter()
 	{
 		//動き決定の範囲
-        moveType = (MoveType)Random.Range((int)MoveType.IDLE, (int)MoveType.RUN + 1);
+        currentMoveType = (MoveType)Random.Range((int)MoveType.IDLE, (int)MoveType.TURN + 1);
         moveFlg = true;
-		//次の動きが歩きになったとき
-		if(moveType == MoveType.WALK)
-		{
-			//終了地点がなるべくかぶらないようにするため違う場所になるまで回す。
-			while (currentMoveIndex == moveIndex)
-			{
-				currentMoveIndex = Random.Range(0, penguinsData.rangeList.Count);
-			}
-			//終了地点が決まったらランダムで若干ずらす。
-			endPos = CircleRandamaiser(currentMoveIndex);
-
-		}
-        //次の動きが走りになったとき
-        if (moveType == MoveType.RUN)
+        if(currentMoveType == MoveType.IDLE && moveType == MoveType.IDLE)
+        {
+            currentMoveType = (MoveType)Random.Range((int)MoveType.IDLE + 1, (int)MoveType.TURN + 1);
+        }
+		if(currentMoveType == MoveType.TURN)
 		{
             //終了地点がなるべくかぶらないようにするため違う場所になるまで回す。
             while (currentMoveIndex == moveIndex)
@@ -194,7 +223,9 @@ public class PenguinMove : MonoBehaviour
             }
             //終了地点が決まったらランダムで若干ずらす。
             endPos = CircleRandamaiser(currentMoveIndex);
+            
         }
+		
     }
 
     //0から半径分の範囲を取るためそれを指定された座標と計算することで若干位置をずらせる。
@@ -211,4 +242,13 @@ public class PenguinMove : MonoBehaviour
 		return retVector;
     }
 
+    private void Pause()
+    {
+        pauseFlg = true;
+    }
+
+    private void ReGame()
+    {
+        pauseFlg = false;
+    }
 }
