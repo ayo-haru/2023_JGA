@@ -129,6 +129,9 @@ public class StateFollowPenguin : AIState
             }
         }
 
+        //驚きモーション中は移動させない
+        agent.isStopped = animator.GetCurrentAnimatorStateInfo(0).IsName("Surprised");
+
         //!!!,!!の時は追従する
         agent.speed = (ui.GetEmotion() >= EEmotion.ATTENSION_MIDDLE) ? data.speed : 0.0f;
         agent.SetDestination(target.position + posOffset);
