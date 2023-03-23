@@ -10,6 +10,7 @@
 // 2023/03/03	(小楠)終了処理追加　UI追加
 // 2023/03/05	(小楠)UIの表示を変更
 // 2023/03/08	(小楠)アニメーションの処理を追加
+// 2023/03/23	(小楠)驚いたアニメーション追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -74,6 +75,7 @@ public class StateAttention : AIState
         agent.speed = 0.0f;
         ui.SetEmotion(EEmotion.QUESTION);
         animator.SetBool("isWalk", false);
+        animator.SetTrigger("surprised");
     }
 
     public override void UpdateState()

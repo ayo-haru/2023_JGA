@@ -94,6 +94,9 @@ public class StateDefaultRootWalk : AIState
         //エラーチェック
         if (!ErrorCheck()) return;
 
+        //驚きモーション中は移動させない
+        agent.isStopped = animator.GetCurrentAnimatorStateInfo(0).IsName("Surprised");
+
         if (agent.pathPending) return;
 
         //目的地までの経路がない場合は目的地の変更
