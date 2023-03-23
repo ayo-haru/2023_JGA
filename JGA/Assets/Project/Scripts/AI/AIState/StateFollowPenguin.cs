@@ -16,6 +16,7 @@
 // 2023/03/08	(小楠）アニメーションの処理追加
 // 2023/03/11	(小楠）navmeshagentの目的地をちょっとずらして、お客さんをばらけるようにした
 // 2023/03/12	(小楠）プレイヤーからアピールフラグ取得した
+// 2023/03/24	(小楠）ペンギンの追従速度をプレイヤー基準に変更
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -42,6 +43,8 @@ public class StateFollowPenguin : AIState
     private Animator animator;
     //目的地の位置調節用
     private Vector3 posOffset;
+    //ペンギンに追従する速度
+    [SerializeField, Range(0.5f, 1.0f)] float followSpeed = 0.5f;
 #if false
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -133,7 +136,7 @@ public class StateFollowPenguin : AIState
         agent.isStopped = animator.GetCurrentAnimatorStateInfo(0).IsName("Surprised");
 
         //!!!,!!の時は追従する
-        agent.speed = (ui.GetEmotion() >= EEmotion.ATTENSION_MIDDLE) ? data.speed : 0.0f;
+        agent.speed = (ui.GetEmotion() >= EEmotion.ATTENSION_MIDDLE) ? (player.vForce.magnitude > 0) ? player.vForce.magnitude / 60.0f * followSpeed : data.speed : 0.0f; 
         agent.SetDestination(target.position + posOffset);
 
         //プレイヤーの方向を向く

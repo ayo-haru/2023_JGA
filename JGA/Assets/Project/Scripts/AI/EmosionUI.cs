@@ -30,15 +30,14 @@ public enum EEmotion
 public class EmosionUI : MonoBehaviour
 {
     private EEmotion currentEmotion = EEmotion.NONE;    //現在の感情
-    private TextMesh ui;
-    private float fTimer;       //点滅用タイマー
     private GameObject effect = null;
-	/// <summary>
-	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
-	/// </summary>
-	void Awake()
+#if false
+    /// <summary>
+    /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
+    /// </summary>
+    void Awake()
 	{
-        ui = GetComponent<TextMesh>();
+
 	}
 
 	/// <summary>
@@ -46,46 +45,28 @@ public class EmosionUI : MonoBehaviour
 	/// </summary>
 	void Start()
 	{
-        fTimer = 0.0f;
-	}
 
+	}
+#endif
 	/// <summary>
 	/// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
 	/// </summary>
 	void FixedUpdate()
 	{
-		
-	}
-
-	/// <summary>
-	/// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
-	/// </summary>
-	void Update()
-	{
-        if(effect)effect.transform.position = gameObject.transform.position;
-        if (!ui) return;
-        if (ui.text == "") return;
-
-        //カメラの方に向ける
-        Vector3 dir = Camera.main.transform.position;
-        dir.y = transform.position.y;
-        transform.LookAt(dir);
-
-        //uiの点滅処理
-        if(ui.text == "\\ /")
-        {
-            fTimer += 1.0f;
-            if(fTimer >= 120.0f)
-            {
-                fTimer = 0.0f;
-            }
-            ui.color = (fTimer >= 60.0f) ? new Color(1.0f,1.0f,1.0f,0.0f) : new Color(1.0f,1.0f,1.0f,1.0f);
-        }
+        if (effect) effect.transform.position = gameObject.transform.position;
     }
-
+#if false
+    /// <summary>
+    /// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
+    /// </summary>
+    void Update()
+	{
+        
+    }
+#endif
     public void SetEmotion(EEmotion emotion)
     {
-        if (!ui || currentEmotion == emotion) return;
+        if (currentEmotion == emotion) return;
 
         currentEmotion = emotion;
         if(effect)Destroy(effect);
@@ -105,11 +86,12 @@ public class EmosionUI : MonoBehaviour
                 effect = EffectManager.Create(transform.position, 3);
                 break;
             case EEmotion.HIGH_TENSION:
-                ui.text = "\\ /";
-                ui.color = Color.white;
+                effect = EffectManager.Create(transform.position, 0);
+                ParticleSystem.MainModule main = effect.GetComponent<ParticleSystem>().main;
+                main.loop = true;
                 break;
             default:
-                ui.text = "";
+                effect = null;
                 break;
         }
     }
