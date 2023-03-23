@@ -5211,14 +5211,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   audioSource: {fileID: 0}
-  seCall: {fileID: 8300000, guid: 5d2a7da4e5a38db4fbdbd236554a27eb, type: 3}
+  seCall: {fileID: 8300000, guid: fb8d8f05280cdd945b7f2fc17e933289, type: 3}
+  seHit: {fileID: 0}
+  seHold: {fileID: 0}
   anim: {fileID: 0}
   moveForce: 250
-  appealForce: 342.5
-  runForce: 375
   maxMoveSpeed: 5
-  maxAppealSpeed: 6.25
-  maxRunSpeed: 7.5
+  runMagnification: 1.5
   joyRunZone: 0.8
   callMin: 0.5
   callMax: 5

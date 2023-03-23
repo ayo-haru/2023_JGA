@@ -42,6 +42,9 @@ public class BaseSceneManager : MonoBehaviour
         // キャンバスの設定
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
 
+        // AudioSourceをつける
+        gameObject.AddComponent<AudioSource>();
+
         // UIのマネージャーを設定する
         gameObject.AddComponent<UIManager>();
     }
