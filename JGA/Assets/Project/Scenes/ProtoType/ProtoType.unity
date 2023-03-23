@@ -11431,7 +11431,7 @@ PrefabInstance:
     - target: {fileID: 1784219950100967057, guid: 26c33261f850af44dbd10477524c4ab7,
         type: 3}
       propertyPath: playMinute
-      value: 1
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1784219950100967058, guid: 26c33261f850af44dbd10477524c4ab7,
         type: 3}

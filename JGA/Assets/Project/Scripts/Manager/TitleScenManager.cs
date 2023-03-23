@@ -36,12 +36,27 @@ public class TitleScenManager : BaseSceneManager
     private enum ETitleSelect {TITLESELECT_START,TITLESELECT_OPTION,TITLESELECT_EXIT,MAX_TITLESELECT};
     private ETitleSelect select = ETitleSelect.TITLESELECT_START;
 
+    private AudioSource audioSource;
+
     private void Awake() {
+        /*
+         * InitでAddComponentしてるもの
+         * ・AudioSource
+         * ・UIManager
+         */
         Init();
+
+        // BGM再生用にオーディオソース取得
+        audioSource = GetComponent<AudioSource>();
 
         startImage = startButton.GetComponent<Image>();
         optionImage = optionButton.GetComponent<Image>();
         exitImage = exitButton.GetComponent<Image>();
+    }
+
+    private void Start() {
+        // BGM再生
+        SoundManager.Play(audioSource, SoundManager.EBGM.TITLE_001);
     }
 
     /// <summary>
