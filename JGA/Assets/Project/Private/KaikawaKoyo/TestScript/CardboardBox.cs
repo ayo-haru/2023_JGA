@@ -11,8 +11,10 @@
 // 2023/03/11	音の実装。
 // 2023/03/13	吹っ飛ばし処理をPlayer.csへ輸送しやした（酒井）
 // 2023/03/16	音の再生方法を変更
+// 2023/03/24   ポーズ処理の追加
 //=============================================================================
 using UnityEngine;
+using UniRx;
 
 public class CardboardBox : MonoBehaviour
 {
@@ -32,21 +34,28 @@ public class CardboardBox : MonoBehaviour
 	[SerializeField]
 	private bool Sleeping;
 
-	public bool IsSound { get; set; }   // 音が鳴ったフラグ
+    // ポーズ時の値保存用
+    private Vector3 pauseVelocity;
+    private Vector3 pauseAngularVelocity;
+
+    public bool IsSound { get; set; }   // 音が鳴ったフラグ
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
 	/// </summary>
 	void Awake()
 	{
-		rb = GetComponent<Rigidbody>();
+        PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(this.gameObject);
+        PauseManager.OnResumed.Subscribe(x => { Resumed(); }).AddTo(this.gameObject);
+
+        rb = GetComponent<Rigidbody>();
 		sound = GetComponent<AudioSource>();
 	}
 
 	private void Start()
 	{
-		// オブジェクトのサイズを計算
-		objectsize = (transform.localScale.x + transform.localScale.y + transform.localScale.z) / 3;
+        // オブジェクトのサイズを計算
+        objectsize = (transform.localScale.x + transform.localScale.y + transform.localScale.z) / 3;
 	}
 
 
@@ -60,8 +69,11 @@ public class CardboardBox : MonoBehaviour
 
 	private void Update()
 	{
-		// IsSoundフラグ切り替え
-		IsSound = sound.isPlaying;
+        if (PauseManager.isPaused)
+            return;
+
+        // IsSoundフラグ切り替え
+        IsSound = sound.isPlaying;
 
 		// 動きが止まったら動かないようにする
 		if (!rb.isKinematic && rb.IsSleeping())
@@ -73,7 +85,22 @@ public class CardboardBox : MonoBehaviour
 		Sleeping = rb.IsSleeping();
 	}
 
-	private void OnCollisionEnter(Collision collision)
+    // ポーズ処理
+    private void Pause()
+    {
+        pauseVelocity = rb.velocity;
+        pauseAngularVelocity = rb.angularVelocity;
+        rb.isKinematic = true;
+    }
+
+    private void Resumed()
+    {
+        rb.velocity = pauseVelocity;
+        rb.angularVelocity = pauseAngularVelocity;
+        rb.isKinematic = false;
+    }
+
+    private void OnCollisionEnter(Collision collision)
 	{
 		// はたかれてから止まるまでの間にオブジェクトにぶつかったら音を鳴らす
 		if (!rb.IsSleeping())
