@@ -1,9 +1,34 @@
 fileFormatVersion: 2
-guid: 92b3fdb6652d0314e86a9d5070c0f696
+guid: b417fa62dd5eb3f4a8fcf2e513ffb9de
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lambert1
+    second: {fileID: 2100000, guid: da1d486921adee042b10f9fd73996686, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: penguin_rock
+    second: {fileID: 2100000, guid: 706ce49c29e582a4baa63a795f3d77ee, type: 2}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: rock_base_low_lambert1_BaseColor
+    second: {fileID: 2800000, guid: c3f9512d430ac9d44a12571bf5f7f8ba, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: rock_base_low_lambert1_Normal
+    second: {fileID: 2800000, guid: 6867a0358c339a64db00f0add2f82bd4, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: rock_parts_basecoler
+    second: {fileID: 2800000, guid: f4250040552a40646b19fff92b9e117f, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
