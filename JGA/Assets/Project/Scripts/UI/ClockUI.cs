@@ -116,7 +116,7 @@ public class ClockUI : MonoBehaviour
             minutes = 0;
         }
 
-        clock.text = string.Format("{0:00} : {1:00}", hours, minutes);
+        clock.text = string.Format((minutes % 2 == 0) ? "{0:00} : {1:00}" : "{0:00}   {1:00}", hours, minutes / 5 * 5);
     }
     /// <summary>
     /// 終了時間に達したかどうか
