@@ -29,12 +29,14 @@ public class Player : MonoBehaviour
 	[SerializeField, Tooltip("歩行時速度")]
 	private float moveForce = 7;
 	[SerializeField, Tooltip("歩行時最高速度")]
-	private float maxMoveSpeed = 5;
+	private float _maxMoveSpeed = 5;
+	public float MaxMoveSpeed { get { return _maxMoveSpeed; } }
 	[SerializeField, Tooltip("疾走速度倍率")]
 	private float runMagnification = 1.5f;
 
 	private float runForce;         //疾走時速度
 	private float _maxRunSpeed;     //疾走時最高速度
+	public float MaxRunSpeed { get { return _maxRunSpeed; } }
 	private float appealForce;      //アピール時速度
 	private float _maxAppealSpeed;  //アピール時最高速度
 	public float MaxAppealSpeed { get { return _maxAppealSpeed; } }
@@ -128,9 +130,9 @@ public class Player : MonoBehaviour
 
 		// アピール速度設定
 		runForce = moveForce * runMagnification;
-		_maxRunSpeed = maxMoveSpeed * runMagnification;
+		_maxRunSpeed = _maxMoveSpeed * runMagnification;
 		appealForce = (moveForce + runForce) / 2;
-		_maxAppealSpeed = (maxMoveSpeed + _maxRunSpeed) / 2;
+		_maxAppealSpeed = (_maxMoveSpeed + _maxRunSpeed) / 2;
 	}
 
 	/// <summary>
@@ -293,7 +295,7 @@ public class Player : MonoBehaviour
 			else
 			{
 				force = moveForce;
-				max = maxMoveSpeed;
+				max = _maxMoveSpeed;
 			}
 
 			// 制限速度内の場合、移動方向の力を与える
@@ -328,7 +330,7 @@ public class Player : MonoBehaviour
 			else
 			{
 				force = moveForce;
-				max = maxMoveSpeed;
+				max = _maxMoveSpeed;
 			}
 
 			// 制限速度内の場合、移動方向の力を与える
