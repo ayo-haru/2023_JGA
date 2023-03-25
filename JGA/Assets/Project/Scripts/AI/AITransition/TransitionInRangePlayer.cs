@@ -2,12 +2,13 @@
 // @File	: [TransitionInRangePlayer.cs]
 // @Brief	: 遷移条件　プレイヤーが範囲内にいるか
 // @Author	: Ogusu Yuuko
-// @Editer	: 
+// @Editer	: Ichida Mai
 // @Detail	: 
 // 
 // [Date]
 // 2023/03/05	スクリプト作成
 // 2023/03/06	スクリプト名変えた エラーチェック追加
+// 2023/03/25	自動生成に対応
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ using UnityEngine;
 public class TransitionInRangePlayer : AITransition
 {
     //お客さん用データ
-    private GuestData data;
+    private GuestData.Data data;
     //遷移条件反転用フラグ
     [SerializeField,Tooltip("プレイヤーが範囲外に出たら遷移したい場合はチェックを入れてください")] private bool inv = false;
     //プレイヤーのトランスフォーム
@@ -57,7 +58,7 @@ public class TransitionInRangePlayer : AITransition
 #endif
     public override void InitTransition()
     {
-        if (!data) data = GetComponent<AIManager>().GetGuestData();
+        if (data==null) data = GetComponent<AIManager>().GetGuestData();
         if (!target) target = GameObject.FindWithTag("Player").GetComponent<Transform>();
     }
 
@@ -72,8 +73,8 @@ public class TransitionInRangePlayer : AITransition
     public override bool ErrorCheck()
     {
         if (!target)Debug.LogError("プレイヤーのトランスフォームが取得されていません");
-        if (!data)Debug.LogError("ゲスト用データが取得されていません");
+        if (data==null)Debug.LogError("ゲスト用データが取得されていません");
 
-        return target && data;
+        return target && (data!=null);
     }
 }

@@ -15,11 +15,9 @@ using UnityEngine;
 public class TransitionInRangeOther : AITransition
 {
     //ゲスト用データ
-    private GuestData data;
+    private GuestData.Data data;
     //遷移条件反転用フラグ
     [SerializeField,Tooltip("ターゲットが範囲外に出たら遷移したい場合はチェックを入れてください")] private bool inv = false;
-    //目的地のトランスフォーム
-    [SerializeField]private Transform target;
 #if false
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -55,7 +53,7 @@ public class TransitionInRangeOther : AITransition
 #endif
     public override void InitTransition()
     {
-        if (!data) data = GetComponent<AIManager>().GetGuestData();
+        if (data==null) data = GetComponent<AIManager>().GetGuestData();
     }
 
     public override bool IsTransition()
@@ -63,14 +61,14 @@ public class TransitionInRangeOther : AITransition
         //エラーチェック
         if (!ErrorCheck()) return false;
 
-        return (Vector3.Distance(gameObject.transform.position, target.position) <= data.reactionArea) != inv;
+        return (Vector3.Distance(gameObject.transform.position, data.penguinTF.position) <= data.reactionArea) != inv;
     }
 
     public override bool ErrorCheck()
     {
-        if (!data)Debug.LogError("ゲスト用データが取得されていません");
-        if (!target)Debug.LogError("目的地のトランストームが設定されていません");
+        if (data==null)Debug.LogError("ゲスト用データが取得されていません");
+        if (!data.penguinTF) Debug.LogError("目的地のトランストームが設定されていません");
 
-        return data && target;
+        return (data!=null) && data.penguinTF;
     }
 }

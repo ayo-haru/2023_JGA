@@ -2,7 +2,7 @@
 // @File	: [AIManager.cs]
 // @Brief	: AI管理クラス
 // @Author	: Ogusu Yuuko
-// @Editer	: Ogusu Yuuko
+// @Editer	: Ogusu Yuuko,Ichida Mai
 // @Detail	: 
 // 
 // [Date]
@@ -11,6 +11,7 @@
 // 2023/03/03	(小楠)ステートの終了処理追加
 // 2023/03/11	(小楠)乱数の初期化を追加
 // 2023/03/23	(小楠)ポーズの処理追加
+// 2023/03/25	(伊地田)自動生成、直置き両方に対応
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -26,10 +27,14 @@ public class AIManager : MonoBehaviour
     //現在のステート
     private int currentState = 0;
 
-    //使用する客データ
-    [SerializeField] private GuestData data;
     //ナビメッシュエージェント
     private NavMeshAgent agent;
+
+    [Space(100)]
+    [Header("デバッグ用直置きしたプレハブか？\nチェックいれて下のdataを設定すると\n直置きでも使えるよ")]
+    [SerializeField] private bool isDebug = false;
+    // 使用する客データ
+    [SerializeField] private GuestData.Data data;
 
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -46,6 +51,19 @@ public class AIManager : MonoBehaviour
 	/// </summary>
 	void Start()
 	{
+        //デバッグ用直置きしたとき用のデータセット。
+        //自動生成はStageSceneManagerで行っている
+        if (isDebug) {
+            StageSceneManager _StageSceneManager = GameObject.Find("StageSceneManager").GetComponent<StageSceneManager>();
+            data.rootTransforms = new List<Transform>();
+            for (int i = 0; i < data.roots.Length; i++) {
+                MySceneManager.eRoot index = data.roots[i];
+                data.rootTransforms.Add(_StageSceneManager.GetRootTransform(index));
+            }
+
+            data.penguinTF = _StageSceneManager.GetRootTransform(MySceneManager.eRoot.PENGUIN);
+        }
+
         //エラーチェック
         #region
         if (nodeList.Length <= 0) Debug.LogError("ノードが設定されていません");
@@ -135,10 +153,14 @@ public class AIManager : MonoBehaviour
         return -1;
     }
 
-    public GuestData GetGuestData()
+    public GuestData.Data GetGuestData()
     {
         return data;
     }
+    public void SetGuestData(GuestData.Data _guestData) {
+        data = _guestData;
+    }
+
 
     private void Pause()
     {
