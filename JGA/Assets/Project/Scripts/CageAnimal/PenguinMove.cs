@@ -46,8 +46,8 @@ public class PenguinMove : MonoBehaviour
 	//終了地点を格納しておく変数
 	private Vector3 endPos;
 
-	//ペンギンの総合データ
-    [SerializeField]private PenguinsData penguinsData;
+
+
 	//動いてるときの時間
 	private float moveTime;
 
@@ -59,11 +59,12 @@ public class PenguinMove : MonoBehaviour
     /// </summary>
     void Awake()
 	{
+
         currentMoveType = MoveType.IDLE;
 		moveType    = MoveType.IDLE;
 		moveFlg = false;
 		moveTime = 0.0f;
-		movedata = Random.Range(0, penguinsData.dataList.Count);
+		movedata = Random.Range(0, BoothAnimalManager.Instance.penguinsData.dataList.Count);
 
         PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(gameObject);
         PauseManager.OnResumed.Subscribe(x => { ReGame(); }).AddTo(gameObject);
@@ -75,12 +76,9 @@ public class PenguinMove : MonoBehaviour
     void Start()
 	{
 		
-		currentMoveIndex = Random.Range(0, penguinsData.rangeList.Count);
+		currentMoveIndex = BoothAnimalManager.Instance.penguinStartIndex;
         moveIndex = currentMoveIndex;
 
-		//初期地点を少しランダムにする。
-        
-        this.transform.position = CircleRandamaiser(moveIndex);
 
     }
 
@@ -162,7 +160,7 @@ public class PenguinMove : MonoBehaviour
         //速度を決定してその速度で終了地点まで動く
         this.transform.position = Vector3.MoveTowards(	this.transform.position,
 														endPos,
-														penguinsData.dataList[movedata].walkSpeed * Time.deltaTime);
+                                                        BoothAnimalManager.Instance.penguinsData.dataList[movedata].walkSpeed * Time.deltaTime);
 		//最期まで動いたら初期化し、アイドルに移る
 		if(this.transform.position == endPos)
 		{
@@ -180,7 +178,7 @@ public class PenguinMove : MonoBehaviour
 		//速度を決定してその速度で終了地点まで動く
         this.transform.position = Vector3.MoveTowards(	this.transform.position,
                                                         endPos,
-                                                        penguinsData.dataList[movedata].runSpeed * Time.deltaTime);
+                                                        BoothAnimalManager.Instance.penguinsData.dataList[movedata].runSpeed * Time.deltaTime);
         //最期まで動いたら初期化し、アイドルに移る
         if (this.transform.position == endPos)
         {
@@ -195,7 +193,7 @@ public class PenguinMove : MonoBehaviour
 	{
         var endRot = Quaternion.LookRotation(endPos - this.transform.position);
         var befRot = this.transform.rotation;
-        this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, endRot, penguinsData.dataList[movedata].rotateAngle);
+        this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, endRot, BoothAnimalManager.Instance.penguinsData.dataList[movedata].rotateAngle);
 
 		if (befRot == this.transform.rotation)
 		{
@@ -219,7 +217,7 @@ public class PenguinMove : MonoBehaviour
             //終了地点がなるべくかぶらないようにするため違う場所になるまで回す。
             while (currentMoveIndex == moveIndex)
             {
-                currentMoveIndex = Random.Range(0, penguinsData.rangeList.Count);
+                currentMoveIndex = Random.Range(0, BoothAnimalManager.Instance.penguinsData.rangeList.Count);
             }
             //終了地点が決まったらランダムで若干ずらす。
             endPos = CircleRandamaiser(currentMoveIndex);
@@ -233,12 +231,12 @@ public class PenguinMove : MonoBehaviour
 	{
 		var retVector = new Vector3();
 		//範囲を決める。
-        var startPoint = Random.insideUnitCircle * penguinsData.rangeArea;
+        var startPoint = Random.insideUnitCircle * BoothAnimalManager.Instance.penguinsData.rangeArea;
 
         //決めた範囲分動かした場所を決定し返す
-        retVector = new Vector3(penguinsData.rangeList[index].x + startPoint.x,
-                                penguinsData.rangeList[index].y,
-                                penguinsData.rangeList[index].z + startPoint.y);
+        retVector = new Vector3(BoothAnimalManager.Instance.penguinsData.rangeList[index].x + startPoint.x,
+                                BoothAnimalManager.Instance.penguinsData.rangeList[index].y,
+                                BoothAnimalManager.Instance.penguinsData.rangeList[index].z + startPoint.y);
 		return retVector;
     }
 

@@ -19,6 +19,7 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 		//---プレハブの登録
 		public static PrefabContainer characterDatas;
 		public static PrefabContainer UIDatas;
+		public static PrefabContainer animalDatas;
 
 		//---データの登録
 		public static ZooKeeperData zooKeeperData;
@@ -80,6 +81,7 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 		//---オブジェクト
 		GameData.characterDatas = AddressableLoader<PrefabContainer>.Load("CharacterData");
 		GameData.UIDatas = AddressableLoader<PrefabContainer>.Load("UIData");
+		GameData.animalDatas = AddressableLoader<PrefabContainer>.Load("AnimalData");
 		//---サウンド
 		Sound.BGMDatas = AddressableLoader<SoundData>.Load("BGMData");
 		Sound.SEDatas = AddressableLoader<SoundData>.Load("SEData");

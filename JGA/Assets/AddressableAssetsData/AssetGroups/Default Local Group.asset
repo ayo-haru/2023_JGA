@@ -45,6 +45,10 @@ MonoBehaviour:
     m_Address: EffectData
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 1e326129dc60e9749ac2b3b4abf45494
+    m_Address: AnimalData
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 6490bc5112e0d74469e157e8c2cc9fd5, type: 2}
   m_SchemaSet:
