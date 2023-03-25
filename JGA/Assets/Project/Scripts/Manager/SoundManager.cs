@@ -193,6 +193,11 @@ public class SoundManager : MonoBehaviour
 		Debug.LogError("<color=red>指定されたオブジェクトが見つかりません</color>(SoundManager.Play)\n");
 	}
 
+	public static void Stop(AudioSource audioSource)
+	{
+		audioSource.Stop();
+	}
+
 	void Pause()
 	{
 		foreach (var item in Source)
