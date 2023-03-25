@@ -33,14 +33,11 @@ public class Player : MonoBehaviour
 	[SerializeField, Tooltip("疾走速度倍率")]
 	private float runMagnification = 1.5f;
 
-	//[SerializeField, Tooltip("疾走時速度")]
-	private float runForce;
-	//[SerializeField, Tooltip("疾走時最高速度")]
-	private float maxRunSpeed;
-	//[SerializeField, Tooltip("アピール時速度")]
-	private float appealForce;
-	//[SerializeField, Tooltip("アピール時最高速度")]
-	private float maxAppealSpeed;
+	private float runForce;         //疾走時速度
+	private float _maxRunSpeed;     //疾走時最高速度
+	private float appealForce;      //アピール時速度
+	private float _maxAppealSpeed;  //アピール時最高速度
+	public float MaxAppealSpeed { get { return _maxAppealSpeed; } }
 
 	[SerializeField, Tooltip("ジョイスティックで走り始めるゾーン")]
 	private float joyRunZone = 0.8f;
@@ -64,6 +61,7 @@ public class Player : MonoBehaviour
 	private bool delay;
 
 	[SerializeField] private bool isHold;       // つかみフラグ
+	[SerializeField] private bool isMove;
 	[SerializeField] private bool isRun;        // 走りフラグ
 	[SerializeField] private bool _IsAppeal;    // アピールフラグ
 	public bool IsAppeal { get { return _IsAppeal; } }
@@ -130,9 +128,9 @@ public class Player : MonoBehaviour
 
 		// アピール速度設定
 		runForce = moveForce * runMagnification;
-		maxRunSpeed = maxMoveSpeed * runMagnification;
+		_maxRunSpeed = maxMoveSpeed * runMagnification;
 		appealForce = (moveForce + runForce) / 2;
-		maxAppealSpeed = (maxMoveSpeed + maxRunSpeed) / 2;
+		_maxAppealSpeed = (maxMoveSpeed + _maxRunSpeed) / 2;
 	}
 
 	/// <summary>
@@ -234,6 +232,21 @@ public class Player : MonoBehaviour
 				}
 			}
 		}
+
+		// サウンド
+		if (moveInputValue.normalized != Vector2.zero)
+		{
+			if (!isMove)
+			{
+				isMove = true;
+				SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_WALK_001);
+			}
+		}
+		else
+		{
+			isMove = false;
+			SoundManager.Stop(audioSource);
+		}
 	}
 
 	private void Pause()
@@ -270,12 +283,12 @@ public class Player : MonoBehaviour
 			if (_IsAppeal)
 			{
 				force = appealForce;
-				max = maxAppealSpeed;
+				max = _maxAppealSpeed;
 			}
 			else if (isRun)
 			{
 				force = runForce;
-				max = maxRunSpeed;
+				max = _maxRunSpeed;
 			}
 			else
 			{
@@ -305,12 +318,12 @@ public class Player : MonoBehaviour
 			if (_IsAppeal)
 			{
 				force = appealForce;
-				max = maxAppealSpeed;
+				max = _maxAppealSpeed;
 			}
 			else if (isRun)
 			{
 				force = runForce;
-				max = maxRunSpeed;
+				max = _maxRunSpeed;
 			}
 			else
 			{
@@ -512,7 +525,8 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void OnCall()
 	{
-		EffectManager.Create(transform.position + new Vector3(0, 2, 0), 0);
+		var obj = EffectManager.Create(transform.position + new Vector3(0, 2, 0), 0, transform.rotation);
+		obj.transform.parent = transform;
 		SoundManager.Play(audioSource, seCall);
 	}
 
