@@ -2,12 +2,13 @@
 // @File	: [TransitionInteract.cs]
 // @Brief	: 遷移条件　ペンギンが近くにいてかつインタラクトしたら
 // @Author	: Ogusu Yuuko
-// @Editer	: Ogusu Yuuko
+// @Editer	: Ogusu Yuuko,Ichida Mai
 // @Detail	: 
 // 
 // [Date]
 // 2023/03/07	スクリプト作成
 // 2023/03/13	(小楠)インタラクトフラグ取得
+// 2023/03/13	(伊地田)自動生成に対応
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ using UnityEngine;
 public class TransitionInteract : AITransition
 {
     private Transform playerTransform;
-    private GuestData data;
+    private GuestData.Data data;
     private GameObject[] interactObjecs;
 #if false
     /// <summary>
@@ -55,7 +56,7 @@ public class TransitionInteract : AITransition
     {
         //コンポーネント、オブジェクトの取得
         if (!playerTransform) playerTransform = GameObject.FindWithTag("Player").GetComponent<Transform>();
-        if (!data) data = GetComponent<AIManager>().GetGuestData();
+        if (data==null) data = GetComponent<AIManager>().GetGuestData();
         if (interactObjecs == null) interactObjecs = GameObject.FindGameObjectsWithTag("Interact");
     }
 
@@ -81,9 +82,9 @@ public class TransitionInteract : AITransition
     public override bool ErrorCheck()
     {
         if (!playerTransform)Debug.LogError("プレイヤーのトランスフォームが取得されていません");
-        if (!data)Debug.LogError("ゲスト用データが取得されていません");
+        if (data==null)Debug.LogError("ゲスト用データが取得されていません");
         if ((interactObjecs == null) ? true : interactObjecs.Length <= 0)Debug.LogError("インタラクトオブジェクトがありません");
 
-        return playerTransform && data && ((interactObjecs == null) ? false : interactObjecs.Length > 0);
+        return playerTransform && (data!=null) && ((interactObjecs == null) ? false : interactObjecs.Length > 0);
     }
 }

@@ -2,7 +2,7 @@
 // @File	: [StateFollowPenguin.cs]
 // @Brief	: ペンギン追いかける処理
 // @Author	: Ogusu Yuuko
-// @Editer	: Ogusu Yuuko
+// @Editer	: Ogusu Yuuko,Ichida Mai
 // @Detail	: 
 // 
 // [Date]
@@ -17,6 +17,7 @@
 // 2023/03/11	(小楠）navmeshagentの目的地をちょっとずらして、お客さんをばらけるようにした
 // 2023/03/12	(小楠）プレイヤーからアピールフラグ取得した
 // 2023/03/24	(小楠）ペンギンの追従速度をプレイヤー基準に変更
+// 2023/03/25	(小楠）自動生成に対応
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -36,7 +37,7 @@ public class StateFollowPenguin : AIState
     //感情UI
     [SerializeField] private EmosionUI ui;
     //お客さん用データ
-    private GuestData data;
+    private GuestData.Data data;
     //感情の変化時間計算用
     private float fTimer = 0.0f;
     //アニメーター
@@ -82,7 +83,7 @@ public class StateFollowPenguin : AIState
     {
         //オブジェクト、コンポーネントの取得
         if (!agent) agent = GetComponent<NavMeshAgent>();
-        if (!data) data = GetComponent<AIManager>().GetGuestData();
+        if (data==null) data = GetComponent<AIManager>().GetGuestData();
         if (!penguin) penguin = GameObject.FindWithTag("Player");
         if (!target && penguin) target = penguin.GetComponent<Transform>();
         if (!player && penguin) player = penguin.GetComponent<Player>();
@@ -160,9 +161,9 @@ public class StateFollowPenguin : AIState
         if (!player)Debug.LogError("プレイヤー用スクリプトが取得できてません");
         if (!agent)Debug.LogError("ナビメッシュエージェントが取得できてません");
         if (!ui)Debug.LogError("感情UIが設定されていません");
-        if (!data)Debug.LogError("ゲスト用データがが取得できてません");
+        if (data==null)Debug.LogError("ゲスト用データがが取得できてません");
         if (!animator)Debug.LogError("アニメータが取得できてません");
 
-        return penguin && target && player && agent && ui && data && animator;
+        return penguin && target && player && agent && ui && (data!=null) && animator;
     }
 }

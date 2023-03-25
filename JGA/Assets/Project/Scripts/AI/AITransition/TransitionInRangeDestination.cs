@@ -2,11 +2,12 @@
 // @File	: [TransitionInRangeDestination.cs]
 // @Brief	: 遷移条件　目的地が範囲内にあるか
 // @Author	: Ogusu Yuuko
-// @Editer	: 
+// @Editer	: Ichida Mai
 // @Detail	: 
 // 
 // [Date]
 // 2023/03/15	スクリプト作成
+// 2023/03/25	(伊地田) 自動生成に対応
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ using UnityEngine.AI;
 public class TransitionInRangeDestination : AITransition
 {
     //ゲスト用データ
-    private GuestData data;
+    private GuestData.Data data;
     //ナビメッシュエージェント
     private NavMeshAgent agent;
     //遷移条件反転用フラグ
@@ -57,7 +58,7 @@ public class TransitionInRangeDestination : AITransition
 #endif
     public override void InitTransition()
     {
-        if (!data) data = GetComponent<AIManager>().GetGuestData();
+        if (data==null) data = GetComponent<AIManager>().GetGuestData();
         if (!agent) agent = GetComponent<NavMeshAgent>();
     }
 
@@ -71,9 +72,9 @@ public class TransitionInRangeDestination : AITransition
 
     public override bool ErrorCheck()
     {
-        if (!data)Debug.LogError("ゲスト用データが取得されていません");
+        if (data==null)Debug.LogError("ゲスト用データが取得されていません");
         if (!agent)Debug.LogError("ナビメッシュエージェントが取得されていません");
 
-        return data && agent;
+        return (data!=null) && agent;
     }
 }

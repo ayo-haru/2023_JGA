@@ -22,6 +22,7 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 
 		//---データの登録
 		public static ZooKeeperData zooKeeperData;
+		public static GuestData guestData;
 
 		//---フラグ
 		public static bool isCatchPenguin;
@@ -87,6 +88,7 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 		Effect.effectDatas = AddressableLoader<EffectData>.Load("EffectData");
 		//---データ
 		GameData.zooKeeperData = AddressableLoader<ZooKeeperData>.Load("ZooKeeperData");
+		GameData.guestData = AddressableLoader<GuestData>.Load("GuestData");
 
 		//----- 変数初期化 -----
 		GameData.isCatchPenguin = false;

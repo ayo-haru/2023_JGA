@@ -2,13 +2,14 @@
 // @File	: [TransitionRay.cs]
 // @Brief	: 遷移条件　プレイヤーが視界に入ったか
 // @Author	: Ogusu Yuuko
-// @Editer	: 
+// @Editer	: Ichida Mai
 // @Detail	: https://nekojara.city/unity-object-sight
 // 
 // [Date]
 // 2023/03/05	スクリプト作成
 // 2023/03/07	視界をRayから円錐に変更
 // 2023/03/10	視界を位置を調整
+// 2023/03/25	自動生成に対応
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ using UnityEngine;
 public class TransitionRay : AITransition
 {
     private Transform playerTransform;
-    private GuestData data;
+    private GuestData.Data data;
     [SerializeField,Range(0,360),Tooltip("視線の向き")] private float angle = 45.0f;
     [SerializeField, Range(0, 180), Tooltip("視野角")] private float viewAngle = 45.0f;
     [SerializeField,Tooltip("プレイヤーが視界から外れた時に遷移したい場合はチェックを入れてください")] private bool inv = false;
@@ -57,7 +58,7 @@ public class TransitionRay : AITransition
 #endif
     public override void InitTransition()
     {
-        if(!data)data = GetComponent<AIManager>().GetGuestData();
+        if(data==null)data = GetComponent<AIManager>().GetGuestData();
         if (!playerTransform) playerTransform = GameObject.FindWithTag("Player").GetComponent<Transform>();
     }
 
@@ -102,9 +103,9 @@ public class TransitionRay : AITransition
     public override bool ErrorCheck()
     {
         if (!eyesPos)Debug.LogError("目の位置が設定されていません");
-        if (!data)Debug.LogError("ゲスト用データが取得されていません");
+        if (data==null)Debug.LogError("ゲスト用データが取得されていません");
         if (!playerTransform)Debug.LogError("プレイヤーのトランスフォームが取得されていません");
 
-        return eyesPos && data && playerTransform;
+        return eyesPos && (data!=null) && playerTransform;
     }
 }

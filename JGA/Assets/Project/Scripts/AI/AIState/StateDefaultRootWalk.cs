@@ -2,7 +2,7 @@
 // @File	: [StateDefaultRootWalk.cs]
 // @Brief	: 指定されたルートの移動
 // @Author	: Ogusu Yuuko
-// @Editer	: Ogusu Yuuko
+// @Editer	: Ogusu Yuuko,Ichida Mai
 // @Detail	: 
 // 
 // [Date]
@@ -13,6 +13,7 @@
 // 2023/03/10	(小楠）追跡範囲の変更。目的地の方向くようにした
 // 2023/03/11	(小楠）目的地との距離を調整
 // 2023/03/18	(小楠）動物の方向くようにした
+// 2023/03/25	(伊地田）自動生成に対応
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -21,8 +22,6 @@ using UnityEngine.AI;
 
 public class StateDefaultRootWalk : AIState
 {
-    //目的地のリスト
-    [SerializeField] private List<Transform> targetList;
     //動物のTransform
     private List<Transform> animals;
     //現在向かっている目的地
@@ -32,7 +31,7 @@ public class StateDefaultRootWalk : AIState
     //ナビメッシュエージェント
     private NavMeshAgent agent;
     //お客さん用のデータ
-    private GuestData data;
+    private GuestData.Data data;
     //アニメーター
     private Animator animator;
 #if false
@@ -71,7 +70,7 @@ public class StateDefaultRootWalk : AIState
     {
         //データ、コンポーネント取得
         if (!agent) agent = GetComponent<NavMeshAgent>();
-        if (!data) data = GetComponent<AIManager>().GetGuestData();
+        if (data==null) data = GetComponent<AIManager>().GetGuestData();
         if (!animator) animator = GetComponent<Animator>();
         GetAnimalsTransrom();
 
@@ -79,7 +78,7 @@ public class StateDefaultRootWalk : AIState
         if (!ErrorCheck()) return;
 
         //ナビメッシュエージェントの設定
-        agent.SetDestination(targetList[targetNum].position);
+        agent.SetDestination(data.rootTransforms[targetNum].position);
         agent.speed = data.speed;
         agent.stoppingDistance = Random.Range(1,data.cageDistance);
 
@@ -116,7 +115,7 @@ public class StateDefaultRootWalk : AIState
             }
 
             //動物の方を向く
-            Quaternion rot = Quaternion.LookRotation(((!animals[targetNum]) ? targetList[targetNum].position : animals[targetNum].position) - transform.position);
+            Quaternion rot = Quaternion.LookRotation(((!animals[targetNum]) ? data.rootTransforms[targetNum].position : animals[targetNum].position) - transform.position);
             transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime);
 
         }
@@ -129,12 +128,12 @@ public class StateDefaultRootWalk : AIState
 
     public override bool ErrorCheck()
     {
-        if((targetList == null) ? true : targetList.Count <= 0)Debug.LogError("目的地のリストがありません");
+        if((data.rootTransforms == null) ? true : data.rootTransforms.Count <= 0)Debug.LogError("目的地のリストがありません");
         if (!agent)Debug.LogError("ナビメッシュエージェントが取得されていません");
-        if (!data)Debug.LogError("ゲスト用データが取得されていません");
+        if (data==null)Debug.LogError("ゲスト用データが取得されていません");
         if (!animator)Debug.LogError("アニメータが取得されていません");
 
-        return ((targetList == null) ? false : targetList.Count > 0) && agent && data && animator;
+        return ((data.rootTransforms == null) ? false : data.rootTransforms.Count > 0) && agent && (data!=null) && animator;
     }
 
     /// <summary>
@@ -143,10 +142,10 @@ public class StateDefaultRootWalk : AIState
     public void ChangeTarget()
     {
         //ターゲットが1つ以下の場合は処理しない
-        if(targetList.Count <= 1) return;
+        if(data.rootTransforms.Count <= 1) return;
 
-        targetNum = (targetNum + 1) % targetList.Count;
-        agent.SetDestination(targetList[targetNum].position);
+        targetNum = (targetNum + 1) % data.rootTransforms.Count;
+        agent.SetDestination(data.rootTransforms[targetNum].position);
         fTimer = 0.0f;
         animator.SetBool("isWalk", true);
     }
@@ -158,13 +157,13 @@ public class StateDefaultRootWalk : AIState
         if (animals != null) return;
         animals = new List<Transform>();
 
-        for(int i = 0; i < targetList.Count; ++i)
+        for(int i = 0; i < data.rootTransforms.Count; ++i)
         {
             animals.Add(null);
             //動物の名前から動物の親オブジェクトを取得
-            int index = targetList[targetNum].name.IndexOf("CagePos");
+            int index = data.rootTransforms[targetNum].name.IndexOf("CagePos");
             if (index < 0) continue;
-            GameObject obj = GameObject.Find(targetList[i].name.Substring(0, index));
+            GameObject obj = GameObject.Find(data.rootTransforms[i].name.Substring(0, index));
             if ((!obj) ? true : obj.transform.childCount <= 0) continue;
 
             //子オブジェクトの中からランダムで1つ動物をanimalsに格納
