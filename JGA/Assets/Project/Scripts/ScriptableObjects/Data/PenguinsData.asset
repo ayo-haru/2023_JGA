@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 67da3fc384d3d974bb14eb334ab582aa, type: 3}
-  m_Name: New Penguins Data
+  m_Name: PenguinsData
   m_EditorClassIdentifier: 
   dataList:
   - walkSpeed: 3
     runSpeed: 5
-    rotateSpeed: 5
+    rotateAngle: 1
     minAppealTime: 0
     maxAppealTime: 0
     swimSpeed: 0
@@ -23,7 +23,7 @@ MonoBehaviour:
     maxIdleTime: 5
   - walkSpeed: 2
     runSpeed: 4
-    rotateSpeed: 0
+    rotateAngle: 1
     minAppealTime: 0
     maxAppealTime: 0
     swimSpeed: 0
@@ -41,4 +41,4 @@ MonoBehaviour:
     downStone: {x: 0, y: 0, z: 0}
   - builtStone: {x: 0, y: 0, z: 0}
     downStone: {x: 0, y: 0, z: 0}
-  rangeArea: 3
+  rangeArea: 2
