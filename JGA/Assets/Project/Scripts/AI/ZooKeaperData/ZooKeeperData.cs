@@ -31,7 +31,7 @@ public class ZooKeeperData : ScriptableObject{
         [Header("オブジェクトをもとに戻す人か戻さない人か")]
         public ZooKeeperAI.Status status;
         [Header("飼育員のスピード")]
-        [Range(1.1f, 50.0f)] public float speed = 5.0f;
+        [Range(1.1f, 2.0f)] public float speed = 1.1f;
         [Header("飼育員の追いかけるスピード")]
         [Range(1.1f, 2.0f)] public float chaseSpeed = 1.1f;
         [Header("飼育員の索敵範囲")]

@@ -30,10 +30,10 @@ public class GimmickObj : MonoBehaviour
         // 元の位置にあるかフラグ
         for (int i = 0; i < gimmickList.Count; i++)
         {
-            x1 = (int)gimmickList[i].transform.position.x;
-            z1 = (int)gimmickList[i].transform.position.z;
-            x2 = (int)resetPos[i].transform.position.x;
-            z2 = (int)resetPos[i].transform.position.z;
+            x1 = Mathf.FloorToInt(gimmickList[i].transform.position.x);
+            z1 = Mathf.FloorToInt(gimmickList[i].transform.position.z);
+            x2 = Mathf.FloorToInt(resetPos[i].transform.position.x);
+            z2 = Mathf.FloorToInt(resetPos[i].transform.position.z);
             if (x1 != x2 || z1 != z2)
             {
                 bReset.Add(false);  // 元の位置にない
@@ -53,10 +53,10 @@ public class GimmickObj : MonoBehaviour
         // オブジェクトが元の位置にあるか
         for (int i = 0; i < gimmickList.Count; i++)
         {
-            x1 = (int)gimmickList[i].transform.position.x;
-            z1 = (int)gimmickList[i].transform.position.z;
-            x2 = (int)resetPos[i].transform.position.x;
-            z2 = (int)resetPos[i].transform.position.z;
+            x1 = Mathf.FloorToInt(gimmickList[i].transform.position.x);
+            z1 = Mathf.FloorToInt(gimmickList[i].transform.position.z);
+            x2 = Mathf.FloorToInt(resetPos[i].transform.position.x);
+            z2 = Mathf.FloorToInt(resetPos[i].transform.position.z);
             if(x1 != x2 || z1 != z2)
             {
                 bReset[i] = false;
