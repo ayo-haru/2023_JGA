@@ -86,9 +86,7 @@ public class EmosionUI : MonoBehaviour
                 effect = EffectManager.Create(transform.position, 3);
                 break;
             case EEmotion.HIGH_TENSION:
-                effect = EffectManager.Create(transform.position, 0);
-                ParticleSystem.MainModule main = effect.GetComponent<ParticleSystem>().main;
-                main.loop = true;
+                effect = EffectManager.Create(transform.position, 5);
                 break;
             default:
                 effect = null;
