@@ -98,9 +98,11 @@ public class StageSceneManager : BaseSceneManager {
                 }
 
                 // 生成
-                GameObject zooKeeperInstace = Instantiate(zooKeeperObj, spawnPos.transform.position, Quaternion.identity);
-                if (parent) {
-                    zooKeeperInstace.transform.parent = parent.transform;   // 親を設定
+                if (spawnPos) {
+                    GameObject zooKeeperInstace = Instantiate(zooKeeperObj, spawnPos.transform.position, Quaternion.identity);
+                    if (parent) {
+                        zooKeeperInstace.transform.parent = parent.transform;   // 親を設定
+                    }
                 }
                 zooKeeperInstace.name = _zooKeeperList[i].name; // 表示名変更
 
