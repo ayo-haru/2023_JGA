@@ -103,11 +103,10 @@ public class StageSceneManager : BaseSceneManager {
                     if (parent) {
                         zooKeeperInstace.transform.parent = parent.transform;   // 親を設定
                     }
+                    zooKeeperInstace.name = _zooKeeperList[i].name; // 表示名変更
+                                                                    // データをZooKeeperAI.csに流し込む
+                    zooKeeperInstace.GetComponent<ZooKeeperAI>().SetData(_zooKeeperList[i]);
                 }
-                zooKeeperInstace.name = _zooKeeperList[i].name; // 表示名変更
-
-                // データをZooKeeperAI.csに流し込む
-                zooKeeperInstace.GetComponent<ZooKeeperAI>().SetData(_zooKeeperList[i]);
             }
         }
 
