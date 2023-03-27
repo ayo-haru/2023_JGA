@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Glass
+  m_Name: SM_Glass
   m_Shader: {fileID: -6465566751694194690, guid: d67ea1ec104451b41ad57f3e16157b9e,
     type: 3}
   m_ValidKeywords: []
@@ -48,7 +48,14 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _DistortStrength: 0.0001
+    - _Metallic: 1
+    - _NoiseScale: 145
+    - _NormalStrength: 0.34
     - _QueueControl: 0
     - _QueueOffset: 0
-    m_Colors: []
+    - _ReflectionStrength: 2.02
+    - _Smoothness: 0.463
+    m_Colors:
+    - _GlassColor: {r: 0, g: 1, b: 0.99020815, a: 0.101960786}
   m_BuildTextureStacks: []
