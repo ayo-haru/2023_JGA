@@ -62,7 +62,7 @@ public class StageSceneManager : BaseSceneManager {
         zooKeeperRootPos[(int)MySceneManager.eRoot.ELEPHANT] = GameObject.Find("ElephantCagePos").GetComponent<Transform>();
         zooKeeperRootPos[(int)MySceneManager.eRoot.LION] = GameObject.Find("LionCagePos").GetComponent<Transform>();
         zooKeeperRootPos[(int)MySceneManager.eRoot.POLARBEAR] = GameObject.Find("PolarBearCagePos").GetComponent<Transform>();
-        zooKeeperRootPos[(int)MySceneManager.eRoot.BIRD] = GameObject.Find("birdCagePos").GetComponent<Transform>();
+        zooKeeperRootPos[(int)MySceneManager.eRoot.BIRD] = GameObject.Find("BirdCagePos").GetComponent<Transform>();
 
         isSceneChangeOnce = false;
     }
@@ -104,7 +104,7 @@ public class StageSceneManager : BaseSceneManager {
                         zooKeeperInstace.transform.parent = parent.transform;   // 親を設定
                     }
                     zooKeeperInstace.name = _zooKeeperList[i].name; // 表示名変更
-                                                                    // データをZooKeeperAI.csに流し込む
+                    // データをZooKeeperAI.csに流し込む
                     zooKeeperInstace.GetComponent<ZooKeeperAI>().SetData(_zooKeeperList[i]);
                 }
             }
@@ -153,10 +153,6 @@ public class StageSceneManager : BaseSceneManager {
     //}
 
     void Update() {
-        /*
-         * ・リスタートがかかったら各オブジェクトをリスタート(初期化)させる
-         */
-
         if (clockUI) {
             if (_ClockUI.IsFinish()) {
                 if (!isSceneChangeOnce) {

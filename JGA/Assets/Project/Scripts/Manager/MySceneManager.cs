@@ -52,8 +52,7 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 
 	private static string[] sceneName = {   // シーン名(実際に作ったシーンの名前入れてね)
 		"Title",
-		"ProtoType",
-		"Stage_001"	// 海川君のステージ出来たらこっちにいろいろうつして、ProtoTypeのシーンとはさよなら
+		"Stage_001"
 	};
 
 	//----- 飼育員、客のルートに使用 -----
