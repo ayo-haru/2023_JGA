@@ -14,10 +14,156 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dataList:
   - name: OGuest001
-    roots: 0300000004000000
-    rootTransforms: []
+    roots: 05000000
+    rootTransforms:
+    - {fileID: 0}
     penguinTF: {fileID: 0}
     speed: 1
+    followSpeed: 0.5
+    inBoothSpeed: 0.5
+    rayLength: 10
+    reactionArea: 15
+    distance: 2
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 0
+    cageDistance: 10
+  - name: OGuest002
+    roots: 05000000
+    rootTransforms:
+    - {fileID: 0}
+    penguinTF: {fileID: 0}
+    speed: 1
+    followSpeed: 0.5
+    inBoothSpeed: 0.5
+    rayLength: 10
+    reactionArea: 15
+    distance: 2
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 0
+    cageDistance: 10
+  - name: OGuest003
+    roots: 05000000
+    rootTransforms:
+    - {fileID: 0}
+    penguinTF: {fileID: 0}
+    speed: 1
+    followSpeed: 0.5
+    inBoothSpeed: 0.5
+    rayLength: 10
+    reactionArea: 15
+    distance: 2
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 0
+    cageDistance: 10
+  - name: OGuest004
+    roots: 05000000
+    rootTransforms:
+    - {fileID: 0}
+    penguinTF: {fileID: 0}
+    speed: 1
+    followSpeed: 0.5
+    inBoothSpeed: 0.5
+    rayLength: 10
+    reactionArea: 15
+    distance: 2
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 0
+    cageDistance: 10
+  - name: OGuest005
+    roots: 05000000
+    rootTransforms:
+    - {fileID: 0}
+    penguinTF: {fileID: 0}
+    speed: 1
+    followSpeed: 0.5
+    inBoothSpeed: 0.5
+    rayLength: 10
+    reactionArea: 15
+    distance: 2
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 0
+    cageDistance: 10
+  - name: OGuest006
+    roots: 05000000
+    rootTransforms:
+    - {fileID: 0}
+    penguinTF: {fileID: 0}
+    speed: 1
+    followSpeed: 0.5
+    inBoothSpeed: 0.5
+    rayLength: 10
+    reactionArea: 15
+    distance: 2
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 0
+    cageDistance: 10
+  - name: OGuest007
+    roots: 0400000002000000
+    rootTransforms:
+    - {fileID: 0}
+    - {fileID: 0}
+    penguinTF: {fileID: 0}
+    speed: 1
+    followSpeed: 0.5
+    inBoothSpeed: 0.5
+    rayLength: 10
+    reactionArea: 15
+    distance: 2
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 0
+    cageDistance: 10
+  - name: OGuest008
+    roots: 0200000004000000
+    rootTransforms:
+    - {fileID: 0}
+    - {fileID: 0}
+    penguinTF: {fileID: 0}
+    speed: 1
+    followSpeed: 0.5
+    inBoothSpeed: 0.5
+    rayLength: 10
+    reactionArea: 15
+    distance: 2
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 0
+    cageDistance: 10
+  - name: OGuest009
+    roots: 060000000500000002000000
+    rootTransforms:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    penguinTF: {fileID: 0}
+    speed: 1
+    followSpeed: 0.5
+    inBoothSpeed: 0.5
+    rayLength: 10
+    reactionArea: 15
+    distance: 2
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 0
+    cageDistance: 10
+  - name: OGuest010
+    roots: 0600000005000000020000000300000004000000
+    rootTransforms:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    penguinTF: {fileID: 0}
+    speed: 1
+    followSpeed: 0.5
+    inBoothSpeed: 0.5
     rayLength: 10
     reactionArea: 15
     distance: 2
