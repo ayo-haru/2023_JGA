@@ -86,7 +86,7 @@ public class StageSceneManager : BaseSceneManager {
             for (int i = 0; i < _zooKeeperList.Length; i++) {
                 GameObject spawnPos = GameObject.Find(_zooKeeperList[i].name + "Spawn"); // 生成位置を名前で取得する
                 if (spawnPos == null) { // 存在するか
-                    Debug.LogError(_zooKeeperList[i].name + "のスポーン位置が見つかりませんでした。(StageSceneManager.cs)");    // 存在しないのでメッセージ出す
+                    Debug.LogWarning(_zooKeeperList[i].name + "のスポーン位置が見つかりませんでした。(StageSceneManager.cs)");    // 存在しないのでメッセージ出す
                 } else {
                     _zooKeeperList[i].respawnTF = spawnPos.GetComponent<Transform>();    // 存在してたので位置を取得
                 }
@@ -144,7 +144,7 @@ public class StageSceneManager : BaseSceneManager {
 
             _ClockUI.CountStart();
         } else {
-            Debug.LogError("ClockUIがシーン上にありません");
+            Debug.LogWarning("ClockUIがシーン上にありません");
         }
     }
 
