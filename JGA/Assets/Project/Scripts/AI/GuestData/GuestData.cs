@@ -9,6 +9,7 @@
 // 2023/03/02	スクリプト作成
 // 2023/03/11	(小楠)ケージとの距離を追加
 // 2023/03/25	(伊地田)複数設定用に変更
+// 2023/03/27	(小楠)ペンギンに追従する時とブース内の速さを追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -30,6 +31,10 @@ public class GuestData : ScriptableObject
         public Transform penguinTF;
         [Header("移動速度")]
         [Range(1, 3)] public float speed = 1;
+        [Header("ペンギン追従速度")]
+        [Range(0.5f, 1.0f)] public float followSpeed = 0.5f;
+        [Header("ブース内移動速度")]
+        [Range(0.1f, 1.0f)] public float inBoothSpeed = 0.5f;
         [Header("視線の長さ")]
         [Min(1)] public float rayLength = 10.0f;
         [Header("反応する範囲")]
@@ -48,10 +53,12 @@ public class GuestData : ScriptableObject
 
     // 表示
     [SerializeField]
-    public Data[] dataList = { 
-        new Data { 
+    public Data[] dataList = {
+        new Data {
             name = "OGuest",
             speed = 1,
+            followSpeed = 0.5f,
+            inBoothSpeed = 0.5f,
             rayLength = 10.0f, 
             reactionArea = 15, 
             distance = 2,

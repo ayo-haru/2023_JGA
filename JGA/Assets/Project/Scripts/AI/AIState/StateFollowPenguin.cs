@@ -44,8 +44,6 @@ public class StateFollowPenguin : AIState
     private Animator animator;
     //目的地の位置調節用
     private Vector3 posOffset;
-    //ペンギンに追従する速度
-    [SerializeField, Range(0.5f, 1.0f)] float followSpeed = 0.5f;
 #if false
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -137,7 +135,7 @@ public class StateFollowPenguin : AIState
         agent.isStopped = animator.GetCurrentAnimatorStateInfo(0).IsName("Surprised");
 
         //!!!,!!の時は追従する
-        agent.speed = (ui.GetEmotion() >= EEmotion.ATTENSION_MIDDLE) ? player.MaxAppealSpeed * followSpeed : 0.0f; 
+        agent.speed = (ui.GetEmotion() >= EEmotion.ATTENSION_MIDDLE) ? player.MaxAppealSpeed * data.followSpeed : 0.0f; 
         agent.SetDestination(target.position + posOffset);
 
         //プレイヤーの方向を向く
