@@ -137,7 +137,7 @@ public class StateFollowPenguin : AIState
         agent.isStopped = animator.GetCurrentAnimatorStateInfo(0).IsName("Surprised");
 
         //!!!,!!の時は追従する
-        agent.speed = (ui.GetEmotion() >= EEmotion.ATTENSION_MIDDLE) ? (player.vForce.magnitude > 0) ? player.vForce.magnitude / 60.0f * followSpeed : data.speed : 0.0f; 
+        agent.speed = (ui.GetEmotion() >= EEmotion.ATTENSION_MIDDLE) ? player.MaxAppealSpeed * followSpeed : 0.0f; 
         agent.SetDestination(target.position + posOffset);
 
         //プレイヤーの方向を向く
