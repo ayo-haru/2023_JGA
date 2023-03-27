@@ -46,7 +46,10 @@ public class SoundManager : MonoBehaviour
 		HUMAN_RUN_003,
 
 		SELECT_001,
-		SELECT_002,
+		DECISION_001,
+		CANCEL_001,
+		SLIDE_001,
+
 	}
 
 	private static HashSet<AudioSource> Source = new HashSet<AudioSource>();
