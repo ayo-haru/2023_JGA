@@ -101,6 +101,41 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5d4c909aefd4e3d4cb37376120e11bd8, type: 3}
+--- !u!1 &2858956129449438927 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2784310932717566011, guid: 5d4c909aefd4e3d4cb37376120e11bd8,
+    type: 3}
+  m_PrefabInstance: {fileID: 76228562752870132}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &6587547195555354288
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2858956129449438927}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 5.9, y: 7.7, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!208 &4482130370828299193
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2858956129449438927}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 2.95, y: 3.85, z: 0.1}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!4 &3235517333618439285 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3307907833448473217, guid: 5d4c909aefd4e3d4cb37376120e11bd8,
