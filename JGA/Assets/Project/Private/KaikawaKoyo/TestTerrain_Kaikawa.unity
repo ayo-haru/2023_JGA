@@ -667,6 +667,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Stage
       objectReference: {fileID: 0}
+    - target: {fileID: 845823778388838597, guid: e102e6c418cc0f74990ec9be3f0aed4b,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 95
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e102e6c418cc0f74990ec9be3f0aed4b, type: 3}
 --- !u!1001 &2129140293

@@ -12,7 +12,9 @@
 // 2023/03/13	吹っ飛ばし処理をPlayer.csへ輸送しやした（酒井）
 // 2023/03/16	音の再生方法を変更
 // 2023/03/24   ポーズ処理の追加
+// 2023/03/27   はたかれる関係の処理を別スクリプトへ移動。スタートとポーズ後に音が鳴らないように
 //=============================================================================
+using System.Collections;
 using UnityEngine;
 using UniRx;
 
@@ -23,16 +25,7 @@ public class CardboardBox : MonoBehaviour
 	[SerializeField]
 	private AudioClip clip;
 
-	[SerializeField, Tooltip("吹っ飛ぶ強さ")]
-	private float blowpower = 10.0f;    // 吹っ飛ぶ強さ
-	[SerializeField, Tooltip("上方向のベクトル調整値")]
-	private float topvector = 0.1f;    // 上方向のベクトル調整値
-	private float objectsize;
-
-	[SerializeField]
-	private bool Kinematic;
-	[SerializeField]
-	private bool Sleeping;
+    private bool delay;
 
     // ポーズ時の値保存用
     private Vector3 pauseVelocity;
@@ -54,11 +47,9 @@ public class CardboardBox : MonoBehaviour
 
 	private void Start()
 	{
-        // オブジェクトのサイズを計算
-        objectsize = (transform.localScale.x + transform.localScale.y + transform.localScale.z) / 3;
+        StartCoroutine(Delay());
 	}
-
-
+    
 	/// <summary>
 	/// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
 	/// </summary>
@@ -74,15 +65,6 @@ public class CardboardBox : MonoBehaviour
 
         // IsSoundフラグ切り替え
         IsSound = sound.isPlaying;
-
-		// 動きが止まったら動かないようにする
-		if (!rb.isKinematic && rb.IsSleeping())
-		{
-			rb.isKinematic = true;
-		}
-
-		Kinematic = rb.isKinematic;
-		Sleeping = rb.IsSleeping();
 	}
 
     // ポーズ処理
@@ -91,6 +73,7 @@ public class CardboardBox : MonoBehaviour
         pauseVelocity = rb.velocity;
         pauseAngularVelocity = rb.angularVelocity;
         rb.isKinematic = true;
+        delay = true;
     }
 
     private void Resumed()
@@ -98,15 +81,23 @@ public class CardboardBox : MonoBehaviour
         rb.velocity = pauseVelocity;
         rb.angularVelocity = pauseAngularVelocity;
         rb.isKinematic = false;
+        StartCoroutine(Delay());
     }
 
     private void OnCollisionEnter(Collision collision)
 	{
 		// はたかれてから止まるまでの間にオブジェクトにぶつかったら音を鳴らす
-		if (!rb.IsSleeping())
+		if (!rb.IsSleeping() && !delay)
 		{
-			// ここで音を鳴らすよ
+            // ここで音を鳴らすよ
 			SoundManager.Play(sound, clip);
 		}
 	}
+
+    IEnumerator Delay()
+    {
+        delay = true;
+        yield return new WaitUntil(() => rb.isKinematic == true);
+        delay = false;
+    }
 }
