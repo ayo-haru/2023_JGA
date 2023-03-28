@@ -243,6 +243,13 @@ public class Player : MonoBehaviour
 				isMove = true;
 				SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_WALK_001);
 			}
+			else
+			{
+				if (audioSource.isPlaying == false)
+				{
+					SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_WALK_001);
+				}
+			}
 		}
 		else
 		{
