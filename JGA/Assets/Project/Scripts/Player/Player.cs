@@ -378,7 +378,7 @@ public class Player : MonoBehaviour
 
 	public void MoveSound()
 	{
-		SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_WALK_002);
+		SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_WALK_001);
 	}
 
 	/// <summary>
