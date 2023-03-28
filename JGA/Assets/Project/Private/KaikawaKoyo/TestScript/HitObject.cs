@@ -67,15 +67,5 @@ public class HitObject : MonoBehaviour
         rb.isKinematic = false;
     }
 
-    /// <summary>
-    /// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
-    /// </summary>
-    void Update()
-	{
-        // 動きが止まったら動かないようにする
-        if (!rb.isKinematic && rb.IsSleeping())
-        {
-            rb.isKinematic = true;
-        }
-    }
+ 
 }
