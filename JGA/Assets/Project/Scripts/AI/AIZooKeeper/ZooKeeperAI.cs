@@ -56,7 +56,6 @@ public class ZooKeeperAI : MonoBehaviour
     private SphereCollider sphereCollider;
     //private float angle = 45.0f;
 
-    private Transform playerPos;
     private Player player;
     private NavMeshAgent navMesh;
     private RaycastHit rayhit;
@@ -101,11 +100,10 @@ public class ZooKeeperAI : MonoBehaviour
     /// </summary>
     void Start()
     {
-        animator = GetComponent<Animator>();
-        audioSource = this.GetComponent<AudioSource>();
-        playerPos = GameObject.FindWithTag("Player").GetComponent<Transform>();
-        player = GameObject.FindWithTag("Player").GetComponent<Player>();
-        gimmickObj = transform.root.gameObject.GetComponent<GimmickObj>();  // 親オブジェクトのスクリプト取得
+        if(animator == null) animator = GetComponent<Animator>();
+        if(audioSource == null) audioSource = this.GetComponent<AudioSource>();
+        if(player == null) player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        if(gimmickObj == null) gimmickObj = transform.root.gameObject.GetComponent<GimmickObj>();  // 親オブジェクトのスクリプト取得
         //sphereCollider.radius = search; // colliderのradiusを変更する
 
         // 巡回ルートに要素があるか
@@ -170,6 +168,7 @@ public class ZooKeeperAI : MonoBehaviour
         #region ペンギンブース
         if (collision.gameObject.name == "PenguinBooth")
         {
+            chaseNow = false;
             if (data.rootTransforms.Count >= 1)
             {
                 navMesh.SetDestination(data.rootTransforms[rootNum].position);     // 目的地の再設定
@@ -216,18 +215,33 @@ public class ZooKeeperAI : MonoBehaviour
                 else
                 {
                     // Ray当たってない
-                    chaseNow = false;
+                    if (!chaseNow)
+                    {
+                        surpriseFlg = true;
+                        if (exclamationEffect) Destroy(exclamationEffect);
+                        if (!gimmickFlg)
+                        {
+                            if (data.rootTransforms.Count >= 1)
+                            {
+                                navMesh.SetDestination(data.rootTransforms[rootNum].position);     // 目的地の再設定
+                            }
+                            else
+                            {
+                                walkFlg = false;
+                                navMesh.isStopped = true;   // ナビゲーションの停止（true:ナビゲーションOFF　false:ナビゲーションON）
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // 範囲外
+                if (!chaseNow)
+                {
                     surpriseFlg = true;
                     if (exclamationEffect) Destroy(exclamationEffect);
-                    if (gimmickFlg && !catchFlg)
-                    {
-                        navMesh.SetDestination(gimmickObj.gimmickList[gimmickNum].transform.position);   // 目的地をオブジェクトの位置に設定
-                    }
-                    if (catchFlg) // オブジェクトを運んでいるか
-                    {
-                        navMesh.SetDestination(gimmickObj.resetPos[resetNum].position);    // 目的地をオブジェクトの位置に設定
-                    }
-                    else if (!gimmickFlg)
+                    if (!gimmickFlg)
                     {
                         if (data.rootTransforms.Count >= 1)
                         {
@@ -241,67 +255,54 @@ public class ZooKeeperAI : MonoBehaviour
                     }
                 }
             }
-            else
-            {
-                // 範囲外
-                chaseNow = false;
-                surpriseFlg = true;
-                if (exclamationEffect) Destroy(exclamationEffect);
-                if (gimmickFlg && !catchFlg)
-                {
-                    navMesh.SetDestination(gimmickObj.gimmickList[gimmickNum].transform.position);   // 目的地をオブジェクトの位置に設定
-                }
-                if (catchFlg) // オブジェクトを運んでいるか
-                {
-                    navMesh.SetDestination(gimmickObj.resetPos[resetNum].position);    // 目的地をオブジェクトの位置に設定
-                }
-                else if(!gimmickFlg)
-                {
-                    if (data.rootTransforms.Count >= 1)
-                    {
-                        navMesh.SetDestination(data.rootTransforms[rootNum].position);     // 目的地の再設定
-                    }
-                    else
-                    {
-                        walkFlg = false;
-                        navMesh.isStopped = true;   // ナビゲーションの停止（true:ナビゲーションOFF　false:ナビゲーションON）
-                    }
-                }
-            }
         }
         #endregion
 
         #region ギミックオブジェクト
-        // 索敵範囲にギミックオブジェクトが入ったら目的地をオブジェクトに設定
-        if (data.status == Status.returnObj && other.gameObject.tag == "Interact" && !chaseNow)
+        if (gimmickObj.gimmickList.Count >= 1)
         {
-            for (int i = 0; i < gimmickObj.gimmickList.Count; i++)
+            // 索敵範囲にギミックオブジェクトが入ったら目的地をオブジェクトに設定
+            if (data.status == Status.returnObj && other.gameObject.tag == "Interact" && !chaseNow)
             {
-                if (other.gameObject == gimmickObj.gimmickList[i])
+                for (int i = 0; i < gimmickObj.gimmickList.Count; i++)
                 {
-                    if (!gimmickObj.bReset[i]) // 元の位置になかったら
+                    if (other.gameObject == gimmickObj.gimmickList[i])
                     {
-                        var posObj = other.transform.position - transform.position;
-                        var directionObj = transform.forward;  // 方向
-                        float objAngle = Vector3.Angle(this.transform.forward, posObj);
-                        Debug.DrawRay(transform.position, posObj * data.searchDistance, Color.black);
-
-                        // 視界の角度内に収まっているかどうか
-                        if (objAngle < data.searchAngle)
+                        if (!gimmickObj.bReset[i]) // 元の位置になかったら
                         {
-                            // Rayが当たっているか
-                            if (Physics.Raycast(transform.position, posObj, out rayhit, data.searchDistance))    // rayの開始地点、rayの向き、当たったオブジェクトの情報を格納、rayの発射距離
+                            var posObj = other.transform.position - transform.position;
+                            var directionObj = transform.forward;  // 方向
+                            float objAngle = Vector3.Angle(this.transform.forward, posObj);
+                            Debug.DrawRay(transform.position, posObj * data.searchDistance, Color.black);
+
+                            // 視界の角度内に収まっているかどうか
+                            if (objAngle < data.searchAngle)
                             {
-                                if (rayhit.collider.tag == "Interact" && !gimmickFlg)
+                                // Rayが当たっているか
+                                if (Physics.Raycast(transform.position, posObj, out rayhit, data.searchDistance))    // rayの開始地点、rayの向き、当たったオブジェクトの情報を格納、rayの発射距離
                                 {
-                                    parentObj = gimmickObj.gimmickList[i].transform.root.gameObject;        // 親オブジェクト取得
-                                    navMesh.SetDestination(gimmickObj.gimmickList[i].transform.position);   // 目的地をオブジェクトの位置に設定
-                                    gimmickFlg = true;
-                                    resetNum = i;
-                                    gimmickNum = i;
+                                    if (rayhit.collider.tag == "Interact" && !gimmickFlg)
+                                    {
+                                        parentObj = gimmickObj.gimmickList[i].transform.root.gameObject;        // 親オブジェクト取得
+                                        navMesh.SetDestination(gimmickObj.gimmickList[i].transform.position);   // 目的地をオブジェクトの位置に設定
+                                        gimmickFlg = true;
+                                        resetNum = i;
+                                        gimmickNum = i;
+                                    }
+                                }
+                                else if (chaseNow)
+                                {
+                                    gimmickFlg = false;
+                                    if (catchFlg)
+                                    {
+                                        catchFlg = false;
+                                        gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().isKinematic = false;   // 物理演算の影響を受けるようにする
+                                        gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().useGravity = true;
+                                        gimmickObj.gimmickList[gimmickNum].transform.parent = parentObj.transform;
+                                    }
                                 }
                             }
-                            else
+                            else if (chaseNow)
                             {
                                 gimmickFlg = false;
                                 if (catchFlg)
@@ -311,17 +312,6 @@ public class ZooKeeperAI : MonoBehaviour
                                     gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().useGravity = true;
                                     gimmickObj.gimmickList[gimmickNum].transform.parent = parentObj.transform;
                                 }
-                            }
-                        }
-                        else
-                        {
-                            gimmickFlg = false;
-                            if (catchFlg)
-                            {
-                                catchFlg = false;
-                                gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().isKinematic = false;   // 物理演算の影響を受けるようにする
-                                gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().useGravity = true;
-                                gimmickObj.gimmickList[gimmickNum].transform.parent = parentObj.transform;
                             }
                         }
                     }
@@ -340,37 +330,15 @@ public class ZooKeeperAI : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             chaseNow = false;
-            if (gimmickFlg && !catchFlg)
+            if (data.rootTransforms.Count >= 1)
             {
-                navMesh.SetDestination(gimmickObj.gimmickList[gimmickNum].transform.position);   // 目的地をオブジェクトの位置に設定
-            }
-            if (catchFlg) // オブジェクトを運んでいるか
-            {
-                navMesh.SetDestination(gimmickObj.resetPos[resetNum].position);    // 目的地をオブジェクトの位置に設定
+                navMesh.SetDestination(data.rootTransforms[rootNum].position);     // 目的地の再設定
             }
             else
             {
-                if (data.rootTransforms.Count >= 1)
-                {
-                    navMesh.SetDestination(data.rootTransforms[rootNum].position);     // 目的地の再設定
-                }
-                else
-                {
-                    walkFlg = false;
-                    navMesh.isStopped = true;   // ナビゲーションの停止（true:ナビゲーションOFF　false:ナビゲーションON）
-                }
+                walkFlg = false;
+                navMesh.isStopped = true;   // ナビゲーションの停止（true:ナビゲーションOFF　false:ナビゲーションON）
             }
-        }
-        #endregion
-
-        #region ギミックオブジェクト
-        if (other.gameObject.tag == "Interact" && catchFlg)
-        {
-            gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().isKinematic = false;   // 物理演算の影響を受けるようにする
-            gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().useGravity = true;
-            gimmickObj.gimmickList[gimmickNum].transform.parent = parentObj.transform;
-            catchFlg = false;
-            gimmickFlg = false;
         }
         #endregion
     }
@@ -381,6 +349,11 @@ public class ZooKeeperAI : MonoBehaviour
     private void Move()
     {
         #region 移動
+        // ペンギンを追いかける
+        if(chaseNow)
+        {
+            navMesh.destination = player.transform.position;    // ペンギンを追従
+        }
         // オブジェクトを元の位置に戻す
         if (gimmickFlg)
         {
@@ -409,10 +382,11 @@ public class ZooKeeperAI : MonoBehaviour
                     // 置くアニメーション終了したらオブジェクトを置く
                     // コルーチン開始
                     StartCoroutine("ResetObj");
+                    surpriseFlg = true;
                 }
             }
         }
-        else if (data.rootTransforms.Count >= 1 && !catchFlg)
+        if (data.rootTransforms.Count >= 1 && !gimmickFlg && !chaseNow)
         {
             // プロトタイプ用-------------------
             // 歩行アニメーション再生
@@ -434,7 +408,7 @@ public class ZooKeeperAI : MonoBehaviour
                 navMesh.SetDestination(data.rootTransforms[rootNum].position); // 目的地の再設定
             }
         }
-        else
+        else if(data.rootTransforms.Count <= 0)
         {
             navMesh.isStopped = true;   // ナビゲーションの停止（true:ナビゲーションOFF　false:ナビゲーションON）
 
@@ -550,10 +524,14 @@ public class ZooKeeperAI : MonoBehaviour
         walkFlg = false;
         navMesh.isStopped = true;
         navMesh.speed = 0.0f;
-        //------------------------
-        // 置くアニメーション開始（仮で驚くモーション）
-        animator.SetTrigger("isSurprise");
-        //------------------------
+        if (surpriseFlg)
+        {
+            surpriseFlg = false;
+            //------------------------
+            // 置くアニメーション開始（仮で驚くモーション）
+            animator.SetTrigger("isSurprise");
+            //------------------------
+        }
 
         yield return new WaitForSeconds(1.5f);
 

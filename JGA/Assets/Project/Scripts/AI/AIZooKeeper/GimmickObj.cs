@@ -27,21 +27,28 @@ public class GimmickObj : MonoBehaviour
     /// </summary>
     void Start()
 	{
-        // 元の位置にあるかフラグ
-        for (int i = 0; i < gimmickList.Count; i++)
+        if (gimmickList.Count >= 1)
         {
-            x1 = Mathf.FloorToInt(gimmickList[i].transform.position.x);
-            z1 = Mathf.FloorToInt(gimmickList[i].transform.position.z);
-            x2 = Mathf.FloorToInt(resetPos[i].transform.position.x);
-            z2 = Mathf.FloorToInt(resetPos[i].transform.position.z);
-            if (x1 != x2 || z1 != z2)
+            // 元の位置にあるかフラグ
+            for (int i = 0; i < gimmickList.Count; i++)
             {
-                bReset.Add(false);  // 元の位置にない
+                x1 = Mathf.FloorToInt(gimmickList[i].transform.position.x);
+                z1 = Mathf.FloorToInt(gimmickList[i].transform.position.z);
+                x2 = Mathf.FloorToInt(resetPos[i].transform.position.x);
+                z2 = Mathf.FloorToInt(resetPos[i].transform.position.z);
+                if (x1 != x2 || z1 != z2)
+                {
+                    bReset.Add(false);  // 元の位置にない
+                }
+                else
+                {
+                    bReset.Add(true);   // 元の位置にある
+                }
             }
-            else
-            {
-                bReset.Add(true);   // 元の位置にある
-            }
+        }
+        else
+        {
+            Debug.LogWarning("ギミックリストが空です。(GimmickObj.cs)");
         }
     }
 
@@ -50,16 +57,19 @@ public class GimmickObj : MonoBehaviour
 	/// </summary>
 	void FixedUpdate()
 	{
-        // オブジェクトが元の位置にあるか
-        for (int i = 0; i < gimmickList.Count; i++)
+        if (gimmickList.Count >= 1)
         {
-            x1 = Mathf.FloorToInt(gimmickList[i].transform.position.x);
-            z1 = Mathf.FloorToInt(gimmickList[i].transform.position.z);
-            x2 = Mathf.FloorToInt(resetPos[i].transform.position.x);
-            z2 = Mathf.FloorToInt(resetPos[i].transform.position.z);
-            if(x1 != x2 || z1 != z2)
+            // オブジェクトが元の位置にあるか
+            for (int i = 0; i < gimmickList.Count; i++)
             {
-                bReset[i] = false;
+                x1 = Mathf.FloorToInt(gimmickList[i].transform.position.x);
+                z1 = Mathf.FloorToInt(gimmickList[i].transform.position.z);
+                x2 = Mathf.FloorToInt(resetPos[i].transform.position.x);
+                z2 = Mathf.FloorToInt(resetPos[i].transform.position.z);
+                if (x1 != x2 || z1 != z2)
+                {
+                    bReset[i] = false;
+                }
             }
         }
     }
