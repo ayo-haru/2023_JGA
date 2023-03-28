@@ -34,6 +34,8 @@ public class StateDefaultRootWalk : AIState
     private GuestData.Data data;
     //アニメーター
     private Animator animator;
+    //ペンギン用スクリプト
+    private Player player;
 
     private bool bOnce = true;
     private bool bChange = false;
@@ -75,6 +77,7 @@ public class StateDefaultRootWalk : AIState
         if (!agent) agent = GetComponent<NavMeshAgent>();
         if (data==null) data = GetComponent<AIManager>().GetGuestData();
         if (!animator) animator = GetComponent<Animator>();
+        if (!player) player = GameObject.FindWithTag("Player").GetComponent<Player>();
         GetAnimalsTransrom();
 
         //エラーチェック
@@ -82,7 +85,8 @@ public class StateDefaultRootWalk : AIState
 
         //ナビメッシュエージェントの設定
         agent.SetDestination(data.rootTransforms[targetNum].position);
-        agent.speed = data.speed;
+        agent.speed = (player) ? player.MaxAppealSpeed * data.followSpeed * data.inBoothSpeed : data.speed;
+
         agent.stoppingDistance = Random.Range(1,data.cageDistance);
 
         //この時点で目的地の近くにいる場合はばらけさせる
@@ -143,6 +147,7 @@ public class StateDefaultRootWalk : AIState
         if (!agent)Debug.LogError("ナビメッシュエージェントが取得されていません");
         if (data==null)Debug.LogError("ゲスト用データが取得されていません");
         if (!animator)Debug.LogError("アニメータが取得されていません");
+        if (!player) Debug.LogWarning("プレイヤー用スクリプトが取得されていません");
 
         return ((data.rootTransforms == null) ? false : data.rootTransforms.Count > 0) && agent && (data!=null) && animator;
     }
