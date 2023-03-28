@@ -62,9 +62,12 @@ public class Player : MonoBehaviour
 	public bool IsInteract { get { return _IsInteract; } set { _IsInteract = value; } }        // インタラクトプロパティ
 	private bool delay;
 
-	[SerializeField] private bool isHold;       // つかみフラグ
-	[SerializeField] private bool isMove;
-	[SerializeField] private bool isRun;        // 走りフラグ
+	[SerializeField] private bool _IsHold;       // つかみフラグ
+	public bool IsHold { get { return _IsHold; } }
+	[SerializeField] private bool _IsMove;
+	public bool IsMove { get { return _IsMove; } }
+	[SerializeField] private bool _IsRun;        // 走りフラグ
+	public bool IsRun { get { return _IsRun; } }
 	[SerializeField] private bool _IsAppeal;    // アピールフラグ
 	public bool IsAppeal { get { return _IsAppeal; } }
 
@@ -189,7 +192,7 @@ public class Player : MonoBehaviour
 
 		// アニメーション
 		anim.SetBool("move", moveInputValue.normalized != Vector2.zero);
-		anim.SetBool("run", isRun);
+		anim.SetBool("run", _IsRun);
 
 
 		float length;
@@ -294,7 +297,7 @@ public class Player : MonoBehaviour
 				force = appealForce;
 				max = _maxAppealSpeed;
 			}
-			else if (isRun)
+			else if (_IsRun)
 			{
 				force = runForce;
 				max = _maxRunSpeed;
@@ -320,7 +323,7 @@ public class Player : MonoBehaviour
 		}
 		else
 		{
-			isRun = moveInputValue.magnitude >= joyRunZone;
+			_IsRun = moveInputValue.magnitude >= joyRunZone;
 
 			float force, max;
 
@@ -329,7 +332,7 @@ public class Player : MonoBehaviour
 				force = appealForce;
 				max = _maxAppealSpeed;
 			}
-			else if (isRun)
+			else if (_IsRun)
 			{
 				force = runForce;
 				max = _maxRunSpeed;
@@ -367,11 +370,11 @@ public class Player : MonoBehaviour
 		{
 			// 押された時
 			case InputActionPhase.Performed:
-				isRun = true;
+				_IsRun = true;
 				break;
 			// 離された時
 			case InputActionPhase.Canceled:
-				isRun = false;
+				_IsRun = false;
 				break;
 		}
 	}
