@@ -37,6 +37,9 @@ public class SoundManager : MonoBehaviour
 		DOOR_CLOSE,
 		DOOR_OPEN,
 		INTO_WATER,
+		CAN_CATCH,
+		CAN_RELEASE,
+		CAN_ROLL,
 
 		HUMAN_WALK_001,
 		HUMAN_WALK_002,
