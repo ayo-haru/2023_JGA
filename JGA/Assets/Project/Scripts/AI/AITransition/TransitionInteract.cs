@@ -83,7 +83,7 @@ public class TransitionInteract : AITransition
     {
         if (!playerTransform)Debug.LogError("プレイヤーのトランスフォームが取得されていません");
         if (data==null)Debug.LogError("ゲスト用データが取得されていません");
-        if ((interactObjecs == null) ? true : interactObjecs.Length <= 0)Debug.LogError("インタラクトオブジェクトがありません");
+        if ((interactObjecs == null) ? true : interactObjecs.Length <= 0)Debug.LogWarning("インタラクトオブジェクトがありません");
 
         return playerTransform && (data!=null) && ((interactObjecs == null) ? false : interactObjecs.Length > 0);
     }

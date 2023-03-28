@@ -34,6 +34,9 @@ public class StateDefaultRootWalk : AIState
     private GuestData.Data data;
     //アニメーター
     private Animator animator;
+
+    private bool bOnce = true;
+    private bool bChange = false;
 #if false
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -81,6 +84,14 @@ public class StateDefaultRootWalk : AIState
         agent.SetDestination(data.rootTransforms[targetNum].position);
         agent.speed = data.speed;
         agent.stoppingDistance = Random.Range(1,data.cageDistance);
+
+        //この時点で目的地の近くにいる場合はばらけさせる
+        if(bOnce && Vector3.Distance(transform.position,agent.destination) <= agent.stoppingDistance && data.rootTransforms.Count == 1)
+        {
+            agent.SetDestination(data.rootTransforms[targetNum].position + new Vector3(Random.Range(-10.0f,10.0f), 0.0f, Random.Range(-10.0f,10.0f)) * agent.stoppingDistance);
+            bChange = true;
+        }
+        bOnce = false;
 
         fTimer = 0.0f;
 
@@ -142,7 +153,8 @@ public class StateDefaultRootWalk : AIState
     public void ChangeTarget()
     {
         //ターゲットが1つ以下の場合は処理しない
-        if(data.rootTransforms.Count <= 1) return;
+        if(data.rootTransforms.Count <= 1 && !bChange) return;
+        bChange = false;
 
         targetNum = (targetNum + 1) % data.rootTransforms.Count;
         agent.SetDestination(data.rootTransforms[targetNum].position);
