@@ -115,19 +115,19 @@ public class TitleScenManager : BaseSceneManager
     public void StartButton()
     {
         SceneChange(MySceneManager.SceneState.SCENE_GAME);
-        //SoundManager.Play(audioSource, SoundManager.ESE.DECISION_001);
-        SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_VOICE);
+        SoundManager.Play(audioSource, SoundManager.ESE.DECISION_001);
+        //SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_VOICE);
     }
     public void OptionButton()
     {
-       // SoundManager.Play(audioSource, SoundManager.ESE.DECISION_001);
-        SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_VOICE);
+        SoundManager.Play(audioSource, SoundManager.ESE.DECISION_001);
+        //SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_VOICE);
         //オプション画面を開く
     }
     public void ExitButton()
     {
-        //SoundManager.Play(audioSource, SoundManager.ESE.DECISION_001);
-        SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_VOICE);
+        SoundManager.Play(audioSource, SoundManager.ESE.DECISION_001);
+        //SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_VOICE);
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
@@ -171,8 +171,8 @@ public class TitleScenManager : BaseSceneManager
                 exitImage.color = Color.gray;
                 break;
         }
-       // SoundManager.Play(audioSource, SoundManager.ESE.SELECT_001);
-        SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_VOICE);
+        SoundManager.Play(audioSource, SoundManager.ESE.SELECT_001);
+        //SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_VOICE);
     }
     private void ControllerResetSelect()
     {
@@ -183,7 +183,7 @@ public class TitleScenManager : BaseSceneManager
 
     public void SelectButton()
     {
-       // SoundManager.Play(audioSource, SoundManager.ESE.SELECT_001);
-        SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_VOICE);
+        SoundManager.Play(audioSource, SoundManager.ESE.SELECT_001);
+        //SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_VOICE);
     }
 }
