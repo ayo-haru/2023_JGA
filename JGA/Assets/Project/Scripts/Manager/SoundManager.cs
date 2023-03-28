@@ -27,6 +27,7 @@ public class SoundManager : MonoBehaviour
 		PENGUIN_CATCH,
 		PENGUIN_HIT_001,
 		PENGUIN_WALK_001,
+		PENGUIN_WALK_002,
 		PENGUIN_RUN_001,
 
 		HOURCE_WALK_001,
