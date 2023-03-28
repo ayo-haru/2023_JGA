@@ -543,8 +543,8 @@ public class Player : MonoBehaviour
 	private void OnCollisionStay(Collision collision)
 	{
 		// Playerと掴んでいるオブジェクトが接触していると、ぶっ飛ぶので離す
-		if (InteractObject == collision.collider)
-			collision.transform.localPosition += Vector3.forward / 10;
+		//if (InteractObject == collision.collider)
+		//	collision.transform.localPosition += Vector3.forward / 10;
 	}
 
 	private void OnTriggerEnter(Collider other)

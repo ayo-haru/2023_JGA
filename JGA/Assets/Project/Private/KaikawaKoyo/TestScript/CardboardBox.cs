@@ -63,6 +63,12 @@ public class CardboardBox : MonoBehaviour
         if (PauseManager.isPaused)
             return;
 
+        // 動きが止まったら動かないようにする
+        if (!rb.isKinematic && rb.IsSleeping())
+        {
+            rb.isKinematic = true;
+        }
+
         // IsSoundフラグ切り替え
         IsSound = sound.isPlaying;
 	}
