@@ -235,27 +235,27 @@ public class Player : MonoBehaviour
 			}
 		}
 
-		// サウンド
-		if (moveInputValue.normalized != Vector2.zero)
-		{
-			if (!isMove)
-			{
-				isMove = true;
-				SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_WALK_001);
-			}
-			else
-			{
-				if (audioSource.isPlaying == false)
-				{
-					SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_WALK_001);
-				}
-			}
-		}
-		else
-		{
-			isMove = false;
-			SoundManager.Stop(audioSource);
-		}
+		//// サウンド
+		//if (moveInputValue.normalized != Vector2.zero)
+		//{
+		//	if (!isMove)
+		//	{
+		//		isMove = true;
+		//		SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_WALK_001);
+		//	}
+		//	else
+		//	{
+		//		if (audioSource.isPlaying == false)
+		//		{
+		//			SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_WALK_001);
+		//		}
+		//	}
+		//}
+		//else
+		//{
+		//	isMove = false;
+		//	SoundManager.Stop(audioSource);
+		//}
 	}
 
 	private void Pause()
@@ -376,6 +376,10 @@ public class Player : MonoBehaviour
 		}
 	}
 
+	public void MoveSound()
+	{
+		SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_WALK_002);
+	}
 
 	/// <summary>
 	/// 移動方向取得
