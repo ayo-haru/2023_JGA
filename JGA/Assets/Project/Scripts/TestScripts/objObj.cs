@@ -19,7 +19,8 @@ public class objObj : BaseObj,ITest {
 	/// </summary>
 	void Awake()
 	{
-		
+		Init();
+
 	}
 
 	/// <summary>
@@ -27,7 +28,7 @@ public class objObj : BaseObj,ITest {
 	/// </summary>
 	void Start()
 	{
-		isPlaySound = false;	
+		isPlaySound = false;
 	}
 
 	/// <summary>
@@ -35,9 +36,9 @@ public class objObj : BaseObj,ITest {
 	/// </summary>
 	void Update()
 	{
-		if (Input.GetKeyUp(KeyCode.U)) {
-			isPlaySound = true;
-		}
+		//if (Input.GetKeyUp(KeyCode.U)) {
+			//isPlaySound = true;
+		//}
 		//Debug.Log(isPlaySound);
 	}
 

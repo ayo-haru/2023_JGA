@@ -567,10 +567,6 @@ public class Player : MonoBehaviour
 
 		if (WithinRange.Count == 1 && other.TryGetComponent(out Outline outline))
 			outline.enabled = true;
-
-		if (other.GetComponent<BaseObj>()) {
-			Debug.Log(other.GetComponent<BaseObj>().GetisPlaySound());
-		}
 	}
 
 	private void OnTriggerExit(Collider other)
