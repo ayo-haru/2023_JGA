@@ -5214,6 +5214,7 @@ MonoBehaviour:
   seCall: {fileID: 8300000, guid: fb8d8f05280cdd945b7f2fc17e933289, type: 3}
   seHit: {fileID: 0}
   seHold: {fileID: 0}
+  seWalk: {fileID: 8300000, guid: 54f3c2dd230ba0c47b16525eb0e7259f, type: 3}
   anim: {fileID: 0}
   moveForce: 250
   _maxMoveSpeed: 5
@@ -5224,9 +5225,9 @@ MonoBehaviour:
   callInterval: 0
   _vForce: {x: 0, y: 0, z: 0}
   _IsInteract: 0
-  isHold: 0
-  isMove: 0
-  isRun: 0
+  _IsHold: 0
+  _IsMove: 0
+  _IsRun: 0
   _IsAppeal: 0
   bGamePad: 0
   WithinRange: []

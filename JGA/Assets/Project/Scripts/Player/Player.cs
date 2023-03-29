@@ -23,6 +23,7 @@ public class Player : MonoBehaviour
 	[SerializeField] private AudioClip seCall;          // ＳＥ：鳴き声
 	[SerializeField] private AudioClip seHit;           // ＳＥ：はたく
 	[SerializeField] private AudioClip seHold;          // ＳＥ：つかむ
+	[SerializeField] private AudioClip seWalk;          // ＳＥ：歩く
 	[SerializeField] private Animator anim;             // Animatorへの参照
 
 	[Header("ステータス")]
@@ -381,7 +382,7 @@ public class Player : MonoBehaviour
 
 	public void MoveSound()
 	{
-		SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_WALK_001);
+		SoundManager.Play(audioSource, seWalk);
 	}
 
 	/// <summary>
@@ -412,7 +413,8 @@ public class Player : MonoBehaviour
 			// もし掴んでいたら離す
 			if (HoldObjectRb != null)
 			{
-				OnHold(false);
+				_IsHold = false;
+				OnHold();
 				Debug.Log($"Holded");
 			}
 			else
@@ -442,7 +444,8 @@ public class Player : MonoBehaviour
 				switch (InteractObject.tag)
 				{
 					case "holdObject":
-						OnHold(true);
+						_IsHold = true;
+						OnHold();
 						break;
 
 					case "Interact":
@@ -457,7 +460,8 @@ public class Player : MonoBehaviour
 		}
 		else if (HoldObjectRb != null)
 		{
-			OnHold(false);
+			_IsHold = false;
+			OnHold();
 		}
 
 	}
@@ -465,10 +469,10 @@ public class Player : MonoBehaviour
 	/// <summary>
 	/// つかむ
 	/// </summary>
-	private void OnHold(bool isHold)
+	private void OnHold()
 	{
 		// 掴む処理
-		if (isHold)
+		if (_IsHold)
 		{
 			InteractObject.transform.parent = transform;
 			InteractObject.transform.localPosition = new Vector3(0, 0.5f, InteractObject.transform.localPosition.z);
