@@ -18,7 +18,6 @@ using UnityEngine;
 public class CanObject : BaseObj , IObjectSound
 {
 	private Player player;
-	private Collider playerCollision;
 	private bool fallFlg;
 
 	/// <summary>
@@ -38,11 +37,6 @@ public class CanObject : BaseObj , IObjectSound
         if (player == null)
         {
             player = GameObject.FindWithTag("Player").GetComponent<Player>();
-        }
-		if(playerCollision == null)
-		{
-			playerCollision = GameObject.FindWithTag("Player").GetComponent<CapsuleCollider>();
-
         }
     }
 
@@ -88,6 +82,7 @@ public class CanObject : BaseObj , IObjectSound
 		if(collison.gameObject.tag == "Ground" && fallFlg)
 		{
 			PlayRelease();
+			fallFlg = false;
         }
 	}
 
