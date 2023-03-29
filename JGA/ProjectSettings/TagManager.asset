@@ -9,6 +9,7 @@ TagManager:
   - Target
   - holdObject
   - Guest
+  - Ground
   layers:
   - Default
   - TransparentFX

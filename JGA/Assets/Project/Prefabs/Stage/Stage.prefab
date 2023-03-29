@@ -1191,7 +1191,7 @@ GameObject:
   - component: {fileID: 4311172137964836591}
   m_Layer: 0
   m_Name: StageTerrain
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 95
@@ -1252,7 +1252,7 @@ TerrainCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4311172137964836588}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 8242caa81d25bbc48af169e007041767, type: 2}
   m_Enabled: 1
   m_TerrainData: {fileID: 15600000, guid: 3cdeeae2c9700b343bc666bc360b8a33, type: 2}
   m_EnableTreeColliders: 1
