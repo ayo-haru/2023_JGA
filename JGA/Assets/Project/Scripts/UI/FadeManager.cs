@@ -69,8 +69,10 @@ public class FadeManager : MonoBehaviour
 					alpha -= speed;
 				} else {
 					fadeMode = eFade.Default;
+
+                    PauseManager.isPaused = false;
 				}
-			}
+            }
 			image.color = new Color(0.0f, 0.0f, 0.0f, alpha);
         }
 	}
@@ -82,28 +84,37 @@ public class FadeManager : MonoBehaviour
 		alpha = 0.0f;
 
         fadeMode = eFade.FadeOut;
-		Debug.Log("フェードアウト開始");
+
+        if (!PauseManager.isPaused) {
+            PauseManager.isPaused = true;
+        }
     }
 
-	/// <summary>
-	/// フェードイン開始。フェードインさせたいときに書く
-	/// </summary>
-	public static void StartFadeIn() {
+    /// <summary>
+    /// フェードイン開始。フェードインさせたいときに書く
+    /// </summary>
+    public static void StartFadeIn() {
 		alpha = 1.0f;
 
         fadeMode = eFade.FadeIn;
-		Debug.Log("フェードイン開始");
+
+        if (!PauseManager.isPaused) {
+            PauseManager.isPaused = true;
+        }
     }
-	/// <summary>
-	/// フェードイン開始。シーン切り替わった瞬間のイベント用関数。
-	/// </summary>
-	/// <param name="thisScene"></param>
-	/// <param name="nextScene"></param>
+    /// <summary>
+    /// フェードイン開始。シーン切り替わった瞬間のイベント用関数。
+    /// </summary>
+    /// <param name="thisScene"></param>
+    /// <param name="nextScene"></param>
     public static void StartFadeIn(Scene thisScene, Scene nextScene) {
         alpha = 1.0f;
 
         fadeMode = eFade.FadeIn;
-        Debug.Log("フェードイン開始");
+
+		if (!PauseManager.isPaused) {
+			PauseManager.isPaused = true;
+		}
     }
 
 	/// <summary>

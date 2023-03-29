@@ -16146,10 +16146,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07d5adba171260d4c9491b72a8d7ee1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gimmickList:
-  - {fileID: 0}
-  resetPos:
-  - {fileID: 0}
+  gimmickList: []
+  resetPos: []
   bReset: 
 --- !u!4 &1301820577
 Transform:

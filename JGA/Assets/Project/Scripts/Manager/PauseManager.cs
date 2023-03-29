@@ -51,6 +51,10 @@ public class PauseManager : SingletonMonoBehaviour<PauseManager>
 
 	private void Pause(InputAction.CallbackContext context)
 	{
+		if(FadeManager.fadeMode != FadeManager.eFade.Default) {		// フェード中はポーズの開始の入力を受け付けない
+			return;
+		}
+
 		_isPaused = !_isPaused;
 
 		if (_isPaused)
