@@ -56,14 +56,6 @@ public class StageSceneManager : BaseSceneManager {
         Init();
         Application.targetFrameRate = 60;       // FPSを60に固定
 
-        zooKeeperRootPos = new Transform[Enum.GetNames(typeof(MySceneManager.eRoot)).Length];
-        zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN] = GameObject.Find("PenguinCagePos").GetComponent<Transform>();
-        zooKeeperRootPos[(int)MySceneManager.eRoot.BEAR] = GameObject.Find("BearCagePos").GetComponent<Transform>();
-        zooKeeperRootPos[(int)MySceneManager.eRoot.ELEPHANT] = GameObject.Find("ElephantCagePos").GetComponent<Transform>();
-        zooKeeperRootPos[(int)MySceneManager.eRoot.LION] = GameObject.Find("LionCagePos").GetComponent<Transform>();
-        zooKeeperRootPos[(int)MySceneManager.eRoot.POLARBEAR] = GameObject.Find("PolarBearCagePos").GetComponent<Transform>();
-        zooKeeperRootPos[(int)MySceneManager.eRoot.BIRD] = GameObject.Find("BirdCagePos").GetComponent<Transform>();
-
         isSceneChangeOnce = false;
     }
 
@@ -71,6 +63,16 @@ public class StageSceneManager : BaseSceneManager {
     /// 最初のフレーム更新の前に呼び出される
     /// </summary>
     void Start() {
+        zooKeeperRootPos = new Transform[Enum.GetNames(typeof(MySceneManager.eRoot)).Length];
+        if (isGuestSpawn == true || isZKSpawn == true) {  // デバッグ用エラー出ないように囲んどく
+            zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN] = GameObject.Find("PenguinCagePos").GetComponent<Transform>();
+            zooKeeperRootPos[(int)MySceneManager.eRoot.BEAR] = GameObject.Find("BearCagePos").GetComponent<Transform>();
+            zooKeeperRootPos[(int)MySceneManager.eRoot.ELEPHANT] = GameObject.Find("ElephantCagePos").GetComponent<Transform>();
+            zooKeeperRootPos[(int)MySceneManager.eRoot.LION] = GameObject.Find("LionCagePos").GetComponent<Transform>();
+            zooKeeperRootPos[(int)MySceneManager.eRoot.POLARBEAR] = GameObject.Find("PolarBearCagePos").GetComponent<Transform>();
+            zooKeeperRootPos[(int)MySceneManager.eRoot.BIRD] = GameObject.Find("BirdCagePos").GetComponent<Transform>();
+        }
+
         //----- プレイヤーの生成 -----
         if (isPlayerSpawn) {
             playerRespawn = GameObject.Find("PlayerSpawn");
@@ -146,6 +148,8 @@ public class StageSceneManager : BaseSceneManager {
         } else {
             Debug.LogWarning("ClockUIがシーン上にありません");
         }
+
+        //SoundManager.Play(GetComponent<AudioSource>(),SoundManager.EBGM.TITLE_001);
     }
 
     //void FixedUpdate() {
