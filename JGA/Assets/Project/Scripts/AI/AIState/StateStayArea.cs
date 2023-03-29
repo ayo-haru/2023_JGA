@@ -14,6 +14,7 @@
 // 2023/03/18	(小楠）動物の方向くようにした
 // 2023/03/19	(小楠）ペンギンエリアに着いたときに客の人数のカウントを追加
 // 2023/03/25	(伊地田）自動生成に対応
+// 2023/03/30	(小楠）複数個所のペンギンエリアに対応
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -78,7 +79,15 @@ public class StateStayArea : AIState
         if (!ErrorCheck()) return;
 
         //ナビメッシュエージェントの設定
-        agent.SetDestination(data.penguinTF.position + new Vector3(Random.Range(-5.0f, 5.0f), 0.0f, Random.Range(-5.0f, 5.0f)));
+        //一番近い位置のペンギンエリアを目的地に設定する
+        Vector3 nearPos = data.penguinTF[0].position;
+        for(int i = 1; i < data.penguinTF.Count; ++i)
+        {
+            if (Vector3.Distance(gameObject.transform.position, nearPos) < Vector3.Distance(gameObject.transform.position,data.penguinTF[i].position)) continue;
+            nearPos = data.penguinTF[i].position;
+        }
+
+        agent.SetDestination(nearPos + new Vector3(Random.Range(-5.0f, 5.0f), 0.0f, Random.Range(-5.0f, 5.0f)));
         agent.speed = data.speed;
         agent.stoppingDistance = Random.Range(1.0f,data.cageDistance);
 
@@ -99,7 +108,7 @@ public class StateStayArea : AIState
         if (isStay)
         {
             //動物の方を向く
-            Quaternion rot = Quaternion.LookRotation(((!animal) ? data.penguinTF.position : animal.position) - transform.position);
+            Quaternion rot = Quaternion.LookRotation(((!animal) ? agent.destination : animal.position) - transform.position);
             transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime);
             return;
         }
@@ -133,21 +142,21 @@ public class StateStayArea : AIState
     public override bool ErrorCheck()
     {
         if (!agent)Debug.LogError("ナビメッシュエージェントが取得されていません");
-        if (!data.penguinTF) Debug.LogError("待機位置が設定されていません");
+        if ((data.penguinTF == null) ? true : data.penguinTF.Count <= 0) Debug.LogError("待機位置が設定されていません");
         if (data==null)Debug.LogError("ゲスト用データが取得されていません");
         if (!animator)Debug.LogError("アニメーターが取得されていません");
         if (!ui) Debug.LogError("感情UIが設定されていません");
 
-        return agent && data.penguinTF && (data!=null) && animator && ui;
+        return agent && ((data.penguinTF == null) ? false : data.penguinTF.Count > 0) && (data!=null) && animator && ui;
     }
     public void GetAnimalTransrom()
     {
         if (animal != null) return;
 
         //動物の名前から動物の親オブジェクトを取得
-        int index = data.penguinTF.name.IndexOf("CagePos");
+        int index = data.penguinTF[0].name.IndexOf("CagePos");
         if (index < 0) return;
-        GameObject obj = GameObject.Find(data.penguinTF.name.Substring(0, index));
+        GameObject obj = GameObject.Find(data.penguinTF[0].name.Substring(0, index));
         if ((!obj) ? true : obj.transform.childCount <= 0) return;
         //子オブジェクトの中からランダムで1つ動物をanimalsに格納
         animal = obj.transform.GetChild(Random.Range(0, obj.transform.childCount));   

@@ -7,6 +7,7 @@
 // 
 // [Date]
 // 2023/03/06	スクリプト作成
+// 2023/03/30	複数のぺんぎんエリアに対応
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -61,14 +62,19 @@ public class TransitionInRangeOther : AITransition
         //エラーチェック
         if (!ErrorCheck()) return false;
 
-        return (Vector3.Distance(gameObject.transform.position, data.penguinTF.position) <= data.reactionArea) != inv;
+        for(int i = 0; i < data.penguinTF.Count; ++i)
+        {
+            if ((Vector3.Distance(gameObject.transform.position, data.penguinTF[i].position) <= data.reactionArea) != inv) return true;
+        }
+
+        return false;
     }
 
     public override bool ErrorCheck()
     {
         if (data==null)Debug.LogError("ゲスト用データが取得されていません");
-        if (!data.penguinTF) Debug.LogError("目的地のトランストームが設定されていません");
+        if ((data.penguinTF == null) ? true : data.penguinTF.Count <= 0) Debug.LogError("目的地のトランストームが設定されていません");
 
-        return (data!=null) && data.penguinTF;
+        return (data!=null) && (data.penguinTF == null) ? false : data.penguinTF.Count > 0;
     }
 }

@@ -10,6 +10,7 @@
 // 2023/03/11	(小楠)ケージとの距離を追加
 // 2023/03/25	(伊地田)複数設定用に変更
 // 2023/03/27	(小楠)ペンギンに追従する時とブース内の速さを追加
+// 2023/03/30	(小楠)ペンギンブースのトランフォームをリストにした
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ public class GuestData : ScriptableObject
         [HideInInspector]   // 巡回ルートのトランスフォーム
         public List<Transform> rootTransforms;
         [HideInInspector]   // ペンギンブースの位置
-        public Transform penguinTF;
+        public List<Transform> penguinTF;
         [Header("移動速度")]
         [Range(1, 3)] public float speed = 1;
         [Header("ペンギン追従速度")]

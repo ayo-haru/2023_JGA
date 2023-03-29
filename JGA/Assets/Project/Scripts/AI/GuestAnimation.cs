@@ -8,6 +8,7 @@
 // [Date]
 // 2023/03/21	スクリプト作成
 // 2023/03/22	ポーズの処理追加
+// 2023/03/30	足音削除
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ public class GuestAnimation : MonoBehaviour
 {
     [SerializeField] private Animator animator;
     [SerializeField] private AudioSource audioSource;
-    private bool isWalk = false;
+
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -35,8 +36,8 @@ public class GuestAnimation : MonoBehaviour
 	/// </summary>
 	void Start()
 	{
-        isWalk = animator.GetBool("isWalk");
-        WalkAnimation();
+
+
     }
 
 	/// <summary>
@@ -46,11 +47,11 @@ public class GuestAnimation : MonoBehaviour
 	{
         if (PauseManager.isPaused) return;
         if (!animator || !audioSource) return;
-        if (isWalk == animator.GetBool("isWalk")) return;
 
-        isWalk = animator.GetBool("isWalk");
 
-        WalkAnimation();
+
+
+
     }
 
 	/// <summary>
@@ -61,28 +62,13 @@ public class GuestAnimation : MonoBehaviour
 		
 	}
 
-    private void WalkAnimation()
-    {
-        if (isWalk)
-        {
-            SoundManager.Play(audioSource, SoundManager.ESE.HUMAN_WALK_003);
-        }
-        else
-        {
-            audioSource.Stop();
-        }
-        
-    }
-
     private void Pause()
     {
-        audioSource.Stop();
         animator.speed = 0.0f;
     }
 
     private void Resumed()
     {
         animator.speed = 1.0f;
-        WalkAnimation();
     }
 }
