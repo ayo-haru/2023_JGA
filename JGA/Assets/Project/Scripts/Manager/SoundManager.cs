@@ -23,35 +23,69 @@ public class SoundManager : MonoBehaviour
 	}
 	public enum ESE
 	{
+        //　※追加、削除するときはSEData.assetとのリストの数、順番を完全一致させること！
+        // ○○関連に合わせて追加するのでリストの順番も同様に！
+
+        // ペンギン関連-------
 		PENGUIN_VOICE,
 		PENGUIN_CATCH,
 		PENGUIN_HIT_001,
 		PENGUIN_WALK_001,
+		PENGUIN_WALK_002,
 		//PENGUIN_RUN_001,
+		//------------------
 
+		// 動物関連---------
+		// ウマ
 		HOURCE_WALK_001,
 		HOURCE_RUN_001,
 
+		//-----------------
+
+		// ギミック関連------
+
+		// 共通
+		OBJECT_HIT,
+
+		// 段ボール
 		CARDBOARDBOX_001,
 		CARDBOARDBOX_002,
+
+		// ドア
 		DOOR_CLOSE,
 		DOOR_OPEN,
-		INTO_WATER,
-		CAN_CATCH,
-		CAN_RELEASE,
-		CAN_ROLL,
 
+		// 水しぶき
+		INTO_WATER,
+
+		// 空き缶
+		CAN_CATCH,				// つかむとき
+		CAN_RELEASE,			// 叩いた時＆離して地面についた時
+		CAN_ROLL,				// 地面にある時に転がる音1
+		CAN_ROLLING,			// 地面にある時に転がる音2
+
+		// ラジオ
+		RADIO_CATCH,			// ラジオつかむとき
+		RADIO_RELEASE,			// ラジオ離した時
+
+		//----------------
+
+		// 人関連----------
 		HUMAN_WALK_001,
 		HUMAN_WALK_002,
 		HUMAN_WALK_003,
 		HUMAN_RUN_001,
 		HUMAN_RUN_002,
 		HUMAN_RUN_003,
+		//----------------
 
-		SELECT_001,
-		DECISION_001,
-		CANCEL_001,
-		SLIDE_001,
+
+		// システム音-------
+		SELECT_001,				// 選択中
+		DECISION_001,			// 決定
+		CANCEL_001,				// 戻る
+		SLIDE_001,				// スライド
+		//---------------
 
 	}
 
