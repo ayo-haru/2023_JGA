@@ -56,6 +56,10 @@ public class CanObject : MonoBehaviour , IObjectSound
 		{
 			PlayPickUp();
 		}
+		if(player.IsHold)
+		{
+			PlayHold();
+		}
 		//if(!rb.IsSleeping())
 		//{
 		//	if (!test)
@@ -81,7 +85,7 @@ public class CanObject : MonoBehaviour , IObjectSound
 	}
     private void OnCollisionEnter(Collision collison)
     {
-		if (collison.collider == playerCollision)
+		if (collison.collider == playerCollision && !player.IsHold)
 		{
 			SoundManager.Play(audioSource, SoundManager.ESE.CAN_ROLL);
 		}
@@ -96,11 +100,11 @@ public class CanObject : MonoBehaviour , IObjectSound
 
     public void PlayHold()
     {
-
+        //SoundManager.Play(audioSource, SoundManager.ESE.CAN_CATCH);
     }
 
     public void PlayRelease()
     {
-
+        SoundManager.Play(audioSource, SoundManager.ESE.CAN_RELEASE);
     }
 }
