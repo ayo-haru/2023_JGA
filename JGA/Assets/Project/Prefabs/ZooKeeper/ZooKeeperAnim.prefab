@@ -861,6 +861,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   chaseNow: 0
+  isDebug: 0
+  data:
+    name: Zookeeper
+    roots: 
+    rootTransforms: []
+    respawnTF: {fileID: 0}
+    status: 0
+    speed: 1.1
+    chaseSpeed: 1.1
+    search: 15
+    searchAngle: 45
+    searchDistance: 10
 --- !u!82 &-6031804008901432818
 AudioSource:
   m_ObjectHideFlags: 0
@@ -892,10 +904,91 @@ AudioSource:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0
+      time: 0.002
       value: 1
       inSlope: 0
       outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.038230784
+      value: 0.9986067
+      inSlope: -0.07618029
+      outSlope: -0.07618029
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 1
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.06073442
+      value: 0.6424501
+      inSlope: -6.788258
+      outSlope: -6.788258
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.07186242
+      value: 0.5638247
+      inSlope: -11.592026
+      outSlope: -11.592026
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.2279279
+    - serializedVersion: 3
+      time: 0.08844083
+      value: 0.43466473
+      inSlope: -6.6646705
+      outSlope: -6.6646705
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.6185912
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.21730927
+      value: 0
+      inSlope: 0.079783276
+      outSlope: 0.079783276
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 1
+      outWeight: 0.22612868
+    - serializedVersion: 3
+      time: 0.60990256
+      value: 0.0022190958
+      inSlope: 0.048920605
+      outSlope: 0.048920605
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.23788819
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.8015248
+      value: 0
+      inSlope: -0.005535436
+      outSlope: -0.005535436
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.4579922
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.90115494
+      value: 0
+      inSlope: -0
+      outSlope: -0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.96783406
+      value: 0
+      inSlope: 0.21040547
+      outSlope: 0.21040547
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
@@ -903,12 +996,12 @@ AudioSource:
     - serializedVersion: 3
       time: 1
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: 0.18050519
+      outSlope: 0.18050519
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      inWeight: 1
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
