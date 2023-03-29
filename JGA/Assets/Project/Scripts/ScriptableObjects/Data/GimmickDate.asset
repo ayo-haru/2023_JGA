@@ -12,4 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 264c3b9323e7c9e43b29ba9c691d5649, type: 3}
   m_Name: GimmickDate
   m_EditorClassIdentifier: 
-  list: []
+  list:
+  - displayName: Can.Prefab
+    ID: 0
+    prefab: {fileID: 5306763877153515574, guid: 2db89fac5a6ea684bbda67e3276cf10c,
+      type: 3}
