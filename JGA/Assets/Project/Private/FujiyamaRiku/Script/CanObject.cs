@@ -12,15 +12,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 
-public class CanObject : MonoBehaviour , IObjectSound
+public class CanObject : BaseObj , IObjectSound
 {
-	private Rigidbody rb;
 	private Player player;
 	private Collider playerCollision;
-	private AudioSource audioSource;
-	private bool test;
+	private bool fallFlg;
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -28,7 +27,7 @@ public class CanObject : MonoBehaviour , IObjectSound
 	void Awake()
 	{
 		audioSource = this.GetComponent<AudioSource>();
-        rb = this.GetComponent<Rigidbody>();	
+        rb = this.GetComponent<Rigidbody>();
     }
 
 	/// <summary>
@@ -59,21 +58,9 @@ public class CanObject : MonoBehaviour , IObjectSound
 		if(player.IsHold)
 		{
 			PlayHold();
-		}
-		//if(!rb.IsSleeping())
-		//{
-		//	if (!test)
-		//	{
-  //              audioSource.loop = true;
-  //              SoundManager.Play(audioSource, SoundManager.ESE.CAN_ROLL);
-		//		test = true;
-		//	}
-  //      }
-		//else
-		//{
-  //          test = false;
-  //          audioSource.loop = false;
-  //      }
+			fallFlg = true;
+
+        }
     }
 
 	/// <summary>
@@ -81,19 +68,31 @@ public class CanObject : MonoBehaviour , IObjectSound
 	/// </summary>
 	void Update()
 	{
-		
-	}
+        if(audioSource.isPlaying)
+		{
+			isPlaySound = true;
+        }
+		else
+		{
+            isPlaySound = false;
+        }
+
+		Debug.Log(isPlaySound);
+    }
     private void OnCollisionEnter(Collision collison)
     {
-		if (collison.collider == playerCollision && !player.IsHold)
+		if (collison.gameObject.tag == "Player"  && !player.IsHold)
 		{
 			SoundManager.Play(audioSource, SoundManager.ESE.CAN_ROLL);
 		}
+		if(collison.gameObject.tag == "Ground" && fallFlg)
+		{
+			PlayRelease();
+        }
 	}
 
     public void PlayPickUp()
     {
-		
 		SoundManager.Play(audioSource, SoundManager.ESE.CAN_CATCH);
 		
     }
