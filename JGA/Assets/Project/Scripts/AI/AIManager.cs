@@ -12,6 +12,7 @@
 // 2023/03/11	(小楠)乱数の初期化を追加
 // 2023/03/23	(小楠)ポーズの処理追加
 // 2023/03/25	(伊地田)自動生成、直置き両方に対応
+// 2023/03/30	(小楠)penguinTFのリスト化に対応
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -61,7 +62,11 @@ public class AIManager : MonoBehaviour
                 data.rootTransforms.Add(_StageSceneManager.GetRootTransform(index));
             }
 
-            data.penguinTF = _StageSceneManager.GetRootTransform(MySceneManager.eRoot.PENGUIN);
+            data.penguinTF = new List<Transform>();
+            data.penguinTF.Add(_StageSceneManager.GetRootTransform(MySceneManager.eRoot.PENGUIN));
+            data.penguinTF.Add(_StageSceneManager.GetRootTransform(MySceneManager.eRoot.PENGUIN));
+            data.penguinTF.Add(_StageSceneManager.GetRootTransform(MySceneManager.eRoot.PENGUIN));
+            data.penguinTF.Add(_StageSceneManager.GetRootTransform(MySceneManager.eRoot.PENGUIN));
         }
 
         //エラーチェック
