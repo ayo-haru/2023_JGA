@@ -46,6 +46,7 @@ public class SoundManager : MonoBehaviour
 
 		// 共通
 		OBJECT_HIT,
+		OBJECT_DROP,
 
 		// 段ボール
 		CARDBOARDBOX_001,

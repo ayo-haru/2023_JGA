@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clock: {fileID: 1784219950100967056}
-  playMinute: 5
+  playMinute: 10
   lossSecondsParcent: 10
   startHour: 9
   finishHour: 17
