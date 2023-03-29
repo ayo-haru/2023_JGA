@@ -94,9 +94,10 @@ GameObject:
   - component: {fileID: 4822995719234024076}
   - component: {fileID: 5000121970957817189}
   - component: {fileID: 5000121970957817186}
+  - component: {fileID: 1410981679217799394}
   m_Layer: 0
   m_Name: Can
-  m_TagString: Untagged
+  m_TagString: holdObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -147,3 +148,17 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 3493291955490051683, guid: f2c8b3ea92da74940b768e6fdfa82c2f, type: 3}
+--- !u!114 &1410981679217799394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5306763877153515574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c0077cdbbf0e0545929bdbc2c4adb54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blowpower: 13
+  topvector: 1
