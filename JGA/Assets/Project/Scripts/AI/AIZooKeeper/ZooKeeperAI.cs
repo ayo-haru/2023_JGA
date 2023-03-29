@@ -37,13 +37,12 @@ public class ZooKeeperAI : MonoBehaviour
     }
 
     [SerializeField] private Animator animator;
-    private AudioSource audioSource;
-    private bool walkFlg = false;
     private bool surpriseFlg = true;    // 驚くアニメーション用フラグ
+    private AudioSource audioSource;
+    private NavMeshAgent navMesh;
     private int rootNum = 0;
-    private Vector3 desVelocity;
-    private GameObject exclamationEffect;
-    private GameObject questionEffect;
+    private GameObject exclamationEffect;   // ！エフェクト
+    private GameObject questionEffect;      // ？エフェクト
 
     /*
      * インスペクターで設定してた値はScriptableObjectで設定できるようにしました
@@ -55,16 +54,11 @@ public class ZooKeeperAI : MonoBehaviour
 
     [SerializeField] private bool chaseNow = false;    // ペンギンを追いかけているフラグ
     private SphereCollider sphereCollider;
-    //private float angle = 45.0f;
-
     private Player player;
-    private NavMeshAgent navMesh;
-    private CharacterController characterController;
-    private Rigidbody rb;
     private RaycastHit rayhit;
 
     private GimmickObj gimmickObj;
-    private GameObject parentObj;
+    private GameObject parentObj;       // 親オブジェクト取得
     private bool gimmickFlg = false;    // ギミックオブジェクトに当たったか
     private bool catchFlg = false;      // ギミックオブジェクトを掴んだか
     private int resetNum = -1;
@@ -106,8 +100,6 @@ public class ZooKeeperAI : MonoBehaviour
         if (animator == null) animator = GetComponent<Animator>();
         if (audioSource == null) audioSource = this.GetComponent<AudioSource>();
         if (player == null) player = GameObject.FindWithTag("Player").GetComponent<Player>();
-        if (characterController == null) characterController = GetComponent<CharacterController>();
-        if (rb == null) rb = GetComponent<Rigidbody>();
         if (gimmickObj == null) gimmickObj = transform.root.gameObject.GetComponent<GimmickObj>();  // 親オブジェクトのスクリプト取得
         //sphereCollider.radius = search; // colliderのradiusを変更する
 
@@ -147,7 +139,6 @@ public class ZooKeeperAI : MonoBehaviour
 
         Move();
         CharControl();
-        Sound();
     }
 
     private void Update()
@@ -183,7 +174,6 @@ public class ZooKeeperAI : MonoBehaviour
             }
             else
             {
-                walkFlg = false;
                 navMesh.isStopped = true;   // ナビゲーションの停止（true:ナビゲーションOFF　false:ナビゲーションON）
             }
         }
@@ -235,7 +225,6 @@ public class ZooKeeperAI : MonoBehaviour
                             }
                             else
                             {
-                                walkFlg = false;
                                 navMesh.isStopped = true;   // ナビゲーションの停止（true:ナビゲーションOFF　false:ナビゲーションON）
                             }
                         }
@@ -257,7 +246,6 @@ public class ZooKeeperAI : MonoBehaviour
                         }
                         else
                         {
-                            walkFlg = false;
                             navMesh.isStopped = true;   // ナビゲーションの停止（true:ナビゲーションOFF　false:ナビゲーションON）
                         }
                     }
@@ -344,7 +332,6 @@ public class ZooKeeperAI : MonoBehaviour
             }
             else
             {
-                walkFlg = false;
                 navMesh.isStopped = true;   // ナビゲーションの停止（true:ナビゲーションOFF　false:ナビゲーションON）
             }
         }
@@ -368,7 +355,6 @@ public class ZooKeeperAI : MonoBehaviour
             // プロトタイプ用-------------------
             // 歩行アニメーション再生
             animator.SetBool("isWalk", true);
-            walkFlg = true;
             //--------------------------------
 
             if (!catchFlg)
@@ -399,7 +385,6 @@ public class ZooKeeperAI : MonoBehaviour
             // プロトタイプ用-------------------
             // 歩行アニメーション再生
             animator.SetBool("isWalk", true);
-            walkFlg = true;
             //--------------------------------
             if (navMesh.remainingDistance <= 2.0f    // 目標地点までの距離が2.0ｍ以下になったら到着
                  && !navMesh.pathPending)            // 経路計算中かどうか（計算中：true　計算完了：false）
@@ -423,8 +408,6 @@ public class ZooKeeperAI : MonoBehaviour
             // プロトタイプ用-------------------
             // 歩行アニメーション再生
             animator.SetBool("isWalk", false);
-            //animator.SetFloat("BlendTree", 0);
-            walkFlg = false;
             //--------------------------------
         }
         #endregion
@@ -442,12 +425,6 @@ public class ZooKeeperAI : MonoBehaviour
             // nextPositionからdeltaPositionを算出
             targetDeltaPosition = navMesh.nextPosition - transform.position;
 
-            //var dx = Vector3.Dot(transform.right, targetDeltaPosition);
-            //var dy = Vector3.Dot(transform.forward, targetDeltaPosition);
-            //Vector2 deltaPos = new Vector2(dx, dy);
-            //var velocity = deltaPos / Time.deltaTime;
-            //animator.SetFloat("BlendTree", velocity.x);
-
             // エージェントの移動を正とする
             transform.position = navMesh.nextPosition;
 
@@ -455,15 +432,6 @@ public class ZooKeeperAI : MonoBehaviour
             if (targetDeltaPosition.magnitude > navMesh.radius)
                 transform.position = navMesh.nextPosition - 0.9f * targetDeltaPosition;
         }
-    }
-
-    /// <summary>
-    /// 飼育員の足音
-    /// </summary>
-    public void Sound()
-    {
-        // 足音を鳴らす
-        //SoundManager.Play(audioSource, SoundManager.ESE.HUMAN_WALK_002);
     }
 
     #region コルーチン
@@ -485,7 +453,6 @@ public class ZooKeeperAI : MonoBehaviour
             //-----------------------
             // 驚くアニメーション開始
             animator.SetTrigger("isSurprise");
-            walkFlg = false;
             //-----------------------
             surpriseFlg = false;
         }
@@ -494,7 +461,6 @@ public class ZooKeeperAI : MonoBehaviour
 
         // 驚くアニメーション終了したらペンギンを追従開始
         chaseNow = true;
-        walkFlg = true;
         navMesh.isStopped = false;   // ナビゲーションの停止（true:ナビゲーションOFF　false:ナビゲーションON）
         navMesh.speed = data.chaseSpeed * player.MaxRunSpeed; // 巡回スピード * 追いかける速さ           
 
@@ -522,7 +488,6 @@ public class ZooKeeperAI : MonoBehaviour
                 new Vector3(transform.position.x, transform.position.y + 4.0f, transform.position.z),
                 4);
         // 止まる
-        walkFlg = false;
         navMesh.isStopped = true;
         navMesh.speed = 0.0f;
 
@@ -532,7 +497,6 @@ public class ZooKeeperAI : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
 
         // 動く
-        walkFlg = true;
         navMesh.isStopped = false;
         navMesh.speed = data.speed * player.MaxMoveSpeed;
 
@@ -546,7 +510,6 @@ public class ZooKeeperAI : MonoBehaviour
     private IEnumerator ResetObj()
     {
         // 止まる
-        walkFlg = false;
         navMesh.isStopped = true;
         navMesh.speed = 0.0f;
         if (surpriseFlg)
@@ -566,7 +529,6 @@ public class ZooKeeperAI : MonoBehaviour
         Bring();
 
         // 動く
-        walkFlg = true;
         navMesh.isStopped = false;
         navMesh.speed = data.speed * player.MaxMoveSpeed;
         navMesh.SetDestination(data.rootTransforms[rootNum].position); // 目的地の再設定
