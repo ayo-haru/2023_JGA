@@ -16,17 +16,21 @@ public class BaseObj : MonoBehaviour
 {
 	protected Rigidbody rb;
 	protected AudioSource audioSource;
-
-
 	
-	protected bool isPlaySound;	// 音が鳴っているか
+	protected bool isPlaySound; // 音が鳴っているか
+
+    protected void Init()
+    {
+        rb  = GetComponent<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
+    }
 
 
-	/// <summary>
-	/// 音が鳴ってるかフラグの取得あ
-	/// </summary>
-	/// <returns></returns>
-	public bool GetisPlaySound() {
+    /// <summary>
+    /// 音が鳴ってるかフラグの取得
+    /// </summary>
+    /// <returns></returns>
+    public bool GetisPlaySound() {
 		return isPlaySound;
 	}
 }
