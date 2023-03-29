@@ -32,9 +32,15 @@ public static class SceneLauncher
 		EditorSceneManager.OpenScene("Assets/Project/Scenes/InitializeScene.unity", OpenSceneMode.Single);
     }
 
-	[MenuItem("Launcher/ProtoType", priority = 2)]
+	[MenuItem("Launcher/ProtoType", priority = 3)]
 	public static void OpeneProtoTypeScene()
 	{
 		EditorSceneManager.OpenScene("Assets/Project/Scenes/ProtoType/ProtoType.unity", OpenSceneMode.Single);
+	}
+
+	[MenuItem("Launcher/Stage001", priority = 4)]
+	public static void OpeneStage001Scene()
+	{
+		EditorSceneManager.OpenScene("Assets/Project/Scenes/Game/Stage_001.unity", OpenSceneMode.Single);
 	}
 }
