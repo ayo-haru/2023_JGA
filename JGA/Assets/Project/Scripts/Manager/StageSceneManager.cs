@@ -2,7 +2,7 @@
 // @File	: [StageSceneManager.cs]
 // @Brief	: 
 // @Author	: Ichida Mai
-// @Editer	: 
+// @Editer	: Ogusu Yuuko
 // @Detail	: 
 // 
 // [Date]
@@ -10,6 +10,7 @@
 // 2023/03/16	スポーン地点をPlayerRespwanに変更(吉原)
 // 2023/03/20	飼育員自動生成(伊地田)
 // 2023/03/21	飼育員自動生成バグとり(伊地田)
+// 2023/03/30	ペンギンブースをリストに変更しました。【小楠】
 //=============================================================================
 using System;
 using System.Collections;
@@ -125,7 +126,11 @@ public class StageSceneManager : BaseSceneManager {
                     _guestList[i].rootTransforms.Add(zooKeeperRootPos[(int)_guestList[i].roots[j]]);
                 }
                 // ペンギンブースの座標を入れる
-                _guestList[i].penguinTF = zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN];
+                _guestList[i].penguinTF = new List<Transform>();
+                _guestList[i].penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN]);
+                _guestList[i].penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN]);
+                _guestList[i].penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN]);
+                _guestList[i].penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN]);
 
                 // 生成
                 GameObject guestInstace = Instantiate(guestObj, _guestList[i].rootTransforms[0].position, Quaternion.identity);
