@@ -53,6 +53,10 @@ MonoBehaviour:
     m_Address: GuestData
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 555fa97676cd0504ab1ae4997208a6d2
+    m_Address: GimmickData
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 6490bc5112e0d74469e157e8c2cc9fd5, type: 2}
   m_SchemaSet:
