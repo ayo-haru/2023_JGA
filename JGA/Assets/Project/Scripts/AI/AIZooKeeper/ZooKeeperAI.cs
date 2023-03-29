@@ -44,13 +44,6 @@ public class ZooKeeperAI : MonoBehaviour
     private GameObject exclamationEffect;   // ！エフェクト
     private GameObject questionEffect;      // ？エフェクト
 
-    /*
-     * インスペクターで設定してた値はScriptableObjectで設定できるようにしました
-     * ZooKeeperData.csに設定の項目はあるよ。
-     * Assets/Project/Script/AI/ZooKeeperData　にデータのScriptableObjectはあるよ。
-     * 生成は3/19現在StageSceneManager.csのStartでやってます！
-     */
-    private ZooKeeperData.Data data;    // 飼育員用の外部で設定できるパラメーターたち
 
     [SerializeField] private bool chaseNow = false;    // ペンギンを追いかけているフラグ
     private SphereCollider sphereCollider;
@@ -63,6 +56,19 @@ public class ZooKeeperAI : MonoBehaviour
     private bool catchFlg = false;      // ギミックオブジェクトを掴んだか
     private int resetNum = -1;
     private int gimmickNum = -1;
+
+
+    [Space(100)]
+    [Header("デバッグ用直置きしたプレハブか？\nチェックいれて下のdataを設定すると\n直置きでも使えるよ")]
+    [SerializeField] private bool isDebug = false;
+    /*
+     * インスペクターで設定してた値はScriptableObjectで設定できるようにしました
+     * ZooKeeperData.csに設定の項目はあるよ。
+     * Assets/Project/Script/AI/ZooKeeperData　にデータのScriptableObjectはあるよ。
+     * 生成は3/19現在StageSceneManager.csのStartでやってます！
+    */
+    [SerializeField]
+    private ZooKeeperData.Data data;    // 飼育員用の外部で設定できるパラメーターたち
 
     /// <summary>
     /// Inspectorから自身の値が変更されたときに自動で呼ばれる
@@ -97,6 +103,17 @@ public class ZooKeeperAI : MonoBehaviour
     /// </summary>
     void Start()
     {
+        //デバッグ用直置きしたとき用のデータセット。
+        //自動生成はStageSceneManagerで行っている
+        if (isDebug) {
+            StageSceneManager _StageSceneManager = GameObject.Find("StageSceneManager").GetComponent<StageSceneManager>();
+            data.rootTransforms = new List<Transform>();
+            for (int i = 0; i < data.roots.Length; i++) {
+                MySceneManager.eRoot index = data.roots[i];
+                data.rootTransforms.Add(_StageSceneManager.GetRootTransform(index));
+            }
+        }
+
         if (animator == null) animator = GetComponent<Animator>();
         if (audioSource == null) audioSource = this.GetComponent<AudioSource>();
         if (player == null) player = GameObject.FindWithTag("Player").GetComponent<Player>();
