@@ -19,6 +19,7 @@
 // 2023/03/19   飼育員をプログラムで配置するためにインスペクターで値決めてたのをScriptableObjectで決めるように変えた(伊地田)
 // 2023/03/21   一時停止処理の作成開始
 // 2023/03/25   飼育員の速度変更
+// 2023/03/29   足滑りの無い移動実装
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -38,9 +39,9 @@ public class ZooKeeperAI : MonoBehaviour
     [SerializeField] private Animator animator;
     private AudioSource audioSource;
     private bool walkFlg = false;
-    private bool soundFlg = false;
     private bool surpriseFlg = true;    // 驚くアニメーション用フラグ
     private int rootNum = 0;
+    private Vector3 desVelocity;
     private GameObject exclamationEffect;
     private GameObject questionEffect;
 
@@ -58,6 +59,8 @@ public class ZooKeeperAI : MonoBehaviour
 
     private Player player;
     private NavMeshAgent navMesh;
+    private CharacterController characterController;
+    private Rigidbody rb;
     private RaycastHit rayhit;
 
     private GimmickObj gimmickObj;
@@ -100,18 +103,22 @@ public class ZooKeeperAI : MonoBehaviour
     /// </summary>
     void Start()
     {
-        if(animator == null) animator = GetComponent<Animator>();
-        if(audioSource == null) audioSource = this.GetComponent<AudioSource>();
-        if(player == null) player = GameObject.FindWithTag("Player").GetComponent<Player>();
-        if(gimmickObj == null) gimmickObj = transform.root.gameObject.GetComponent<GimmickObj>();  // 親オブジェクトのスクリプト取得
+        if (animator == null) animator = GetComponent<Animator>();
+        if (audioSource == null) audioSource = this.GetComponent<AudioSource>();
+        if (player == null) player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        if (characterController == null) characterController = GetComponent<CharacterController>();
+        if (rb == null) rb = GetComponent<Rigidbody>();
+        if (gimmickObj == null) gimmickObj = transform.root.gameObject.GetComponent<GimmickObj>();  // 親オブジェクトのスクリプト取得
         //sphereCollider.radius = search; // colliderのradiusを変更する
 
+        // 位置更新を手動で行う
+        navMesh.updatePosition = false;
         // 巡回ルートに要素があるか
         if (data.rootTransforms.Count >= 1)
         {
             rootNum = 0;
             navMesh.SetDestination(data.rootTransforms[rootNum].position); // 目的地の設定
-                                                                           
+
             // 速度設定(始めは歩いてる)
             navMesh.speed = data.speed * player.MaxMoveSpeed;
         }
@@ -139,6 +146,7 @@ public class ZooKeeperAI : MonoBehaviour
         }
 
         Move();
+        CharControl();
         Sound();
     }
 
@@ -415,6 +423,7 @@ public class ZooKeeperAI : MonoBehaviour
             // プロトタイプ用-------------------
             // 歩行アニメーション再生
             animator.SetBool("isWalk", false);
+            //animator.SetFloat("BlendTree", 0);
             walkFlg = false;
             //--------------------------------
         }
@@ -422,26 +431,42 @@ public class ZooKeeperAI : MonoBehaviour
     }
 
     /// <summary>
-    /// 飼育員の足音
+    /// vavMeshを使わず移動する
     /// </summary>
-    private void Sound()
+    private void CharControl()
     {
-        // 歩いている時に足音を鳴らす
-        if (soundFlg != walkFlg)
+        Vector3 targetDeltaPosition;    // 差分取得用
+
+        if (!navMesh.pathPending)
         {
-            soundFlg = walkFlg;
-            if (soundFlg)
-            {
-                // 足音を鳴らす
-                SoundManager.Play(audioSource, SoundManager.ESE.HUMAN_WALK_001);
-            }
-            else
-            {
-                audioSource.Stop();
-            }
+            // nextPositionからdeltaPositionを算出
+            targetDeltaPosition = navMesh.nextPosition - transform.position;
+
+            //var dx = Vector3.Dot(transform.right, targetDeltaPosition);
+            //var dy = Vector3.Dot(transform.forward, targetDeltaPosition);
+            //Vector2 deltaPos = new Vector2(dx, dy);
+            //var velocity = deltaPos / Time.deltaTime;
+            //animator.SetFloat("BlendTree", velocity.x);
+
+            // エージェントの移動を正とする
+            transform.position = navMesh.nextPosition;
+
+            // エージェントに追従する
+            if (targetDeltaPosition.magnitude > navMesh.radius)
+                transform.position = navMesh.nextPosition - 0.9f * targetDeltaPosition;
         }
     }
 
+    /// <summary>
+    /// 飼育員の足音
+    /// </summary>
+    public void Sound()
+    {
+        // 足音を鳴らす
+        //SoundManager.Play(audioSource, SoundManager.ESE.HUMAN_WALK_002);
+    }
+
+    #region コルーチン
     /// <summary>
     /// ペンギンを追従するコルーチン
     /// </summary>
@@ -546,6 +571,7 @@ public class ZooKeeperAI : MonoBehaviour
         navMesh.speed = data.speed * player.MaxMoveSpeed;
         navMesh.SetDestination(data.rootTransforms[rootNum].position); // 目的地の再設定
     }
+    #endregion
 
     /// <summary>
     /// オブジェクトを運ぶ
@@ -581,9 +607,9 @@ public class ZooKeeperAI : MonoBehaviour
     /// </summary>
     private void OnDrawGizmos()
     {
-        Handles.color = new Color(0, 0, 1, 0.3f);
-        Handles.DrawSolidArc(transform.position, Vector3.up, 
-            Quaternion.Euler(0f, -data.searchAngle, 0f) * transform.forward, data.searchAngle * 2.0f, data.searchDistance);
+        //Handles.color = new Color(0, 0, 1, 0.3f);
+        //Handles.DrawSolidArc(transform.position, Vector3.up,
+        //    Quaternion.Euler(0f, -data.searchAngle, 0f) * transform.forward, data.searchAngle * 2.0f, data.searchDistance);
     }
 
     /// <summary>
