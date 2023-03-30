@@ -46,9 +46,18 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Interact"",
+                    ""name"": ""Hit"",
                     ""type"": ""Button"",
                     ""id"": ""efa36aaf-772c-4e9f-b7fa-12765d2a4057"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Hold"",
+                    ""type"": ""Button"",
+                    ""id"": ""00aeff9d-dbd8-4d6f-bece-b9dead120078"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -167,22 +176,44 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""b81c6db9-8b26-448a-a4ce-dfc37950a0a6"",
-                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Interact"",
+                    ""action"": ""Hit"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
                     ""id"": ""74171726-f7a2-477e-82f7-59f31f2b8a5f"",
-                    ""path"": ""<Mouse>/rightButton"",
+                    ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Interact"",
+                    ""action"": ""Hit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ba2c22a7-8cd4-4dd4-995b-81220a353569"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Hold"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ef1cb05f-e57a-48a4-816a-0e4f29bacc10"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": ""Hold(duration=0.01,pressPoint=0.02)"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Hold"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -304,7 +335,8 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
-        m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
+        m_Player_Hit = m_Player.FindAction("Hit", throwIfNotFound: true);
+        m_Player_Hold = m_Player.FindAction("Hold", throwIfNotFound: true);
         m_Player_Appeal = m_Player.FindAction("Appeal", throwIfNotFound: true);
         // Camera
         m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
@@ -374,7 +406,8 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Run;
-    private readonly InputAction m_Player_Interact;
+    private readonly InputAction m_Player_Hit;
+    private readonly InputAction m_Player_Hold;
     private readonly InputAction m_Player_Appeal;
     public struct PlayerActions
     {
@@ -382,7 +415,8 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
         public PlayerActions(@MyContorller wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Run => m_Wrapper.m_Player_Run;
-        public InputAction @Interact => m_Wrapper.m_Player_Interact;
+        public InputAction @Hit => m_Wrapper.m_Player_Hit;
+        public InputAction @Hold => m_Wrapper.m_Player_Hold;
         public InputAction @Appeal => m_Wrapper.m_Player_Appeal;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
@@ -399,9 +433,12 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
                 @Run.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
                 @Run.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
                 @Run.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
-                @Interact.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
-                @Interact.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
-                @Interact.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
+                @Hit.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHit;
+                @Hit.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHit;
+                @Hit.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHit;
+                @Hold.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHold;
+                @Hold.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHold;
+                @Hold.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHold;
                 @Appeal.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAppeal;
                 @Appeal.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAppeal;
                 @Appeal.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAppeal;
@@ -415,9 +452,12 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
                 @Run.started += instance.OnRun;
                 @Run.performed += instance.OnRun;
                 @Run.canceled += instance.OnRun;
-                @Interact.started += instance.OnInteract;
-                @Interact.performed += instance.OnInteract;
-                @Interact.canceled += instance.OnInteract;
+                @Hit.started += instance.OnHit;
+                @Hit.performed += instance.OnHit;
+                @Hit.canceled += instance.OnHit;
+                @Hold.started += instance.OnHold;
+                @Hold.performed += instance.OnHold;
+                @Hold.canceled += instance.OnHold;
                 @Appeal.started += instance.OnAppeal;
                 @Appeal.performed += instance.OnAppeal;
                 @Appeal.canceled += instance.OnAppeal;
@@ -503,7 +543,8 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
-        void OnInteract(InputAction.CallbackContext context);
+        void OnHit(InputAction.CallbackContext context);
+        void OnHold(InputAction.CallbackContext context);
         void OnAppeal(InputAction.CallbackContext context);
     }
     public interface ICameraActions

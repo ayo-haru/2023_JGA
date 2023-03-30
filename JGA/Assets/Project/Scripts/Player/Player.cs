@@ -124,8 +124,10 @@ public class Player : MonoBehaviour
 		gameInputs.Player.Move.canceled += OnMove;
 		gameInputs.Player.Appeal.performed += OnAppeal;
 		gameInputs.Player.Appeal.canceled += OnAppeal;
-		gameInputs.Player.Interact.performed += OnInteract;
-		gameInputs.Player.Interact.canceled += OnInteract;
+		gameInputs.Player.Hit.performed += OnHit;
+		gameInputs.Player.Hit.canceled += OnHit;
+		gameInputs.Player.Hold.performed += OnHold;
+		gameInputs.Player.Hold.canceled += OnHold;
 		gameInputs.Player.Run.performed += OnRun;
 		gameInputs.Player.Run.canceled += OnRun;
 
@@ -206,6 +208,9 @@ public class Player : MonoBehaviour
 			length = 10.0f;
 		}
 
+		// 移動中判定
+		_IsMove = moveInputValue.normalized != Vector2.zero ? true : false;
+
 
 		if (WithinRange.Count == 0 && InteractOutline != null)
 		{
@@ -239,27 +244,6 @@ public class Player : MonoBehaviour
 			}
 		}
 
-		//// サウンド
-		//if (moveInputValue.normalized != Vector2.zero)
-		//{
-		//	if (!isMove)
-		//	{
-		//		isMove = true;
-		//		SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_WALK_001);
-		//	}
-		//	else
-		//	{
-		//		if (audioSource.isPlaying == false)
-		//		{
-		//			SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_WALK_001);
-		//		}
-		//	}
-		//}
-		//else
-		//{
-		//	isMove = false;
-		//	SoundManager.Stop(audioSource);
-		//}
 	}
 
 	private void Pause()
@@ -397,15 +381,52 @@ public class Player : MonoBehaviour
 	}
 
 	/// <summary>
-	/// インタラクト
+	/// はたく
 	/// </summary>
-	private void OnInteract(InputAction.CallbackContext context)
+	private void OnHit(InputAction.CallbackContext context)
 	{
 		if (WithinRange.Count == 0 || PauseManager.isPaused)
 			return;
 
 
-		// 押された時
+		// 押された瞬間
+		if (context.phase == InputActionPhase.Performed)
+		{
+			// 現在のインタラクト対象を登録
+			if (InteractOutline != null)
+			{
+				InteractObject = InteractOutline.GetComponent<Collider>();
+			}
+			else
+			{
+				float length = 10.0f;
+
+				// プレイヤーに一番近いオブジェクトをインタラクト対象とする
+				foreach (Collider obj in WithinRange)
+				{
+					float distance = Vector3.Distance(transform.position, obj.transform.position);
+
+					if (length > distance)
+					{
+						length = distance;
+						InteractObject = obj;
+					}
+				}
+			}
+
+			OnHit();
+		}
+	}
+
+	/// <summary>
+	/// 咥える
+	/// </summary>
+	private void OnHold(InputAction.CallbackContext context)
+	{
+		if (WithinRange.Count == 0 || PauseManager.isPaused)
+			return;
+
+		// 長押し
 		if (context.phase == InputActionPhase.Performed)
 		{
 			_IsInteract = true;
@@ -446,13 +467,6 @@ public class Player : MonoBehaviour
 					case "holdObject":
 						_IsHold = true;
 						OnHold();
-						break;
-
-					case "Interact":
-						OnHit();
-						break;
-
-					default:
 						break;
 				}
 			}
