@@ -16,16 +16,15 @@ using UnityEngine;
 
 public class CanObject : BaseObj , IObjectSound
 {
-	private Player player;
 	private bool fallFlg;
+	private bool pickUpFlg;
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
 	/// </summary>
 	void Awake()
 	{
-		audioSource = this.GetComponent<AudioSource>();
-        rb = this.GetComponent<Rigidbody>();
+		Init();
     }
 
 	/// <summary>
@@ -44,16 +43,7 @@ public class CanObject : BaseObj , IObjectSound
 	/// </summary>
 	void FixedUpdate()
 	{
-		if (player.IsInteract)
-		{
-			PlayPickUp();
-		}
-		if(player.IsHold)
-		{
-			PlayHold();
-			fallFlg = true;
-
-        }
+		
     }
 
 	/// <summary>
@@ -70,25 +60,41 @@ public class CanObject : BaseObj , IObjectSound
             isPlaySound = false;
         }
 
-		Debug.Log(isPlaySound);
     }
     private void OnCollisionEnter(Collision collison)
     {
-		if (collison.gameObject.tag == "Player"  && !player.IsHold)
+		if (collison.gameObject.tag == "Player"  && !pickUpFlg)
 		{
-			SoundManager.Play(audioSource, SoundManager.ESE.CAN_ROLL);
-		}
+            SoundManager.Play(audioSource, SoundManager.ESE.CAN_ROLL);
+        }
 		if(collison.gameObject.tag == "Ground" && fallFlg)
 		{
 			PlayRelease();
 			fallFlg = false;
+			pickUpFlg = false;
         }
 	}
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+			if(player.IsHold && !pickUpFlg)
+			{
+				PlayPickUp();
+				fallFlg = true;
+				pickUpFlg = true;
+            }
+			if (player.IsInteract)
+            {
+                //SoundManager.Play(audioSource, SoundManager.ESE.OBJECT_HIT);
+            }
+        }
+    }
 
     public void PlayPickUp()
     {
 		SoundManager.Play(audioSource, SoundManager.ESE.CAN_CATCH);
-		
     }
 
     public void PlayHold()
@@ -100,4 +106,5 @@ public class CanObject : BaseObj , IObjectSound
     {
         SoundManager.Play(audioSource, SoundManager.ESE.CAN_RELEASE);
     }
+
 }
