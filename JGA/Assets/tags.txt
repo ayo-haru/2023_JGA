@@ -1,0 +1,13 @@
+Untagged
+Respawn
+Finish
+EditorOnly
+MainCamera
+Player
+GameController
+Interact
+Scenery
+Target
+holdObject
+Guest
+Ground

@@ -49,26 +49,26 @@ public class CameraManager : MonoBehaviour
 	/// </summary>
 	void LateUpdate()
 	{
-        //if (!Application.isPlaying)
-        //{
-        //    if (parent == null || child == null || camera == null)
-        //    {
-        //        return;
-        //    }
+        if (!Application.isPlaying)
+        {
+            if (parent == null || child == null || camera == null)
+            {
+                return;
+            }
 
-        //    // パラメータを各種オブジェクトに反映
-        //    parent.localPosition = parameter.position;
-        //    parent.eulerAngles = parameter.angles;
+            // パラメータを各種オブジェクトに反映
+            parent.localPosition = parameter.position;
+            parent.eulerAngles = parameter.angles;
 
-        //    var childPos = child.localPosition;
-        //    childPos.z = -parameter.distance;
-        //    child.localPosition = childPos;
+            var childPos = child.localPosition;
+            childPos.z = -parameter.distance;
+            child.localPosition = childPos;
 
-        //    camera.fieldOfView = parameter.fieldOfView;
-        //    camera.transform.localPosition = parameter.offsetPosition;
-        //    camera.transform.localEulerAngles = parameter.offsetAngles;
+            camera.fieldOfView = parameter.fieldOfView;
+            camera.transform.localPosition = parameter.offsetPosition;
+            camera.transform.localEulerAngles = parameter.offsetAngles;
 
-        //}
+        }
     }
     
     /// <summary>
