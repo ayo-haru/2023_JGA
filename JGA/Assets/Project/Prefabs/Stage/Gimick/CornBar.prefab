@@ -93,7 +93,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5465255858365966207}
   - component: {fileID: 5499673883737607353}
-  - component: {fileID: 5499673883737607352}
+  - component: {fileID: 3328164066888883923}
   m_Layer: 0
   m_Name: CornBar
   m_TagString: Untagged
@@ -133,8 +133,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &5499673883737607352
-MeshCollider:
+--- !u!65 &3328164066888883923
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -143,7 +143,6 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -2857236524381509799, guid: 79381127bac472a4e9cc8a8580e50fa9, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 9.283135, y: 0.38294828, z: 0.4372828}
+  m_Center: {x: -0.010458469, y: -0.0052292347, z: -0.0040389374}

@@ -50,12 +50,12 @@ Material:
     m_Floats:
     - _DistortStrength: 0.0001
     - _Metallic: 1
-    - _NoiseScale: 145
-    - _NormalStrength: 0.34
+    - _NoiseScale: 57
+    - _NormalStrength: 0.019
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReflectionStrength: 2.02
     - _Smoothness: 0.463
     m_Colors:
-    - _GlassColor: {r: 0, g: 1, b: 0.99020815, a: 0.101960786}
+    - _GlassColor: {r: 1, g: 1, b: 1, a: 0.5019608}
   m_BuildTextureStacks: []
