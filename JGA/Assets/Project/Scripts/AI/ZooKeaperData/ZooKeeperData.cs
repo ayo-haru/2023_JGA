@@ -10,14 +10,10 @@
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Rendering;
-using UnityEditor.Searcher;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "ScriptableObject/CreateZookeeperData")]
 public class ZooKeeperData : ScriptableObject{
-
-
     [System.Serializable]
     public class Data {
         [Header("飼育員の名前\n(初期位置のﾌﾟﾚﾊﾌﾞの名前はName+Spawnになる)")]
