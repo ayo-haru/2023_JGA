@@ -14,10 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dataList:
   - name: OGuest001
-    roots: 05000000
+    roots: 07000000
     rootTransforms:
     - {fileID: 0}
-    penguinTF: {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
     speed: 1
     followSpeed: 0.5
     inBoothSpeed: 0.5
@@ -29,10 +33,14 @@ MonoBehaviour:
     waitTime: 0
     cageDistance: 10
   - name: OGuest002
-    roots: 05000000
+    roots: 07000000
     rootTransforms:
     - {fileID: 0}
-    penguinTF: {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
     speed: 1
     followSpeed: 0.5
     inBoothSpeed: 0.5
@@ -44,10 +52,14 @@ MonoBehaviour:
     waitTime: 0
     cageDistance: 10
   - name: OGuest003
-    roots: 05000000
+    roots: 07000000
     rootTransforms:
     - {fileID: 0}
-    penguinTF: {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
     speed: 1
     followSpeed: 0.5
     inBoothSpeed: 0.5
@@ -59,10 +71,14 @@ MonoBehaviour:
     waitTime: 0
     cageDistance: 10
   - name: OGuest004
-    roots: 05000000
+    roots: 07000000
     rootTransforms:
     - {fileID: 0}
-    penguinTF: {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
     speed: 1
     followSpeed: 0.5
     inBoothSpeed: 0.5
@@ -74,10 +90,14 @@ MonoBehaviour:
     waitTime: 0
     cageDistance: 10
   - name: OGuest005
-    roots: 05000000
+    roots: 07000000
     rootTransforms:
     - {fileID: 0}
-    penguinTF: {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
     speed: 1
     followSpeed: 0.5
     inBoothSpeed: 0.5
@@ -89,10 +109,14 @@ MonoBehaviour:
     waitTime: 0
     cageDistance: 10
   - name: OGuest006
-    roots: 05000000
+    roots: 07000000
     rootTransforms:
     - {fileID: 0}
-    penguinTF: {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
     speed: 1
     followSpeed: 0.5
     inBoothSpeed: 0.5
@@ -104,11 +128,15 @@ MonoBehaviour:
     waitTime: 0
     cageDistance: 10
   - name: OGuest007
-    roots: 0400000002000000
+    roots: 0600000004000000
     rootTransforms:
     - {fileID: 0}
     - {fileID: 0}
-    penguinTF: {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
     speed: 1
     followSpeed: 0.5
     inBoothSpeed: 0.5
@@ -120,11 +148,15 @@ MonoBehaviour:
     waitTime: 0
     cageDistance: 10
   - name: OGuest008
-    roots: 0200000004000000
+    roots: 0400000006000000
     rootTransforms:
     - {fileID: 0}
     - {fileID: 0}
-    penguinTF: {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
     speed: 1
     followSpeed: 0.5
     inBoothSpeed: 0.5
@@ -136,12 +168,16 @@ MonoBehaviour:
     waitTime: 0
     cageDistance: 10
   - name: OGuest009
-    roots: 060000000500000002000000
+    roots: 080000000700000004000000
     rootTransforms:
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
-    penguinTF: {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
     speed: 1
     followSpeed: 0.5
     inBoothSpeed: 0.5
@@ -153,14 +189,18 @@ MonoBehaviour:
     waitTime: 0
     cageDistance: 10
   - name: OGuest010
-    roots: 0600000005000000020000000300000004000000
+    roots: 0400000005000000060000000700000008000000
     rootTransforms:
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
-    penguinTF: {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
     speed: 1
     followSpeed: 0.5
     inBoothSpeed: 0.5
