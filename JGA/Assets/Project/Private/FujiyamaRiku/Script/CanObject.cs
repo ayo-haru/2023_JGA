@@ -12,7 +12,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 
 public class CanObject : BaseObj , IObjectSound
@@ -94,7 +93,7 @@ public class CanObject : BaseObj , IObjectSound
 
     public void PlayHold()
     {
-        //SoundManager.Play(audioSource, SoundManager.ESE.CAN_CATCH);
+
     }
 
     public void PlayRelease()
