@@ -11,6 +11,7 @@
 //=============================================================================
 using System.Collections.Generic;
 using UniRx;
+using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -152,6 +153,11 @@ public class Player : MonoBehaviour
 
 	private void Update()
 	{
+		if (PauseManager.isPaused)
+		{
+			moveInputValue = Vector2.zero;
+		}
+
 		// ゲームパッドが接続されていないとnullになる。
 		if (Gamepad.current == null)
 			bGamePad = false;
@@ -419,6 +425,27 @@ public class Player : MonoBehaviour
 	}
 
 	/// <summary>
+	/// はたく
+	/// </summary>
+	private void OnHit()
+	{
+		var rigidbody = InteractObject.GetComponent<Rigidbody>();
+		float blowpower = 10.0f;    // 吹っ飛ぶ強さ
+		float topvector = 0.1f;    // 吹っ飛ぶ強さ
+
+		// プレイヤーが範囲内にいる時にインタラクトフラグがTrueになったらふき飛ぶよ
+		rigidbody.isKinematic = false;
+		Vector3 vec = (InteractObject.transform.position + new Vector3(0.0f, topvector, 0.0f) - transform.position).normalized;
+		rigidbody.velocity = vec * blowpower;
+		vec = (InteractObject.transform.position - transform.position).normalized;
+		rigidbody.AddTorque(vec * blowpower);
+
+		//InteractObject.GetComponent<AudioSource>().Play();
+
+		//SoundManager.Play(audioSource, SoundManager.ESE.);
+	}
+
+	/// <summary>
 	/// 咥える
 	/// </summary>
 	private void OnHold(InputAction.CallbackContext context)
@@ -490,7 +517,8 @@ public class Player : MonoBehaviour
 		{
 			InteractObject.transform.parent = transform;
 			InteractObject.transform.localPosition = new Vector3(0, 0.5f, InteractObject.transform.localPosition.z);
-			InteractObject.transform.localRotation = Quaternion.identity;
+			//InteractObject.transform.localRotation = Quaternion.identity;
+
 			if (InteractObject.TryGetComponent(out Rigidbody rigidbody))
 			{
 				HoldObjectRb = rigidbody;
@@ -509,27 +537,6 @@ public class Player : MonoBehaviour
 			InteractObject = null;
 			HoldObjectRb = null;
 		}
-	}
-
-	/// <summary>
-	/// はたく
-	/// </summary>
-	private void OnHit()
-	{
-		var rigidbody = InteractObject.GetComponent<Rigidbody>();
-		float blowpower = 10.0f;    // 吹っ飛ぶ強さ
-		float topvector = 0.1f;    // 吹っ飛ぶ強さ
-
-		// プレイヤーが範囲内にいる時にインタラクトフラグがTrueになったらふき飛ぶよ
-		rigidbody.isKinematic = false;
-		Vector3 vec = (InteractObject.transform.position + new Vector3(0.0f, topvector, 0.0f) - transform.position).normalized;
-		rigidbody.velocity = vec * blowpower;
-		vec = (InteractObject.transform.position - transform.position).normalized;
-		rigidbody.AddTorque(vec * blowpower);
-
-		//InteractObject.GetComponent<AudioSource>().Play();
-
-		//SoundManager.Play(audioSource, SoundManager.ESE.);
 	}
 
 	/// <summary>
