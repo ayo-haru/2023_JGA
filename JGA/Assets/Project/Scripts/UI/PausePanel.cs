@@ -55,11 +55,13 @@ public class PausePanel : MonoBehaviour
 
 	void Pause()
 	{
+		pausePanel.SetActive(true);
 		gameObject.SetActive(true);
 	}
 
 	void Resumed()
 	{
+		pausePanel.SetActive(false);
 		gameObject.SetActive(false);
 	}
 
