@@ -59,8 +59,10 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 	//----- 飼育員、客のルートに使用 -----
 	public enum eRoot
 	{
-		NONE = 0,
-		PENGUIN,
+		PENGUIN_N = 0,
+		PENGUIN_S,
+		PENGUIN_W,
+		PENGUIN_E,
 		BEAR,
 		ELEPHANT,
 		LION,

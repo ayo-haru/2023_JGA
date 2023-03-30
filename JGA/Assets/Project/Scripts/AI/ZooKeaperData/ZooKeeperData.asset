@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   list:
   - name: ZooKeeper001
-    roots: 0200000001000000
+    roots: 0100000004000000
     rootTransforms:
     - {fileID: 0}
     - {fileID: 0}
@@ -38,7 +38,7 @@ MonoBehaviour:
     searchAngle: 45
     searchDistance: 10
   - name: ZooKeeper003
-    roots: 0200000005000000
+    roots: 0600000005000000
     rootTransforms:
     - {fileID: 0}
     - {fileID: 0}
@@ -50,7 +50,7 @@ MonoBehaviour:
     searchAngle: 45
     searchDistance: 10
   - name: ZooKeeper004
-    roots: 0600000005000000
+    roots: 0700000008000000
     rootTransforms:
     - {fileID: 0}
     - {fileID: 0}

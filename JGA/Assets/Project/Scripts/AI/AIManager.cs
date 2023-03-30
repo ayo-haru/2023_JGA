@@ -63,10 +63,10 @@ public class AIManager : MonoBehaviour
             }
 
             data.penguinTF = new List<Transform>();
-            data.penguinTF.Add(_StageSceneManager.GetRootTransform(MySceneManager.eRoot.PENGUIN));
-            data.penguinTF.Add(_StageSceneManager.GetRootTransform(MySceneManager.eRoot.PENGUIN));
-            data.penguinTF.Add(_StageSceneManager.GetRootTransform(MySceneManager.eRoot.PENGUIN));
-            data.penguinTF.Add(_StageSceneManager.GetRootTransform(MySceneManager.eRoot.PENGUIN));
+            data.penguinTF.Add(_StageSceneManager.GetRootTransform(MySceneManager.eRoot.PENGUIN_N));
+            data.penguinTF.Add(_StageSceneManager.GetRootTransform(MySceneManager.eRoot.PENGUIN_S));
+            data.penguinTF.Add(_StageSceneManager.GetRootTransform(MySceneManager.eRoot.PENGUIN_W));
+            data.penguinTF.Add(_StageSceneManager.GetRootTransform(MySceneManager.eRoot.PENGUIN_E));
         }
 
         //エラーチェック

@@ -23,6 +23,7 @@ public class StageSceneManager : BaseSceneManager {
     private GameObject playerInstance;
     [SerializeField] GameObject playerRespawn;
 
+    [NamedArrayAttribute(new string[] { "PENGUIN_N", "PENGUIN_S", "PENGUIN_W", "PENGUIN_E", "BEAR", "ELEPHANT", "LION", "POLARBEAR", "BIRD", })]
     [SerializeField]
     private Transform[] zooKeeperRootPos;
 
@@ -66,7 +67,10 @@ public class StageSceneManager : BaseSceneManager {
     void Start() {
         zooKeeperRootPos = new Transform[Enum.GetNames(typeof(MySceneManager.eRoot)).Length];
         if (isGuestSpawn == true || isZKSpawn == true) {  // デバッグ用エラー出ないように囲んどく
-            zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN] = GameObject.Find("PenguinCagePos").GetComponent<Transform>();
+            zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_N] = GameObject.Find("PenguinCagePos").GetComponent<Transform>();
+            zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_S] = GameObject.Find("PenguinCagePos").GetComponent<Transform>();
+            zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_W] = GameObject.Find("PenguinCagePos").GetComponent<Transform>();
+            zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_E] = GameObject.Find("PenguinCagePos").GetComponent<Transform>();
             zooKeeperRootPos[(int)MySceneManager.eRoot.BEAR] = GameObject.Find("BearCagePos").GetComponent<Transform>();
             zooKeeperRootPos[(int)MySceneManager.eRoot.ELEPHANT] = GameObject.Find("ElephantCagePos").GetComponent<Transform>();
             zooKeeperRootPos[(int)MySceneManager.eRoot.LION] = GameObject.Find("LionCagePos").GetComponent<Transform>();
@@ -127,10 +131,10 @@ public class StageSceneManager : BaseSceneManager {
                 }
                 // ペンギンブースの座標を入れる
                 _guestList[i].penguinTF = new List<Transform>();
-                _guestList[i].penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN]);
-                _guestList[i].penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN]);
-                _guestList[i].penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN]);
-                _guestList[i].penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN]);
+                _guestList[i].penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_N]);
+                _guestList[i].penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_S]);
+                _guestList[i].penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_W]);
+                _guestList[i].penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_E]);
 
                 // 生成
                 GameObject guestInstace = Instantiate(guestObj, _guestList[i].rootTransforms[0].position, Quaternion.identity);
