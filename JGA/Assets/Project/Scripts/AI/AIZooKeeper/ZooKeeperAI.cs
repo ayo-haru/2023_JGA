@@ -132,7 +132,6 @@ public class ZooKeeperAI : MonoBehaviour
 
         // 位置更新を手動で行う
         navMesh.updatePosition = false;
-        navMesh.updateRotation = false;
         // 巡回ルートに要素があるか
         if (data.rootTransforms.Count >= 1)
         {
@@ -158,6 +157,7 @@ public class ZooKeeperAI : MonoBehaviour
 
         Move();
         CharControl();
+        Dir();
     }
 
     private void Update()
@@ -262,7 +262,7 @@ public class ZooKeeperAI : MonoBehaviour
                                     soundObjFlg = false;
                                     gimmickFlg = true;
                                     parentObj = gimmickObj.gimmickList[i].transform.root.gameObject;        // 親オブジェクト取得
-                                    Dir(gimmickObj.gimmickList[i].transform);
+                                    navMesh.SetDestination(gimmickObj.gimmickList[i].transform.position);
                                     gimmickNum = i;
                                 }
                             }
@@ -325,7 +325,7 @@ public class ZooKeeperAI : MonoBehaviour
         // ペンギンを追いかける
         if (chaseNow)
         {
-            Dir(player.transform);
+            navMesh.destination = player.transform.position;
         }
         // オブジェクトを元の位置に戻す
         if (gimmickFlg)
@@ -361,7 +361,7 @@ public class ZooKeeperAI : MonoBehaviour
         if (soundObjFlg)
         {
             // なったオブジェクトまで移動
-            Dir(soundObj.transform);
+            navMesh.SetDestination(soundObj.transform.position);
             // オブジェクトの位置に到着したか
             if (navMesh.remainingDistance <= 1.5f    // 目標地点までの距離が1.5ｍ以下になったら到着
                     && !navMesh.pathPending)         // 経路計算中かどうか（計算中：true　計算完了：false）
@@ -545,7 +545,7 @@ public class ZooKeeperAI : MonoBehaviour
             gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().isKinematic = true;   // 物理演算の影響を受けないようにする
             gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().useGravity = false;
             gimmickObj.gimmickList[gimmickNum].transform.parent = this.transform;
-            Dir(gimmickObj.resetPos[gimmickNum]);
+            navMesh.SetDestination(gimmickObj.resetPos[gimmickNum].transform.position);
         }
         else if (gimmickObj.bReset[gimmickNum] || chaseNow)
         {
@@ -565,17 +565,8 @@ public class ZooKeeperAI : MonoBehaviour
     /// <summary>
     /// 向きの調整
     /// </summary>
-    private void Dir(Transform targetPos)
+    private void Dir()
     {
-        if (chaseNow)
-        {
-            navMesh.destination = targetPos.transform.position;
-        }
-        else
-        {
-            navMesh.SetDestination(targetPos.transform.position);
-        }
-
         // 次に目指すべき位置を取得
         var nextPoint = navMesh.steeringTarget;
         Vector3 targetDir = nextPoint - transform.position;
@@ -590,17 +581,6 @@ public class ZooKeeperAI : MonoBehaviour
         {
             transform.position += transform.forward * 5.0f * Time.deltaTime;
         }
-
-        // targetに向かって移動する
-        if (chaseNow)
-        {
-            navMesh.destination = targetPos.transform.position;
-        }
-        else
-        {
-            navMesh.SetDestination(targetPos.transform.position);
-        }
-        navMesh.nextPosition = transform.position;
     }
 
     /// <summary>
