@@ -54,7 +54,7 @@ public class FadeManager : MonoBehaviour
     void Update()
 	{
         if (MySceneManager.GameData.isCatchPenguin) {	// ペンギンを捕まえたらフェードアウト開始
-			StartFadeOut();
+			StartFadeIn();
 		}
 
         if (fadeMode != eFade.Default) {
@@ -65,12 +65,16 @@ public class FadeManager : MonoBehaviour
 					fadeMode = eFade.FadeIn;
 				}
 			} else if (fadeMode == eFade.FadeIn) {
-				if (alpha > 0.0f) {
+				if (alpha > 0.1f) {
+					/*
+					 * はじめはゆっくりでちょっと経ったらはやくげんざんしよ
+					 */
 					alpha -= speed;
 				} else {
 					fadeMode = eFade.Default;
-
+					alpha = 0.0f;
 					PauseManager.isPaused = false;
+
 					//PauseManager.Resume();
 				}
             }
