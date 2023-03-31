@@ -9,6 +9,7 @@
 // 2023/03/07	スクリプト作成
 // 2023/03/13	(小楠)インタラクトフラグ取得
 // 2023/03/13	(伊地田)自動生成に対応
+// 2023/03/31	(小楠)BaseObjクラスを使った処理に変更
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -72,9 +73,9 @@ public class TransitionInteract : AITransition
         for(int i = 0; i < interactObjecs.Length; ++i)
         {
             if (Vector3.Distance(transform.position, interactObjecs[i].transform.position) > data.reactionArea) continue;
-            CardboardBox cardboardBox = interactObjecs[i].GetComponent<CardboardBox>();
-            if (!cardboardBox) continue;
-            if (cardboardBox.IsSound) return true;
+            BaseObj obj = interactObjecs[i].GetComponent<BaseObj>();
+            if (!obj) continue;
+            if (obj.GetisPlaySound()) return true;
         }
         return false;
     }

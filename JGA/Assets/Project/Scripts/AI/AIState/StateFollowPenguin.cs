@@ -134,16 +134,17 @@ public class StateFollowPenguin : AIState
         //驚きモーション中は移動させない
         agent.isStopped = animator.GetCurrentAnimatorStateInfo(0).IsName("Surprised");
 
-        //!!!,!!の時は追従する
-        agent.speed = (ui.GetEmotion() >= EEmotion.ATTENSION_MIDDLE) ? player.MaxAppealSpeed * data.followSpeed : 0.0f; 
+        //!!!,!!の時は追従する プレイヤーが客に向かって歩いてるときは追従しない
+        float dot = Vector3.Dot(agent.velocity.normalized,player.vForce.normalized);
+        agent.speed = (ui.GetEmotion() >= EEmotion.ATTENSION_MIDDLE && dot >= 0) ? player.MaxAppealSpeed * data.followSpeed : 0.0f; 
         agent.SetDestination(target.position + posOffset);
 
         //プレイヤーの方向を向く
         Quaternion rot = Quaternion.LookRotation(target.position - transform.position);
-        transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime);
+        transform.rotation = Quaternion.Slerp(transform.rotation, rot,Time.deltaTime);
 
         //アニメーション更新
-        animator.SetBool("isWalk", (agent.velocity.magnitude > 0.0f) ? true : false);
+        animator.SetBool("isWalk", (agent.velocity.magnitude > 0.2f) ? true : false);
     }
 
     public override void FinState()
