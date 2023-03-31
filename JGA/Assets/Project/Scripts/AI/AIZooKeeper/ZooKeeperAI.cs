@@ -36,6 +36,11 @@ public class ZooKeeperAI : MonoBehaviour
         returnObj,      // オブジェクトを元に戻す
         notReturnObj,   // オブジェクトを元に戻さない
     }
+    private enum Effect
+    {
+        exclamation,    // ！エフェクト
+        question,       // ？エフェクト   
+    }
 
     [SerializeField] private Animator animator;
     private bool surpriseFlg = true;    // 驚くアニメーション用フラグ
@@ -209,7 +214,6 @@ public class ZooKeeperAI : MonoBehaviour
                             // コルーチン開始
                             StartCoroutine("PenguinChase");
                         }
-                        navMesh.destination = other.transform.position;    // ペンギンを追従
                     }
                 }
                 else
@@ -258,7 +262,7 @@ public class ZooKeeperAI : MonoBehaviour
                                     soundObjFlg = false;
                                     gimmickFlg = true;
                                     parentObj = gimmickObj.gimmickList[i].transform.root.gameObject;        // 親オブジェクト取得
-                                    navMesh.SetDestination(gimmickObj.gimmickList[i].transform.position);   // 目的地をオブジェクトの位置に設定
+                                    Dir(gimmickObj.gimmickList[i].transform);
                                     gimmickNum = i;
                                 }
                             }
@@ -321,8 +325,7 @@ public class ZooKeeperAI : MonoBehaviour
         // ペンギンを追いかける
         if (chaseNow)
         {
-            //navMesh.destination = player.transform.position;    // ペンギンを追従
-            PlayerChase();
+            Dir(player.transform);
         }
         // オブジェクトを元の位置に戻す
         if (gimmickFlg)
@@ -358,7 +361,7 @@ public class ZooKeeperAI : MonoBehaviour
         if (soundObjFlg)
         {
             // なったオブジェクトまで移動
-            navMesh.SetDestination(soundObj.transform.position);
+            Dir(soundObj.transform);
             // オブジェクトの位置に到着したか
             if (navMesh.remainingDistance <= 1.5f    // 目標地点までの距離が1.5ｍ以下になったら到着
                     && !navMesh.pathPending)         // 経路計算中かどうか（計算中：true　計算完了：false）
@@ -405,7 +408,7 @@ public class ZooKeeperAI : MonoBehaviour
     }
 
     /// <summary>
-    /// vavMeshを使わず移動する
+    /// navMeshを使わず移動する
     /// </summary>
     private void CharControl()
     {
@@ -436,10 +439,7 @@ public class ZooKeeperAI : MonoBehaviour
             // 驚きモーション中は移動させない
             NavMeshStop();
             // エフェクト表示
-            exclamationEffect =
-                EffectManager.Create(
-                    new Vector3(transform.position.x, transform.position.y + 4.0f, transform.position.z),
-                    3);
+            CreateEffect(Effect.exclamation);
             //-----------------------
             // 驚くアニメーション開始
             animator.SetTrigger("isSurprise");
@@ -472,10 +472,7 @@ public class ZooKeeperAI : MonoBehaviour
     private IEnumerator CatchObj()
     {
         // エフェクト表示
-        questionEffect =
-            EffectManager.Create(
-                new Vector3(transform.position.x, transform.position.y + 4.0f, transform.position.z),
-                4);
+        CreateEffect(Effect.question);
         // 止まる
         NavMeshStop();
 
@@ -522,10 +519,7 @@ public class ZooKeeperAI : MonoBehaviour
     private IEnumerator SoundObj()
     {
         // エフェクト表示
-        questionEffect =
-            EffectManager.Create(
-                new Vector3(transform.position.x, transform.position.y + 4.0f, transform.position.z),
-                4);
+        CreateEffect(Effect.question);
         // 止まる
         NavMeshStop();
 
@@ -551,7 +545,7 @@ public class ZooKeeperAI : MonoBehaviour
             gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().isKinematic = true;   // 物理演算の影響を受けないようにする
             gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().useGravity = false;
             gimmickObj.gimmickList[gimmickNum].transform.parent = this.transform;
-            navMesh.SetDestination(gimmickObj.resetPos[gimmickNum].position);   // 目的地をオブジェクトの位置に設定
+            Dir(gimmickObj.resetPos[gimmickNum]);
         }
         else if (gimmickObj.bReset[gimmickNum] || chaseNow)
         {
@@ -569,11 +563,18 @@ public class ZooKeeperAI : MonoBehaviour
     }
 
     /// <summary>
-    /// プレイヤーを追いかる時の向きを調整
+    /// 向きの調整
     /// </summary>
-    private void PlayerChase()
+    private void Dir(Transform targetPos)
     {
-        navMesh.destination = player.transform.position;
+        if (chaseNow)
+        {
+            navMesh.destination = targetPos.transform.position;
+        }
+        else
+        {
+            navMesh.SetDestination(targetPos.transform.position);
+        }
 
         // 次に目指すべき位置を取得
         var nextPoint = navMesh.steeringTarget;
@@ -591,7 +592,14 @@ public class ZooKeeperAI : MonoBehaviour
         }
 
         // targetに向かって移動する
-        navMesh.destination = player.transform.position;
+        if (chaseNow)
+        {
+            navMesh.destination = targetPos.transform.position;
+        }
+        else
+        {
+            navMesh.SetDestination(targetPos.transform.position);
+        }
         navMesh.nextPosition = transform.position;
     }
 
@@ -627,6 +635,29 @@ public class ZooKeeperAI : MonoBehaviour
             gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().isKinematic = false;   // 物理演算の影響を受けるようにする
             gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().useGravity = true;
             gimmickObj.gimmickList[gimmickNum].transform.parent = parentObj.transform;
+        }
+    }
+
+    /// <summary>
+    /// エフェクト作成
+    /// </summary>
+    private void CreateEffect(Effect effect)
+    {
+        switch(effect)
+        {
+            case Effect.exclamation:    // ！エフェクト
+                exclamationEffect =
+                    EffectManager.Create(
+                        new Vector3(transform.position.x, transform.position.y + 4.0f, transform.position.z),
+                        3);
+                break;
+            case Effect.question:       // ？エフェクト
+                // エフェクト表示
+                questionEffect =
+                    EffectManager.Create(
+                        new Vector3(transform.position.x, transform.position.y + 4.0f, transform.position.z),
+                        4);
+                break;
         }
     }
 
