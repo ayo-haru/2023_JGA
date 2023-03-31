@@ -11,7 +11,6 @@
 //=============================================================================
 using System.Collections.Generic;
 using UniRx;
-using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -27,7 +26,7 @@ public class Player : MonoBehaviour
 	[SerializeField] private AudioClip seWalk;          // ＳＥ：歩く
 	[SerializeField] private Animator anim;             // Animatorへの参照
 
-	[Header("ステータス")]
+	[Header("ステータス")] //-----------------------------------------------------------------
 	[SerializeField, Tooltip("歩行時速度")]
 	private float moveForce = 7;
 	[SerializeField, Tooltip("歩行時最高速度")]
@@ -51,7 +50,34 @@ public class Player : MonoBehaviour
 	private float callMax = 5.0f;
 	[SerializeField]
 	private float callInterval = 0;
+	//----------------------------------------------------------------------------------------
 
+	// フラグ --------------------------------------------------------------------------------
+	[SerializeField]
+	private bool _IsInteract;  // インタラクトフラグ
+	public bool IsInteract { get { return _IsInteract; } set { _IsInteract = value; } }
+	private bool DelayInteract;
+	[SerializeField]
+	private bool _IsHit;  // インタラクトフラグ
+	public bool IsHit { get { return _IsHit; } set { _IsHit = value; } }
+	private bool DelayHit;
+
+	[SerializeField]
+	private bool _IsHold;       // つかみフラグ
+	public bool IsHold { get { return _IsHold; } }
+	[SerializeField]
+	private bool _IsMove;
+	public bool IsMove { get { return _IsMove; } }
+	[SerializeField]
+	private bool _IsRun;        // 走りフラグ
+	public bool IsRun { get { return _IsRun; } }
+	[SerializeField]
+	private bool _IsAppeal;    // アピールフラグ
+	public bool IsAppeal { get { return _IsAppeal; } }
+
+	[SerializeField] private bool bGamePad;     // ゲームパッド接続確認フラグ
+
+	//----------------------------------------------------------------------------------------
 
 	[SerializeField] private Vector3 _vForce;
 	public Vector3 vForce { get { return _vForce; } }
@@ -60,20 +86,6 @@ public class Player : MonoBehaviour
 	private Vector3 pauseAngularVelocity;
 
 
-	[SerializeField] private bool _IsInteract;  // インタラクトフラグ
-	public bool IsInteract { get { return _IsInteract; } set { _IsInteract = value; } }        // インタラクトプロパティ
-	private bool delay;
-
-	[SerializeField] private bool _IsHold;       // つかみフラグ
-	public bool IsHold { get { return _IsHold; } }
-	[SerializeField] private bool _IsMove;
-	public bool IsMove { get { return _IsMove; } }
-	[SerializeField] private bool _IsRun;        // 走りフラグ
-	public bool IsRun { get { return _IsRun; } }
-	[SerializeField] private bool _IsAppeal;    // アピールフラグ
-	public bool IsAppeal { get { return _IsAppeal; } }
-
-	[SerializeField] private bool bGamePad;     // ゲームパッド接続確認フラグ
 	private MyContorller gameInputs;            // 方向キー入力取得
 	private Vector2 moveInputValue;             // 移動方向
 
@@ -174,14 +186,28 @@ public class Player : MonoBehaviour
 		// インタラクトして１フレーム経過後
 		if (_IsInteract)
 		{
-			if (!delay)
+			if (!DelayInteract)
 			{
-				delay = true;
+				DelayInteract = true;
 			}
 			else
 			{
-				delay = false;
+				DelayInteract = false;
 				_IsInteract = false;
+			}
+		}
+
+		// インタラクトして１フレーム経過後
+		if (_IsHit)
+		{
+			if (!DelayHit)
+			{
+				DelayHit = true;
+			}
+			else
+			{
+				DelayHit = false;
+				_IsHit = false;
 			}
 		}
 
@@ -439,6 +465,8 @@ public class Player : MonoBehaviour
 		rigidbody.velocity = vec * blowpower;
 		vec = (InteractObject.transform.position - transform.position).normalized;
 		rigidbody.AddTorque(vec * blowpower);
+
+		_IsHit = true;
 
 		//InteractObject.GetComponent<AudioSource>().Play();
 
