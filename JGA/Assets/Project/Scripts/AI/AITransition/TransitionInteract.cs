@@ -19,7 +19,7 @@ public class TransitionInteract : AITransition
 {
     private Transform playerTransform;
     private GuestData.Data data;
-    private GameObject[] interactObjecs;
+    private BaseObj[] interactObjecs;
 #if false
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -58,7 +58,8 @@ public class TransitionInteract : AITransition
         //コンポーネント、オブジェクトの取得
         if (!playerTransform) playerTransform = GameObject.FindWithTag("Player").GetComponent<Transform>();
         if (data==null) data = GetComponent<AIManager>().GetGuestData();
-        if (interactObjecs == null) interactObjecs = GameObject.FindGameObjectsWithTag("Interact");
+        //if (interactObjecs == null) interactObjecs = GameObject.FindGameObjectsWithTag("Interact");
+        if (interactObjecs == null) interactObjecs = GameObject.Find("InteractObject").GetComponentsInChildren<BaseObj>();
     }
 
     public override bool IsTransition()
@@ -73,9 +74,10 @@ public class TransitionInteract : AITransition
         for(int i = 0; i < interactObjecs.Length; ++i)
         {
             if (Vector3.Distance(transform.position, interactObjecs[i].transform.position) > data.reactionArea) continue;
-            BaseObj obj = interactObjecs[i].GetComponent<BaseObj>();
-            if (!obj) continue;
-            if (obj.GetisPlaySound()) return true;
+            if (interactObjecs[i].GetisPlaySound()) return true;
+            //BaseObj obj = interactObjecs[i].GetComponent<BaseObj>();
+            //if (!obj) continue;
+            //if (obj.GetisPlaySound()) return true;
         }
         return false;
     }
