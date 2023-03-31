@@ -66,9 +66,6 @@ public class FadeManager : MonoBehaviour
 				}
 			} else if (fadeMode == eFade.FadeIn) {
 				if (alpha > 0.1f) {
-					/*
-					 * はじめはゆっくりでちょっと経ったらはやくげんざんしよ
-					 */
 					alpha -= speed;
 				} else {
 					fadeMode = eFade.Default;
