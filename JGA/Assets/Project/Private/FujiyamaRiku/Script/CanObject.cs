@@ -17,7 +17,7 @@ using UnityEngine;
 public class CanObject : BaseObj , IObjectSound
 {
 	private bool fallFlg;
-	private bool pickUpFlg;
+    private bool flyFlg;
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -63,15 +63,22 @@ public class CanObject : BaseObj , IObjectSound
     }
     private void OnCollisionEnter(Collision collison)
     {
-		if (collison.gameObject.tag == "Player"  && !pickUpFlg)
+		if (collison.gameObject.tag == "Player"  && !fallFlg)
 		{
             SoundManager.Play(audioSource, SoundManager.ESE.CAN_ROLL);
         }
-		if(collison.gameObject.tag == "Ground" && fallFlg)
+		if(collison.gameObject.tag == "Ground")
 		{
-			PlayRelease();
-			fallFlg = false;
-			pickUpFlg = false;
+            if (fallFlg)
+            {
+                PlayRelease();
+                fallFlg = false;
+            }
+            if(flyFlg)
+            {
+                SoundManager.Play(audioSource, SoundManager.ESE.CAN_ROLL);
+                flyFlg = false;
+            }
         }
 	}
 
@@ -79,16 +86,20 @@ public class CanObject : BaseObj , IObjectSound
     {
         if (other.tag == "Player")
         {
-			if(player.IsHold && !pickUpFlg)
+			if(player.IsHold && !fallFlg)
 			{
 				PlayPickUp();
 				fallFlg = true;
-				pickUpFlg = true;
             }
-			if (player.IsInteract)
-            {
-                //SoundManager.Play(audioSource, SoundManager.ESE.OBJECT_HIT);
-            }
+			
+        }
+    }
+    private void OnTriggerStay(Collider other)
+    {
+        if (player.IsHit && !flyFlg)
+        {
+            SoundManager.Play(audioSource, SoundManager.ESE.OBJECT_HIT);
+            flyFlg = true;
         }
     }
 
