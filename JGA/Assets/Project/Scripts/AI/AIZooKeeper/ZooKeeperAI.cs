@@ -160,8 +160,8 @@ public class ZooKeeperAI : MonoBehaviour
 
     private void Update()
     {
-        if (PauseManager.isPaused)
-            return;
+        //if (PauseManager.isPaused)
+        //    return;
 
         if (MySceneManager.GameData.isCatchPenguin) {
             ReStart();
@@ -596,7 +596,7 @@ public class ZooKeeperAI : MonoBehaviour
     /// </summary>
     private void ReStart() {
         // インスペクターで設定したリスポーン位置に再配置する
-        this.gameObject.transform.position = data.respawnTF.position;
+        navMesh.Warp(data.respawnTF.position);
     }
 
     /// <summary>
