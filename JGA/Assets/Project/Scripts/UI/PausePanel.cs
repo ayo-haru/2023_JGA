@@ -14,6 +14,12 @@ using UnityEngine.UI;
 
 public class PausePanel : MonoBehaviour
 {
+	[Header("パネル移動速度")]
+	[SerializeField]
+	private float PanelMoveValue = 100;
+
+	private BaseSceneManager bsm;
+
 	[Header("有効パネル")]
 	[SerializeField]
 	private GameObject pausePanel;
@@ -21,6 +27,8 @@ public class PausePanel : MonoBehaviour
 	private GameObject optionPanel;
 	[SerializeField]
 	private GameObject keyConfigPanel;
+
+	private GameObject ActivePanel;
 
 
 	[Header("Pauseパネル - オブジェクト")]
@@ -47,21 +55,36 @@ public class PausePanel : MonoBehaviour
 		//OpitonButton.onClick.AddListener(ChangePanel);
 		TitleButton.onClick.AddListener(ChangeTitle);
 
+		pausePanel.SetActive(true);
+		optionPanel.SetActive(true);
+		keyConfigPanel.SetActive(true);
+
+		rect = GetComponent<RectTransform>();
+
+		bsm = FindObjectOfType<BaseSceneManager>();
+
 		if (gameObject.activeSelf)
 			gameObject.SetActive(false);
 
-		rect = GetComponent<RectTransform>();
+	}
+
+	private void FixedUpdate()
+	{
+		if (ActivePanel == pausePanel && rect.localPosition != new Vector3(0, 0, 0))
+			rect.localPosition = Vector3.MoveTowards(rect.localPosition, new Vector3(0, 0, 0), PanelMoveValue);
+		if (ActivePanel == optionPanel && rect.localPosition != new Vector3(-1920 * 1, 0, 0))
+			rect.localPosition = Vector3.MoveTowards(rect.localPosition, new Vector3(-1920 * 1, 0, 0), PanelMoveValue);
+		if (ActivePanel == keyConfigPanel && rect.localPosition != new Vector3(-1920 * 2, 0, 0))
+			rect.localPosition = Vector3.MoveTowards(rect.localPosition, new Vector3(-1920 * 2, 0, 0), PanelMoveValue);
 	}
 
 	void Pause()
 	{
-		pausePanel.SetActive(true);
 		gameObject.SetActive(true);
 	}
 
 	void Resumed()
 	{
-		pausePanel.SetActive(false);
 		gameObject.SetActive(false);
 	}
 
@@ -73,6 +96,7 @@ public class PausePanel : MonoBehaviour
 
 	private void ChangeTitle()
 	{
+		//bsm.SceneChange(MySceneManager.SceneState.SCENE_TITLE);
 		//SceneChange(MySceneManager.SceneState.SCENE_TITLE);
 	}
 
@@ -82,16 +106,13 @@ public class PausePanel : MonoBehaviour
 	}
 	public void ChangePanel(string panelName)
 	{
-		pausePanel.SetActive(panelName.Equals(pausePanel.name));
-		optionPanel.SetActive(panelName.Equals(optionPanel.name));
-		keyConfigPanel.SetActive(panelName.Equals(keyConfigPanel.name));
+		if (panelName.Equals(pausePanel.name))
+			ActivePanel = pausePanel;
 
-		if (pausePanel.activeSelf)
-			rect.localPosition = new Vector3(0, 0, 0);
-		if (optionPanel.activeSelf)
-			rect.localPosition = new Vector3(-1920 * 1, 0, 0);
-		if (keyConfigPanel.activeSelf)
-			rect.localPosition = new Vector3(-1920 * 2, 0, 0);
+		if (panelName.Equals(optionPanel.name))
+			ActivePanel = optionPanel;
 
+		if (panelName.Equals(keyConfigPanel.name))
+			ActivePanel = keyConfigPanel;
 	}
 }

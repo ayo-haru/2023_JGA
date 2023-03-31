@@ -321,6 +321,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c83e93541b419ea4cb000a5c0f7d658f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PanelMoveValue: 100
   pausePanel: {fileID: 2213540770768478809}
   optionPanel: {fileID: 5310268551733948553}
   keyConfigPanel: {fileID: 8939138706975995314}
