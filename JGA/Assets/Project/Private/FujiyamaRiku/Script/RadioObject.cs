@@ -17,7 +17,6 @@ public class RadioObject : BaseObj, IObjectSound
 {
     private bool fallFlg;
     private bool onOffFlg;
-    private bool pickUpFlg;
 
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -63,7 +62,7 @@ public class RadioObject : BaseObj, IObjectSound
 
     private void OnCollisionEnter(Collision collison)
     {
-        if (collison.gameObject.tag == "Player" && !pickUpFlg)
+        if (collison.gameObject.tag == "Player" && !fallFlg)
         {
             SoundManager.Play(audioSource, SoundManager.ESE.OBJECT_HIT);
         }
@@ -71,31 +70,35 @@ public class RadioObject : BaseObj, IObjectSound
         {
             PlayRelease();
             fallFlg = false;
-            pickUpFlg = false;
         }
     }
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player")
         {
-            if (player.IsHold && !pickUpFlg)
+            if (player.IsHold && !fallFlg)
             {
                 PlayPickUp();
-                pickUpFlg = true;
                 fallFlg = true;
             }
-            if (player.IsInteract)
+            
+        }
+    }
+    private void OnTriggerStay(Collider other)
+    {
+        if (player.IsHit)
+        {
+            if (onOffFlg)
             {
-                if (onOffFlg)
-                {
-                    onOffFlg = false;
-                    SoundManager.Play(audioSource, SoundManager.ESE.RADIO_CATCH);
-                }
-                if (!onOffFlg)
-                {
-                    onOffFlg = true;
-                    SoundManager.Play(audioSource, SoundManager.ESE.RADIO_RELEASE);
-                }
+                onOffFlg = false;
+                SoundManager.Play(audioSource, SoundManager.ESE.RADIO_RELEASE);
+                Debug.Log("offになったお");
+            }
+            else if (!onOffFlg)
+            {
+                onOffFlg = true;
+                SoundManager.Play(audioSource, SoundManager.ESE.RADIO_CATCH);
+                Debug.Log("Onになったお");
             }
         }
     }
