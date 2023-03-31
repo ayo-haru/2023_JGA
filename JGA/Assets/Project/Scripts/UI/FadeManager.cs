@@ -70,7 +70,8 @@ public class FadeManager : MonoBehaviour
 				} else {
 					fadeMode = eFade.Default;
 
-                    PauseManager.isPaused = false;
+					PauseManager.isPaused = false;
+					PauseManager.Resume();
 				}
             }
 			image.color = new Color(0.0f, 0.0f, 0.0f, alpha);
@@ -86,7 +87,8 @@ public class FadeManager : MonoBehaviour
         fadeMode = eFade.FadeOut;
 
         if (!PauseManager.isPaused) {
-            PauseManager.isPaused = true;
+			PauseManager.isPaused = true;
+			PauseManager.Pause();
         }
     }
 
@@ -99,7 +101,8 @@ public class FadeManager : MonoBehaviour
         fadeMode = eFade.FadeIn;
 
         if (!PauseManager.isPaused) {
-            PauseManager.isPaused = true;
+			PauseManager.isPaused = true;
+			PauseManager.Pause();
         }
     }
     /// <summary>
@@ -114,6 +117,7 @@ public class FadeManager : MonoBehaviour
 
 		if (!PauseManager.isPaused) {
 			PauseManager.isPaused = true;
+			PauseManager.Pause();
 		}
     }
 
