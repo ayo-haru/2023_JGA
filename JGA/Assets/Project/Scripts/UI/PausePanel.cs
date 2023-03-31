@@ -18,8 +18,6 @@ public class PausePanel : MonoBehaviour
 	[SerializeField]
 	private float PanelMoveValue = 100;
 
-	private BaseSceneManager bsm;
-
 	[Header("有効パネル")]
 	[SerializeField]
 	private GameObject pausePanel;
@@ -61,8 +59,6 @@ public class PausePanel : MonoBehaviour
 
 		rect = GetComponent<RectTransform>();
 
-		bsm = FindObjectOfType<BaseSceneManager>();
-
 		if (gameObject.activeSelf)
 			gameObject.SetActive(false);
 
@@ -96,8 +92,7 @@ public class PausePanel : MonoBehaviour
 
 	private void ChangeTitle()
 	{
-		//bsm.SceneChange(MySceneManager.SceneState.SCENE_TITLE);
-		//SceneChange(MySceneManager.SceneState.SCENE_TITLE);
+		MySceneManager.SceneChange(MySceneManager.SceneState.SCENE_TITLE);
 	}
 
 	public void ChangePanel(GameObject panelObj)
