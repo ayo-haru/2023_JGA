@@ -702,7 +702,7 @@ public class ZooKeeperAI : MonoBehaviour
     private void ReStart()
     {
         // インスペクターで設定したリスポーン位置に再配置する
-        this.gameObject.transform.position = data.respawnTF.position;
+        navMesh.Warp(data.respawnTF.position);
     }
 
     /// <summary>
