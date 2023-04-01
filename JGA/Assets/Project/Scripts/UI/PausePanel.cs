@@ -10,6 +10,7 @@
 //=============================================================================
 using UniRx;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class PausePanel : MonoBehaviour
@@ -38,6 +39,8 @@ public class PausePanel : MonoBehaviour
 	private Button TitleButton;
 
 	private RectTransform rect;
+	[SerializeField]
+	private AudioSource audioSource;
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -61,6 +64,16 @@ public class PausePanel : MonoBehaviour
 
 		if (gameObject.activeSelf)
 			gameObject.SetActive(false);
+
+		Button[] buttons = GetComponentsInChildren<Button>();
+		for (int i = 0; i < buttons.Length; i++)
+		{
+			//var e = buttons[i].AddComponent<EventTrigger>();
+			//EventTrigger.Entry entry = e.Entry;
+			//entry.eventID = EventTriggerType.PointerDown;
+			//entry.callback.AddListener((eventDate) => DecisionSound());
+			//e.triggers.Add(entry);
+		}
 
 	}
 
@@ -109,5 +122,20 @@ public class PausePanel : MonoBehaviour
 
 		if (panelName.Equals(keyConfigPanel.name))
 			ActivePanel = keyConfigPanel;
+	}
+
+	public void DecisionSound()
+	{
+		SoundManager.Play(audioSource, SoundManager.ESE.DECISION_001);
+	}
+
+	public void SelectSound()
+	{
+		SoundManager.Play(audioSource, SoundManager.ESE.SELECT_001);
+	}
+
+	public void SlideSound()
+	{
+		SoundManager.Play(audioSource, SoundManager.ESE.SLIDE_001);
 	}
 }
