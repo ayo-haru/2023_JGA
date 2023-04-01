@@ -338,6 +338,56 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7201172330545797627, guid: 45202d6d951413948ae9822bf6661b2c,
+        type: 3}
+      propertyPath: rolloffCustomCurve.m_Curve.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7201172330545797627, guid: 45202d6d951413948ae9822bf6661b2c,
+        type: 3}
+      propertyPath: rolloffCustomCurve.m_Curve.Array.data[2].time
+      value: 0.4555735
+      objectReference: {fileID: 0}
+    - target: {fileID: 7201172330545797627, guid: 45202d6d951413948ae9822bf6661b2c,
+        type: 3}
+      propertyPath: rolloffCustomCurve.m_Curve.Array.data[3].time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7201172330545797627, guid: 45202d6d951413948ae9822bf6661b2c,
+        type: 3}
+      propertyPath: rolloffCustomCurve.m_Curve.Array.data[0].value
+      value: 0.9857483
+      objectReference: {fileID: 0}
+    - target: {fileID: 7201172330545797627, guid: 45202d6d951413948ae9822bf6661b2c,
+        type: 3}
+      propertyPath: rolloffCustomCurve.m_Curve.Array.data[1].value
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7201172330545797627, guid: 45202d6d951413948ae9822bf6661b2c,
+        type: 3}
+      propertyPath: rolloffCustomCurve.m_Curve.Array.data[1].inSlope
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7201172330545797627, guid: 45202d6d951413948ae9822bf6661b2c,
+        type: 3}
+      propertyPath: rolloffCustomCurve.m_Curve.Array.data[1].outSlope
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7201172330545797627, guid: 45202d6d951413948ae9822bf6661b2c,
+        type: 3}
+      propertyPath: rolloffCustomCurve.m_Curve.Array.data[3].inWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 7201172330545797627, guid: 45202d6d951413948ae9822bf6661b2c,
+        type: 3}
+      propertyPath: rolloffCustomCurve.m_Curve.Array.data[1].outWeight
+      value: 0.08105756
+      objectReference: {fileID: 0}
+    - target: {fileID: 7201172330545797627, guid: 45202d6d951413948ae9822bf6661b2c,
+        type: 3}
+      propertyPath: rolloffCustomCurve.m_Curve.Array.data[3].outWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 45202d6d951413948ae9822bf6661b2c, type: 3}
 --- !u!4 &48426581 stripped
