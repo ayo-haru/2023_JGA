@@ -278,6 +278,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Radio
       objectReference: {fileID: 0}
+    - target: {fileID: 5155025298042600934, guid: 45202d6d951413948ae9822bf6661b2c,
+        type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 5425498223474677109, guid: 45202d6d951413948ae9822bf6661b2c,
         type: 3}
       propertyPath: m_Mass
@@ -3829,6 +3834,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4311172137964836588, guid: 01eb5b54d8149be439800ab13cb5d514,
+        type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 5779720065953261960, guid: 01eb5b54d8149be439800ab13cb5d514,
         type: 3}
       propertyPath: m_Name
