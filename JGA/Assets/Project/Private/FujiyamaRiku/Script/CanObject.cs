@@ -14,6 +14,8 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+
+
 public class CanObject : BaseObj , IObjectSound
 {
 	private bool fallFlg;
@@ -25,6 +27,7 @@ public class CanObject : BaseObj , IObjectSound
 	void Awake()
 	{
 		Init();
+        objType = ObjType.HIT_HOLD;
     }
 
 	/// <summary>

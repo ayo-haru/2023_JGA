@@ -14,11 +14,26 @@ using UnityEngine;
 
 public class BaseObj : MonoBehaviour
 {
+    public enum ObjType
+    {
+        None = 0,   
+        HIT,
+        HOLD,
+        HIT_HOLD,
+        RETURN,
+
+    }
+
+
 	protected Rigidbody rb;
 	protected AudioSource audioSource;
     protected Player player;
 
+    public ObjType objType;
+
     protected bool isPlaySound; // 音が鳴っているか
+
+
 
     protected void Init()
     {

@@ -31,6 +31,7 @@ public class RadioObject : BaseObj, IObjectSound
     void Awake()
 	{
         Init();
+        objType = ObjType.HIT_HOLD;
         //生成＆初期化
         playAudio = this.AddComponent<AudioSource>();
         playAudio.loop = true;
