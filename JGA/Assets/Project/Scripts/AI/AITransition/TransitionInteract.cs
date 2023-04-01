@@ -10,6 +10,7 @@
 // 2023/03/13	(小楠)インタラクトフラグ取得
 // 2023/03/13	(伊地田)自動生成に対応
 // 2023/03/31	(小楠)BaseObjクラスを使った処理に変更
+// 2023/04/01	(小楠)エラー直した
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -59,7 +60,30 @@ public class TransitionInteract : AITransition
         if (!playerTransform) playerTransform = GameObject.FindWithTag("Player").GetComponent<Transform>();
         if (data==null) data = GetComponent<AIManager>().GetGuestData();
         //if (interactObjecs == null) interactObjecs = GameObject.FindGameObjectsWithTag("Interact");
-        if (interactObjecs == null) interactObjecs = GameObject.Find("InteractObject").GetComponentsInChildren<BaseObj>();
+        if (interactObjecs == null)
+        {
+            GameObject interactObject = GameObject.Find("InteractObject");
+            if (interactObject)
+            {
+                interactObjecs = interactObject.GetComponentsInChildren<BaseObj>();
+            }
+            else
+            {
+                #region プロトタイプシーン用のインタラクトオブジェクト取得処理
+                List<BaseObj> baseObj = new List<BaseObj>();
+                foreach (GameObject obj in FindObjectsOfType(typeof(GameObject)))
+                {
+                    BaseObj baseObject = obj.GetComponent<BaseObj>();
+                    if (baseObject) baseObj.Add(baseObject);
+                }
+                interactObjecs = new BaseObj[baseObj.Count];
+                for(int i = 0; i < baseObj.Count; ++i)
+                {
+                    interactObjecs[i] = baseObj[i];
+                }
+                #endregion
+            }
+        }
     }
 
     public override bool IsTransition()
@@ -75,9 +99,6 @@ public class TransitionInteract : AITransition
         {
             if (Vector3.Distance(transform.position, interactObjecs[i].transform.position) > data.reactionArea) continue;
             if (interactObjecs[i].GetisPlaySound()) return true;
-            //BaseObj obj = interactObjecs[i].GetComponent<BaseObj>();
-            //if (!obj) continue;
-            //if (obj.GetisPlaySound()) return true;
         }
         return false;
     }
