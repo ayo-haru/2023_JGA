@@ -98,6 +98,18 @@ public class StateStayArea : AIState
 
         //ui設定
         ui.SetEmotion(EEmotion.NONE);
+
+
+        //ペンギンブースに着いた客の人数を追加
+        GuestNumUI guestNumUI = GameObject.Find("GuestNumUI").GetComponent<GuestNumUI>();
+        if (guestNumUI)
+        {
+            guestNumUI.Add();
+        }
+        else
+        {
+            Debug.LogError("客人数表示用UIが取得できませんでした");
+        }
     }
 
     public override void UpdateState()
@@ -122,14 +134,6 @@ public class StateStayArea : AIState
             //ui設定
             ui.SetEmotion(EEmotion.HIGH_TENSION);
             isStay = true;
-
-            //ペンギンブースに着いた客の人数を追加
-            GuestNumUI guestNumUI = GameObject.Find("GuestNumUI").GetComponent<GuestNumUI>();
-            if (guestNumUI){
-                guestNumUI.Add();
-            }else{
-                Debug.LogError("客人数表示用UIが取得できませんでした");
-            }
         }
     }
 
