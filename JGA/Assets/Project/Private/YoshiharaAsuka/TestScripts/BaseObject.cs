@@ -16,17 +16,18 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(AudioSource))]
+[RequireComponent(typeof(Outline))]
 public abstract class BaseObject : MonoBehaviour,IPlayObjectSound
 {
 
 	//----- オブジェクトステート -----
 	public enum OBJState
 	{
-		NONE = 0,			// 通常
-		HIT = 1,            // 叩く
-		HOLD = 2,           // つかむ
-		HITANDHOLD = 3,     // 叩くしつかむ
-		RETURN = 4,         // 元に戻す。
+		NONE		= 0,	// 通常
+		HIT			= 1,	// 叩く
+		HOLD		= 2,	// つかむ
+		HITANDHOLD	= 3,	// 叩くしつかむ
+		RETURN		= 4,	// 元に戻す。
 	}
 
 	// ----- SEの鳴らす音の種類 -----
@@ -42,10 +43,12 @@ public abstract class BaseObject : MonoBehaviour,IPlayObjectSound
 	//---- 変数宣言 ----
 	protected Rigidbody rb;						// リジッドボディ
 	protected AudioSource _audioSource;			// オーディオソース
-	protected int[] sounds;						// 鳴らす音の登録
-	protected int objState;                     // オブジェクトのステート
+	protected Player playerRef;					// プレイヤースクリプト取得
 
-	protected bool isPlaySound;                 // サウンド再生中フラグ
+	protected int[] sounds;						// 鳴らす音の登録
+	public OBJState objState;						// オブジェクトのステート
+
+	protected bool isPlaySound;					// サウンド再生中フラグ
 
 
 	
@@ -56,16 +59,18 @@ public abstract class BaseObject : MonoBehaviour,IPlayObjectSound
 	{
 		rb = GetComponent<Rigidbody>();
 		_audioSource = GetComponent<AudioSource>();
+		playerRef = null;
+
 
 		// 音のデフォルトの登録をここで行う。
-		// 継承先でそれぞれの音に変更する
+		// 継承先でも変更はできる
 		sounds = new int[]
 		{
 			(int)SoundManager.ESE.OBJECT_HIT,		// 初期値はOBJECT_HITを登録
 			(int)SoundManager.ESE.OBJECT_HIT,		// 初期値はOBJECT_HITを登録
 			(int)SoundManager.ESE.OBJECT_DROP,		// 初期値はOBJECT_DROPを登録
 		};
-		objState = (int)OBJState.NONE;				// 初期値はNONE
+		objState = OBJState.NONE;				// 初期値はNONE
 		isPlaySound = false;
 	}
 
@@ -74,18 +79,31 @@ public abstract class BaseObject : MonoBehaviour,IPlayObjectSound
 
 	protected virtual void OnCollisionEnter(Collision collision) 
 	{
-		PlayHit(_audioSource, sounds[(int)SoundType.TOUCH]);
-	}
+		// 地面と当たった時の音
+		if(collision.gameObject.tag == "Ground"){
+			PlayHit();
+		}
 
+		// それ以外のオブジェクトと当たった時
+		else{
+			PlayHit();
+		}
+	}
 	protected virtual void OnCollisionStay(Collision collision) { }
 	protected virtual void OnCollisionExit(Collision collision) { }
 
 
-	protected virtual void OnTriggerEnter(Collider other) { }
+	protected virtual void OnTriggerEnter(Collider other) 
+	{
+
+	}
 	protected virtual void OnTriggerStay(Collider other) { }
 	protected virtual void OnTriggerExit(Collider other) { }
 
-
+	/// <summary>
+	/// isPlaySoundフラグの取得
+	/// </summary>
+	/// <returns></returns>
 
 	public bool GetIsPlaySound()
 	{
@@ -96,25 +114,35 @@ public abstract class BaseObject : MonoBehaviour,IPlayObjectSound
 	/// 再生フラグの切り替え
 	/// </summary>
 	protected bool CheckIsPlaySound()
-    {
-        if (_audioSource.isPlaying){
+	{
+		if (_audioSource.isPlaying){
 			return isPlaySound = true;
-        }
-        else{
+		}
+		else{
 			return isPlaySound = false;
-        }
-    }
+		}
+	}
 
 
 
 
 	// ===================== インターフェースメソッド =========================
+	public  void PlayHit()
+	{
+		SoundManager.Play(_audioSource,SoundManager.ESE.OBJECT_HIT);
+	}
 	public void PlayHit(AudioSource audioSource, int soundNumber)
 	{
-		SoundManager.Play(audioSource,(SoundManager.ESE)soundNumber);
+		SoundManager.Play(audioSource, (SoundManager.ESE)soundNumber);
 	}
 
-	public void PlayPick(AudioSource audioSource, int soundNumber)
+	public void PlayDrop()
+	{
+		SoundManager.Play(_audioSource, SoundManager.ESE.OBJECT_DROP);
+	}
+
+
+	public void PlayDrop(AudioSource audioSource, int soundNumber)
 	{
 		SoundManager.Play(audioSource, (SoundManager.ESE)soundNumber);
 	}

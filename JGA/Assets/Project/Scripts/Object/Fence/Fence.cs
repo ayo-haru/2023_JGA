@@ -1,20 +1,20 @@
 //=============================================================================
-// @File	: [CardBoard.cs]
-// @Brief	: 段ボールの処理を記載
+// @File	: [Fence.cs]
+// @Brief	: 
 // @Author	: Yoshihara Asuka
 // @Editer	: 
 // @Detail	: 
 // 
 // [Date]
-// 2023/03/30	スクリプト作成
+// 2023/04/03	スクリプト作成
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardBoard : BaseObject
+public class Fence : BaseObject
 {
-	Animator _animator;
+
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -29,9 +29,19 @@ public class CardBoard : BaseObject
 	/// </summary>
 	void Start()
 	{
-		_animator = GetComponent<Animator>();
-		Debug.Log(objState);
+		rb.isKinematic = true;		// 柵ではrigidbodyを使用しない。
+
+		// オブジェクトと当たった時の音を変更
+		sounds[(int)SoundType.TOUCH] = (int)SoundManager.ESE.STEALFENCE;
 	}
+
+	protected override void OnCollisionEnter(Collision collision)
+	{
+		if (collision.gameObject){
+			PlayHit(_audioSource, sounds[(int)SoundType.TOUCH]);
+		}
+	}
+
 
 	/// <summary>
 	/// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
@@ -39,22 +49,5 @@ public class CardBoard : BaseObject
 	void Update()
 	{
 		CheckIsPlaySound();
-
-	}
-
-	void TestChangeState()
-	{
-		if (Input.GetKey(KeyCode.F1))
-		{
-			objState = OBJState.HIT;
-			Debug.Log(objState);
-		}
-
-		if (Input.GetKey(KeyCode.F2))
-		{
-			objState = OBJState.HOLD;
-			Debug.Log(objState);
-		}
-
 	}
 }

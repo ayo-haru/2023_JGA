@@ -67,8 +67,12 @@ public class SoundManager : MonoBehaviour
 
 		// ラジオ
 		RADIO_CATCH,			// ラジオつかむとき
-		RADIO_PLAY,			// ラジオプレイ
+		RADIO_PLAY,				// ラジオプレイ
 		RADIO_RELEASE,			// ラジオ離した時
+
+
+		// フェンス
+		STEALFENCE,				// 鉄柵の音
 
 		//----------------
 
