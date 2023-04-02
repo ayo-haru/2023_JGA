@@ -53,10 +53,10 @@ public class Player : MonoBehaviour
 	//----------------------------------------------------------------------------------------
 
 	// フラグ --------------------------------------------------------------------------------
-	[SerializeField]
+	//[SerializeField]
 	//private bool _IsInteract;  // インタラクトフラグ
 	//public bool IsInteract { get { return _IsInteract; } set { _IsInteract = value; } }
-	private bool DelayInteract;
+	//private bool DelayInteract;
 	[SerializeField]
 	private bool _IsHit;  // インタラクトフラグ
 	public bool IsHit { get { return _IsHit; } set { _IsHit = value; } }
@@ -92,9 +92,15 @@ public class Player : MonoBehaviour
 	private MyContorller gameInputs;            // 方向キー入力取得
 	private Vector2 moveInputValue;             // 移動方向
 
-	private Collider InteractObject;            // 掴んでいるオブジェクト：コリジョン
+	[SerializeField]
+	private Collider InteractCollision;            // 掴んでいるオブジェクト：コリジョン
+	[SerializeField]
 	private Rigidbody HoldObjectRb;             // 掴んでいるオブジェクト：重力関連
+	[SerializeField]
 	private Outline InteractOutline;            // 掴んでいるオブジェクト：アウトライン
+	[SerializeField]
+	private BaseObj InteractObj;                // そのオブジェクトに対する処理
+
 	[SerializeField]
 	private List<Collider> WithinRange = new List<Collider>();  // インタラクト範囲内にあるオブジェクトリスト
 
@@ -265,6 +271,13 @@ public class Player : MonoBehaviour
 			}
 		}
 
+
+		Debug.Log($"InteractCollision:{InteractCollision}");
+		if (InteractCollision)
+		{
+			Debug.Log($"InteractCollision.GetComponent<BaseObj>():{InteractCollision.GetComponent<BaseObj>()}");
+			Debug.Log($"InteractCollision.GetComponent<BaseObj>().objType:{InteractCollision.GetComponent<BaseObj>().objType}");
+		}
 	}
 
 	private void Pause()
@@ -417,7 +430,7 @@ public class Player : MonoBehaviour
 			// 現在のインタラクト対象を登録
 			if (InteractOutline != null)
 			{
-				InteractObject = InteractOutline.GetComponent<Collider>();
+				InteractCollision = InteractOutline.GetComponent<Collider>();
 			}
 			else
 			{
@@ -431,12 +444,15 @@ public class Player : MonoBehaviour
 					if (length > distance)
 					{
 						length = distance;
-						InteractObject = obj;
+						InteractCollision = obj;
+						break;
 					}
 				}
 			}
 
-			OnHit();
+			if (InteractCollision.GetComponent<BaseObj>().objType == BaseObj.ObjType.HIT ||
+				InteractCollision.GetComponent<BaseObj>().objType == BaseObj.ObjType.HIT_HOLD)
+				OnHit();
 		}
 	}
 
@@ -445,15 +461,15 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void OnHit()
 	{
-		var rigidbody = InteractObject.GetComponent<Rigidbody>();
+		var rigidbody = InteractCollision.GetComponent<Rigidbody>();
 		float blowpower = 10.0f;    // 吹っ飛ぶ強さ
-		float topvector = 0.1f;    // 吹っ飛ぶ強さ
+		float topvector = 0.1f;     // 吹っ飛ぶ強さ
 
 		// プレイヤーが範囲内にいる時にインタラクトフラグがTrueになったらふき飛ぶよ
 		rigidbody.isKinematic = false;
-		Vector3 vec = (InteractObject.transform.position + new Vector3(0.0f, topvector, 0.0f) - transform.position).normalized;
+		Vector3 vec = (InteractCollision.transform.position + new Vector3(0.0f, topvector, 0.0f) - transform.position).normalized;
 		rigidbody.velocity = vec * blowpower;
-		vec = (InteractObject.transform.position - transform.position).normalized;
+		vec = (InteractCollision.transform.position - transform.position).normalized;
 		rigidbody.AddTorque(vec * blowpower);
 
 		_IsHit = true;
@@ -478,15 +494,16 @@ public class Player : MonoBehaviour
 			if (HoldObjectRb != null)
 			{
 				_IsHold = false;
-				OnHold();
-				Debug.Log($"Holded");
+				if (InteractCollision.GetComponent<BaseObj>().objType == BaseObj.ObjType.HOLD ||
+					InteractCollision.GetComponent<BaseObj>().objType == BaseObj.ObjType.HIT_HOLD)
+					OnHold();
 			}
 			else
 			{
 				// 現在のインタラクト対象を登録
 				if (InteractOutline != null)
 				{
-					InteractObject = InteractOutline.GetComponent<Collider>();
+					InteractCollision = InteractOutline.GetComponent<Collider>();
 				}
 				else
 				{
@@ -500,16 +517,18 @@ public class Player : MonoBehaviour
 						if (length > distance)
 						{
 							length = distance;
-							InteractObject = obj;
+							InteractCollision = obj;
 						}
 					}
 				}
 
-				switch (InteractObject.tag)
+				switch (InteractCollision.tag)
 				{
 					case "Interact":
 						_IsHold = true;
-						OnHold();
+						if (InteractCollision.GetComponent<BaseObj>().objType == BaseObj.ObjType.HOLD ||
+							InteractCollision.GetComponent<BaseObj>().objType == BaseObj.ObjType.HIT_HOLD)
+							OnHold();
 						break;
 				}
 			}
@@ -518,24 +537,26 @@ public class Player : MonoBehaviour
 		else if (HoldObjectRb != null)
 		{
 			_IsHold = false;
-			OnHold();
+			if (InteractCollision.GetComponent<BaseObj>().objType == BaseObj.ObjType.HOLD ||
+				InteractCollision.GetComponent<BaseObj>().objType == BaseObj.ObjType.HIT_HOLD)
+				OnHold();
 		}
 
 	}
 
 	/// <summary>
-	/// つかむ
+	/// 咥える
 	/// </summary>
 	private void OnHold()
 	{
 		// 掴む処理
 		if (_IsHold)
 		{
-			InteractObject.transform.parent = transform;
-			InteractObject.transform.localPosition = new Vector3(0, 0.5f, InteractObject.transform.localPosition.z);
+			InteractCollision.transform.parent = transform;
+			InteractCollision.transform.localPosition = new Vector3(0, 0.5f, InteractCollision.transform.localPosition.z);
 			//InteractObject.transform.localRotation = Quaternion.identity;
 
-			if (InteractObject.TryGetComponent(out Rigidbody rigidbody))
+			if (InteractCollision.TryGetComponent(out Rigidbody rigidbody))
 			{
 				HoldObjectRb = rigidbody;
 				HoldObjectRb.useGravity = false;
@@ -547,10 +568,10 @@ public class Player : MonoBehaviour
 		// 離す処理
 		else
 		{
-			InteractObject.transform.parent = null;
+			InteractCollision.transform.parent = null;
 			HoldObjectRb.useGravity = true;
 			HoldObjectRb.isKinematic = false;
-			InteractObject = null;
+			InteractCollision = null;
 			HoldObjectRb = null;
 		}
 	}
