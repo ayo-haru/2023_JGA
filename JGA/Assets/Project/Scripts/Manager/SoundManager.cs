@@ -87,6 +87,7 @@ public class SoundManager : MonoBehaviour
 		DECISION_001,			// 決定
 		CANCEL_001,				// 戻る
 		SLIDE_001,				// スライド
+		COUNTDOWN_001,			// カウントダウン
 		//---------------
 
 	}
