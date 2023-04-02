@@ -31,7 +31,6 @@ public class CardBoard : BaseObject
 	{
 		_animator = GetComponent<Animator>();
 		Debug.Log(objState);
-
 	}
 
 
@@ -43,13 +42,10 @@ public class CardBoard : BaseObject
 		TestChangeState();
 	}
 
-    protected override void OnCollisionEnter(Collision collision)
-    {
-    }
 
 
-    void TestChangeState()
-    {
+	void TestChangeState()
+	{
 		if (Input.GetKey(KeyCode.F1))
 		{
 			objState = (int)OBJState.HIT;

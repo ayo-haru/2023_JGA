@@ -7,15 +7,19 @@
 // 
 // [Date]
 // 2023/04/01	スクリプト作成
+// 2023/04/02	衝突時の判定で音を鳴らすvirtual関数の作成。
+//				音の登録をint型の配列で用意
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class BaseObject : MonoBehaviour
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(AudioSource))]
+public abstract class BaseObject : MonoBehaviour,IPlayObjectSound
 {
 
-	//---- オブジェクトステート ----
+	//----- オブジェクトステート -----
 	public enum OBJState
 	{
 		NONE = 0,			// 通常
@@ -25,10 +29,20 @@ public abstract class BaseObject : MonoBehaviour
 		RETURN = 4,         // 元に戻す。
 	}
 
+	// ----- SEの鳴らす音の種類 -----
+	public enum SoundType
+	{ 
+		TOUCH	= 0,		// 触れた時
+		HIT		= 1,		// 叩くとき
+		DROP	= 2,		// 落とした時
+	}
 
+
+	
 	//---- 変数宣言 ----
 	protected Rigidbody rb;						// リジッドボディ
 	protected AudioSource _audioSource;			// オーディオソース
+	protected int[] sounds;						// 鳴らす音の登録
 	protected int objState;                     // オブジェクトのステート
 
 	protected bool isPlaySound;                 // サウンド再生中フラグ
@@ -43,11 +57,24 @@ public abstract class BaseObject : MonoBehaviour
 	{
 		rb = GetComponent<Rigidbody>();
 		_audioSource = GetComponent<AudioSource>();
+
+		// 音のデフォルトの登録をここで行う。
+		// 継承先でそれぞれの音に変更する
+		sounds = new int[]
+		{
+			(int)SoundManager.ESE.OBJECT_HIT,		// 初期値はOBJECT_HITを登録
+			(int)SoundManager.ESE.OBJECT_HIT,		// 初期値はOBJECT_HITを登録
+			(int)SoundManager.ESE.OBJECT_DROP,		// 初期値はOBJECT_DROPを登録
+		};
 		objState = (int)OBJState.NONE;		// 初期値はNONE
 	}
 
 
-	protected virtual void OnCollisionEnter(Collision collision) { }
+	protected virtual void OnCollisionEnter(Collision collision) 
+	{
+		PlayHit(_audioSource, sounds[(int)SoundType.TOUCH]);
+	}
+
 	protected virtual void OnCollisionStay(Collision collision) { }
 	protected virtual void OnCollisionExit(Collision collision) { }
 
@@ -67,4 +94,15 @@ public abstract class BaseObject : MonoBehaviour
 
 
 
+	// ===================== インターフェースメソッド =========================
+	public void PlayHit(AudioSource audioSource, int soundNumber)
+	{
+		SoundManager.Play(audioSource,(SoundManager.ESE)soundNumber);
+	}
+
+	public void PlayPick(AudioSource audioSource, int soundNumber)
+	{
+		SoundManager.Play(audioSource, (SoundManager.ESE)soundNumber);
+	}
+	//=====================================================================
 }
