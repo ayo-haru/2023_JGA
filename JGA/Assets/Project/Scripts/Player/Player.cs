@@ -54,8 +54,8 @@ public class Player : MonoBehaviour
 
 	// フラグ --------------------------------------------------------------------------------
 	[SerializeField]
-	private bool _IsInteract;  // インタラクトフラグ
-	public bool IsInteract { get { return _IsInteract; } set { _IsInteract = value; } }
+	//private bool _IsInteract;  // インタラクトフラグ
+	//public bool IsInteract { get { return _IsInteract; } set { _IsInteract = value; } }
 	private bool DelayInteract;
 	[SerializeField]
 	private bool _IsHit;  // インタラクトフラグ
@@ -68,6 +68,9 @@ public class Player : MonoBehaviour
 	[SerializeField]
 	private bool _IsMove;
 	public bool IsMove { get { return _IsMove; } }
+	//[SerializeField]
+	//private bool _IsWalk;
+	//public bool IsWalk { get { return _IsWalk; } }
 	[SerializeField]
 	private bool _IsRun;        // 走りフラグ
 	public bool IsRun { get { return _IsRun; } }
@@ -184,20 +187,6 @@ public class Player : MonoBehaviour
 		}
 
 		// インタラクトして１フレーム経過後
-		if (_IsInteract)
-		{
-			if (!DelayInteract)
-			{
-				DelayInteract = true;
-			}
-			else
-			{
-				DelayInteract = false;
-				_IsInteract = false;
-			}
-		}
-
-		// インタラクトして１フレーム経過後
 		if (_IsHit)
 		{
 			if (!DelayHit)
@@ -226,7 +215,7 @@ public class Player : MonoBehaviour
 		}
 
 		// アニメーション
-		anim.SetBool("move", moveInputValue.normalized != Vector2.zero);
+		anim.SetBool("move", _IsMove);
 		anim.SetBool("run", _IsRun);
 
 
@@ -387,7 +376,8 @@ public class Player : MonoBehaviour
 		{
 			// 押された時
 			case InputActionPhase.Performed:
-				_IsRun = true;
+				if (moveInputValue.normalized != Vector2.zero)
+					_IsRun = true;
 				break;
 			// 離された時
 			case InputActionPhase.Canceled:
@@ -484,8 +474,6 @@ public class Player : MonoBehaviour
 		// 長押し
 		if (context.phase == InputActionPhase.Performed)
 		{
-			_IsInteract = true;
-
 			// もし掴んでいたら離す
 			if (HoldObjectRb != null)
 			{
@@ -519,7 +507,7 @@ public class Player : MonoBehaviour
 
 				switch (InteractObject.tag)
 				{
-					case "holdObject":
+					case "Interact":
 						_IsHold = true;
 						OnHold();
 						break;
@@ -609,7 +597,7 @@ public class Player : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-		if (other.tag != "holdObject" && other.tag != "Interact")
+		if (/*other.tag != "holdObject" && */other.tag != "Interact")
 			return;
 
 		WithinRange.Add(other);
