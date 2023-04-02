@@ -27,8 +27,8 @@ public class StageSceneManager : BaseSceneManager {
     [SerializeField]
     private Transform[] zooKeeperRootPos;
 
-    GameObject clockUI;
-    ClockUI _ClockUI;
+    GameObject timerUI;
+    TimerUI _TimerUI;
 
     private bool isSceneChangeOnce;
 
@@ -149,13 +149,13 @@ public class StageSceneManager : BaseSceneManager {
         }
 
 
-        clockUI = GameObject.Find("ClockUI");
-        if (clockUI) {
-            _ClockUI = clockUI.GetComponent<ClockUI>();
+        timerUI = GameObject.Find("TimerUI");
+        if (timerUI) {
+            _TimerUI = timerUI.GetComponent<TimerUI>();
 
-            _ClockUI.CountStart();
+            _TimerUI.CountStart();
         } else {
-            Debug.LogWarning("ClockUIがシーン上にありません");
+            Debug.LogWarning("TimerUIがシーン上にありません");
         }
 
         //SoundManager.Play(GetComponent<AudioSource>(),SoundManager.EBGM.TITLE_001);
@@ -166,8 +166,8 @@ public class StageSceneManager : BaseSceneManager {
     //}
 
     void Update() {
-        if (clockUI) {
-            if (_ClockUI.IsFinish()) {
+        if (timerUI) {
+            if (_TimerUI.IsFinish()) {
                 if (!isSceneChangeOnce) {
                     SceneChange(MySceneManager.SceneState.SCENE_TITLE);
                     isSceneChangeOnce = true;
