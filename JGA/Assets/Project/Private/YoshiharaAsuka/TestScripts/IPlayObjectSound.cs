@@ -14,7 +14,12 @@ using UnityEngine;
 
 public interface IPlayObjectSound
 {
+    void PlayHit();
+
     void PlayHit(AudioSource audioSource,int soundNumber);
-    void PlayPick(AudioSource audioSource,int soundNumber);
+
+    void PlayDrop();
+
+    void PlayDrop(AudioSource audioSource,int soundNumber);
 
 }
