@@ -52,7 +52,6 @@ public abstract class BaseObject : MonoBehaviour,IPlayObjectSound
 	/// <summary>
 	/// 初期化関数
 	/// </summary>
-	/// <returns></returns>
 	protected void Init()
 	{
 		rb = GetComponent<Rigidbody>();
@@ -66,8 +65,11 @@ public abstract class BaseObject : MonoBehaviour,IPlayObjectSound
 			(int)SoundManager.ESE.OBJECT_HIT,		// 初期値はOBJECT_HITを登録
 			(int)SoundManager.ESE.OBJECT_DROP,		// 初期値はOBJECT_DROPを登録
 		};
-		objState = (int)OBJState.NONE;		// 初期値はNONE
+		objState = (int)OBJState.NONE;				// 初期値はNONE
+		isPlaySound = false;
 	}
+
+
 
 
 	protected virtual void OnCollisionEnter(Collision collision) 
@@ -84,13 +86,25 @@ public abstract class BaseObject : MonoBehaviour,IPlayObjectSound
 	protected virtual void OnTriggerExit(Collider other) { }
 
 
-	/// <summary>
-	/// 音の再生中フラグの取得
 
 	public bool GetIsPlaySound()
 	{
 		return isPlaySound;
 	}
+
+	/// <summary>
+	/// 再生フラグの切り替え
+	/// </summary>
+	protected bool CheckIsPlaySound()
+    {
+        if (_audioSource.isPlaying){
+			return isPlaySound = true;
+        }
+        else{
+			return isPlaySound = false;
+        }
+    }
+
 
 
 
