@@ -223,6 +223,7 @@ public class Player : MonoBehaviour
 		// アニメーション
 		anim.SetBool("move", _IsMove);
 		anim.SetBool("run", _IsRun);
+		anim.SetBool("Hit", _IsHit);
 
 
 		float length;
@@ -271,13 +272,6 @@ public class Player : MonoBehaviour
 			}
 		}
 
-
-		Debug.Log($"InteractCollision:{InteractCollision}");
-		if (InteractCollision)
-		{
-			Debug.Log($"InteractCollision.GetComponent<BaseObj>():{InteractCollision.GetComponent<BaseObj>()}");
-			Debug.Log($"InteractCollision.GetComponent<BaseObj>().objType:{InteractCollision.GetComponent<BaseObj>().objType}");
-		}
 	}
 
 	private void Pause()
