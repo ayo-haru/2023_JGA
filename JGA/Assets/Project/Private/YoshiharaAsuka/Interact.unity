@@ -313,6 +313,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &170509209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 170509206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d883929e9cca29249a9bcc63c411d74f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &186973822
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -380,6 +392,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Corn
       objectReference: {fileID: 0}
+    - target: {fileID: 5490508897053762231, guid: 5034d260a6ae9254dbfcb56a0d4774f3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5034d260a6ae9254dbfcb56a0d4774f3, type: 3}
 --- !u!1001 &235736914
@@ -393,6 +410,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: CardBoard001
+      objectReference: {fileID: 0}
+    - target: {fileID: 4016370870344652512, guid: b19d1bafc1fa3cd43a09f80469bd2a76,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4392932315298188378, guid: b19d1bafc1fa3cd43a09f80469bd2a76,
         type: 3}
@@ -462,6 +484,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: CornBar
+      objectReference: {fileID: 0}
+    - target: {fileID: 4653253689664273861, guid: 5a91305a2ada0ce458a9ff8d41b79d4f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5465255858365966207, guid: 5a91305a2ada0ce458a9ff8d41b79d4f,
         type: 3}
@@ -649,6 +676,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Barricade
+      objectReference: {fileID: 0}
+    - target: {fileID: 2392163199045712470, guid: e369f40c18c84674094dca5ea79ab09c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3060613133099983084, guid: e369f40c18c84674094dca5ea79ab09c,
         type: 3}
@@ -997,6 +1029,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Can
       objectReference: {fileID: 0}
+    - target: {fileID: 5306763877153515574, guid: 2db89fac5a6ea684bbda67e3276cf10c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2db89fac5a6ea684bbda67e3276cf10c, type: 3}
 --- !u!1001 &1724673028
@@ -1066,6 +1103,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: TrashBox002
       objectReference: {fileID: 0}
+    - target: {fileID: 9135639265127736161, guid: 4fc8c502ef0f25242b31446670f535df,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4fc8c502ef0f25242b31446670f535df, type: 3}
 --- !u!1001 &2120378695
@@ -1079,6 +1121,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Radio
+      objectReference: {fileID: 0}
+    - target: {fileID: 5155025298042600934, guid: 45202d6d951413948ae9822bf6661b2c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5530847634401224540, guid: 45202d6d951413948ae9822bf6661b2c,
         type: 3}
