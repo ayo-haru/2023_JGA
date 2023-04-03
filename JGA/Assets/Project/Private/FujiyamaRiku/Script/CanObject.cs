@@ -74,7 +74,7 @@ public class CanObject : BaseObj , IObjectSound
 	{
 		if (collison.gameObject.tag == "Player"  && !fallFlg)
 		{
-			Debug.Log("転がる音再生");
+			Debug.Log("蹴ったとき時の音");
 			SoundManager.Play(audioSource, SoundManager.ESE.CAN_ROLL);
 		}
 		if(collison.gameObject.tag == "Ground")
@@ -93,6 +93,8 @@ public class CanObject : BaseObj , IObjectSound
 		}
 	}
 
+
+
 	private void OnTriggerEnter(Collider other)
 	{
 		if (other.tag == "Player")
@@ -107,9 +109,9 @@ public class CanObject : BaseObj , IObjectSound
 	}
 	private void OnTriggerStay(Collider other)
 	{
-		if (player.IsHit && !flyFlg && other.tag == "Player")
+		if (player.IsHit && other.tag == "Player")
 		{
-			Debug.Log("当たった時の音再生");
+			Debug.Log("はたいて当たった時の音再生");
 			SoundManager.Play(audioSource, SoundManager.ESE.OBJECT_HIT);
 			flyFlg = true;
 		}

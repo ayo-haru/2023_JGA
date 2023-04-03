@@ -22,7 +22,9 @@ public class SoundObject : BaseObj
 	void Awake()
 	{
 		Init();
-	}
+        objType = ObjType.None;
+
+    }
 
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
@@ -60,10 +62,10 @@ public class SoundObject : BaseObj
 
     private void OnCollisionEnter(Collision collison)
     {
-        if (collison.gameObject.tag == "Player" && !player.IsHold)
-        {
-            SoundManager.Play(audioSource, SoundManager.ESE.OBJECT_HIT);
-        }
+        //if (collison.gameObject.tag == "Player" && !player.IsHold)
+        //{
+        //    SoundManager.Play(audioSource, SoundManager.ESE.OBJECT_HIT);
+        //}
        
     }
 }
