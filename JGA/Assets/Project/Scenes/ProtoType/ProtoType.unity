@@ -11086,7 +11086,7 @@ PrefabInstance:
     - target: {fileID: 5155025298042600934, guid: 45202d6d951413948ae9822bf6661b2c,
         type: 3}
       propertyPath: m_TagString
-      value: holdObject
+      value: Interact
       objectReference: {fileID: 0}
     - target: {fileID: 5530847634401224540, guid: 45202d6d951413948ae9822bf6661b2c,
         type: 3}
