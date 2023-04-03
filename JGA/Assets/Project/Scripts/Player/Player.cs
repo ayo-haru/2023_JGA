@@ -81,6 +81,8 @@ public class Player : MonoBehaviour
 	[SerializeField] private bool bGamePad;     // ゲームパッド接続確認フラグ
 
 	private bool bAnimHit;
+
+	private bool bHitMotion;
 	//----------------------------------------------------------------------------------------
 
 	[SerializeField] private Vector3 _vForce;
@@ -96,7 +98,6 @@ public class Player : MonoBehaviour
 	private Collider InteractCollision;            // 掴んでいるオブジェクト：コリジョン
 	private Rigidbody HoldObjectRb;             // 掴んでいるオブジェクト：重力関連
 	private Outline InteractOutline;            // 掴んでいるオブジェクト：アウトライン
-	private BaseObj InteractObj;                // そのオブジェクトに対する処理
 
 	[SerializeField]
 	private List<Collider> WithinRange = new List<Collider>();  // インタラクト範囲内にあるオブジェクトリスト
@@ -144,7 +145,6 @@ public class Player : MonoBehaviour
 		gameInputs.Player.Appeal.performed += OnAppeal;
 		gameInputs.Player.Appeal.canceled += OnAppeal;
 		gameInputs.Player.Hit.performed += OnHit;
-		gameInputs.Player.Hit.canceled += OnHit;
 		gameInputs.Player.Hold.performed += OnHold;
 		gameInputs.Player.Hold.canceled += OnHold;
 		gameInputs.Player.Run.performed += OnRun;
@@ -165,7 +165,9 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void FixedUpdate()
 	{
-		Move();
+		// はたき中でないとき移動
+		if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
+			Move();
 
 	}
 
@@ -218,7 +220,7 @@ public class Player : MonoBehaviour
 		}
 
 		// アニメーション
-		if (!bAnimHit)
+		if (!bHitMotion)
 		{
 			anim.SetBool("move", _IsMove);
 			anim.SetBool("run", _IsRun);
@@ -227,6 +229,17 @@ public class Player : MonoBehaviour
 		{
 			if (anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
 			{
+				AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
+				// 再生中か？
+				if (stateInfo.normalizedTime < 1.0f)
+				{
+					Debug.Log($"Hit再生中");
+				}
+				else
+				{
+					bHitMotion = false;
+					anim.SetBool("Hit", bHitMotion);
+				}
 
 			}
 		}
@@ -421,7 +434,11 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void OnHit(InputAction.CallbackContext context)
 	{
-		if (WithinRange.Count == 0 || PauseManager.isPaused)
+		bHitMotion = true;
+		anim.SetBool("Hit", bHitMotion);
+		Debug.Log($"Hit");
+
+		if (WithinRange.Count == 0 || PauseManager.isPaused || _IsHold)
 			return;
 
 
@@ -451,8 +468,8 @@ public class Player : MonoBehaviour
 				}
 			}
 
-			if (InteractCollision.GetComponent<BaseObj>().objType == BaseObj.ObjType.HIT ||
-				InteractCollision.GetComponent<BaseObj>().objType == BaseObj.ObjType.HIT_HOLD)
+			if (InteractCollision.GetComponent<BaseObject>().objState == BaseObject.OBJState.HIT ||
+				InteractCollision.GetComponent<BaseObject>().objState == BaseObject.OBJState.HITANDHOLD)
 				OnHit();
 		}
 	}
@@ -474,8 +491,6 @@ public class Player : MonoBehaviour
 		rigidbody.AddTorque(vec * blowpower);
 
 		_IsHit = true;
-		bAnimHit = true;
-		anim.SetBool("Hit", _IsHit);
 
 		//InteractObject.GetComponent<AudioSource>().Play();
 
@@ -497,8 +512,8 @@ public class Player : MonoBehaviour
 			if (HoldObjectRb != null)
 			{
 				_IsHold = false;
-				if (InteractCollision.GetComponent<BaseObj>().objType == BaseObj.ObjType.HOLD ||
-					InteractCollision.GetComponent<BaseObj>().objType == BaseObj.ObjType.HIT_HOLD)
+				if (InteractCollision.GetComponent<BaseObject>().objState == BaseObject.OBJState.HIT ||
+					InteractCollision.GetComponent<BaseObject>().objState == BaseObject.OBJState.HITANDHOLD)
 					OnHold();
 			}
 			else
@@ -529,8 +544,8 @@ public class Player : MonoBehaviour
 				{
 					case "Interact":
 						_IsHold = true;
-						if (InteractCollision.GetComponent<BaseObj>().objType == BaseObj.ObjType.HOLD ||
-							InteractCollision.GetComponent<BaseObj>().objType == BaseObj.ObjType.HIT_HOLD)
+						if (InteractCollision.GetComponent<BaseObject>().objState == BaseObject.OBJState.HIT ||
+							InteractCollision.GetComponent<BaseObject>().objState == BaseObject.OBJState.HITANDHOLD)
 							OnHold();
 						break;
 				}
@@ -540,8 +555,8 @@ public class Player : MonoBehaviour
 		else if (HoldObjectRb != null)
 		{
 			_IsHold = false;
-			if (InteractCollision.GetComponent<BaseObj>().objType == BaseObj.ObjType.HOLD ||
-				InteractCollision.GetComponent<BaseObj>().objType == BaseObj.ObjType.HIT_HOLD)
+			if (InteractCollision.GetComponent<BaseObject>().objState == BaseObject.OBJState.HIT ||
+				InteractCollision.GetComponent<BaseObject>().objState == BaseObject.OBJState.HITANDHOLD)
 				OnHold();
 		}
 
