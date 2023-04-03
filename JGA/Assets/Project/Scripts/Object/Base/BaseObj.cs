@@ -7,11 +7,14 @@
 // 
 // [Date]
 // 2023/03/29	スクリプト作成
+// 2023/04/04   OutLineスクリプトを追加するようにattributeつけました(吉原)
+
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Outline))]
 public class BaseObj : MonoBehaviour
 {
 	public enum ObjType

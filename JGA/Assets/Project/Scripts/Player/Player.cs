@@ -8,6 +8,8 @@
 // [Date]
 // 2023/02/25	スクリプト作成
 // 2023/03/08	リスポーンするよ
+// 2023/04/04	インタラクトオブジェクトの所を手直ししました～(吉原)
+//				OnHit(コールバック関数)とOnHit(メインの処理)で名前がまったく同じだからメインの処理はHitにさせていただきましたわ！！！
 //=============================================================================
 using System.Collections.Generic;
 using UniRx;
@@ -233,7 +235,7 @@ public class Player : MonoBehaviour
 				// 再生中か？
 				if (stateInfo.normalizedTime < 1.0f)
 				{
-					Debug.Log($"Hit再生中");
+					//Debug.Log($"Hit再生中");
 				}
 				else
 				{
@@ -468,16 +470,33 @@ public class Player : MonoBehaviour
 				}
 			}
 
-			if (InteractCollision.GetComponent<BaseObject>().objState == BaseObject.OBJState.HIT ||
-				InteractCollision.GetComponent<BaseObject>().objState == BaseObject.OBJState.HITANDHOLD)
-				OnHit();
+			//if (InteractCollision.GetComponent<BaseObj>().objType == BaseObj.ObjType.HIT ||
+			//	InteractCollision.GetComponent<BaseObj>().objType == BaseObj.ObjType.HIT_HOLD){
+			//	OnHit();
+			//}
+
+			// BaseObjとBaseObject二つあるため、それぞれ出来るように書きました(吉原 04/04 4:25)
+			if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj)){
+
+				if(baseObj.objType == BaseObj.ObjType.HIT ||
+					baseObj.objType == BaseObj.ObjType.HIT_HOLD){
+					Hit();
+				}
+			}
+			else if (InteractCollision.TryGetComponent<BaseObject>(out var baseObject)){
+
+				if(baseObject.objState == BaseObject.OBJState.HIT ||
+					baseObject.objState == BaseObject.OBJState.HITANDHOLD){
+					Hit();
+				}
+			}
 		}
 	}
 
 	/// <summary>
 	/// はたく
 	/// </summary>
-	private void OnHit()
+	private void Hit()
 	{
 		var rigidbody = InteractCollision.GetComponent<Rigidbody>();
 		float blowpower = 10.0f;    // 吹っ飛ぶ強さ
@@ -512,9 +531,22 @@ public class Player : MonoBehaviour
 			if (HoldObjectRb != null)
 			{
 				_IsHold = false;
-				if (InteractCollision.GetComponent<BaseObject>().objState == BaseObject.OBJState.HIT ||
-					InteractCollision.GetComponent<BaseObject>().objState == BaseObject.OBJState.HITANDHOLD)
-					OnHold();
+				
+				// BaseObjとBaseObject二つあるため、それぞれ出来るように書きました(吉原 04/04 4:25)
+				if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj)){
+
+					if (baseObj.objType == BaseObj.ObjType.HOLD ||
+						baseObj.objType == BaseObj.ObjType.HIT_HOLD){
+						Hold();
+					}
+				}
+				else if (InteractCollision.TryGetComponent<BaseObject>(out var baseObject)){
+
+					if (baseObject.objState == BaseObject.OBJState.HOLD ||
+						baseObject.objState == BaseObject.OBJState.HITANDHOLD){
+						Hold();
+					}
+				}
 			}
 			else
 			{
@@ -544,9 +576,21 @@ public class Player : MonoBehaviour
 				{
 					case "Interact":
 						_IsHold = true;
-						if (InteractCollision.GetComponent<BaseObject>().objState == BaseObject.OBJState.HIT ||
-							InteractCollision.GetComponent<BaseObject>().objState == BaseObject.OBJState.HITANDHOLD)
-							OnHold();
+						// BaseObjとBaseObject二つあるため、それぞれ出来るように書きました(吉原 04/04 4:25)
+						if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj)){
+
+							if (baseObj.objType == BaseObj.ObjType.HOLD ||
+								baseObj.objType == BaseObj.ObjType.HIT_HOLD){
+								Hold();
+							}
+						}
+						else if (InteractCollision.TryGetComponent<BaseObject>(out var baseObject)){
+
+							if (baseObject.objState == BaseObject.OBJState.HOLD ||
+								baseObject.objState == BaseObject.OBJState.HITANDHOLD){
+								Hold();
+							}
+						}
 						break;
 				}
 			}
@@ -555,9 +599,21 @@ public class Player : MonoBehaviour
 		else if (HoldObjectRb != null)
 		{
 			_IsHold = false;
-			if (InteractCollision.GetComponent<BaseObject>().objState == BaseObject.OBJState.HIT ||
-				InteractCollision.GetComponent<BaseObject>().objState == BaseObject.OBJState.HITANDHOLD)
-				OnHold();
+			// BaseObjとBaseObject二つあるため、それぞれ出来るように書きました(吉原 04/04 4:25)
+			if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj)){
+
+				if (baseObj.objType == BaseObj.ObjType.HOLD ||
+					baseObj.objType == BaseObj.ObjType.HIT_HOLD){
+					Hold();
+				}
+			}
+			else if (InteractCollision.TryGetComponent<BaseObject>(out var baseObject)){
+
+				if (baseObject.objState == BaseObject.OBJState.HOLD ||
+					baseObject.objState == BaseObject.OBJState.HITANDHOLD){
+					Hold();
+				}
+			}
 		}
 
 	}
@@ -565,7 +621,7 @@ public class Player : MonoBehaviour
 	/// <summary>
 	/// 咥える
 	/// </summary>
-	private void OnHold()
+	private void Hold()
 	{
 		// 掴む処理
 		if (_IsHold)

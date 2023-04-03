@@ -16,29 +16,22 @@ public class Fence : BaseObject
 {
 
 
-	/// <summary>
-	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
-	/// </summary>
-	void Awake()
-	{
-		Init();
-	}
 
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
 	/// </summary>
 	void Start()
 	{
+		Init();
+
 		rb.isKinematic = true;		// 柵ではrigidbodyを使用しない。
 
-		// オブジェクトと当たった時の音を変更
-		sounds[(int)SoundType.TOUCH] = (int)SoundManager.ESE.STEALFENCE;
 	}
 
 	protected override void OnCollisionEnter(Collision collision)
 	{
 		if (collision.gameObject){
-			PlayHit(_audioSource, sounds[(int)SoundType.TOUCH]);
+			PlayHit(_audioSource,SoundManager.ESE.STEALFENCE);
 		}
 	}
 
@@ -49,5 +42,13 @@ public class Fence : BaseObject
 	void Update()
 	{
 		CheckIsPlaySound();
+	}
+
+    protected override void Pause()
+    {
+		// 物理挙動停止
+		rb.velocity = pauseVelocity;
+		rb.angularVelocity = pauseAngleVelocity;
+
 	}
 }

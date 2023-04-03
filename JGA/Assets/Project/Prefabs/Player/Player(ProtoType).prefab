@@ -5195,8 +5195,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.5, y: 0.8, z: 0.5}
-  m_Center: {x: 0, y: 0.5, z: 0.35}
+  m_Size: {x: 0.5, y: 0.73855495, z: 0.11650765}
+  m_Center: {x: 0, y: 0.3736782, z: 0.15825385}
 --- !u!114 &275277329
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5223,13 +5223,13 @@ MonoBehaviour:
   callMin: 0.5
   callMax: 5
   callInterval: 0
-  _vForce: {x: 0, y: 0, z: 0}
-  _IsInteract: 0
+  _IsHit: 0
   _IsHold: 0
   _IsMove: 0
   _IsRun: 0
   _IsAppeal: 0
   bGamePad: 0
+  _vForce: {x: 0, y: 0, z: 0}
   WithinRange: []
 --- !u!1 &6903381975108728197
 GameObject:

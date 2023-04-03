@@ -9,10 +9,12 @@
 // 2023/04/01	スクリプト作成
 // 2023/04/02	衝突時の判定で音を鳴らすvirtual関数の作成。
 //				音の登録をint型の配列で用意
+// 2023/04/03	ポーズの処理追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(AudioSource))]
@@ -30,28 +32,28 @@ public abstract class BaseObject : MonoBehaviour,IPlayObjectSound
 		RETURN		= 4,	// 元に戻す。
 	}
 
-	// ----- SEの鳴らす音の種類 -----
-	public enum SoundType
-	{ 
-		TOUCH	= 0,		// 触れた時
-		HIT		= 1,		// 叩くとき
-		DROP	= 2,		// 落とした時
-	}
 
-
-	
 	//---- 変数宣言 ----
 	protected Rigidbody rb;						// リジッドボディ
 	protected AudioSource _audioSource;			// オーディオソース
 	protected Player playerRef;					// プレイヤースクリプト取得
 
-	protected int[] sounds;						// 鳴らす音の登録
-	public OBJState objState;						// オブジェクトのステート
+	public OBJState objState;					// オブジェクトのステート
 
-	protected bool isPlaySound;					// サウンド再生中フラグ
+	protected bool isPlaySound;                 // サウンド再生中フラグ
+
+	//----- ポーズ用変数 ----
+	protected Vector3 pauseVelocity = Vector3.zero;
+	protected Vector3 pauseAngleVelocity = Vector3.zero;
+	//---------------------
+
+	protected virtual void Awake()
+	{
+		PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(this.gameObject);
+		PauseManager.OnResumed.Subscribe(x => { Resumed(); }).AddTo(this.gameObject);
+	}
 
 
-	
 	/// <summary>
 	/// 初期化関数
 	/// </summary>
@@ -61,17 +63,9 @@ public abstract class BaseObject : MonoBehaviour,IPlayObjectSound
 		_audioSource = GetComponent<AudioSource>();
 		playerRef = null;
 
-
-		// 音のデフォルトの登録をここで行う。
-		// 継承先でも変更はできる
-		sounds = new int[]
-		{
-			(int)SoundManager.ESE.OBJECT_HIT,		// 初期値はOBJECT_HITを登録
-			(int)SoundManager.ESE.OBJECT_HIT,		// 初期値はOBJECT_HITを登録
-			(int)SoundManager.ESE.OBJECT_DROP,		// 初期値はOBJECT_DROPを登録
-		};
 		objState = OBJState.NONE;				// 初期値はNONE
 		isPlaySound = false;
+
 	}
 
 
@@ -123,15 +117,32 @@ public abstract class BaseObject : MonoBehaviour,IPlayObjectSound
 		}
 	}
 
+	/// <summary>
+	/// ポーズの処理
+	/// </summary>
+	protected virtual void Pause()
+	{
+		// 物理挙動停止
+		rb.velocity = pauseVelocity;
+		rb.angularVelocity = pauseAngleVelocity;
+		rb.isKinematic = false;
+	}
 
+	protected virtual void Resumed()
+	{
+		// 物理挙動開始
+		rb.velocity = pauseVelocity;
+		rb.angularVelocity = pauseAngleVelocity;
+		rb.isKinematic = true;
 
+	}
 
 	// ===================== インターフェースメソッド =========================
 	public  void PlayHit()
 	{
 		SoundManager.Play(_audioSource,SoundManager.ESE.OBJECT_HIT);
 	}
-	public void PlayHit(AudioSource audioSource, int soundNumber)
+	public void PlayHit(AudioSource audioSource, SoundManager.ESE soundNumber)
 	{
 		SoundManager.Play(audioSource, (SoundManager.ESE)soundNumber);
 	}
@@ -141,8 +152,7 @@ public abstract class BaseObject : MonoBehaviour,IPlayObjectSound
 		SoundManager.Play(_audioSource, SoundManager.ESE.OBJECT_DROP);
 	}
 
-
-	public void PlayDrop(AudioSource audioSource, int soundNumber)
+	public void PlayDrop(AudioSource audioSource, SoundManager.ESE soundNumber)
 	{
 		SoundManager.Play(audioSource, (SoundManager.ESE)soundNumber);
 	}

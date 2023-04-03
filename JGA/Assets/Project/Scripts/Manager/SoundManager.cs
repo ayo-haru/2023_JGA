@@ -23,10 +23,10 @@ public class SoundManager : MonoBehaviour
 	}
 	public enum ESE
 	{
-        //　※追加、削除するときはSEData.assetとのリストの数、順番を完全一致させること！
-        // ○○関連に合わせて追加するのでリストの順番も同様に！
+		//　※追加、削除するときはSEData.assetとのリストの数、順番を完全一致させること！
+		// ○○関連に合わせて追加するのでリストの順番も同様に！
 
-        // ペンギン関連-------
+		// ペンギン関連-------
 		PENGUIN_VOICE,
 		PENGUIN_CATCH,
 		PENGUIN_HIT_001,

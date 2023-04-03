@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UniRx;
+using UnityEditor;
 
 public class ZooKeeperAI : MonoBehaviour
 {
@@ -684,9 +685,9 @@ public class ZooKeeperAI : MonoBehaviour
     /// </summary>
     private void OnDrawGizmos()
     {
-        //Handles.color = new Color(0, 0, 1, 0.3f);
-        //Handles.DrawSolidArc(transform.position, Vector3.up,
-        //    Quaternion.Euler(0f, -data.searchAngle, 0f) * transform.forward, data.searchAngle * 2.0f, data.searchDistance);
+        Handles.color = new Color(0, 0, 1, 0.3f);
+        Handles.DrawSolidArc(transform.position, Vector3.up,
+            Quaternion.Euler(0f, -data.searchAngle, 0f) * transform.forward, data.searchAngle * 2.0f, data.searchDistance);
     }
 
     /// <summary>
