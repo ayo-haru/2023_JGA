@@ -80,6 +80,7 @@ public class Player : MonoBehaviour
 
 	[SerializeField] private bool bGamePad;     // ゲームパッド接続確認フラグ
 
+	private bool bAnimHit;
 	//----------------------------------------------------------------------------------------
 
 	[SerializeField] private Vector3 _vForce;
@@ -92,13 +93,9 @@ public class Player : MonoBehaviour
 	private MyContorller gameInputs;            // 方向キー入力取得
 	private Vector2 moveInputValue;             // 移動方向
 
-	[SerializeField]
 	private Collider InteractCollision;            // 掴んでいるオブジェクト：コリジョン
-	[SerializeField]
 	private Rigidbody HoldObjectRb;             // 掴んでいるオブジェクト：重力関連
-	[SerializeField]
 	private Outline InteractOutline;            // 掴んでいるオブジェクト：アウトライン
-	[SerializeField]
 	private BaseObj InteractObj;                // そのオブジェクトに対する処理
 
 	[SerializeField]
@@ -221,9 +218,19 @@ public class Player : MonoBehaviour
 		}
 
 		// アニメーション
-		anim.SetBool("move", _IsMove);
-		anim.SetBool("run", _IsRun);
-		anim.SetBool("Hit", _IsHit);
+		if (!bAnimHit)
+		{
+			anim.SetBool("move", _IsMove);
+			anim.SetBool("run", _IsRun);
+		}
+		else
+		{
+			if (anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
+			{
+
+			}
+		}
+
 
 
 		float length;
@@ -467,6 +474,8 @@ public class Player : MonoBehaviour
 		rigidbody.AddTorque(vec * blowpower);
 
 		_IsHit = true;
+		bAnimHit = true;
+		anim.SetBool("Hit", _IsHit);
 
 		//InteractObject.GetComponent<AudioSource>().Play();
 
