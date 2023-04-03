@@ -8,18 +8,21 @@
 // [Date]
 // 2023/03/28	スクリプト作成
 // 2023/03/28	音の実装
+// 2023/04/02   音が多数でなってしまっていたのの解消、ポーズの処理の書き込み
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-
+using UniRx;
 
 
 public class CanObject : BaseObj , IObjectSound
 {
 	private bool fallFlg;
     private bool flyFlg;
+
+
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -28,6 +31,9 @@ public class CanObject : BaseObj , IObjectSound
 	{
 		Init();
         objType = ObjType.HIT_HOLD;
+
+        PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(this.gameObject);
+        PauseManager.OnResumed.Subscribe(x => { Resumed(); }).AddTo(this.gameObject);
     }
 
 	/// <summary>
@@ -99,7 +105,7 @@ public class CanObject : BaseObj , IObjectSound
     }
     private void OnTriggerStay(Collider other)
     {
-        if (player.IsHit && !flyFlg)
+        if (player.IsHit && !flyFlg && other.tag == "Player")
         {
             SoundManager.Play(audioSource, SoundManager.ESE.OBJECT_HIT);
             flyFlg = true;
@@ -119,6 +125,17 @@ public class CanObject : BaseObj , IObjectSound
     public void PlayRelease()
     {
         SoundManager.Play(audioSource, SoundManager.ESE.CAN_RELEASE);
+    }
+
+    private void Pause()
+    {
+        audioSource.Pause();
+        
+    }
+
+    private void Resumed()
+    {
+        audioSource.Play();
     }
 
 }

@@ -9,12 +9,14 @@
 // 2023/03/31	スクリプト作成
 // 2023/03/31	音実装
 // 2023/03/31   ラジオが鳴ってるときの音実装
+// 2023/04/02   音が多数でなってしまっていたのの解消、ポーズの処理の書き込み
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
+using UniRx;
 
 public class RadioObject : BaseObj, IObjectSound
 {
@@ -23,7 +25,9 @@ public class RadioObject : BaseObj, IObjectSound
     //ラジオをオンオフするフラグ
     private bool onOffFlg;
     //ラジオが鳴ってる時用のAudioSource
-    private AudioSource playAudio;
+    private AudioSource[] playAudio;
+
+    const int RadioAudio = 1;
 
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -33,10 +37,10 @@ public class RadioObject : BaseObj, IObjectSound
         Init();
         objType = ObjType.HIT_HOLD;
         //生成＆初期化
-        playAudio = this.AddComponent<AudioSource>();
-        playAudio.loop = true;
-        playAudio.playOnAwake = false;
-        playAudio.spatialBlend = 1.0f;
+        playAudio = this.GetComponents<AudioSource>();
+
+        PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(this.gameObject);
+        PauseManager.OnResumed.Subscribe(x => { Resumed(); }).AddTo(this.gameObject);
     }
 
 	/// <summary>
@@ -72,7 +76,7 @@ public class RadioObject : BaseObj, IObjectSound
             isPlaySound = false;
         }
         //ラジオが鳴っているときの処理
-        if(playAudio.isPlaying)
+        if (playAudio[RadioAudio].isPlaying)
         {
             isPlaySound = true;
         }
@@ -81,7 +85,7 @@ public class RadioObject : BaseObj, IObjectSound
             //ラジオがオンになったときにSEが終わったらラジオを流す
             if (onOffFlg && !audioSource.isPlaying)
             {
-                SoundManager.Play(playAudio, SoundManager.ESE.RADIO_PLAY);
+                SoundManager.Play(playAudio[RadioAudio], SoundManager.ESE.RADIO_PLAY);
             }
             isPlaySound = false;
         }
@@ -118,13 +122,13 @@ public class RadioObject : BaseObj, IObjectSound
     private void OnTriggerStay(Collider other)
     {
         //プレイヤーがはたいたときにOnOffする
-        if (player.IsHit)
+        if (player.IsHit && other.tag == "Player")
         {
             if (onOffFlg)
             {
                 onOffFlg = false;
 
-                playAudio.Stop();
+                playAudio[RadioAudio].Stop();
 
                 SoundManager.Play(audioSource, SoundManager.ESE.RADIO_RELEASE);
 
@@ -151,5 +155,17 @@ public class RadioObject : BaseObj, IObjectSound
     public void PlayRelease()
     {
         SoundManager.Play(audioSource, SoundManager.ESE.OBJECT_DROP);
+    }
+
+    private void Pause()
+    {
+        audioSource.Pause();
+        playAudio[RadioAudio].Pause();
+    }
+
+    private void Resumed()
+    {
+        audioSource.Play();
+        playAudio[RadioAudio].Play();
     }
 }
