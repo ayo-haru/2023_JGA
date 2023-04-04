@@ -165,13 +165,17 @@ public class ZooKeeperAI : MonoBehaviour
 
     private void Update()
     {
-        if (PauseManager.isPaused)
-            return;
-
         if (MySceneManager.GameData.isCatchPenguin)
         {
+            // ペンギンが捕まっているときはポーズ中なのでポーズ中でも処理を行う
             ReStart();
         }
+
+        if (PauseManager.isPaused)
+        {
+            return;
+        }
+
     }
 
     /// <summary>
