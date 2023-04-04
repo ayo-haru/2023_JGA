@@ -41,7 +41,7 @@ public class MainCamera : MonoBehaviour
     //インプットアクション
     private MyContorller gameInput;
     //プレイヤー追従用のプレイヤー取得
-    private GameObject playerobj;
+    [SerializeField]private GameObject targetObject;
     //プレイヤーの座標変更取得
     private Vector3 currentPlayerPos;
 	//カメラとプレイヤーの座標の初期
@@ -168,12 +168,14 @@ public class MainCamera : MonoBehaviour
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
 	/// </summary>
-	void Start() {        
-        //プレイヤーを格納
-        playerobj = GameObject.Find("LookPos");
-        firstCamPos = playerobj.transform.position;
+	void Start() {
+
+        // 注視点座標をプレイヤーの座標に
+        //playerobj = GameObject.Find("LookPos");
+        targetObject = GameObject.FindGameObjectWithTag("Player");
+        firstCamPos = targetObject.transform.position;
         //プレイヤーの初期位置とカメラの座標を固定
-        offset = cameraParent.transform.position - playerobj.transform.position;
+        offset = cameraParent.transform.position - targetObject.transform.position;
         //初期の視野角を格納
         if (!zoomObjChange)
         {
@@ -287,7 +289,7 @@ public class MainCamera : MonoBehaviour
         //{
             cameraParent.position = Vector3.Lerp(
             a: cameraParent.position,
-            b: playerobj.transform.position,
+            b: targetObject.transform.position,
             t: Time.deltaTime * smoothMove);
         //}
         //==============================================================
