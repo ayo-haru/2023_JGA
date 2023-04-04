@@ -15,8 +15,10 @@ using UnityEngine;
 //エディタ拡張的な使い方をしていくカメラマネージャー
 //基本的には情報をそれぞれのカメラに渡していく
 
+
 /// <summary> カメラのパラメータ </summary>
 [System.Serializable]
+[ExecuteInEditMode]
 public class CameraParameter
 {
     public GameObject playerObj;
@@ -29,6 +31,7 @@ public class CameraParameter
 }
 
 [ExecuteInEditMode]
+
 public class CameraManager : MonoBehaviour
 {
     [SerializeField]
