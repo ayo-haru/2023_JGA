@@ -21,21 +21,14 @@ public class PauseManager : SingletonMonoBehaviour<PauseManager>
 	private static Subject<string> resumeSubject = new Subject<string>();
 
 	private static bool _isPaused = false;
-
-	public static bool isPaused
-	{ get { return _isPaused; } set { _isPaused = value; } }
+	public static bool isPaused { get { return _isPaused; } set { _isPaused = value; } }
+	private static bool _noMenu = false;
+	public static bool NoMenu { get { return _noMenu; } set { _noMenu = value; } }
 
 	private MyContorller gameInputs;            // 方向キー入力取得
 
-	public static IObservable<string> OnPaused
-	{
-		get { return pauseSubject; }
-	}
-
-	public static IObservable<string> OnResumed
-	{
-		get { return resumeSubject; }
-	}
+	public static IObservable<string> OnPaused { get { return pauseSubject; } }
+	public static IObservable<string> OnResumed { get { return resumeSubject; } }
 
 	private void Start()
 	{
@@ -51,7 +44,8 @@ public class PauseManager : SingletonMonoBehaviour<PauseManager>
 
 	private void Pause(InputAction.CallbackContext context)
 	{
-		if(FadeManager.fadeMode != FadeManager.eFade.Default) {		// フェード中はポーズの開始の入力を受け付けない
+		if (FadeManager.fadeMode != FadeManager.eFade.Default)
+		{       // フェード中はポーズの開始の入力を受け付けない
 			return;
 		}
 

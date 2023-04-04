@@ -89,7 +89,8 @@ public class PausePanel : MonoBehaviour
 
 	void Pause()
 	{
-		gameObject.SetActive(true);
+		if (!PauseManager.NoMenu)
+			gameObject.SetActive(true);
 	}
 
 	void Resumed()
