@@ -97,8 +97,11 @@ public class Player : MonoBehaviour
 	private MyContorller gameInputs;            // 方向キー入力取得
 	private Vector2 moveInputValue;             // 移動方向
 
+	[SerializeField]
 	private Collider InteractCollision;            // 掴んでいるオブジェクト：コリジョン
+	[SerializeField]
 	private Rigidbody HoldObjectRb;             // 掴んでいるオブジェクト：重力関連
+	[SerializeField]
 	private Outline InteractOutline;            // 掴んでいるオブジェクト：アウトライン
 
 	[SerializeField]
@@ -474,11 +477,6 @@ public class Player : MonoBehaviour
 				}
 			}
 
-			//if (InteractCollision.GetComponent<BaseObj>().objType == BaseObj.ObjType.HIT ||
-			//	InteractCollision.GetComponent<BaseObj>().objType == BaseObj.ObjType.HIT_HOLD){
-			//	OnHit();
-			//}
-
 			// BaseObjとBaseObject二つあるため、それぞれ出来るように書きました(吉原 04/04 4:25)
 			if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj))
 			{
@@ -689,8 +687,8 @@ public class Player : MonoBehaviour
 	private void OnCollisionStay(Collision collision)
 	{
 		// Playerと掴んでいるオブジェクトが接触していると、ぶっ飛ぶので離す
-		//if (InteractObject == collision.collider)
-		//	collision.transform.localPosition += Vector3.forward / 10;
+		if (InteractCollision != null && InteractCollision == collision.collider)
+			collision.transform.localPosition += Vector3.forward / 10;
 	}
 
 	private void OnTriggerEnter(Collider other)
