@@ -22,12 +22,14 @@ public class CanObject : BaseObj , IObjectSound
 	private bool fallFlg;
 	private bool flyFlg;
 
+    // ポーズ時の値保存用
+    private Vector3 pauseVelocity;
+    private Vector3 pauseAngularVelocity;
 
-
-	/// <summary>
-	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
-	/// </summary>
-	void Awake()
+    /// <summary>
+    /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
+    /// </summary>
+    void Awake()
 	{
 		Init();
 		objType = ObjType.HIT_HOLD;
@@ -137,12 +139,17 @@ public class CanObject : BaseObj , IObjectSound
 	private void Pause()
 	{
 		audioSource.Pause();
-		
-	}
+        pauseVelocity = rb.velocity;
+        pauseAngularVelocity = rb.angularVelocity;
+        rb.isKinematic = true;
+    }
 
 	private void Resumed()
 	{
 		audioSource.Play();
-	}
+        rb.velocity = pauseVelocity;
+        rb.angularVelocity = pauseAngularVelocity;
+        rb.isKinematic = false;
+    }
 
 }
