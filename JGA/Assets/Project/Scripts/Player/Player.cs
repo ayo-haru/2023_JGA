@@ -436,9 +436,13 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void OnHit(InputAction.CallbackContext context)
 	{
+		if (bHitMotion || IsAppeal)
+			return;
+
 		bHitMotion = true;
 		anim.SetBool("Hit", bHitMotion);
 		Debug.Log($"Hit");
+
 
 		if (WithinRange.Count == 0 || PauseManager.isPaused || _IsHold)
 			return;
@@ -476,17 +480,21 @@ public class Player : MonoBehaviour
 			//}
 
 			// BaseObjとBaseObject二つあるため、それぞれ出来るように書きました(吉原 04/04 4:25)
-			if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj)){
+			if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj))
+			{
 
-				if(baseObj.objType == BaseObj.ObjType.HIT ||
-					baseObj.objType == BaseObj.ObjType.HIT_HOLD){
+				if (baseObj.objType == BaseObj.ObjType.HIT ||
+					baseObj.objType == BaseObj.ObjType.HIT_HOLD)
+				{
 					Hit();
 				}
 			}
-			else if (InteractCollision.TryGetComponent<BaseObject>(out var baseObject)){
+			else if (InteractCollision.TryGetComponent<BaseObject>(out var baseObject))
+			{
 
-				if(baseObject.objState == BaseObject.OBJState.HIT ||
-					baseObject.objState == BaseObject.OBJState.HITANDHOLD){
+				if (baseObject.objState == BaseObject.OBJState.HIT ||
+					baseObject.objState == BaseObject.OBJState.HITANDHOLD)
+				{
 					Hit();
 				}
 			}
@@ -521,97 +529,85 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void OnHold(InputAction.CallbackContext context)
 	{
+		if (context.phase == InputActionPhase.Performed)
+			Debug.Log($"InputActionPhase.Performed");
+		if (context.phase == InputActionPhase.Canceled)
+			Debug.Log($"InputActionPhase.Canceled");
+
 		if (WithinRange.Count == 0 || PauseManager.isPaused)
 			return;
 
-		// 長押し
+		// 長押し開始
 		if (context.phase == InputActionPhase.Performed)
 		{
-			// もし掴んでいたら離す
-			if (HoldObjectRb != null)
+			// 現在のインタラクト対象を登録
+			if (InteractOutline != null)
 			{
-				_IsHold = false;
-				
-				// BaseObjとBaseObject二つあるため、それぞれ出来るように書きました(吉原 04/04 4:25)
-				if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj)){
-
-					if (baseObj.objType == BaseObj.ObjType.HOLD ||
-						baseObj.objType == BaseObj.ObjType.HIT_HOLD){
-						Hold();
-					}
-				}
-				else if (InteractCollision.TryGetComponent<BaseObject>(out var baseObject)){
-
-					if (baseObject.objState == BaseObject.OBJState.HOLD ||
-						baseObject.objState == BaseObject.OBJState.HITANDHOLD){
-						Hold();
-					}
-				}
+				InteractCollision = InteractOutline.GetComponent<Collider>();
 			}
 			else
 			{
-				// 現在のインタラクト対象を登録
-				if (InteractOutline != null)
-				{
-					InteractCollision = InteractOutline.GetComponent<Collider>();
-				}
-				else
-				{
-					float length = 10.0f;
+				float length = 10.0f;
 
-					// プレイヤーに一番近いオブジェクトをインタラクト対象とする
-					foreach (Collider obj in WithinRange)
+				// プレイヤーに一番近いオブジェクトをインタラクト対象とする
+				foreach (Collider obj in WithinRange)
+				{
+					float distance = Vector3.Distance(transform.position, obj.transform.position);
+
+					if (length > distance)
 					{
-						float distance = Vector3.Distance(transform.position, obj.transform.position);
-
-						if (length > distance)
-						{
-							length = distance;
-							InteractCollision = obj;
-						}
+						length = distance;
+						InteractCollision = obj;
 					}
 				}
-
-				switch (InteractCollision.tag)
-				{
-					case "Interact":
-						_IsHold = true;
-						// BaseObjとBaseObject二つあるため、それぞれ出来るように書きました(吉原 04/04 4:25)
-						if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj)){
-
-							if (baseObj.objType == BaseObj.ObjType.HOLD ||
-								baseObj.objType == BaseObj.ObjType.HIT_HOLD){
-								Hold();
-							}
-						}
-						else if (InteractCollision.TryGetComponent<BaseObject>(out var baseObject)){
-
-							if (baseObject.objState == BaseObject.OBJState.HOLD ||
-								baseObject.objState == BaseObject.OBJState.HITANDHOLD){
-								Hold();
-							}
-						}
-						break;
-				}
 			}
 
+			if (InteractCollision.tag == "Interact")
+			{
+				// BaseObjとBaseObject二つあるため、それぞれ出来るように書きました(吉原 04/04 4:25)
+				if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj))
+				{
+
+					if (baseObj.objType == BaseObj.ObjType.HOLD ||
+						baseObj.objType == BaseObj.ObjType.HIT_HOLD)
+					{
+						Hold();
+						_IsHold = true;
+					}
+				}
+				else if (InteractCollision.TryGetComponent<BaseObject>(out var baseObject))
+				{
+
+					if (baseObject.objState == BaseObject.OBJState.HOLD ||
+						baseObject.objState == BaseObject.OBJState.HITANDHOLD)
+					{
+						Hold();
+						_IsHold = true;
+					}
+				}
+			}
 		}
-		else if (HoldObjectRb != null)
+		else if (context.phase == InputActionPhase.Canceled)
 		{
-			_IsHold = false;
 			// BaseObjとBaseObject二つあるため、それぞれ出来るように書きました(吉原 04/04 4:25)
-			if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj)){
+			if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj))
+			{
 
 				if (baseObj.objType == BaseObj.ObjType.HOLD ||
-					baseObj.objType == BaseObj.ObjType.HIT_HOLD){
+					baseObj.objType == BaseObj.ObjType.HIT_HOLD)
+				{
 					Hold();
+					_IsHold = false;
 				}
 			}
-			else if (InteractCollision.TryGetComponent<BaseObject>(out var baseObject)){
+			else if (InteractCollision.TryGetComponent<BaseObject>(out var baseObject))
+			{
 
 				if (baseObject.objState == BaseObject.OBJState.HOLD ||
-					baseObject.objState == BaseObject.OBJState.HITANDHOLD){
+					baseObject.objState == BaseObject.OBJState.HITANDHOLD)
+				{
 					Hold();
+					_IsHold = false;
 				}
 			}
 		}
@@ -624,7 +620,7 @@ public class Player : MonoBehaviour
 	private void Hold()
 	{
 		// 掴む処理
-		if (_IsHold)
+		if (!_IsHold)
 		{
 			InteractCollision.transform.parent = transform;
 			InteractCollision.transform.localPosition = new Vector3(0, 0.5f, InteractCollision.transform.localPosition.z);
@@ -642,11 +638,18 @@ public class Player : MonoBehaviour
 		// 離す処理
 		else
 		{
-			InteractCollision.transform.parent = null;
-			HoldObjectRb.useGravity = true;
-			HoldObjectRb.isKinematic = false;
-			InteractCollision = null;
-			HoldObjectRb = null;
+			_IsHold = false;
+			if (InteractCollision != null)
+			{
+				InteractCollision.transform.parent = null;
+				InteractCollision = null;
+			}
+			if (HoldObjectRb != null)
+			{
+				HoldObjectRb.useGravity = true;
+				HoldObjectRb.isKinematic = false;
+				HoldObjectRb = null;
+			}
 		}
 	}
 
