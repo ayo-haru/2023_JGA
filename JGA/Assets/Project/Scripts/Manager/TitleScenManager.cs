@@ -9,6 +9,7 @@
 // 2023/03/13	スクリプト作成
 // 2023/03/21	(小楠)ボタン操作追加
 // 2023/03/28	(小楠)音追加
+// 2023/04/05	(小楠)オプション画面追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -29,13 +30,23 @@ public class TitleScenManager : BaseSceneManager
     private Image exitImage;
     //入力フラグ
     private bool bMouse = true;
-
+    //マウス位置
     private Vector3 mousePos;
     //フェードパネル
     [SerializeField] private Image fadePanelImage;
 
+    [SerializeField,Tooltip("オプション画面のBackボタン")] private Button optionBackButton;
+    [SerializeField, Tooltip("オプション画面のKeyconfigボタン")] private Button optionKeyconfigButton;
+    [SerializeField,Tooltip("キーコンフィグ画面のBackボタン")] private Button keyconfigBackButton;
+    [SerializeField] private RectTransform OptionObject;
+
+    //タイトル画面のボタン
     private enum ETitleSelect {TITLESELECT_START,TITLESELECT_OPTION,TITLESELECT_EXIT,MAX_TITLESELECT};
     private ETitleSelect select = ETitleSelect.TITLESELECT_START;
+
+    //タイトルのメニュー
+    private enum ETitleMenu { TITLESCREEN_TITLE, TITLESCREEN_OPTION, TITLESCREEN_KEYCONFIG, MAX_TITLESCREEN };
+    private ETitleMenu titleMenu = ETitleMenu.TITLESCREEN_TITLE;
 
     private AudioSource audioSource;
 
@@ -53,6 +64,11 @@ public class TitleScenManager : BaseSceneManager
         startImage = startButton.GetComponent<Image>();
         optionImage = optionButton.GetComponent<Image>();
         exitImage = exitButton.GetComponent<Image>();
+
+        //オプション画面、キーコンフィグ画面のボタンのイベントを追加
+        optionBackButton.onClick.AddListener(OptionBackButton);
+        optionKeyconfigButton.onClick.AddListener(OptionKeyconfigButton);
+        keyconfigBackButton.onClick.AddListener(KeyconfigBackButton);
     }
 
     private void Start() {
@@ -112,28 +128,66 @@ public class TitleScenManager : BaseSceneManager
         }
     }
 
+    #region タイトル画面のボタン
     public void StartButton()
     {
         SceneChange(MySceneManager.SceneState.SCENE_GAME);
         SoundManager.Play(audioSource, SoundManager.ESE.DECISION_001);
-        //SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_VOICE);
     }
     public void OptionButton()
     {
         SoundManager.Play(audioSource, SoundManager.ESE.DECISION_001);
-        //SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_VOICE);
         //オプション画面を開く
+        OptionMoveLeft();
     }
     public void ExitButton()
     {
         SoundManager.Play(audioSource, SoundManager.ESE.DECISION_001);
-        //SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_VOICE);
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
         Application.Quit();
 #endif
     }
+    #endregion
+
+    #region オプション画面のボタン
+    public void OptionBackButton()
+    {
+        SoundManager.Play(audioSource, SoundManager.ESE.DECISION_001);
+        //オプション閉じる
+        OptionMoveRight();
+    }
+
+    public void OptionKeyconfigButton()
+    {
+        SoundManager.Play(audioSource, SoundManager.ESE.DECISION_001);
+        //キーコンフィグ画面を開く
+        OptionMoveLeft();
+    }
+    #endregion
+
+    #region キーコンフィグ画面のボタン
+    public void KeyconfigBackButton()
+    {
+        SoundManager.Play(audioSource, SoundManager.ESE.DECISION_001);
+        //キーコンフィグ画面を閉じる
+        OptionMoveRight();
+    }
+    #endregion
+
+    #region オプション移動関数
+    public void OptionMoveLeft()
+    {
+        //オプションを左に動かす
+        OptionObject.position = new Vector3(OptionObject.position.x - 1920.0f, OptionObject.position.y, OptionObject.position.z);
+    }
+    public void OptionMoveRight()
+    {
+        //オプションを右に動かす
+        OptionObject.position = new Vector3(OptionObject.position.x + 1920.0f, OptionObject.position.y, OptionObject.position.z);
+    }
+    #endregion
 
     private void ChangeInput()
     {
@@ -172,7 +226,6 @@ public class TitleScenManager : BaseSceneManager
                 break;
         }
         SoundManager.Play(audioSource, SoundManager.ESE.SELECT_001);
-        //SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_VOICE);
     }
     private void ControllerResetSelect()
     {
@@ -184,6 +237,5 @@ public class TitleScenManager : BaseSceneManager
     public void SelectButton()
     {
         SoundManager.Play(audioSource, SoundManager.ESE.SELECT_001);
-        //SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_VOICE);
     }
 }
