@@ -30,11 +30,11 @@ public class GuestAnimation : MonoBehaviour
         PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(gameObject);
         PauseManager.OnResumed.Subscribe(x => { Resumed(); }).AddTo(gameObject);
     }
-
-	/// <summary>
-	/// 最初のフレーム更新の前に呼び出される
-	/// </summary>
-	void Start()
+#if false
+    /// <summary>
+    /// 最初のフレーム更新の前に呼び出される
+    /// </summary>
+    void Start()
 	{
 
 
@@ -61,7 +61,7 @@ public class GuestAnimation : MonoBehaviour
 	{
 		
 	}
-
+#endif
     private void Pause()
     {
         animator.speed = 0.0f;
