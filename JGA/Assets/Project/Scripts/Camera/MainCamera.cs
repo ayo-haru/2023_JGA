@@ -289,7 +289,7 @@ public class MainCamera : MonoBehaviour
         //{
             cameraParent.position = Vector3.Lerp(
             a: cameraParent.position,
-            b: targetObject.transform.position,
+            b: targetObject.transform.localPosition,
             t: Time.deltaTime * smoothMove);
         //}
         //==============================================================
