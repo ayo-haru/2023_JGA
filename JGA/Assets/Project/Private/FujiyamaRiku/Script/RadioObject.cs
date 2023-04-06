@@ -30,14 +30,14 @@ public class RadioObject : BaseObj, IObjectSound
 	const int RadioAudio = 1;
 	private bool pauseFlg;
 
-    // ポーズ時の値保存用
-    private Vector3 pauseVelocity;
-    private Vector3 pauseAngularVelocity;
+	// ポーズ時の値保存用
+	private Vector3 pauseVelocity;
+	private Vector3 pauseAngularVelocity;
 
-    /// <summary>
-    /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
-    /// </summary>
-    void Awake()
+	/// <summary>
+	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
+	/// </summary>
+	void Awake()
 	{
 		Init();
 		objType = ObjType.HIT_HOLD;
@@ -86,13 +86,13 @@ public class RadioObject : BaseObj, IObjectSound
 			isPlaySound = true;
 		}
 		if (!playAudio[RadioAudio].isPlaying && !pauseFlg)
-        {
-            //ラジオがオンになったときにSEが終わったらラジオを流す
-            if (onOffFlg && !audioSource.isPlaying)
-            {
-                SoundManager.Play(playAudio[RadioAudio], SoundManager.ESE.RADIO_PLAY);
-            }
-            isPlaySound = false;
+		{
+			//ラジオがオンになったときにSEが終わったらラジオを流す
+			if (onOffFlg && !audioSource.isPlaying)
+			{
+				SoundManager.Play(playAudio[RadioAudio], SoundManager.ESE.RADIO_PLAY);
+			}
+			isPlaySound = false;
 		}
 	}
 
@@ -141,8 +141,8 @@ public class RadioObject : BaseObj, IObjectSound
 			else if (!onOffFlg)
 			{
 				onOffFlg = true;
-                
-                SoundManager.Play(audioSource, SoundManager.ESE.RADIO_CATCH);
+				
+				SoundManager.Play(audioSource, SoundManager.ESE.RADIO_CATCH);
 
 			}
 		}
@@ -168,18 +168,18 @@ public class RadioObject : BaseObj, IObjectSound
 		audioSource.Pause();
 		playAudio[RadioAudio].Pause();
 		pauseFlg = true;
-        pauseVelocity = rb.velocity;
-        pauseAngularVelocity = rb.angularVelocity;
-        rb.isKinematic = true;
-    }
+		pauseVelocity = rb.velocity;
+		pauseAngularVelocity = rb.angularVelocity;
+		rb.isKinematic = true;
+	}
 
 	private void Resumed()
 	{
 		audioSource.Play();
 		playAudio[RadioAudio].Play();
-        pauseFlg = false;
-        rb.velocity = pauseVelocity;
-        rb.angularVelocity = pauseAngularVelocity;
-        rb.isKinematic = false;
-    }
+		pauseFlg = false;
+		rb.velocity = pauseVelocity;
+		rb.angularVelocity = pauseAngularVelocity;
+		rb.isKinematic = false;
+	}
 }
