@@ -10,6 +10,7 @@
 // 2023/03/21	(小楠)ボタン操作追加
 // 2023/03/28	(小楠)音追加
 // 2023/04/05	(小楠)オプション画面追加
+// 2023/04/06	(小楠)オプションのスライド移動追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -49,6 +50,9 @@ public class TitleScenManager : BaseSceneManager
     private ETitleMenu titleMenu = ETitleMenu.TITLESCREEN_TITLE;
 
     private AudioSource audioSource;
+
+    //オプションスライド移動用変数
+    private int nSlide = 0;
 
     private void Awake() {
         /*
@@ -128,6 +132,14 @@ public class TitleScenManager : BaseSceneManager
         }
     }
 
+    private void FixedUpdate()
+    {
+        if(nSlide != 0)
+        {
+            OptionSlide();
+        }
+    }
+
     #region タイトル画面のボタン
     public void StartButton()
     {
@@ -180,12 +192,28 @@ public class TitleScenManager : BaseSceneManager
     public void OptionMoveLeft()
     {
         //オプションを左に動かす
-        OptionObject.position = new Vector3(OptionObject.position.x - 1920.0f, OptionObject.position.y, OptionObject.position.z);
+        nSlide = -1920;
+        ++titleMenu;
     }
     public void OptionMoveRight()
     {
         //オプションを右に動かす
-        OptionObject.position = new Vector3(OptionObject.position.x + 1920.0f, OptionObject.position.y, OptionObject.position.z);
+        nSlide = 1920;
+        --titleMenu;
+    }
+    public void OptionSlide()
+    {
+        int slideSpeed = 1920 / 30; //←必ず1920が割り切れる数を設定してください
+        if(nSlide > 0)
+        {
+            nSlide -= slideSpeed;
+            OptionObject.position = new Vector3(OptionObject.position.x + slideSpeed, OptionObject.position.y, OptionObject.position.z);
+        }
+        else
+        {
+            nSlide += slideSpeed;
+            OptionObject.position = new Vector3(OptionObject.position.x - slideSpeed, OptionObject.position.y, OptionObject.position.z);
+        }
     }
     #endregion
 
