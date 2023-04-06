@@ -8,6 +8,7 @@
 // [Date]
 // 2023/03/06	スクリプト作成
 // 2023/03/30	複数のぺんぎんエリアに対応
+// 2023/04/07	到着エリアを広くした
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -64,7 +65,7 @@ public class TransitionInRangeOther : AITransition
 
         for(int i = 0; i < data.penguinTF.Count; ++i)
         {
-            if ((Vector3.Distance(gameObject.transform.position, data.penguinTF[i].position) <= data.reactionArea) != inv) return true;
+            if ((Vector3.Distance(gameObject.transform.position, data.penguinTF[i].position) <= data.arrivalPenguinArea) != inv) return true;
         }
 
         return false;
