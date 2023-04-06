@@ -225,7 +225,7 @@ public class MainCamera : MonoBehaviour
 	/// </summary>
 	void Update()
 	{
-        if (pauseFlg)
+        if (pauseFlg && !MySceneManager.GameData.isCatchPenguin)
         {
             return;
         }
@@ -244,7 +244,7 @@ public class MainCamera : MonoBehaviour
         //{
         //    return;
         //}
-        if(pauseFlg)
+        if(pauseFlg && !MySceneManager.GameData.isCatchPenguin)
          {
              return;
          }
@@ -346,7 +346,7 @@ public class MainCamera : MonoBehaviour
     //ズームインとズームアウトを決定動かす処理
     private void ZoomInOut()
 	{
-        if (pauseFlg)
+        if (pauseFlg && !MySceneManager.GameData.isCatchPenguin)
         {
             return;
         }
