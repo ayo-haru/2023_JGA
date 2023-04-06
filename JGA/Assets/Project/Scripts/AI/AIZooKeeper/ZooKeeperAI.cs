@@ -58,7 +58,6 @@ public class ZooKeeperAI : MonoBehaviour
     private RaycastHit rayhit;
 
     private GimmickObj gimmickObj;
-    private GameObject soundObj;
     private GameObject parentObj;       // 親オブジェクト取得
     private bool gimmickFlg = false;    // ギミックオブジェクトを見つけたか
     private bool catchFlg = false;      // ギミックオブジェクトを掴んだか
@@ -293,7 +292,8 @@ public class ZooKeeperAI : MonoBehaviour
             if (other.GetComponent<BaseObj>().GetisPlaySound())
             {
                 soundObjFlg = true;
-                soundObj = other.gameObject;
+                // なったオブジェクトまで移動
+                navMesh.SetDestination(other.gameObject.transform.position);
             }
         }
         #endregion
@@ -360,8 +360,6 @@ public class ZooKeeperAI : MonoBehaviour
         // 音がなったオブジェクトの位置に行く
         if (soundObjFlg)
         {
-            // なったオブジェクトまで移動
-            navMesh.SetDestination(soundObj.transform.position);
             // オブジェクトの位置に到着したか
             if (navMesh.remainingDistance <= 1.5f    // 目標地点までの距離が1.5ｍ以下になったら到着
                     && !navMesh.pathPending)         // 経路計算中かどうか（計算中：true　計算完了：false）
