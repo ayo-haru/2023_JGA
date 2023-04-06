@@ -44,14 +44,12 @@ public class ZooKeeperAI : MonoBehaviour
 
     [SerializeField] private Animator animator;
     private bool surpriseFlg = true;    // 驚くアニメーション用フラグ
-    private bool ResetFlg = true;
+    private bool ResetFlg = true;       // 戻すアニメーション用フラグ
     private AudioSource audioSource;
-    private AnimationCurve animationCurve;
     private NavMeshAgent navMesh;
     private int rootNum = 0;
     private GameObject exclamationEffect;   // ！エフェクト
     private GameObject questionEffect;      // ？エフェクト
-
 
     [SerializeField] private bool chaseNow = false;    // ペンギンを追いかけているフラグ
     private SphereCollider sphereCollider;
@@ -61,7 +59,7 @@ public class ZooKeeperAI : MonoBehaviour
     private GimmickObj gimmickObj;
     private GameObject soundObj;
     private GameObject parentObj;       // 親オブジェクト取得
-    private bool gimmickFlg = false;    // ギミックオブジェクトに当たったか
+    private bool gimmickFlg = false;    // ギミックオブジェクトを見つけたか
     private bool catchFlg = false;      // ギミックオブジェクトを掴んだか
     private bool soundObjFlg = false;   // 音がなったオブジェクトがあるか
     private int gimmickNum = -1;
@@ -501,15 +499,23 @@ public class ZooKeeperAI : MonoBehaviour
     /// </summary>
     private IEnumerator CatchObj()
     {
-        // エフェクト表示
-        CreateEffect(Effect.question);
         // 止まる
         NavMeshStop();
+        if (ResetFlg)
+        {
+            ResetFlg = false;
+            // エフェクト表示
+            CreateEffect(Effect.question);
+            //------------------------
+            // 置くアニメーション開始（仮で驚くモーション）
+            animator.SetTrigger("isSurprise");
+            //------------------------
+        }
+
+        yield return new WaitForSeconds(2.0f);
 
         catchFlg = true;
         Bring();
-
-        yield return new WaitForSeconds(2.0f);
 
         // 動く
         NavMeshMove();
@@ -574,10 +580,12 @@ public class ZooKeeperAI : MonoBehaviour
         #region 運ぶ
         if (catchFlg && gimmickFlg)
         {
+            ResetFlg = true;
             // 掴む
             gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().isKinematic = true;   // 物理演算の影響を受けないようにする
             gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().useGravity = false;
             gimmickObj.gimmickList[gimmickNum].transform.parent = this.transform;
+            gimmickObj.gimmickList[gimmickNum].transform.localPosition = new Vector3(0.0f, 1.0f, 1.0f);
             navMesh.SetDestination(gimmickObj.resetPos[gimmickNum].transform.position);
         }
         else if (gimmickObj.bReset[gimmickNum] || chaseNow)
