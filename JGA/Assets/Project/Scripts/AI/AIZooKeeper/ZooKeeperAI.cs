@@ -155,9 +155,9 @@ public class ZooKeeperAI : MonoBehaviour
             return;
 
         Move();
-        AnimPlay();
         CharControl();
         Dir();
+        AnimPlay();
     }
 
     private void Update()
@@ -439,22 +439,25 @@ public class ZooKeeperAI : MonoBehaviour
     /// </summary>
     private void Dir()
     {
-        // 次に目指すべき位置を取得
-        var nextPoint = navMesh.steeringTarget;
-        Vector3 targetDir = nextPoint - transform.position;
-
-        // ゼロベクトルじゃなかったら
-        if (targetDir != Vector3.zero)
+        if (!navMesh.pathPending)
         {
-            // その方向に向けて旋回する(120度/秒)
-            Quaternion targetRotation = Quaternion.LookRotation(targetDir);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 120.0f * Time.deltaTime);
+            // 次に目指すべき位置を取得
+            var nextPoint = navMesh.steeringTarget;
+            Vector3 targetDir = nextPoint - transform.position;
 
-            // 自分の向きと次の位置の角度差が30度以上の場合、その場で旋回
-            float angle = Vector3.Angle(targetDir, transform.forward);
-            if (angle < 30.0f)
+            // ゼロベクトルじゃなかったら
+            if (targetDir != Vector3.zero)
             {
-                transform.position += transform.forward * 5.0f * Time.deltaTime;
+                // その方向に向けて旋回する(120度/秒)
+                Quaternion targetRotation = Quaternion.LookRotation(targetDir);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 120.0f * Time.deltaTime);
+
+                // 自分の向きと次の位置の角度差が30度以上の場合、その場で旋回
+                float angle = Vector3.Angle(targetDir, transform.forward);
+                if (angle < 30.0f)
+                {
+                    transform.position += transform.forward * 5.0f * Time.deltaTime;
+                }
             }
         }
     }
@@ -670,8 +673,9 @@ public class ZooKeeperAI : MonoBehaviour
     /// </summary>
     private void NavMeshStop()
     {
-        navMesh.isStopped = true;
+        navMesh.velocity = Vector3.zero;
         navMesh.speed = 0.0f;
+        navMesh.isStopped = true;
     }
 
     /// <summary>
