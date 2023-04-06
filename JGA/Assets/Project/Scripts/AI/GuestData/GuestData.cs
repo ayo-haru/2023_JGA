@@ -40,6 +40,8 @@ public class GuestData : ScriptableObject
         [Min(1)] public float rayLength = 10.0f;
         [Header("反応する範囲")]
         [Range(15, 20), Tooltip("ペンギンに反応してくれる範囲(注目度がMAXの時)")] public float reactionArea = 15;
+        [Header("ペンギンエリアに到着する距離")]
+        [Range(1, 50)] public float arrivalPenguinArea = 30.0f;
         [Header("ペンギンとの距離")]
         [Range(2, 4), Tooltip("ペンギンとの距離")] public float distance = 2;
         [Header("感情の変化時間(!!! -> !!)")]

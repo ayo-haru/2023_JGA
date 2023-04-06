@@ -13,6 +13,7 @@
 // 2023/03/23	(小楠)ポーズの処理追加
 // 2023/03/25	(伊地田)自動生成、直置き両方に対応
 // 2023/03/30	(小楠)penguinTFのリスト化に対応
+// 2023/04/07	(小楠)反応する範囲の可視化
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ using UnityEngine;
 using System;
 using UniRx;
 using UnityEngine.AI;
+using UnityEditor;
 
 public class AIManager : MonoBehaviour
 {
@@ -178,5 +180,15 @@ public class AIManager : MonoBehaviour
     {
         if (!agent) agent = GetComponent<NavMeshAgent>();
         if (agent) agent.isStopped = false;
+    }
+
+    private void OnDrawGizmos()
+    {
+        //ペンギン到着エリア
+        Handles.color = new Color(1, 0, 0, 0.3f);
+        Handles.DrawSolidArc(transform.position, Vector3.up,transform.forward, 360.0f, data.arrivalPenguinArea);
+        //音、アピール反応エリア
+        Handles.color = new Color(0, 1, 0, 0.3f);
+        Handles.DrawSolidArc(transform.position,Vector3.up,transform.forward,360.0f,data.reactionArea);
     }
 }
