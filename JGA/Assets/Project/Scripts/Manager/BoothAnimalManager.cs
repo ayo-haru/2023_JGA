@@ -39,8 +39,8 @@ public class BoothAnimalManager : SingletonMonoBehaviour<BoothAnimalManager>
 
 			//決めた範囲分動かした場所を決定し返す
 			var setVector = new Vector3(penguinsData.rangeList[penguinStartIndex].x + startPoint.x,
-									penguinsData.rangeList[penguinStartIndex].y,
-                                    penguinsData.rangeList[penguinStartIndex].z + startPoint.y);
+										penguinsData.rangeList[penguinStartIndex].y,
+										penguinsData.rangeList[penguinStartIndex].z + startPoint.y);
 
 			Instantiate(penguinObj, setVector, Quaternion.identity);
 
