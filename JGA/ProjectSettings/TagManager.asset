@@ -10,6 +10,8 @@ TagManager:
   - TargetAnimals
   - Guest
   - ZooKeeper
+  - Target
+  - HideObj
   layers:
   - Default
   - TransparentFX
