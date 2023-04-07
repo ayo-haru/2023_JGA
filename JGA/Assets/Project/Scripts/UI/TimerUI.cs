@@ -7,6 +7,7 @@
 // 
 // [Date]
 // 2023/04/02	スクリプト作成
+// 2023/04/07	残り時間少なくなった時にHURRY!!を表示
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -29,6 +30,9 @@ public class TimerUI : MonoBehaviour
     //時間計測用
     private float fTimer = 0.0f;
     [SerializeField] private AudioSource audioSource;
+
+    //HURRY！！
+    [SerializeField] private GameObject hurryUI;
 
 #if false
     /// <summary>
@@ -78,6 +82,10 @@ public class TimerUI : MonoBehaviour
         if (fTimer < (playMinutes * 60.0f - soundSeconds)) return;
         
         SoundManager.Play(audioSource, SoundManager.ESE.COUNTDOWN_001);
+        //HURRY!!を生成
+        GameObject ui = Instantiate(hurryUI);
+        ui.transform.SetParent(gameObject.transform.parent);
+        ui.GetComponent<RectTransform>().localPosition = Vector3.zero;
         bSound = false;
     }
     public bool IsFinish()

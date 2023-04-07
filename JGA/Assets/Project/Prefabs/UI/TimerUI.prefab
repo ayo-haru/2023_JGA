@@ -209,6 +209,7 @@ MonoBehaviour:
   lossSecondsParcent: 10
   soundSeconds: 10
   audioSource: {fileID: 6950253132498496588}
+  hurryUI: {fileID: 7544083564555949217, guid: 77a6677a31b8c064a8686eb16a0e1569, type: 3}
 --- !u!82 &6950253132498496588
 AudioSource:
   m_ObjectHideFlags: 0
