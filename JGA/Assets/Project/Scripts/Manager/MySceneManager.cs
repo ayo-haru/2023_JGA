@@ -63,7 +63,7 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 		PENGUIN_S,
 		PENGUIN_W,
 		PENGUIN_E,
-		BEAR,
+		HORSE,
 		ELEPHANT,
 		LION,
 		POLARBEAR,
