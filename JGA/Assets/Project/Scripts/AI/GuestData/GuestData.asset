@@ -22,11 +22,12 @@ MonoBehaviour:
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
-    speed: 1
-    followSpeed: 0.5
+    speed: 3
+    followSpeed: 0.7
     inBoothSpeed: 0.5
     rayLength: 10
-    reactionArea: 15
+    reactionArea: 20
+    arrivalPenguinArea: 30
     distance: 2
     firstCoolDownTime: 3
     secondCoolDownTime: 5
@@ -41,11 +42,12 @@ MonoBehaviour:
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
-    speed: 1
-    followSpeed: 0.5
+    speed: 3
+    followSpeed: 0.7
     inBoothSpeed: 0.5
     rayLength: 10
-    reactionArea: 15
+    reactionArea: 20
+    arrivalPenguinArea: 30
     distance: 2
     firstCoolDownTime: 3
     secondCoolDownTime: 5
@@ -60,11 +62,12 @@ MonoBehaviour:
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
-    speed: 1
-    followSpeed: 0.5
+    speed: 3
+    followSpeed: 0.7
     inBoothSpeed: 0.5
     rayLength: 10
-    reactionArea: 15
+    reactionArea: 20
+    arrivalPenguinArea: 30
     distance: 2
     firstCoolDownTime: 3
     secondCoolDownTime: 5
@@ -79,11 +82,12 @@ MonoBehaviour:
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
-    speed: 1
-    followSpeed: 0.5
+    speed: 3
+    followSpeed: 0.7
     inBoothSpeed: 0.5
     rayLength: 10
-    reactionArea: 15
+    reactionArea: 20
+    arrivalPenguinArea: 30
     distance: 2
     firstCoolDownTime: 3
     secondCoolDownTime: 5
@@ -98,11 +102,12 @@ MonoBehaviour:
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
-    speed: 1
-    followSpeed: 0.5
+    speed: 3
+    followSpeed: 0.7
     inBoothSpeed: 0.5
     rayLength: 10
-    reactionArea: 15
+    reactionArea: 20
+    arrivalPenguinArea: 30
     distance: 2
     firstCoolDownTime: 3
     secondCoolDownTime: 5
@@ -117,11 +122,12 @@ MonoBehaviour:
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
-    speed: 1
-    followSpeed: 0.5
+    speed: 3
+    followSpeed: 0.7
     inBoothSpeed: 0.5
     rayLength: 10
-    reactionArea: 15
+    reactionArea: 20
+    arrivalPenguinArea: 30
     distance: 2
     firstCoolDownTime: 3
     secondCoolDownTime: 5
@@ -137,11 +143,12 @@ MonoBehaviour:
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
-    speed: 1
-    followSpeed: 0.5
+    speed: 3
+    followSpeed: 0.7
     inBoothSpeed: 0.5
     rayLength: 10
-    reactionArea: 15
+    reactionArea: 20
+    arrivalPenguinArea: 30
     distance: 2
     firstCoolDownTime: 3
     secondCoolDownTime: 5
@@ -157,11 +164,12 @@ MonoBehaviour:
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
-    speed: 1
-    followSpeed: 0.5
+    speed: 3
+    followSpeed: 0.7
     inBoothSpeed: 0.5
     rayLength: 10
-    reactionArea: 15
+    reactionArea: 20
+    arrivalPenguinArea: 30
     distance: 2
     firstCoolDownTime: 3
     secondCoolDownTime: 5
@@ -178,11 +186,12 @@ MonoBehaviour:
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
-    speed: 1
-    followSpeed: 0.5
+    speed: 3
+    followSpeed: 0.7
     inBoothSpeed: 0.5
     rayLength: 10
-    reactionArea: 15
+    reactionArea: 20
+    arrivalPenguinArea: 30
     distance: 2
     firstCoolDownTime: 3
     secondCoolDownTime: 5
@@ -201,11 +210,12 @@ MonoBehaviour:
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
-    speed: 1
-    followSpeed: 0.5
+    speed: 3
+    followSpeed: 0.7
     inBoothSpeed: 0.5
     rayLength: 10
-    reactionArea: 15
+    reactionArea: 20
+    arrivalPenguinArea: 30
     distance: 2
     firstCoolDownTime: 3
     secondCoolDownTime: 5
