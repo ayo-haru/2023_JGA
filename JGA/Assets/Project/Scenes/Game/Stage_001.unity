@@ -7189,6 +7189,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Barricade_001
       objectReference: {fileID: 0}
+    - target: {fileID: 2392163199045712470, guid: e369f40c18c84674094dca5ea79ab09c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3060613133099983084, guid: e369f40c18c84674094dca5ea79ab09c,
         type: 3}
       propertyPath: m_RootOrder
