@@ -1415,7 +1415,23 @@ MonoBehaviour:
   - stateNum: 3
     state: {fileID: 7104924354389222856, guid: 2540e751739d9204692ca7c8b186fced, type: 3}
     transitions: []
-  data: {fileID: 11400000, guid: dcb026c1a8fc9014581a63ba104a11fd, type: 2}
+  isDebug: 0
+  data:
+    name: 
+    roots: 
+    rootTransforms: []
+    penguinTF: []
+    speed: 1
+    followSpeed: 0.5
+    inBoothSpeed: 0.5
+    rayLength: 10
+    reactionArea: 15
+    arrivalPenguinArea: 30
+    distance: 2
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 0
+    cageDistance: 10
 --- !u!114 &-2769939408721501398
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1441,7 +1457,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fae7bfb88d69e5142a0d82af343ed683, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetList: []
 --- !u!114 &-5247618554836286653
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1454,7 +1469,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b93cd4199a245045a7e2100b35e116a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
+  ui: {fileID: 0}
 --- !u!114 &-195335736952283924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1523,7 +1538,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inv: 0
-  target: {fileID: 0}
 --- !u!114 &-7525295860995111489
 MonoBehaviour:
   m_ObjectHideFlags: 0
