@@ -130,6 +130,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1292416833}
     m_Modifications:
+    - target: {fileID: 6950253132498496589, guid: a86c6c8829c05fa41bbfe11da1ffe83c,
+        type: 3}
+      propertyPath: playMinutes
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6950253132498496590, guid: a86c6c8829c05fa41bbfe11da1ffe83c,
         type: 3}
       propertyPath: m_Pivot.x
