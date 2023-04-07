@@ -17,18 +17,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
-
+using UnityEngine.EventSystems;
 public class TitleScenManager : BaseSceneManager
 {
-    //ゲームを始めるボタン
-    [SerializeField] private Button startButton;
-    private Image startImage;
-    //オプションボタン
-    [SerializeField] private Button optionButton;
-    private Image optionImage;
-    //ゲームをやめるボタン
-    [SerializeField] private Button exitButton;
-    private Image exitImage;
+    [SerializeField,Header("ゲームを始める")] private Button startButton;
+    [SerializeField,Header("オプション")] private Button optionButton;
+    [SerializeField,Header("ゲームをやめる")] private Button exitButton;
+    [SerializeField, Header("BGM")] private Slider bgmSlider;
+    [SerializeField, Header("SE")] private Slider seSlider;
+    [SerializeField, Header("オプション画面のBackボタン")] private Button optionBackButton;
+    [SerializeField, Header("オプション画面のKeyconfigボタン")] private Button optionKeyconfigButton;
+    [SerializeField, Header("キーコンフィグ画面のBackボタン")] private Button keyconfigBackButton;
+
     //入力フラグ
     private bool bMouse = true;
     //マウス位置
@@ -36,14 +36,10 @@ public class TitleScenManager : BaseSceneManager
     //フェードパネル
     [SerializeField] private Image fadePanelImage;
 
-    [SerializeField,Tooltip("オプション画面のBackボタン")] private Button optionBackButton;
-    [SerializeField, Tooltip("オプション画面のKeyconfigボタン")] private Button optionKeyconfigButton;
-    [SerializeField,Tooltip("キーコンフィグ画面のBackボタン")] private Button keyconfigBackButton;
     [SerializeField] private RectTransform OptionObject;
 
     //タイトル画面のボタン
-    private enum ETitleSelect {TITLESELECT_START,TITLESELECT_OPTION,TITLESELECT_EXIT,MAX_TITLESELECT};
-    private ETitleSelect select = ETitleSelect.TITLESELECT_START;
+    private enum ETitleSelect {TITLESELECT_START,TITLESELECT_OPTION,TITLESELECT_EXIT,OPTIONSELECT_BGM,OPTIONSELECT_SE,OPTIONSELECT_KEYCONFIG,OPTIONSELECT_BACK,KEYCONFIGSELECT_BACK,MAX_TITLESELECT};
 
     //タイトルのメニュー
     private enum ETitleMenu { TITLESCREEN_TITLE, TITLESCREEN_OPTION, TITLESCREEN_KEYCONFIG, MAX_TITLESCREEN };
@@ -65,10 +61,6 @@ public class TitleScenManager : BaseSceneManager
         // BGM再生用にオーディオソース取得
         audioSource = GetComponent<AudioSource>();
 
-        startImage = startButton.GetComponent<Image>();
-        optionImage = optionButton.GetComponent<Image>();
-        exitImage = exitButton.GetComponent<Image>();
-
         //オプション画面、キーコンフィグ画面のボタンのイベントを追加
         optionBackButton.onClick.AddListener(OptionBackButton);
         optionKeyconfigButton.onClick.AddListener(OptionKeyconfigButton);
@@ -86,6 +78,9 @@ public class TitleScenManager : BaseSceneManager
     /// </summary>
     void Update()
 	{
+        //メニュー移動中は入力受け付けない
+        if (nSlide != 0) return;
+
         //マウス、コントローラの値取得
         Gamepad gamepad = Gamepad.current;
         if (gamepad == null) return;
@@ -96,40 +91,22 @@ public class TitleScenManager : BaseSceneManager
         //マウス無効でマウスが動いたらマウス入力を有効
         if (bMouse)
         {
-            if (gamepad.dpad.up.wasReleasedThisFrame || gamepad.dpad.down.wasReleasedThisFrame || gamepad.aButton.isPressed) ChangeInput();
+            if (gamepad.leftStick.ReadValue() != Vector2.zero || gamepad.aButton.wasReleasedThisFrame) ChangeInput();
         }
         else
         {
             if (mousePos != oldMousePos) ChangeInput();
         }
-
+#if false
         //コントローラ入力
         if (!bMouse)
         {
-            ETitleSelect old = select;
-
-            if(gamepad.dpad.up.wasReleasedThisFrame)
-            {
-                if(select > 0)--select;
-            }
-            //左スティック　↓
-            if(gamepad.dpad.down.wasReleasedThisFrame)
-            {
-                if (select < ETitleSelect.MAX_TITLESELECT - 1) ++select;
-            }
-            //Aボタン
-            if (gamepad.aButton.isPressed)
-            {
-                switch (select)
-                {
-                    case ETitleSelect.TITLESELECT_START:StartButton();break;
-                    case ETitleSelect.TITLESELECT_OPTION:OptionButton();break;
-                    case ETitleSelect.TITLESELECT_EXIT:ExitButton();break;
-                }
-            }
-
-            if(select != old)ControllerChangeSelect(select);
+            //上
+            //if(gamepad.dpad.up.wasReleasedThisFrame)ControllerUpSelect();
+            //下
+            //if(gamepad.dpad.down.wasReleasedThisFrame)ControllerDownSelect();
         }
+#endif
     }
 
     private void FixedUpdate()
@@ -140,11 +117,13 @@ public class TitleScenManager : BaseSceneManager
         }
     }
 
-    #region タイトル画面のボタン
+#region タイトル画面のボタン
     public void StartButton()
     {
         SceneChange(MySceneManager.SceneState.SCENE_GAME);
         SoundManager.Play(audioSource, SoundManager.ESE.DECISION_001);
+        //コントローラ入力の場合マウスカーソルが非表示のままになってしまうので表示する
+        if (!bMouse)Cursor.visible = true;
     }
     public void OptionButton()
     {
@@ -161,9 +140,9 @@ public class TitleScenManager : BaseSceneManager
         Application.Quit();
 #endif
     }
-    #endregion
+#endregion
 
-    #region オプション画面のボタン
+#region オプション画面のボタン
     public void OptionBackButton()
     {
         SoundManager.Play(audioSource, SoundManager.ESE.DECISION_001);
@@ -177,29 +156,32 @@ public class TitleScenManager : BaseSceneManager
         //キーコンフィグ画面を開く
         OptionMoveLeft();
     }
-    #endregion
+#endregion
 
-    #region キーコンフィグ画面のボタン
+#region キーコンフィグ画面のボタン
     public void KeyconfigBackButton()
     {
         SoundManager.Play(audioSource, SoundManager.ESE.DECISION_001);
         //キーコンフィグ画面を閉じる
         OptionMoveRight();
     }
-    #endregion
+#endregion
 
-    #region オプション移動関数
+#region オプション移動関数
     public void OptionMoveLeft()
     {
         //オプションを左に動かす
         nSlide = -1920;
         ++titleMenu;
+        if(!bMouse)ChangeMenu(titleMenu);
+
     }
     public void OptionMoveRight()
     {
         //オプションを右に動かす
         nSlide = 1920;
         --titleMenu;
+        if(!bMouse)ChangeMenu(titleMenu);
     }
     public void OptionSlide()
     {
@@ -215,7 +197,7 @@ public class TitleScenManager : BaseSceneManager
             OptionObject.position = new Vector3(OptionObject.position.x - slideSpeed, OptionObject.position.y, OptionObject.position.z);
         }
     }
-    #endregion
+#endregion
 
     private void ChangeInput()
     {
@@ -225,14 +207,14 @@ public class TitleScenManager : BaseSceneManager
             //マウスカーソル非表示
             Cursor.visible = false;
             fadePanelImage.raycastTarget = true;
-            ControllerChangeSelect(select);
+            ChangeMenu(titleMenu);
         }
         else//コントローラ→マウス
         {
             //マウスカーソル表示
             Cursor.visible = true;
             fadePanelImage.raycastTarget = false;
-            ControllerResetSelect();
+            ControllerNoneSelect();
         }
 
         bMouse = !bMouse;
@@ -240,30 +222,95 @@ public class TitleScenManager : BaseSceneManager
 
     private void ControllerChangeSelect(ETitleSelect _select)
     {
-        ControllerResetSelect();
+        ControllerNoneSelect();
         switch (_select)
         {
             case ETitleSelect.TITLESELECT_START:
-                startImage.color = Color.gray;
+                startButton.Select();
                 break;
             case ETitleSelect.TITLESELECT_OPTION:
-                optionImage.color = Color.gray;
+                optionButton.Select();
                 break;
             case ETitleSelect.TITLESELECT_EXIT:
-                exitImage.color = Color.gray;
+                exitButton.Select();
+                break;
+            case ETitleSelect.OPTIONSELECT_BGM:
+                bgmSlider.Select();
+                break;
+            case ETitleSelect.OPTIONSELECT_SE:
+                seSlider.Select();
+                break;
+            case ETitleSelect.OPTIONSELECT_KEYCONFIG:
+                optionKeyconfigButton.Select();
+                break;
+            case ETitleSelect.OPTIONSELECT_BACK:
+                optionBackButton.Select();
+                break;
+            case ETitleSelect.KEYCONFIGSELECT_BACK:
+                keyconfigBackButton.Select();
                 break;
         }
         SoundManager.Play(audioSource, SoundManager.ESE.SELECT_001);
     }
-    private void ControllerResetSelect()
+#if false
+    private void ControllerUpSelect()
     {
-        startImage.color = Color.white;
-        optionImage.color = Color.white;
-        exitImage.color = Color.white;
+        //現在select状態のオブジェクトを取得
+        GameObject selectedObject = EventSystem.current.currentSelectedGameObject;
+        if (!selectedObject) return;
+        //ボタンコンポーネント取得
+        Button selectedButton = selectedObject.GetComponent<Button>();
+        if (!selectedButton) return;
+        //移動先のボタンを取得
+        Selectable nextButton = selectedButton.navigation.selectOnUp;
+        if (!nextButton) return;
+        //現在の選択をリセットし次のボタンを選択状態にする
+        ControllerNoneSelect();
+        nextButton.Select();
+
+        SoundManager.Play(audioSource, SoundManager.ESE.SELECT_001);
+    }
+    private void ControllerDownSelect()
+    {
+        //現在select状態のオブジェクトを取得
+        GameObject selectedObject = EventSystem.current.currentSelectedGameObject;
+        if (!selectedObject) return;
+        //ボタンコンポーネント取得
+        Button selectedButton = selectedObject.GetComponent<Button>();
+        if (!selectedButton) return;
+        //移動先のボタンを取得
+        Selectable nextButton = selectedButton.navigation.selectOnDown;
+        if (!nextButton) return;
+        //現在の選択をリセットし次のボタンを選択状態にする
+        ControllerNoneSelect();
+        nextButton.Select();
+
+        SoundManager.Play(audioSource, SoundManager.ESE.SELECT_001);
+    }
+#endif
+    private void ControllerNoneSelect()
+    {
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
     public void SelectButton()
     {
         SoundManager.Play(audioSource, SoundManager.ESE.SELECT_001);
+    }
+
+    private void ChangeMenu(ETitleMenu _menu)
+    {
+        switch (_menu)
+        {
+            case ETitleMenu.TITLESCREEN_TITLE:
+                ControllerChangeSelect(ETitleSelect.TITLESELECT_START);
+                break;
+            case ETitleMenu.TITLESCREEN_OPTION:
+                ControllerChangeSelect(ETitleSelect.OPTIONSELECT_BGM);
+                break;
+            case ETitleMenu.TITLESCREEN_KEYCONFIG:
+                ControllerChangeSelect(ETitleSelect.KEYCONFIGSELECT_BACK);
+                break;
+        }
     }
 }
