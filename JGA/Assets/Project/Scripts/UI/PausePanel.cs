@@ -9,8 +9,10 @@
 // 2023/03/16	スクリプト作成
 //=============================================================================
 using UniRx;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class PausePanel : MonoBehaviour
@@ -41,6 +43,11 @@ public class PausePanel : MonoBehaviour
 	private RectTransform rect;
 	[SerializeField]
 	private AudioSource audioSource;
+
+	private MyContorller gameInputs;            // 方向キー入力取得
+
+	private bool bGamePad;
+	private bool bNoMouseMode;
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -75,6 +82,24 @@ public class PausePanel : MonoBehaviour
 			//e.triggers.Add(entry);
 		}
 
+		// Input Actionインスタンス生成
+		gameInputs = new MyContorller();
+
+		// Actionイベント登録
+		gameInputs.Menu.Move.performed += OnMove;
+
+		// Input Actionを有効化
+		gameInputs.Enable();
+
+		if (Gamepad.current == null)
+			bGamePad = false;
+		else
+		{
+			bNoMouseMode = true;
+			backButton.Select();        // 最初に選択状態にしたいボタンの設定
+			bGamePad = true;
+		}
+
 	}
 
 	private void FixedUpdate()
@@ -87,6 +112,80 @@ public class PausePanel : MonoBehaviour
 			rect.localPosition = Vector3.MoveTowards(rect.localPosition, new Vector3(-1920 * 2, 0, 0), PanelMoveValue);
 	}
 
+	private void Update()
+	{
+		if (Gamepad.current == null)
+			bGamePad = false;
+		else if (!bGamePad)
+		{
+			bNoMouseMode = true;
+			backButton.Select();        // 最初に選択状態にしたいボタンの設定
+			bGamePad = true;
+		}
+
+		Debug.Log($"select:{EventSystem.current.currentSelectedGameObject}");
+	}
+
+	private void OnMove(InputAction.CallbackContext context)
+	{
+		if (!PauseManager.isPaused)
+			return;
+
+		Vector2 move = context.ReadValue<Vector2>();
+
+		Debug.Log($"move:{move}");
+
+		if (!bNoMouseMode)
+		{
+			bNoMouseMode = true;
+			backButton.Select();        // 最初に選択状態にしたいボタンの設定
+		}
+		else
+		{
+			var select = EventSystem.current.currentSelectedGameObject;
+			Debug.Log($"select:{select}");
+
+			//if (move.x == 1.0f)
+			//{
+
+			//}
+			//if (move.x == -1.0f)
+			//{
+
+			//}
+			//if (move.y == 1.0f)
+			//{
+			//	if (select == backButton.gameObject)
+			//	{
+			//		TitleButton.Select();
+			//	}
+			//	else if (select == OpitonButton.gameObject)
+			//	{
+			//		backButton.Select();
+			//	}
+			//	else if (select == TitleButton.gameObject)
+			//	{
+			//		OpitonButton.Select();
+			//	}
+			//}
+			//if (move.y == -1.0f)
+			//{
+			//	if (select == backButton.gameObject)
+			//	{
+			//		OpitonButton.Select();
+			//	}
+			//	else if (select == OpitonButton.gameObject)
+			//	{
+			//		TitleButton.Select();
+			//	}
+			//	else if (select == TitleButton.gameObject)
+			//	{
+			//		backButton.Select();
+			//	}
+			//}
+		}
+	}
+
 	void Pause()
 	{
 		if (!PauseManager.NoMenu)
@@ -95,6 +194,8 @@ public class PausePanel : MonoBehaviour
 
 	void Resumed()
 	{
+		ActivePanel = pausePanel;
+		rect.localPosition = new Vector3(0, 0, 0);
 		gameObject.SetActive(false);
 	}
 
