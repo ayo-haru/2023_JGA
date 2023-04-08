@@ -7,6 +7,7 @@ public class DebugClockUI : MonoBehaviour
     [SerializeField] private ClockUI ui;
     [SerializeField] private GuestNumUI guestNumUI;
     [SerializeField] private TimerUI timerUI;
+    [SerializeField] private OptionPanel optionPanel;
     // Start is called before the first frame update
     void Start()
     {
@@ -35,6 +36,10 @@ public class DebugClockUI : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F5))
         {
             timerUI.LossTime();
+        }
+        if (Input.GetKeyDown(KeyCode.F6))
+        {
+            optionPanel.Open();
         }
     }
 }

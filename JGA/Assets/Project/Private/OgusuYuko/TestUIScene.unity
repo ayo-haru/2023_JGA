@@ -670,12 +670,25 @@ MonoBehaviour:
   ui: {fileID: 1058650122}
   guestNumUI: {fileID: 758502183}
   timerUI: {fileID: 854649869}
+  optionPanel: {fileID: 1465591666}
 --- !u!224 &1465591665 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1477891532903698542, guid: 1fdb840198b1c0442883bd0d356cdfe9,
     type: 3}
   m_PrefabInstance: {fileID: 1000944234}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1465591666 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1558211527720680207, guid: 1fdb840198b1c0442883bd0d356cdfe9,
+    type: 3}
+  m_PrefabInstance: {fileID: 1000944234}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 406b121b0a3ac224f995686a8fbf2bbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1739139168
 GameObject:
   m_ObjectHideFlags: 0
