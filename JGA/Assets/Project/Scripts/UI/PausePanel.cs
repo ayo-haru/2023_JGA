@@ -122,8 +122,6 @@ public class PausePanel : MonoBehaviour
 			backButton.Select();        // 最初に選択状態にしたいボタンの設定
 			bGamePad = true;
 		}
-
-		Debug.Log($"select:{EventSystem.current.currentSelectedGameObject}");
 	}
 
 	private void OnMove(InputAction.CallbackContext context)
@@ -133,7 +131,7 @@ public class PausePanel : MonoBehaviour
 
 		Vector2 move = context.ReadValue<Vector2>();
 
-		Debug.Log($"move:{move}");
+		//Debug.Log($"move:{move}");
 
 		if (!bNoMouseMode)
 		{
@@ -143,7 +141,7 @@ public class PausePanel : MonoBehaviour
 		else
 		{
 			var select = EventSystem.current.currentSelectedGameObject;
-			Debug.Log($"select:{select}");
+			//Debug.Log($"select:{select}");
 
 			//if (move.x == 1.0f)
 			//{
