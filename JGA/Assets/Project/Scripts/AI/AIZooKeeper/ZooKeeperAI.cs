@@ -22,6 +22,7 @@
 // 2023/03/29   足滑りの無い移動実装
 // 2023/03/30   オブジェクトの音に反応する処理作成
 // 2023/03/31   プレイヤーを追いかける時の角度を調整する処理追加
+// 2023/04/08   RayHitのレイヤーにだけ当たり判定をとるようにした
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -136,7 +137,6 @@ public class ZooKeeperAI : MonoBehaviour
         {
             rootNum = 0;
             navMesh.SetDestination(data.rootTransforms[rootNum].position); // 目的地の設定
-
             // 速度設定(始めは歩いてる)
             navMesh.speed = data.speed * player.MaxMoveSpeed;
         }
@@ -155,12 +155,11 @@ public class ZooKeeperAI : MonoBehaviour
         {
             return;
         }
-            
 
+        AnimPlay();
         Move();
         CharControl();
         Dir();
-        AnimPlay();
     }
 
     private void Update()
@@ -200,40 +199,23 @@ public class ZooKeeperAI : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             var pos = other.transform.position - transform.position;
-            var direction = transform.forward;  // 方向
             float targetAngle = Vector3.Angle(this.transform.forward, pos);
             Debug.DrawRay(transform.position, pos * data.searchDistance, Color.red);
 
-            // 視界の角度内に収まっているかどうか
-            if (targetAngle < data.searchAngle)
+            // 視界の角度内に収まってRayが当たっているか
+            if (targetAngle < data.searchAngle && RayHit(pos) == 1)
             {
-                // Rayが当たっているか
-                if (Physics.Raycast(transform.position, pos, out rayhit, data.searchDistance))    // rayの開始地点、rayの向き、当たったオブジェクトの情報を格納、rayの発射距離
+                if (!chaseNow)
                 {
-                    // 当たったオブジェクトがペンギンかどうか
-                    if (rayhit.collider == other)
-                    {
-                        if (!chaseNow)
-                        {
-                            soundObjFlg = false;
-                            // コルーチン開始
-                            StartCoroutine("PenguinChase");
-                        }
-                    }
-                }
-                else
-                {
-                    // Ray当たってない
-                    if (!chaseNow)
-                    {
-                        PlayerOutOfRange();
-                    }
+                    soundObjFlg = false;
+                    // コルーチン開始
+                    StartCoroutine("PenguinChase");
                 }
             }
             else
             {
                 // 範囲外
-                if (!chaseNow)
+                if (!chaseNow || RayHit(pos) == 3)
                 {
                     PlayerOutOfRange();
                 }
@@ -252,29 +234,17 @@ public class ZooKeeperAI : MonoBehaviour
                     if (other.gameObject == gimmickObj.gimmickList[i] && !gimmickObj.bReset[i])
                     {
                         var posObj = other.transform.position - transform.position;
-                        var directionObj = transform.forward;  // 方向
                         float objAngle = Vector3.Angle(this.transform.forward, posObj);
                         Debug.DrawRay(transform.position, posObj * data.searchDistance, Color.black);
 
-                        // 視界の角度内に収まっているかどうか
-                        if (objAngle < data.searchAngle)
+                        // 視界の角度内に収まってRayが当たっているか
+                        if (objAngle < data.searchAngle && RayHit(posObj) == 2)
                         {
-                            // Rayが当たっているか
-                            if (Physics.Raycast(transform.position, posObj, out rayhit, data.searchDistance))    // rayの開始地点、rayの向き、当たったオブジェクトの情報を格納、rayの発射距離
-                            {
-                                if (rayhit.collider.tag == "Interact" && !gimmickFlg)
-                                {
-                                    soundObjFlg = false;
-                                    gimmickFlg = true;
-                                    parentObj = gimmickObj.gimmickList[i].transform.root.gameObject;        // 親オブジェクト取得
-                                    navMesh.SetDestination(gimmickObj.gimmickList[i].transform.position);
-                                    gimmickNum = i;
-                                }
-                            }
-                            else if (chaseNow)
-                            {
-                                ObjOutOfRange();
-                            }
+                            soundObjFlg = false;
+                            gimmickFlg = true;
+                            parentObj = gimmickObj.gimmickList[i].transform.root.gameObject;        // 親オブジェクト取得
+                            navMesh.SetDestination(gimmickObj.gimmickList[i].transform.position);
+                            gimmickNum = i;
                         }
                         else if (chaseNow)
                         {
@@ -322,12 +292,12 @@ public class ZooKeeperAI : MonoBehaviour
         #endregion
     }
 
+    #region 飼育員の移動
     /// <summary>
     /// 飼育員の移動
     /// </summary>
     private void Move()
     {
-        #region 移動
         // ペンギンを追いかける
         if (chaseNow)
         {
@@ -395,9 +365,10 @@ public class ZooKeeperAI : MonoBehaviour
         {
             NavMeshStop();
         }
-        #endregion
     }
+    #endregion
 
+    #region navMeshを使わず移動する
     /// <summary>
     /// navMeshを使わず移動する
     /// </summary>
@@ -418,23 +389,30 @@ public class ZooKeeperAI : MonoBehaviour
                 transform.position = navMesh.nextPosition - 0.9f * targetDeltaPosition;
         }
     }
+    #endregion
 
+    #region アニメーション
     /// <summary>
     /// アニメーションさせるかどうか
     /// </summary>
     private void AnimPlay()
     {
+        // （巡回リストが0かつペンギンを追従してない）かNavMeshの計算が終わってない時
+        if ((data.rootTransforms.Count <= 0 && !chaseNow) || navMesh.pathPending)
+        {
+            // 待機モーションにする
+            animator.SetBool("isWalk", false);
+        }
+        // NavMeshの計算が終わっているかつNavMeshが停止していない時
         if(!navMesh.pathPending && !navMesh.isStopped)
         {
             // 歩行アニメーション再生
             animator.SetBool("isWalk", true);
         }
-        if (data.rootTransforms.Count <= 0 && !chaseNow)
-        {
-            animator.SetBool("isWalk", false);
-        }
     }
+    #endregion
 
+    #region 飼育員の向きを変える処理
     /// <summary>
     /// 向きの調整
     /// </summary>
@@ -462,6 +440,39 @@ public class ZooKeeperAI : MonoBehaviour
             }
         }
     }
+    #endregion
+
+    #region Rayの当たり判定
+    /// <summary>
+    /// Rayが当たっているか
+    /// </summary>
+    private int RayHit(Vector3 pos)
+    {
+        // RayHitレイヤーとだけ衝突する
+        int layerMask = 1 << 10;
+        // Rayが当たっているか
+        if (Physics.Raycast(transform.position, pos, out rayhit, data.searchDistance, layerMask))    // rayの開始地点、rayの向き、当たったオブジェクトの情報を格納、rayの発射距離、レイヤーマスク
+        {
+            // 当たったオブジェクトがペンギンかどうか
+            if (rayhit.collider.tag == "Player")
+            {
+                return 1;
+            }
+            // 当たったオブジェクトがギミックかどうか
+            if (rayhit.collider.tag == "Interact" && !gimmickFlg)
+            {
+                return 2;
+            }
+            // 当たったオブジェクトが隠れるオブジェクトかどうか
+            if(rayhit.collider.tag == "HideObj")
+            {
+                chaseNow = false;
+                return 3;
+            }
+        }
+        return -1;
+    }
+    #endregion
 
     #region コルーチン
     /// <summary>
@@ -476,21 +487,19 @@ public class ZooKeeperAI : MonoBehaviour
             NavMeshStop();
             // エフェクト表示
             CreateEffect(Effect.exclamation);
-            //-----------------------
             // 驚くアニメーション開始
             animator.SetTrigger("isSurprise");
-            //-----------------------
         }
 
         yield return new WaitForSeconds(1.5f);
 
-        // 驚くアニメーション終了したらペンギンを追従開始
+        // ペンギンを追従開始
         chaseNow = true;
         NavMeshMove();
 
-        // オブジェクトを置く
+        // オブジェクトを持っていたら置く
         gimmickFlg = false;
-        if (catchFlg)   // オブジェクトを持ってる時
+        if (catchFlg)
         {
             catchFlg = false;
             Bring();
@@ -513,10 +522,8 @@ public class ZooKeeperAI : MonoBehaviour
             ResetFlg = false;
             // エフェクト表示
             CreateEffect(Effect.question);
-            //------------------------
             // 置くアニメーション開始（仮で驚くモーション）
             animator.SetTrigger("isSurprise");
-            //------------------------
         }
 
         yield return new WaitForSeconds(2.0f);
@@ -541,10 +548,8 @@ public class ZooKeeperAI : MonoBehaviour
         if (ResetFlg)
         {
             ResetFlg = false;
-            //------------------------
             // 置くアニメーション開始（仮で驚くモーション）
             animator.SetTrigger("isSurprise");
-            //------------------------
         }
 
         yield return new WaitForSeconds(2.0f);
@@ -579,12 +584,12 @@ public class ZooKeeperAI : MonoBehaviour
     }
     #endregion
 
+    #region オブジェクトを掴む、はなす処理
     /// <summary>
     /// オブジェクトを運ぶ
     /// </summary>
     private void Bring()
     {
-        #region 運ぶ
         if (catchFlg && gimmickFlg)
         {
             ResetFlg = true;
@@ -608,9 +613,10 @@ public class ZooKeeperAI : MonoBehaviour
                 gimmickObj.gimmickList[gimmickNum].transform.position = gimmickObj.resetPos[gimmickNum].transform.position;
             }
         }
-        #endregion
     }
+    #endregion
 
+    #region 索敵範囲外の処理
     /// <summary>
     /// 索敵範囲外
     /// </summary>
@@ -645,7 +651,9 @@ public class ZooKeeperAI : MonoBehaviour
             gimmickObj.gimmickList[gimmickNum].transform.parent = parentObj.transform;
         }
     }
+    #endregion
 
+    #region エフェクト作成
     /// <summary>
     /// エフェクト作成
     /// </summary>
@@ -668,7 +676,9 @@ public class ZooKeeperAI : MonoBehaviour
                 break;
         }
     }
+    #endregion
 
+    #region NavMeshをストップ、動かす
     /// <summary>
     /// NavMeshストップ
     /// </summary>
@@ -694,6 +704,7 @@ public class ZooKeeperAI : MonoBehaviour
             navMesh.speed = data.speed * player.MaxMoveSpeed;
         }
     }
+    #endregion
 
     /// <summary>
     /// 視界範囲内（扇状視界）を可視化
@@ -723,6 +734,7 @@ public class ZooKeeperAI : MonoBehaviour
         data = _data;
     }
 
+    #region ポーズ処理
     /// <summary>
     /// ポーズ開始
     /// </summary>
@@ -744,4 +756,5 @@ public class ZooKeeperAI : MonoBehaviour
         // アニメーション
         animator.speed = 1.0f;
     }
+    #endregion
 }
