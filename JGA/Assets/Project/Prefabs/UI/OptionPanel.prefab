@@ -785,6 +785,7 @@ MonoBehaviour:
   backButton: {fileID: 4652559721280220930}
   bgmVolumeIcon: {fileID: 5026250845451094664}
   seVolumeIcon: {fileID: 5038194553353268220}
+  slideSpeed: 50
 --- !u!82 &3662988626164159519
 AudioSource:
   m_ObjectHideFlags: 0

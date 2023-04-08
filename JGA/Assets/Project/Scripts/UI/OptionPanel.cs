@@ -2,11 +2,12 @@
 // @File	: [OptionPanel.cs]
 // @Brief	: 
 // @Author	: Sakai Ryotaro
-// @Editer	: 
+// @Editer	: Ogusu Yuuko
 // @Detail	: 
 // 
 // [Date]
 // 2023/03/20	スクリプト作成
+// 2023/04/08	(小楠)オプションのスライド移動追加
 //=============================================================================
 using UniRx;
 using UnityEngine;
@@ -16,8 +17,8 @@ using UnityEngine.EventSystems;
 
 public class OptionPanel : MonoBehaviour
 {
-    //オーディオソース
     private AudioSource audioSource;
+    private RectTransform rt;
 
     //ボタンの色
     [SerializeField, Header("ボタンの色")] private Color buttonColor;
@@ -35,18 +36,32 @@ public class OptionPanel : MonoBehaviour
 
     public enum EOptionButton { BGM,SE,OPTION_KEYBORD,OPTION_CONTROLLER,BACK,MAX_OPTION_BUTTON};
 
-    //マウス位置
+    //マウス
     private Vector3 mousePos = Vector3.zero;
-
     private bool bMouse = true;
+
+    public enum EOptionSlide { MIN_SLIDE = -2,LEFT, CENTER, RIGHT,MAX_SLIDE };
+    private int nSlide = (int)EOptionSlide.RIGHT;
+    [SerializeField, Range(1.0f, 100.0f)] private float slideSpeed = 10.0f;
+
+
 
 	void Awake()
 	{
         audioSource = GetComponent<AudioSource>();
+        rt = GetComponent<RectTransform>();
+
+        //初期位置設定
+        Vector3 pos = rt.localPosition;
+        pos.x = 1920.0f;
+        rt.localPosition = pos;
 	}
 
     private void Update()
     {
+        if (nSlide != (int)EOptionSlide.CENTER) return;
+        if (rt.localPosition != Vector3.zero) return;
+
         //マウス、コントローラの値取得
         Gamepad gamepad = Gamepad.current;
         if (gamepad == null) return;
@@ -80,6 +95,14 @@ public class OptionPanel : MonoBehaviour
             if (gamepad.dpad.left.wasReleasedThisFrame || gamepad.leftStick.ReadValue().x <= -0.9f) SEVolDelButton();
         }
     }
+
+    private void FixedUpdate()
+    {
+        if (nSlide >= (int)EOptionSlide.MAX_SLIDE || nSlide <= (int)EOptionSlide.MIN_SLIDE) return;
+        if (rt.localPosition.x == 1920.0f * nSlide) return;
+        rt.localPosition = Vector3.MoveTowards(rt.localPosition, new Vector3(1920.0f * nSlide, rt.localPosition.y, rt.localPosition.z), slideSpeed);
+
+    }
     /// <summary>
     /// 戻るボタン
     /// </summary>
@@ -87,6 +110,7 @@ public class OptionPanel : MonoBehaviour
     {
         SoundDecisionSE();
         //オプション画面を閉じる
+        nSlide = (int)EOptionSlide.RIGHT;
     }
     /// <summary>
     /// キーボード&マウス設定ボタン
@@ -214,5 +238,14 @@ public class OptionPanel : MonoBehaviour
     public void ControllerNoneSelect()
     {
         EventSystem.current.SetSelectedGameObject(null);
+    }
+
+    public void Open()
+    {
+        nSlide = (int)EOptionSlide.CENTER;
+    }
+    public bool IsOpen()
+    {
+        return nSlide < (int)EOptionSlide.RIGHT;
     }
 }
