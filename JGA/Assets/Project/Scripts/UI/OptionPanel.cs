@@ -111,6 +111,7 @@ public class OptionPanel : MonoBehaviour
         SoundDecisionSE();
         //オプション画面を閉じる
         nSlide = (int)EOptionSlide.RIGHT;
+        ControllerNoneSelect();
     }
     /// <summary>
     /// キーボード&マウス設定ボタン
@@ -243,6 +244,7 @@ public class OptionPanel : MonoBehaviour
     public void Open()
     {
         nSlide = (int)EOptionSlide.CENTER;
+        ControllerChangeSelect(EOptionButton.BGM);
     }
     public bool IsOpen()
     {
