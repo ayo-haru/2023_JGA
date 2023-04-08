@@ -46,7 +46,7 @@ public class PenguinMove : MonoBehaviour
 	//終了地点を格納しておく変数
 	private Vector3 endPos;
 
-
+    private Rigidbody rb; 
 
 	//動いてるときの時間
 	private float moveTime;
@@ -65,6 +65,7 @@ public class PenguinMove : MonoBehaviour
 		moveFlg = false;
 		moveTime = 0.0f;
 		movedata = Random.Range(0, BoothAnimalManager.Instance.penguinsData.dataList.Count);
+        rb = this.GetComponent<Rigidbody>();
 
         PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(gameObject);
         PauseManager.OnResumed.Subscribe(x => { ReGame(); }).AddTo(gameObject);
@@ -149,8 +150,9 @@ public class PenguinMove : MonoBehaviour
                 currentMoveType = (MoveType)Random.Range((int)MoveType.WALK, (int)MoveType.RUN + 1);
                 return;
             }
+            rb.velocity = Vector3.zero;
             //一通りの処理を終えたら行動を書き込む
-            moveType= MoveType.IDLE;
+            moveType = MoveType.IDLE;
             moveFlg = false;
         }
     }
@@ -164,8 +166,9 @@ public class PenguinMove : MonoBehaviour
 		//最期まで動いたら初期化し、アイドルに移る
 		if(this.transform.position == endPos)
 		{
-			//最終地点の座標に行かないように記憶しておく
-			moveIndex = currentMoveIndex;
+            //最終地点の座標に行かないように記憶しておく
+            rb.velocity = Vector3.zero;
+            moveIndex = currentMoveIndex;
             currentMoveType = MoveType.IDLE;
             moveType= MoveType.WALK;
         }
@@ -183,6 +186,7 @@ public class PenguinMove : MonoBehaviour
         if (this.transform.position == endPos)
         {
             //最終地点の座標に行かないように記憶しておく
+            rb.velocity = Vector3.zero;
             moveIndex = currentMoveIndex;
             currentMoveType = MoveType.IDLE;
             moveType= MoveType.RUN;
@@ -195,7 +199,9 @@ public class PenguinMove : MonoBehaviour
         var befRot = this.transform.rotation;
         this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, endRot, BoothAnimalManager.Instance.penguinsData.dataList[movedata].rotateAngle);
 
-		if (befRot == this.transform.rotation)
+        rb.velocity = Vector3.zero;
+
+        if (befRot == this.transform.rotation)
 		{
             moveIndex = currentMoveIndex;
             currentMoveType = MoveType.IDLE;
