@@ -55,6 +55,8 @@ public class SoundManager : MonoBehaviour
 		// ドア
 		DOOR_CLOSE,
 		DOOR_OPEN,
+		STEALDOOR_OPEN,
+		STEALDOOR_CLOSE,
 
 		// 水しぶき
 		INTO_WATER,
