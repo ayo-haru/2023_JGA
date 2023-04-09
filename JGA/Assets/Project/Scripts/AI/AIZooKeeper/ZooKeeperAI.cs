@@ -156,15 +156,19 @@ public class ZooKeeperAI : MonoBehaviour
             return;
         }
 
-        AnimPlay();
         Move();
         CharControl();
-        Dir();
+        if (ResetFlg)
+        {
+            AnimPlay();
+            Dir();
+        }
     }
 
     private void Update()
     {
         if (PauseManager.isPaused && !MySceneManager.GameData.isCatchPenguin) {
+            NavMeshStop();
             return;
         }
 
@@ -183,6 +187,7 @@ public class ZooKeeperAI : MonoBehaviour
         #region ペンギン
         if (collision.gameObject.tag == "Player")
         {
+            NavMeshStop();
             MySceneManager.GameData.isCatchPenguin = true;
             chaseNow = false;
             navMesh.speed = data.speed * player.MaxMoveSpeed;
@@ -397,8 +402,8 @@ public class ZooKeeperAI : MonoBehaviour
     /// </summary>
     private void AnimPlay()
     {
-        // （巡回リストが0かつペンギンを追従してない）かNavMeshの計算が終わってない時
-        if ((data.rootTransforms.Count <= 0 && !chaseNow) || navMesh.pathPending)
+        // （巡回リストが0かNavMeshの計算が終わってない）かつペンギンを追従してない時
+        if ((data.rootTransforms.Count <= 0 || navMesh.pathPending) && !chaseNow)
         {
             // 待機モーションにする
             animator.SetBool("isWalk", false);
@@ -492,7 +497,7 @@ public class ZooKeeperAI : MonoBehaviour
         }
 
         yield return new WaitForSeconds(1.5f);
-
+            
         // ペンギンを追従開始
         chaseNow = true;
         NavMeshMove();
@@ -522,15 +527,15 @@ public class ZooKeeperAI : MonoBehaviour
             ResetFlg = false;
             // エフェクト表示
             CreateEffect(Effect.question);
-            // 置くアニメーション開始（仮で驚くモーション）
-            animator.SetTrigger("isSurprise");
+            // 拾うアニメーション開始
+            animator.SetTrigger("isPickUp");
         }
 
-        yield return new WaitForSeconds(2.0f);
-
+        yield return new WaitForSeconds(5.0f);
         catchFlg = true;
         Bring();
 
+        yield return new WaitForSeconds(1.0f);
         // 動く
         NavMeshMove();
 
@@ -549,19 +554,28 @@ public class ZooKeeperAI : MonoBehaviour
         {
             ResetFlg = false;
             // 置くアニメーション開始（仮で驚くモーション）
-            animator.SetTrigger("isSurprise");
+            animator.SetBool("isWalk", false);
+            animator.SetFloat("speed", -1f);
+            animator.Play("Put", 0, 1f);
         }
 
-        yield return new WaitForSeconds(2.0f);
+        yield return new WaitForSeconds(1.0f);
 
-        gimmickFlg = false;
-        catchFlg = false;
-        gimmickObj.bReset[gimmickNum] = true;
-        Bring();
+        if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime <= 0)
+        {
+            gimmickFlg = false;
+            catchFlg = false;
+            gimmickObj.bReset[gimmickNum] = true;
+            Bring();
 
-        // 動く
-        NavMeshMove();
-        navMesh.SetDestination(data.rootTransforms[rootNum].position); // 目的地の再設定
+            yield return new WaitForSeconds(1.0f);
+            animator.SetFloat("speed", 1f);
+            animator.SetBool("isWalk", true);
+            animator.Play("Walk");
+            // 動く
+            NavMeshMove();
+            navMesh.SetDestination(data.rootTransforms[rootNum].position); // 目的地の再設定
+        }
     }
 
     /// <summary>

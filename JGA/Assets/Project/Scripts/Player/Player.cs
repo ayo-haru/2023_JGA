@@ -11,8 +11,8 @@
 // 2023/04/04	インタラクトオブジェクトの所を手直ししました～(吉原)
 //				OnHit(コールバック関数)とOnHit(メインの処理)で名前がまったく同じだからメインの処理はHitにさせていただきましたわ！！！
 //=============================================================================
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -111,15 +111,15 @@ public class Player : MonoBehaviour
 	private Transform respawnZone;              // リスポーン位置プレハブ設定用
 
 
-	private GameObject holdPos;	// 持つときの位置
+	private GameObject holdPos; // 持つときの位置
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
 	/// </summary>
 	void Awake()
 	{
-        // ポーズ時の動作を登録
-        PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(this.gameObject);
+		// ポーズ時の動作を登録
+		PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(this.gameObject);
 		PauseManager.OnResumed.Subscribe(x => { Resumed(); }).AddTo(this.gameObject);
 
 		if (rb == null)
@@ -129,9 +129,9 @@ public class Player : MonoBehaviour
 		rb.constraints = RigidbodyConstraints.FreezeRotation;
 
 		// 持つときの場所を子オブジェクトから検索
-        holdPos = transform.Find("HoldPos").gameObject;
+		holdPos = transform.Find("HoldPos").gameObject;
 
-        if (audioSource == null)
+		if (audioSource == null)
 			audioSource = GetComponent<AudioSource>();
 
 
@@ -304,12 +304,13 @@ public class Player : MonoBehaviour
 			}
 		}
 
-		if (_IsHold) {
-            InteractCollision.transform.localPosition = holdPos.transform.localPosition;
-            InteractCollision.transform.localRotation = holdPos.transform.localRotation;
+		if (_IsHold)
+		{
+			InteractCollision.transform.localPosition = holdPos.transform.localPosition;
+			InteractCollision.transform.localRotation = holdPos.transform.localRotation;
 
-        }
-    }
+		}
+	}
 
 	private void Pause()
 	{
@@ -657,17 +658,17 @@ public class Player : MonoBehaviour
 			if (HoldObjectRb != null)
 			{
 				//HoldObjectRb.useGravity = true;
-                //HoldObjectRb.isKinematic = false;
-                HoldObjectRb = null;
+				//HoldObjectRb.isKinematic = false;
+				HoldObjectRb = null;
 			}
 		}
 	}
 
 
-    /// <summary>
-    /// アピール
-    /// </summary>
-    private void OnAppeal(InputAction.CallbackContext context)
+	/// <summary>
+	/// アピール
+	/// </summary>
+	private void OnAppeal(InputAction.CallbackContext context)
 	{
 		if (PauseManager.isPaused)
 			return;
@@ -691,7 +692,8 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void OnCall()
 	{
-		var obj = EffectManager.Create(transform.position + new Vector3(0, 2, 0), 0, transform.rotation);
+		var obj = EffectManager.Create(transform.position + new Vector3(0, 4, 0), 0, transform.rotation);
+		obj.transform.localScale = Vector3.one * 5;
 		obj.transform.parent = transform;
 		SoundManager.Play(audioSource, seCall);
 	}
@@ -700,7 +702,8 @@ public class Player : MonoBehaviour
 	private void OnCollisionStay(Collision collision)
 	{
 		// Playerと掴んでいるオブジェクトが接触していると、ぶっ飛ぶので離す
-		if (InteractCollision != null && InteractCollision == collision.collider) {
+		if (InteractCollision != null && InteractCollision == collision.collider)
+		{
 			collision.transform.localPosition += Vector3.forward / 10;
 			Debug.Log("<color=blue>離す</color>");
 		}
