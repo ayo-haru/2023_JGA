@@ -54,22 +54,32 @@ public class VolumeIcon : MonoBehaviour
 		
 	}
 #endif
-    public void AddVolume()
+    public bool AddVolume()
     {
-        if (currentVol >= maxVol) return;
+        if (currentVol >= maxVol) return false;
         ++currentVol;
         //位置変更
         rt.localPosition = new Vector3(rt.localPosition.x + interval, rt.localPosition.y, rt.localPosition.z);
         //テキスト変更
         text.text = string.Format("{0:0}", currentVol);
+
+        //サウンドマネージャー？の音量設定の関数を呼ぶ
+        //currentVol / (float)maxVol
+
+        return true;
     }
-    public void DelVolume()
+    public bool DelVolume()
     {
-        if (currentVol <= minVol) return;
+        if (currentVol <= minVol) return false;
         --currentVol;
         //位置変更
         rt.localPosition = new Vector3(rt.localPosition.x - interval, rt.localPosition.y, rt.localPosition.z);
         //テキスト変更
         text.text = string.Format("{0:0}", currentVol);
+
+        //サウンドマネージャー？の音量設定の関数を呼ぶ
+        //currentVol / (float)maxVol
+
+        return true;
     }
 }

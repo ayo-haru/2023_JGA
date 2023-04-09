@@ -783,6 +783,10 @@ MonoBehaviour:
   keybordOptionButton: {fileID: 6587292734994432959}
   controllerOptionButton: {fileID: 6526327237196376991}
   backButton: {fileID: 4652559721280220930}
+  addBGMButton: {fileID: 3164291063315086392}
+  delBGMButton: {fileID: 6611145570454035024}
+  addSEButton: {fileID: 1180163837458007707}
+  delSEButton: {fileID: 8499818146550745522}
   bgmVolumeIcon: {fileID: 5026250845451094664}
   seVolumeIcon: {fileID: 5038194553353268220}
   slideSpeed: 50

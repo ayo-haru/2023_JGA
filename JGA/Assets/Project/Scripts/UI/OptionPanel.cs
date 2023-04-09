@@ -29,6 +29,10 @@ public class OptionPanel : MonoBehaviour
     [SerializeField, Header("キーボード&マウスを設定")] private Button keybordOptionButton;
     [SerializeField, Header("コントローラを設定")] private Button controllerOptionButton;
     [SerializeField, Header("戻る")] private Button backButton;
+    [SerializeField, Header("BGM増やすボタン")] private Button addBGMButton;
+    [SerializeField, Header("BGM減らすボタン")] private Button delBGMButton;
+    [SerializeField, Header("SE増やすボタン")] private Button addSEButton;
+    [SerializeField, Header("SE減らすボタン")] private Button delSEButton;
 
     //ボリュームアイコン
     [SerializeField, Header("BGMボリュームアイコン")] private VolumeIcon bgmVolumeIcon;
@@ -134,35 +138,45 @@ public class OptionPanel : MonoBehaviour
     /// </summary>
     public void BGMVolAddButton()
     {
-        SoundDecisionSE();
-        bgmVolumeIcon.AddVolume();
+        if (bgmVolumeIcon.AddVolume()){
+            SoundSelectSE();
+        }else{
+            SoundDecisionSE();
+        }
     }
     /// <summary>
     /// BGM音量下げるボタン
     /// </summary>
     public void BGMVolDelButton()
     {
-        SoundDecisionSE();
-        bgmVolumeIcon.DelVolume();
+        if (bgmVolumeIcon.DelVolume()){
+            SoundSelectSE();
+        }else{
+            SoundDecisionSE();
+        }
     }
     /// <summary>
     /// SE音量上げるボタン
     /// </summary>
     public void SEVolAddButton()
     {
-        SoundDecisionSE();
-        seVolumeIcon.AddVolume();
+        if (seVolumeIcon.AddVolume()){
+            SoundSelectSE();
+        }else{
+            SoundDecisionSE();
+        }
     }
     /// <summary>
     /// SE音量下げるボタン
     /// </summary>
     public void SEVolDelButton()
     {
-        SoundDecisionSE();
-        seVolumeIcon.DelVolume();
+        if (seVolumeIcon.DelVolume()){
+            SoundSelectSE();
+        }else{
+            SoundDecisionSE();
+        }
     }
-
-    
 
     public void SoundSelectSE()
     {
@@ -192,6 +206,13 @@ public class OptionPanel : MonoBehaviour
             controllerOptionButton.colors = colors;
             backButton.colors = colors;
 
+            colors = addBGMButton.colors;
+            colors.highlightedColor = Color.clear;
+            addBGMButton.colors = colors;
+            delBGMButton.colors = colors;
+            addSEButton.colors = colors;
+            delSEButton.colors = colors;
+
             //デフォルトのボタンを選択
             ControllerChangeSelect(EOptionButton.BGM);
         }
@@ -205,6 +226,13 @@ public class OptionPanel : MonoBehaviour
             keybordOptionButton.colors = colors;
             controllerOptionButton.colors = colors;
             backButton.colors = colors;
+
+            colors = addBGMButton.colors;
+            colors.highlightedColor = Color.white;
+            addBGMButton.colors = colors;
+            delBGMButton.colors = colors;
+            addSEButton.colors = colors;
+            delSEButton.colors = colors;
 
             ControllerNoneSelect();
         }
@@ -243,8 +271,10 @@ public class OptionPanel : MonoBehaviour
 
     public void Open()
     {
+        if (nSlide == (int)EOptionSlide.CENTER) return;
         nSlide = (int)EOptionSlide.CENTER;
-        ControllerChangeSelect(EOptionButton.BGM);
+        bMouse = true;
+        ChangeInput();
     }
     public bool IsOpen()
     {
