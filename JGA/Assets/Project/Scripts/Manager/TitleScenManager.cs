@@ -67,8 +67,12 @@ public class TitleScenManager : BaseSceneManager
         bFlag = optionPanel.IsOpen();
         //オプション画面が開かれているときは処理しない
         if (bFlag) return;
-        if (beforeFlag) ControllerChangeSelect(ETitleSelect.TITLESELECT_START);
-        
+        //オプション画面から戻って来た時の初期化処理
+        if (beforeFlag)
+        {
+            bMouse = true;
+            ChangeInput();
+        }
 
         //マウス、コントローラの値取得
         Gamepad gamepad = Gamepad.current;
@@ -93,7 +97,7 @@ public class TitleScenManager : BaseSceneManager
     public void StartButton()
     {
         SoundSEDecision();
-        SoundManager.Play(audioSource, SoundManager.ESE.DECISION_001);
+        SceneChange(MySceneManager.SceneState.SCENE_GAME);
         //コントローラ入力の場合マウスカーソルが非表示のままになってしまうので表示する
         if (!bMouse)Cursor.visible = true;
     }
