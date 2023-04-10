@@ -11,6 +11,7 @@
 // 2023/03/25	(伊地田)複数設定用に変更
 // 2023/03/27	(小楠)ペンギンに追従する時とブース内の速さを追加
 // 2023/03/30	(小楠)ペンギンブースのトランフォームをリストにした
+// 2023/04/10	(小楠)視野角を追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -38,6 +39,8 @@ public class GuestData : ScriptableObject
         [Range(0.1f, 1.0f)] public float inBoothSpeed = 0.5f;
         [Header("視線の長さ")]
         [Min(1)] public float rayLength = 10.0f;
+        [Header("視野角")]
+        [Range(30.0f, 180.0f)] public float viewAngle = 60.0f;
         [Header("反応する範囲")]
         [Range(15, 20), Tooltip("ペンギンに反応してくれる範囲(注目度がMAXの時)")] public float reactionArea = 15;
         [Header("ペンギンエリアに到着する距離")]
@@ -62,7 +65,8 @@ public class GuestData : ScriptableObject
             speed = 1,
             followSpeed = 0.5f,
             inBoothSpeed = 0.5f,
-            rayLength = 10.0f, 
+            rayLength = 10.0f,
+            viewAngle = 60.0f,
             reactionArea = 15, 
             distance = 2,
             firstCoolDownTime = 3.0f,

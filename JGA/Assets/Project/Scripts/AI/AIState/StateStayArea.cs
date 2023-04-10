@@ -15,6 +15,7 @@
 // 2023/03/19	(小楠）ペンギンエリアに着いたときに客の人数のカウントを追加
 // 2023/03/25	(伊地田）自動生成に対応
 // 2023/03/30	(小楠）複数個所のペンギンエリアに対応
+// 2023/04/10	(小楠）ナビメッシュが動かなくなってしまうバグを直した
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -116,6 +117,10 @@ public class StateStayArea : AIState
     {
         //エラーチェック
         if (!ErrorCheck()) return;
+
+        //驚きモーション中は移動させない
+        agent.isStopped = animator.GetCurrentAnimatorStateInfo(0).IsName("Surprised");
+        if (agent.isStopped) return;
 
         if (isStay)
         {

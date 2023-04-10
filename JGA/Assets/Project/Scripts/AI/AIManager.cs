@@ -14,6 +14,7 @@
 // 2023/03/25	(伊地田)自動生成、直置き両方に対応
 // 2023/03/30	(小楠)penguinTFのリスト化に対応
 // 2023/04/07	(小楠)反応する範囲の可視化
+// 2023/04/10	(小楠)視界範囲の可視化
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -190,5 +191,9 @@ public class AIManager : MonoBehaviour
         //音、アピール反応エリア
         Handles.color = new Color(0, 1, 0, 0.3f);
         Handles.DrawSolidArc(transform.position,Vector3.up,transform.forward,360.0f,data.reactionArea);
+        //視界エリア
+        Handles.color = new Color(0, 0, 1, 0.3f);
+        Handles.DrawSolidArc(transform.position, Vector3.up,
+            Quaternion.Euler(0f, -data.viewAngle, 0f) * transform.forward, data.viewAngle * 2.0f, data.rayLength);
     }
 }

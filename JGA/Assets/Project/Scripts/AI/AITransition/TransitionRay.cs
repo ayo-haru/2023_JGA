@@ -10,6 +10,7 @@
 // 2023/03/07	視界をRayから円錐に変更
 // 2023/03/10	視界を位置を調整
 // 2023/03/25	自動生成に対応
+// 2023/04/10	視界の判定方法変更しました
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -19,8 +20,6 @@ public class TransitionRay : AITransition
 {
     private Transform playerTransform;
     private GuestData.Data data;
-    [SerializeField,Range(0,360),Tooltip("視線の向き")] private float angle = 45.0f;
-    [SerializeField, Range(0, 180), Tooltip("視野角")] private float viewAngle = 45.0f;
     [SerializeField,Tooltip("プレイヤーが視界から外れた時に遷移したい場合はチェックを入れてください")] private bool inv = false;
     [SerializeField] private Transform eyesPos; //目の位置
 #if false
@@ -66,36 +65,17 @@ public class TransitionRay : AITransition
     {
         if (!ErrorCheck()) return false;
 
-        //プレイヤーが視界内に入っているか
-        // 視線の向き
-        Vector3 dir = eyesPos.forward;
-        dir.y -= angle / 360.0f;
-
         // ターゲットまでの向きと距離計算
         Vector3 targetDir = playerTransform.position - eyesPos.position;
         float targetDistance = targetDir.magnitude;
+        float targetAngle = Vector3.Angle(transform.forward, targetDir);
 
-        // cos(θ/2)を計算
-        float cosHalf = Mathf.Cos(viewAngle / 2 * Mathf.Deg2Rad);
-
-        // 自身とターゲットへの向きの内積計算
-        // ターゲットへの向きベクトルを正規化する必要があることに注意
-        float innerProduct = Vector3.Dot(dir, targetDir.normalized);
-
-
-        //Rayの可視化
-        Vector3 pos = eyesPos.position;
-        Debug.DrawRay(pos, dir * 10, Color.red, 1.0f / 60.0f);
-
-        // 視界判定 
-        if ((innerProduct > cosHalf && targetDistance < data.rayLength) == inv) return false;
+        if ((targetAngle < data.viewAngle && targetDistance < data.rayLength) == inv) return false;
 
         //視界に入っていた場合プレイヤーに向かってRayを飛ばして、当たったら障害物に隠れていないので、trueを返す
         RaycastHit hit;
-
         //客からプレイヤーに向けて例を飛ばす
-        Physics.Raycast(pos, targetDir, out hit, data.rayLength);
-
+        Physics.Raycast(eyesPos.position, targetDir, out hit, data.rayLength);
         //プレイヤーと当たったか判定
         return (hit.collider.gameObject.tag == "Player") != inv;
     }
