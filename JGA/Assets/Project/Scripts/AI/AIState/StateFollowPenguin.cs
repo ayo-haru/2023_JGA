@@ -18,6 +18,7 @@
 // 2023/03/12	(小楠）プレイヤーからアピールフラグ取得した
 // 2023/03/24	(小楠）ペンギンの追従速度をプレイヤー基準に変更
 // 2023/03/25	(小楠）自動生成に対応
+// 2023/04/10	(小楠）バグ直した
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -133,15 +134,20 @@ public class StateFollowPenguin : AIState
 
         //驚きモーション中は移動させない
         agent.isStopped = animator.GetCurrentAnimatorStateInfo(0).IsName("Surprised");
+        //ペンギンが客に押されてしまうのを防ぐため、ペンギンとの距離が近かったら移動させない
+        if(!agent.isStopped)agent.isStopped = Vector3.Distance(transform.position, target.position) < data.distance;
 
         //!!!,!!の時は追従する プレイヤーが客に向かって歩いてるときは追従しない
         float dot = Vector3.Dot(agent.velocity.normalized,player.vForce.normalized);
         agent.speed = (ui.GetEmotion() >= EEmotion.ATTENSION_MIDDLE && dot >= 0) ? player.MaxAppealSpeed * data.followSpeed : 0.0f; 
         agent.SetDestination(target.position + posOffset);
 
-        //プレイヤーの方向を向く
-        Quaternion rot = Quaternion.LookRotation(target.position - transform.position);
-        transform.rotation = Quaternion.Slerp(transform.rotation, rot,Time.deltaTime);
+        //動いていないときはプレイヤーの方を向く
+        if(agent.velocity.magnitude <= 0.0f)
+        {
+            Quaternion rot = Quaternion.LookRotation(target.position - transform.position);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime);
+        }
 
         //アニメーション更新
         animator.SetBool("isWalk", (agent.velocity.magnitude > 0.2f) ? true : false);
