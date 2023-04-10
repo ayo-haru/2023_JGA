@@ -63,6 +63,9 @@ public class TitleScenManager : BaseSceneManager
     /// </summary>
     void Update()
 	{
+        //マウス、コントローラの値取得
+        Gamepad gamepad = Gamepad.current;
+
         bool beforeFlag = bFlag;
         bFlag = optionPanel.IsOpen();
         //オプション画面が開かれているときは処理しない
@@ -70,12 +73,10 @@ public class TitleScenManager : BaseSceneManager
         //オプション画面から戻って来た時の初期化処理
         if (beforeFlag)
         {
-            bMouse = true;
+            bMouse = (gamepad != null);
             ChangeInput();
         }
 
-        //マウス、コントローラの値取得
-        Gamepad gamepad = Gamepad.current;
         if (gamepad == null) return;
         Vector3 oldMousePos = mousePos;
         mousePos = Input.mousePosition;
