@@ -123,6 +123,16 @@ public class StateDefaultRootWalk : AIState
         {
             animator.SetBool("isWalk", false);
 
+            //ランダム生成用エントランスに到着したら
+            if ((agent.destination.x-agent.stoppingDistance < data.entranceTF.position.x && agent.destination.x + agent.stoppingDistance > data.entranceTF.position.x)&&
+                (agent.destination.z-agent.stoppingDistance < data.entranceTF.position.z && agent.destination.z + agent.stoppingDistance > data.entranceTF.position.z)) {
+                //カウントの減算とオブジェクト消す
+                MySceneManager.GameData.randomGuestCnt--;
+                Destroy(this.gameObject);
+
+                return;
+            }
+
             fTimer += Time.deltaTime;
             if (data.waitTime <= fTimer)
             {
@@ -161,8 +171,13 @@ public class StateDefaultRootWalk : AIState
         if(data.rootTransforms.Count <= 1 && !bChange) return;
         bChange = false;
 
-        targetNum = (targetNum + 1) % data.rootTransforms.Count;
-        agent.SetDestination(data.rootTransforms[targetNum].position);
+        //ランダム生成されたものなら、ルートを最後まで回ったらエントランスに戻る
+        if (data.isRandom && targetNum == data.rootTransforms.Count - 1) {
+            agent.SetDestination(data.entranceTF.position);
+        } else {
+            targetNum = (targetNum + 1) % data.rootTransforms.Count;
+            agent.SetDestination(data.rootTransforms[targetNum].position);
+        }
         fTimer = 0.0f;
         animator.SetBool("isWalk", true);
     }

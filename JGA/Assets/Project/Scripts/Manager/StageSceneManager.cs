@@ -19,18 +19,35 @@ using System.Drawing;
 using UnityEngine;
 
 public class StageSceneManager : BaseSceneManager {
+    //---プレイヤー
     private GameObject playerObj;
     private GameObject playerInstance;
     [SerializeField] GameObject playerRespawn;
 
-    [NamedArrayAttribute(new string[] { "PENGUIN_N", "PENGUIN_S", "PENGUIN_W", "PENGUIN_E", "HORSE", "ELEPHANT", "LION", "POLARBEAR", "BIRD", })]
+    //---各ブース
+    [NamedArrayAttribute(new string[] { "PENGUIN_N", "PENGUIN_S", "PENGUIN_W", "PENGUIN_E", "HORSE", "ELEPHANT", "LION", "POLARBEAR", "BIRD","ENTRANCE" })]
     [SerializeField]
+    [Header("それぞれのブースの場所を入れる(空でもOK)")]
     private Transform[] zooKeeperRootPos;
 
-    GameObject timerUI;
-    TimerUI _TimerUI;
+    //---客
+    [SerializeField]
+    [Header("ランダム生成させる客の合計の数")]
+    private int randomGuestMax = 1;
+    [SerializeField]
+    [Header("ランダム生成させる客のルートの最大数")]
+    private int guestRootMax = 5;
+    private GameObject guestParent; // 客を生成したときに親にするオブジェクト
+    private GameObject guestObj;    // 生成する客のプレハブ
+    private int guestSum;           // 生成した数(連番振るのに使う)
 
-    private bool isSceneChangeOnce;
+    //---時間UI
+    private GameObject timerUI;
+    private TimerUI _TimerUI;
+
+
+    //---変数
+    private bool isSceneChangeOnce; // 一度だけ処理をするときに使う
 
 
 
@@ -59,12 +76,27 @@ public class StageSceneManager : BaseSceneManager {
         Application.targetFrameRate = 60;       // FPSを60に固定
 
         isSceneChangeOnce = false;
+
     }
 
     /// <summary>
     /// 最初のフレーム更新の前に呼び出される
     /// </summary>
     void Start() {
+        //----- 変数初期化 -----
+        // 実際に使うデータとデバッグ用に登録していたデータが違ったら変更
+        if (this.randomGuestMax != MySceneManager.GameData.randomGuestMax) {
+            MySceneManager.GameData.randomGuestMax = this.randomGuestMax;
+        }
+
+        // 客の生成する親オブジェクトの取得
+        guestParent = GameObject.Find("Guests");
+
+        // 生成する客のプレハブ
+        guestObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Guest.prefab");   
+        
+        
+        //----- それぞれのブースの座標の取得 -----
         zooKeeperRootPos = new Transform[Enum.GetNames(typeof(MySceneManager.eRoot)).Length];
         if (isGuestSpawn == true || isZKSpawn == true) {  // デバッグ用エラー出ないように囲んどく
             zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_N] = GameObject.Find("PenguinCagePos_N").GetComponent<Transform>();
@@ -76,6 +108,7 @@ public class StageSceneManager : BaseSceneManager {
             zooKeeperRootPos[(int)MySceneManager.eRoot.LION] = GameObject.Find("LionCagePos").GetComponent<Transform>();
             zooKeeperRootPos[(int)MySceneManager.eRoot.POLARBEAR] = GameObject.Find("PolarBearCagePos").GetComponent<Transform>();
             zooKeeperRootPos[(int)MySceneManager.eRoot.BIRD] = GameObject.Find("BirdCagePos").GetComponent<Transform>();
+            zooKeeperRootPos[(int)MySceneManager.eRoot.ENTRANCE] = GameObject.Find("EntrancePos").GetComponent<Transform>();
         }
 
         //----- プレイヤーの生成 -----
@@ -120,9 +153,8 @@ public class StageSceneManager : BaseSceneManager {
 
         //----- 客の生成 -----
         if (isGuestSpawn) {
+            //----- データで決められた客 -----
             GuestData.Data[] _guestList = MySceneManager.GameData.guestData.dataList;   // 設定された人数分生成する
-            GameObject guestObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Guest.prefab");   // 生成するオブジェクト
-            GameObject parent = GameObject.Find("Guests");  // 生成するときの親にするオブジェクト
             for (int i = 0; i < _guestList.Length; i++) {
                 // 指定された列挙定数から目的地のブースの実際のpositionを設定
                 _guestList[i].rootTransforms = new List<Transform>();
@@ -136,16 +168,71 @@ public class StageSceneManager : BaseSceneManager {
                 _guestList[i].penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_W]);
                 _guestList[i].penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_E]);
 
+                // エントランスの座標を入れる
+                _guestList[i].entranceTF = zooKeeperRootPos[(int)MySceneManager.eRoot.ENTRANCE];
+
                 // 生成
                 GameObject guestInstace = Instantiate(guestObj, _guestList[i].rootTransforms[0].position, Quaternion.identity);
-                if (parent) {
-                    guestInstace.transform.parent = parent.transform;   // 親にする
+                if (guestParent) {
+                    guestInstace.transform.parent = guestParent.transform;   // 親にする
                 }
                 guestInstace.name = _guestList[i].name; // 表示名変更
 
                 // データの流し込み
                 guestInstace.GetComponent<AIManager>().SetGuestData(_guestList[i]);
             }
+
+            //----- ランダムで生成する客 -----
+            GuestData.Data guestData = new GuestData.Data { // 初期化
+                name = "FGuest",
+                entranceTF = zooKeeperRootPos[(int)MySceneManager.eRoot.ENTRANCE],
+                isRandom = true,
+                speed = 3,
+                followSpeed = 0.7f,
+                inBoothSpeed = 0.5f,
+                rayLength = 10.0f,
+                viewAngle = 60.0f,
+                reactionArea = 25,
+                distance = 2,
+                firstCoolDownTime = 3.0f,
+                secondCoolDownTime = 5.0f,
+                waitTime = 0,
+                cageDistance = 10.0f
+            };
+            // ペンギンブースの座標を入れる
+            guestData.penguinTF = new List<Transform>();
+            guestData.penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_N]);
+            guestData.penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_S]);
+            guestData.penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_W]);
+            guestData.penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_E]);
+
+            for (int i = MySceneManager.GameData.randomGuestCnt; i < randomGuestMax; i++) {
+                //----- 目的地のブースをランダムで設定(固定客は作ってない) -----
+                int randomRootSum, randomRootNum;
+
+                // ルートをいくつ設定するかをランダムで決定
+                randomRootSum = UnityEngine.Random.Range(2, guestRootMax + 1);    // ランダムの最大値は1大きくしないと設定した数が含まれない
+
+                guestData.rootTransforms = new List<Transform>();
+                for (int j = 0; j < randomRootSum; j++) {   //　乱数で算出したルートの数だけルートを決める
+                    // ルートをランダムで設定
+                    randomRootNum = UnityEngine.Random.Range(4, (int)MySceneManager.eRoot.ENTRANCE);  // ペンギンのルートが入っているところより大きく、エントランスより小さく
+                    guestData.rootTransforms.Add(zooKeeperRootPos[randomRootNum]);
+                    Debug.Log(zooKeeperRootPos[randomRootNum]);
+                }
+
+
+                // 生成
+                guestSum = MySceneManager.GameData.randomGuestCnt = MySceneManager.GameData.randomGuestCnt + 1;
+                GameObject guestInstace = Instantiate(guestObj, zooKeeperRootPos[(int)MySceneManager.eRoot.ENTRANCE].position, Quaternion.identity);
+                if (guestParent) {
+                    guestInstace.transform.parent = guestParent.transform;   // 親にする
+                }
+                guestInstace.name = guestData.name + String.Format("{0:D3}", guestSum); // 表示名変更
+                // データの流し込み
+                guestInstace.GetComponent<AIManager>().SetGuestData(guestData);
+            }
+
         }
 
 
@@ -157,13 +244,7 @@ public class StageSceneManager : BaseSceneManager {
         } else {
             Debug.LogWarning("TimerUIがシーン上にありません");
         }
-
-        //SoundManager.Play(GetComponent<AudioSource>(),SoundManager.EBGM.TITLE_001);
     }
-
-    //void FixedUpdate() {
-
-    //}
 
     void Update() {
         if (timerUI) {
@@ -174,6 +255,59 @@ public class StageSceneManager : BaseSceneManager {
                 }
             }
         }
+
+        if (isGuestSpawn) {
+            GuestData.Data guestData = new GuestData.Data { // 初期化
+                name = "FGuest",
+                entranceTF = zooKeeperRootPos[(int)MySceneManager.eRoot.ENTRANCE],
+                isRandom = true,
+                speed = 3,
+                followSpeed = 0.7f,
+                inBoothSpeed = 0.5f,
+                rayLength = 10.0f,
+                viewAngle = 60.0f,
+                reactionArea = 25,
+                distance = 2,
+                firstCoolDownTime = 3.0f,
+                secondCoolDownTime = 5.0f,
+                waitTime = 0,
+                cageDistance = 10.0f
+            };
+            // ペンギンブースの座標を入れる
+            guestData.penguinTF = new List<Transform>();
+            guestData.penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_N]);
+            guestData.penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_S]);
+            guestData.penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_W]);
+            guestData.penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_E]);
+
+            for (int i = MySceneManager.GameData.randomGuestCnt; i <= randomGuestMax; i++) {
+                //----- 目的地のブースをランダムで設定(固定客は作ってない) -----
+                int randomRootSum,randomRootNum;
+                
+                // ルートをいくつ設定するかをランダムで決定
+                randomRootSum = UnityEngine.Random.Range(2, guestRootMax+1);    // ランダムの最大値は1大きくしないと設定した数が含まれない
+
+                guestData.rootTransforms = new List<Transform>();
+                for (int j = 0; j < randomRootSum; j++) {   //　乱数で算出したルートの数だけルートを決める
+                    // ルートをランダムで設定
+                    randomRootNum = UnityEngine.Random.Range(5, (int)MySceneManager.eRoot.ENTRANCE);  // ペンギンのルートが入っているところより大きく、エントランスより小さく
+                    guestData.rootTransforms.Add(zooKeeperRootPos[randomRootNum]);
+                }
+
+
+                // 生成
+                guestSum = MySceneManager.GameData.randomGuestCnt = MySceneManager.GameData.randomGuestCnt + 1;
+                GameObject guestInstace = Instantiate(guestObj, zooKeeperRootPos[(int)MySceneManager.eRoot.ENTRANCE].position, Quaternion.identity);
+                if (guestParent) {
+                    guestInstace.transform.parent = guestParent.transform;   // 親にする
+                }
+                guestInstace.name = guestData.name + String.Format("{0:D3}",guestSum); // 表示名変更
+
+                // データの流し込み
+                guestInstace.GetComponent<AIManager>().SetGuestData(guestData);
+            }
+        }
+
     }
 
     private void LateUpdate() {

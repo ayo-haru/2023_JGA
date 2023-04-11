@@ -31,6 +31,10 @@ public class GuestData : ScriptableObject
         public List<Transform> rootTransforms;
         [HideInInspector]   // ペンギンブースの位置
         public List<Transform> penguinTF;
+        [HideInInspector]   // エントランスの位置
+        public Transform entranceTF;
+        [HideInInspector]   // ランダム生成されたかどうか
+        public bool isRandom;
         [Header("移動速度")]
         [Range(1, 3)] public float speed = 1;
         [Header("ペンギン追従速度")]
@@ -62,6 +66,7 @@ public class GuestData : ScriptableObject
     public Data[] dataList = {
         new Data {
             name = "OGuest",
+            isRandom = false,
             speed = 1,
             followSpeed = 0.5f,
             inBoothSpeed = 0.5f,

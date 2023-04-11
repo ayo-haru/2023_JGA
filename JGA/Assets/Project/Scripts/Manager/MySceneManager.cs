@@ -28,6 +28,10 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 
 		//---フラグ
 		public static bool isCatchPenguin;
+
+		//---データ
+		public static int randomGuestMax;   // ランダム生成させる客の最大数
+		public static int randomGuestCnt;	// ランダム生成させる客の今の数
 	}
 
 	public static class Sound
@@ -69,7 +73,7 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 		POLARBEAR,
 		BIRD,
 
-		OTHER
+		ENTRANCE
 	}
 
 
