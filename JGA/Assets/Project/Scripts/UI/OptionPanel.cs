@@ -273,7 +273,8 @@ public class OptionPanel : MonoBehaviour
     {
         if (nSlide == (int)EOptionSlide.CENTER) return;
         nSlide = (int)EOptionSlide.CENTER;
-        bMouse = true;
+        Gamepad gamepad = Gamepad.current;
+        bMouse = (gamepad != null);
         ChangeInput();
     }
     public bool IsOpen()
