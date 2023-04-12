@@ -1,0 +1,272 @@
+fileFormatVersion: 2
+guid: 238440fc8a5697a45a345b4ce57d7bf3
+ModelImporter:
+  serializedVersion: 21300
+  internalIDToNameTable: []
+  externalObjects: {}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 1
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: pick_up
+      takeName: pick_up
+      internalID: 7431391399005418216
+      firstFrame: 0
+      lastFrame: 17
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 1
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/hip
+        weight: 1
+      - path: Armature/hip/kneeL
+        weight: 1
+      - path: Armature/hip/kneeL/ankleL
+        weight: 1
+      - path: Armature/hip/kneeL/ankleL/footL
+        weight: 1
+      - path: Armature/hip/kneeL/ankleL/footL/footL_end
+        weight: 1
+      - path: Armature/hip/kneeR
+        weight: 1
+      - path: Armature/hip/kneeR/ankleR
+        weight: 1
+      - path: Armature/hip/kneeR/ankleR/footR46R
+        weight: 1
+      - path: Armature/hip/kneeR/ankleR/footR46R/footR_end
+        weight: 1
+      - path: Armature/hip/root
+        weight: 1
+      - path: Armature/hip/root/spine
+        weight: 1
+      - path: Armature/hip/root/spine/ahoulder
+        weight: 1
+      - path: Armature/hip/root/spine/ahoulder/wristL
+        weight: 1
+      - path: Armature/hip/root/spine/ahoulder/wristL/wrist_end
+        weight: 1
+      - path: Armature/hip/root/spine/ahoulderR
+        weight: 1
+      - path: Armature/hip/root/spine/ahoulderR/wristR
+        weight: 1
+      - path: Armature/hip/root/spine/ahoulderR/wristR/wristR_end
+        weight: 1
+      - path: Armature/hip/root/spine/neck
+        weight: 1
+      - path: Armature/hip/root/spine/neck/head
+        weight: 1
+      - path: Armature/hip/root/spine/neck/head/underbeak
+        weight: 1
+      - path: Armature/hip/root/spine/neck/head/underbeak/underbeak_end
+        weight: 1
+      - path: Armature/hip/root/spine/neck/head/upbeak
+        weight: 1
+      - path: Armature/hip/root/spine/neck/head/upbeak/upbeak_end
+        weight: 1
+      - path: Armature/hip/tail01
+        weight: 1
+      - path: Armature/hip/tail01/tail02
+        weight: 1
+      - path: Armature/hip/tail01/tail02/tail02_end
+        weight: 1
+      - path: Rkg
+        weight: 1
+      - path: Rkg/base
+        weight: 1
+      - path: Rkg/base/hip
+        weight: 1
+      - path: Rkg/base/hip/ikHandle14
+        weight: 1
+      - path: Rkg/base/hip/spine01
+        weight: 1
+      - path: Rkg/base/hip/spine01/ikHandle9
+        weight: 1
+      - path: Rkg/base/hip/spine01/spine02
+        weight: 1
+      - path: Rkg/base/hip/spine01/spine02/head
+        weight: 1
+      - path: Rkg/base/hip/spine01/spine02/head/neck
+        weight: 1
+      - path: Rkg/base/hip/spine01/spine02/head/neck/beakunder
+        weight: 1
+      - path: Rkg/base/hip/spine01/spine02/head/neck/beakunder/ikHandle12
+        weight: 1
+      - path: Rkg/base/hip/spine01/spine02/head/neck/beakup
+        weight: 1
+      - path: Rkg/base/hip/spine01/spine02/head/neck/beakup/ikHandle13
+        weight: 1
+      - path: Rkg/base/hip/spine01/spine02/head/neck/ikHandle16
+        weight: 1
+      - path: Rkg/base/hip/spine01/spine02/head/neck/ikHandle17
+        weight: 1
+      - path: Rkg/base/hip/spine01/spine02/ikHandle10
+        weight: 1
+      - path: Rkg/base/hip/spine01/spine02/leftarm
+        weight: 1
+      - path: Rkg/base/hip/spine01/spine02/leftarm/leftarmend
+        weight: 1
+      - path: Rkg/base/hip/spine01/spine02/leftarm/leftarmend/ikHandle1
+        weight: 1
+      - path: Rkg/base/hip/spine01/spine02/leftshoulder
+        weight: 1
+      - path: Rkg/base/hip/spine01/spine02/leftshoulder/ikHandle3
+        weight: 1
+      - path: Rkg/base/hip/spine01/spine02/leftshoulder/ikHandle3/locator4
+        weight: 1
+      - path: Rkg/base/hip/spine01/spine02/rightarm
+        weight: 1
+      - path: Rkg/base/hip/spine01/spine02/rightarm/rightarmend
+        weight: 1
+      - path: Rkg/base/hip/spine01/spine02/rightarm/rightarmend/ikHandle2
+        weight: 1
+      - path: Rkg/base/hip/spine01/spine02/rightshoulder
+        weight: 1
+      - path: Rkg/base/hip/spine01/spine02/rightshoulder/ikHandle4
+        weight: 1
+      - path: Rkg/base/hip/tail
+        weight: 1
+      - path: Rkg/base/hip/tail/ikHandle15
+        weight: 1
+      - path: Rkg/base/hip/tail/locator3
+        weight: 1
+      - path: Rkg/base/leftfoot
+        weight: 1
+      - path: Rkg/base/leftfoot/leftfootbottom
+        weight: 1
+      - path: Rkg/base/leftfoot/leftfootbottom/ikHandle5
+        weight: 1
+      - path: Rkg/base/leftfoot/leftfootbottom/ikHandle6
+        weight: 1
+      - path: Rkg/base/leftfoot/leftfootbottom/locator5
+        weight: 1
+      - path: Rkg/base/rightfoot
+        weight: 1
+      - path: Rkg/base/rightfoot/rightfootbottom
+        weight: 1
+      - path: Rkg/base/rightfoot/rightfootbottom/ikHandle7
+        weight: 1
+      - path: Rkg/base/rightfoot/rightfootbottom/ikHandle8
+        weight: 1
+      - path: Rkg/base/rightfoot/rightfootbottom/locator6
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: hip
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 3d83b6a4ad1d6ef42b236ab76d909299,
+    type: 3}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 2
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
