@@ -33,18 +33,18 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Take 001
+      name: Penguin_Run
       takeName: Take 001
       internalID: 1827226128182048838
-      firstFrame: 2
-      lastFrame: 13
+      firstFrame: 4
+      lastFrame: 26
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -122,7 +122,7 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 3d83b6a4ad1d6ef42b236ab76d909299,
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 4b1a233d4c0827f43b7e66f3bae4adaf,
     type: 3}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 2
