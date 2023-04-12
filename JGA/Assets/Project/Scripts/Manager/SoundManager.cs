@@ -62,19 +62,19 @@ public class SoundManager : MonoBehaviour
 		INTO_WATER,
 
 		// 空き缶
-		CAN_CATCH,				// つかむとき
-		CAN_RELEASE,			// 叩いた時＆離して地面についた時
-		CAN_ROLL,				// 地面にある時に転がる音1
-		CAN_ROLLING,			// 地面にある時に転がる音2
+		CAN_CATCH,              // つかむとき
+		CAN_RELEASE,            // 叩いた時＆離して地面についた時
+		CAN_ROLL,               // 地面にある時に転がる音1
+		CAN_ROLLING,            // 地面にある時に転がる音2
 
 		// ラジオ
-		RADIO_CATCH,			// ラジオつかむとき
-		RADIO_PLAY,				// ラジオプレイ
-		RADIO_RELEASE,			// ラジオ離した時
+		RADIO_CATCH,            // ラジオつかむとき
+		RADIO_PLAY,             // ラジオプレイ
+		RADIO_RELEASE,          // ラジオ離した時
 
 
 		// フェンス
-		STEALFENCE,				// 鉄柵の音
+		STEALFENCE,             // 鉄柵の音
 
 		//----------------
 
@@ -89,12 +89,12 @@ public class SoundManager : MonoBehaviour
 
 
 		// システム音-------
-		SELECT_001,				// 選択中
-		DECISION_001,			// 決定
-		CANCEL_001,				// 戻る
-		SLIDE_001,				// スライド
-		COUNTDOWN_001,			// カウントダウン
-		//---------------
+		SELECT_001,             // 選択中
+		DECISION_001,           // 決定
+		CANCEL_001,             // 戻る
+		SLIDE_001,              // スライド
+		COUNTDOWN_001,          // カウントダウン
+								//---------------
 
 	}
 
@@ -241,6 +241,156 @@ public class SoundManager : MonoBehaviour
 		}
 		Debug.LogError("<color=red>指定されたオブジェクトが見つかりません</color>(SoundManager.Play)\n");
 	}
+
+
+
+	/// <summary>
+	/// 音量を取得
+	/// </summary>
+	/// <param name="clip">音</param>
+	/// <returns><strong>成功時</strong> 0.0f ~ 1.0fの値<br/><strong>失敗時</strong> -1.0f</returns>
+	public static float GetVolume(AudioClip clip)
+	{
+		if (clip == null)
+			Debug.LogError($"<color=red>指定されたオブジェクトがNULLです</color>\n");
+
+		var _SEs = MySceneManager.Sound.SEDatas.list;
+		// SEの場合
+		for (int i = 0; i < _SEs.Length; i++)
+		{
+			if (_SEs[i].clip == clip)
+			{
+				return _SEs[i].volume;
+			}
+		}
+
+		var BGMs = MySceneManager.Sound.BGMDatas.list;
+		// BGMの場合
+		for (int i = 0; i < BGMs.Length; i++)
+		{
+			if (BGMs[i].clip == clip)
+			{
+				return BGMs[i].volume;
+			}
+		}
+
+		Debug.LogError($"<color=red>指定されたオブジェクトが見つかりません</color> AudioClip:[{clip}]\n");
+		return -1f;
+	}
+
+	/// <summary>
+	/// 音量を取得
+	/// </summary>
+	/// <param name="clip">音</param>
+	/// <returns><strong>成功時</strong> 0.0f ~ 1.0fの値<br/><strong>失敗時</strong> -1.0f</returns>
+	public static float GetVolume(EBGM eBGM)
+	{
+		if (MySceneManager.Sound.BGMDatas.list.Length <= (int)eBGM ||
+			MySceneManager.Sound.BGMDatas.list.Length == 0)
+		{
+			Debug.LogError($"無効な値です。({eBGM})");
+			return -1f;
+		}
+
+		return MySceneManager.Sound.BGMDatas.list[((int)eBGM)].volume;
+	}
+
+	/// <summary>
+	/// 音量を取得
+	/// </summary>
+	/// <param name="clip">音</param>
+	/// <returns><strong>成功時</strong> 0.0f ~ 1.0fの値<br/><strong>失敗時</strong> -1.0f</returns>
+	public static float GetVolume(ESE eSE)
+	{
+		if (MySceneManager.Sound.SEDatas.list.Length <= (int)eSE ||
+			MySceneManager.Sound.SEDatas.list.Length == 0)
+		{
+			Debug.LogError($"無効な値です。({eSE})");
+			return -1f;
+		}
+
+		return MySceneManager.Sound.BGMDatas.list[((int)eSE)].volume;
+	}
+
+
+
+	/// <summary>
+	/// 音量を設定
+	/// </summary>
+	/// <param name="audioSource">音の再生元</param>
+	/// <param name="clip">音</param>
+	/// <param name="value">値(0.0f~1.0df)</param>
+	public static void SetVolume(AudioSource audioSource, AudioClip clip, float value)
+	{
+		if (audioSource == null || clip == null)
+			Debug.LogError($"<color=red>指定されたオブジェクトがNULLです</color>\n");
+
+		var _SEs = MySceneManager.Sound.SEDatas.list;
+		// SEの場合
+		for (int i = 0; i < _SEs.Length; i++)
+		{
+			if (_SEs[i].clip == clip)
+			{
+				_SEs[i].volume = value;
+				audioSource.volume = value;
+				return;
+			}
+		}
+
+		var BGMs = MySceneManager.Sound.BGMDatas.list;
+		// BGMの場合
+		for (int i = 0; i < BGMs.Length; i++)
+		{
+			if (BGMs[i].clip == clip)
+			{
+				BGMs[i].volume = value;
+				audioSource.volume = value;
+				return;
+			}
+		}
+		Debug.LogError($"<color=red>指定されたオブジェクトが見つかりません</color> AudioClip:[{clip}]\n");
+	}
+
+	/// <summary>
+	/// 音量を設定
+	/// </summary>
+	/// <param name="audioSource">音の再生元</param>
+	/// <param name="eBGM">ID</param>
+	/// <param name="value">値(0.0f~1.0df)</param>
+	public static void SetVolume(AudioSource audioSource, EBGM eBGM, float value)
+	{
+		if (MySceneManager.Sound.BGMDatas.list.Length <= (int)eBGM ||
+			MySceneManager.Sound.BGMDatas.list.Length == 0)
+		{
+			Debug.LogError($"無効な値です。({eBGM})");
+			return;
+		}
+
+		MySceneManager.Sound.BGMDatas.list[((int)eBGM)].volume = value;
+		audioSource.volume = value;
+	}
+
+	/// <summary>
+	/// 音量を設定
+	/// </summary>
+	/// <param name="audioSource">音の再生元</param>
+	/// <param name="eSE">ID</param>
+	/// <param name="value">値(0.0f~1.0df)</param>
+	public static void SetVolume(AudioSource audioSource, ESE eSE, float value)
+	{
+		if (MySceneManager.Sound.SEDatas.list.Length <= (int)eSE ||
+			MySceneManager.Sound.SEDatas.list.Length == 0)
+		{
+			Debug.LogError($"無効な値です。({eSE})");
+			return;
+		}
+
+		MySceneManager.Sound.BGMDatas.list[((int)eSE)].volume = value;
+		audioSource.volume = value;
+	}
+
+
+
 
 	public static void Stop(AudioSource audioSource)
 	{
