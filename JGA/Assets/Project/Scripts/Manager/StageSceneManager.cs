@@ -31,11 +31,11 @@ public class StageSceneManager : BaseSceneManager {
     private Transform[] zooKeeperRootPos;
 
     //---客
-    [SerializeField]
     [Header("ランダム生成させる客の合計の数")]
-    private int randomGuestMax = 1;
     [SerializeField]
-    [Header("ランダム生成させる客のルートの最大数")]
+    private int randomGuestMax = 1;
+    [Header("ランダム生成させる客のルートの最大数\n(2～ペンギンとエントランス以外のブースの合計数)")]
+    [SerializeField][Range(2,(int)MySceneManager.eRoot.ENTRANCE-4)]
     private int guestRootMax = 5;
     private GameObject guestParent; // 客を生成したときに親にするオブジェクト
     private GameObject guestObj;    // 生成する客のプレハブ
@@ -183,30 +183,30 @@ public class StageSceneManager : BaseSceneManager {
             }
 
             //----- ランダムで生成する客 -----
-            GuestData.Data guestData = new GuestData.Data { // 初期化
-                name = "FGuest",
-                entranceTF = zooKeeperRootPos[(int)MySceneManager.eRoot.ENTRANCE],
-                isRandom = true,
-                speed = 3,
-                followSpeed = 0.7f,
-                inBoothSpeed = 0.5f,
-                rayLength = 10.0f,
-                viewAngle = 60.0f,
-                reactionArea = 25,
-                distance = 2,
-                firstCoolDownTime = 3.0f,
-                secondCoolDownTime = 5.0f,
-                waitTime = 0,
-                cageDistance = 10.0f
-            };
-            // ペンギンブースの座標を入れる
-            guestData.penguinTF = new List<Transform>();
-            guestData.penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_N]);
-            guestData.penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_S]);
-            guestData.penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_W]);
-            guestData.penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_E]);
-
             for (int i = MySceneManager.GameData.randomGuestCnt; i < randomGuestMax; i++) {
+                GuestData.Data guestData = new GuestData.Data { // 初期化
+                    name = "FGuest",
+                    entranceTF = zooKeeperRootPos[(int)MySceneManager.eRoot.ENTRANCE],
+                    isRandom = true,
+                    speed = 3,
+                    followSpeed = 0.7f,
+                    inBoothSpeed = 0.5f,
+                    rayLength = 10.0f,
+                    viewAngle = 60.0f,
+                    reactionArea = 25,
+                    distance = 2,
+                    firstCoolDownTime = 3.0f,
+                    secondCoolDownTime = 5.0f,
+                    waitTime = 0,
+                    cageDistance = 10.0f
+                };
+                // ペンギンブースの座標を入れる
+                guestData.penguinTF = new List<Transform>();
+                guestData.penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_N]);
+                guestData.penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_S]);
+                guestData.penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_W]);
+                guestData.penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_E]);
+
                 //----- 目的地のブースをランダムで設定(固定客は作ってない) -----
                 int randomRootSum, randomRootNum;
 
@@ -216,14 +216,17 @@ public class StageSceneManager : BaseSceneManager {
                 guestData.rootTransforms = new List<Transform>();
                 for (int j = 0; j < randomRootSum; j++) {   //　乱数で算出したルートの数だけルートを決める
                     // ルートをランダムで設定
-                    randomRootNum = UnityEngine.Random.Range(4, (int)MySceneManager.eRoot.ENTRANCE);  // ペンギンのルートが入っているところより大きく、エントランスより小さく
+                    do {
+                        randomRootNum = UnityEngine.Random.Range(4, (int)MySceneManager.eRoot.ENTRANCE);  // ペンギンのルートが入っているところより大きく、エントランスより小さく
+                    } while (guestData.rootTransforms.Contains(zooKeeperRootPos[randomRootNum]));
                     guestData.rootTransforms.Add(zooKeeperRootPos[randomRootNum]);
-                    Debug.Log(zooKeeperRootPos[randomRootNum]);
                 }
 
+                //----- 生成 -----
+                // それぞれのカウントを加算
+                guestSum++;
+                MySceneManager.GameData.randomGuestCnt++;
 
-                // 生成
-                guestSum = MySceneManager.GameData.randomGuestCnt = MySceneManager.GameData.randomGuestCnt + 1;
                 GameObject guestInstace = Instantiate(guestObj, zooKeeperRootPos[(int)MySceneManager.eRoot.ENTRANCE].position, Quaternion.identity);
                 if (guestParent) {
                     guestInstace.transform.parent = guestParent.transform;   // 親にする
@@ -257,52 +260,56 @@ public class StageSceneManager : BaseSceneManager {
         }
 
         if (isGuestSpawn) {
-            GuestData.Data guestData = new GuestData.Data { // 初期化
-                name = "FGuest",
-                entranceTF = zooKeeperRootPos[(int)MySceneManager.eRoot.ENTRANCE],
-                isRandom = true,
-                speed = 3,
-                followSpeed = 0.7f,
-                inBoothSpeed = 0.5f,
-                rayLength = 10.0f,
-                viewAngle = 60.0f,
-                reactionArea = 25,
-                distance = 2,
-                firstCoolDownTime = 3.0f,
-                secondCoolDownTime = 5.0f,
-                waitTime = 0,
-                cageDistance = 10.0f
-            };
-            // ペンギンブースの座標を入れる
-            guestData.penguinTF = new List<Transform>();
-            guestData.penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_N]);
-            guestData.penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_S]);
-            guestData.penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_W]);
-            guestData.penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_E]);
+            //----- ランダムで生成する客 -----
+            for (int i = MySceneManager.GameData.randomGuestCnt; i < randomGuestMax; i++) {
+                GuestData.Data guestData = new GuestData.Data { // 初期化
+                    name = "FGuest",
+                    entranceTF = zooKeeperRootPos[(int)MySceneManager.eRoot.ENTRANCE],
+                    isRandom = true,
+                    speed = 3,
+                    followSpeed = 0.7f,
+                    inBoothSpeed = 0.5f,
+                    rayLength = 10.0f,
+                    viewAngle = 60.0f,
+                    reactionArea = 25,
+                    distance = 2,
+                    firstCoolDownTime = 3.0f,
+                    secondCoolDownTime = 5.0f,
+                    waitTime = 0,
+                    cageDistance = 10.0f
+                };
+                // ペンギンブースの座標を入れる
+                guestData.penguinTF = new List<Transform>();
+                guestData.penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_N]);
+                guestData.penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_S]);
+                guestData.penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_W]);
+                guestData.penguinTF.Add(zooKeeperRootPos[(int)MySceneManager.eRoot.PENGUIN_E]);
 
-            for (int i = MySceneManager.GameData.randomGuestCnt; i <= randomGuestMax; i++) {
                 //----- 目的地のブースをランダムで設定(固定客は作ってない) -----
-                int randomRootSum,randomRootNum;
-                
+                int randomRootSum, randomRootNum;
+
                 // ルートをいくつ設定するかをランダムで決定
-                randomRootSum = UnityEngine.Random.Range(2, guestRootMax+1);    // ランダムの最大値は1大きくしないと設定した数が含まれない
+                randomRootSum = UnityEngine.Random.Range(2, guestRootMax + 1);    // ランダムの最大値は1大きくしないと設定した数が含まれない
 
                 guestData.rootTransforms = new List<Transform>();
                 for (int j = 0; j < randomRootSum; j++) {   //　乱数で算出したルートの数だけルートを決める
                     // ルートをランダムで設定
-                    randomRootNum = UnityEngine.Random.Range(5, (int)MySceneManager.eRoot.ENTRANCE);  // ペンギンのルートが入っているところより大きく、エントランスより小さく
+                    do {
+                        randomRootNum = UnityEngine.Random.Range(4, (int)MySceneManager.eRoot.ENTRANCE);  // ペンギンのルートが入っているところより大きく、エントランスより小さく
+                    } while (guestData.rootTransforms.Contains(zooKeeperRootPos[randomRootNum]));
                     guestData.rootTransforms.Add(zooKeeperRootPos[randomRootNum]);
                 }
 
+                //----- 生成 -----
+                // それぞれのカウントを加算
+                guestSum++;
+                MySceneManager.GameData.randomGuestCnt++;
 
-                // 生成
-                guestSum = MySceneManager.GameData.randomGuestCnt = MySceneManager.GameData.randomGuestCnt + 1;
                 GameObject guestInstace = Instantiate(guestObj, zooKeeperRootPos[(int)MySceneManager.eRoot.ENTRANCE].position, Quaternion.identity);
                 if (guestParent) {
                     guestInstace.transform.parent = guestParent.transform;   // 親にする
                 }
-                guestInstace.name = guestData.name + String.Format("{0:D3}",guestSum); // 表示名変更
-
+                guestInstace.name = guestData.name + String.Format("{0:D3}", guestSum); // 表示名変更
                 // データの流し込み
                 guestInstace.GetComponent<AIManager>().SetGuestData(guestData);
             }
