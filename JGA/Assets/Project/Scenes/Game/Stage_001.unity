@@ -330,7 +330,7 @@ PrefabInstance:
     - target: {fileID: 1680828955082991398, guid: d638d426e9cc2624284238320dd145d2,
         type: 3}
       propertyPath: zooKeeperRootPos.Array.size
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6348633696836463273, guid: d638d426e9cc2624284238320dd145d2,
         type: 3}
