@@ -33,7 +33,7 @@ public class TimerUI : MonoBehaviour
 
     //HURRY！！
     [SerializeField] private GameObject hurryUI;
-
+    [SerializeField] private float hurryUIPosY = 200.0f;
 #if false
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -85,7 +85,8 @@ public class TimerUI : MonoBehaviour
         //HURRY!!を生成
         GameObject ui = Instantiate(hurryUI);
         ui.transform.SetParent(gameObject.transform.parent);
-        ui.GetComponent<RectTransform>().localPosition = Vector3.zero;
+        RectTransform rt = gameObject.GetComponent<RectTransform>();
+        ui.GetComponent<RectTransform>().localPosition = new Vector3(0.0f, rt.localPosition.y - hurryUIPosY, 0.0f);
         bSound = false;
     }
     public bool IsFinish()
