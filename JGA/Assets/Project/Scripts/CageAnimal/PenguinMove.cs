@@ -10,6 +10,7 @@
 // 2023/03/16	動きのルーチン作成
 // 2023/03/20	動きの方式を変更
 // 2023/03/21	動きがなるべくかぶらないように乱数にて終了地点の調整
+// 2023/04/14   アニメーションを追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -25,11 +26,13 @@ public class PenguinMove : MonoBehaviour
 		RUN,
         IDLE,
         TURN,
-		JUMP,
-		APPEAL,
+        APPEAL,
+        JUMP,
 		SWIM,
 		MAX_MOVE
 	}
+
+    private Animator anim;
 
 	private MoveType currentMoveType;
 	//現在の動き
@@ -54,6 +57,9 @@ public class PenguinMove : MonoBehaviour
 	//ポーズ用フラグ
 	private bool pauseFlg;
 
+    //ターン用フラグ
+    private bool turnFlg;
+
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
     /// </summary>
@@ -63,9 +69,12 @@ public class PenguinMove : MonoBehaviour
         currentMoveType = MoveType.IDLE;
 		moveType    = MoveType.IDLE;
 		moveFlg = false;
+        turnFlg = false;
 		moveTime = 0.0f;
 		movedata = Random.Range(0, BoothAnimalManager.Instance.penguinsData.dataList.Count);
         rb = this.GetComponent<Rigidbody>();
+
+        anim = this.GetComponent<Animator>();
 
         PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(gameObject);
         PauseManager.OnResumed.Subscribe(x => { ReGame(); }).AddTo(gameObject);
@@ -117,7 +126,7 @@ public class PenguinMove : MonoBehaviour
                 break;
 
             case MoveType.APPEAL:
-                moveFlg = false;
+                Appeal();
                 break;
 
             case MoveType.SWIM:
@@ -125,7 +134,6 @@ public class PenguinMove : MonoBehaviour
                 break;
         }
 
-        Debug.Log(currentMoveType);
     }
 
 	/// <summary>
@@ -140,17 +148,12 @@ public class PenguinMove : MonoBehaviour
 	{
 		//〇秒～〇秒の間でアイドルする。
         moveTime += Time.deltaTime;
-
-		if (moveTime >= 1.0f)
+        rb.velocity = Vector3.zero;
+        if (moveTime >= 3.0f)
 		{
             moveIndex = currentMoveIndex;
             moveTime = 0.0f;
-            if(moveType == MoveType.TURN)
-            {
-                currentMoveType = (MoveType)Random.Range((int)MoveType.WALK, (int)MoveType.RUN + 1);
-                return;
-            }
-            rb.velocity = Vector3.zero;
+            
             //一通りの処理を終えたら行動を書き込む
             moveType = MoveType.IDLE;
             moveFlg = false;
@@ -163,14 +166,15 @@ public class PenguinMove : MonoBehaviour
         this.transform.position = Vector3.MoveTowards(	this.transform.position,
 														endPos,
                                                         BoothAnimalManager.Instance.penguinsData.dataList[movedata].walkSpeed * Time.deltaTime);
-		//最期まで動いたら初期化し、アイドルに移る
-		if(this.transform.position == endPos)
+        rb.velocity = Vector3.zero;
+        //最期まで動いたら初期化し、アイドルに移る
+        if (PositionAreaJudge(this.transform.position, endPos, 0.5f))
 		{
             //最終地点の座標に行かないように記憶しておく
-            rb.velocity = Vector3.zero;
             moveIndex = currentMoveIndex;
             currentMoveType = MoveType.IDLE;
             moveType= MoveType.WALK;
+            anim.SetBool("WalkFlg", false);
         }
 
     }
@@ -182,14 +186,16 @@ public class PenguinMove : MonoBehaviour
         this.transform.position = Vector3.MoveTowards(	this.transform.position,
                                                         endPos,
                                                         BoothAnimalManager.Instance.penguinsData.dataList[movedata].runSpeed * Time.deltaTime);
+        rb.velocity = Vector3.zero;
         //最期まで動いたら初期化し、アイドルに移る
-        if (this.transform.position == endPos)
+        if (PositionAreaJudge(this.transform.position, endPos, 0.5f))
         {
             //最終地点の座標に行かないように記憶しておく
-            rb.velocity = Vector3.zero;
+            
             moveIndex = currentMoveIndex;
             currentMoveType = MoveType.IDLE;
             moveType= MoveType.RUN;
+            anim.SetBool("RunFlg", false);
         }
     }
 
@@ -204,22 +210,65 @@ public class PenguinMove : MonoBehaviour
         if (befRot == this.transform.rotation)
 		{
             moveIndex = currentMoveIndex;
-            currentMoveType = MoveType.IDLE;
-            moveType= MoveType.TURN;
+            moveFlg = false;
+            turnFlg = true;
+            moveType = MoveType.TURN;
+            anim.SetBool("TurnFlg", false);
         }
     }
+
+    private void Appeal()
+    {
+        //〇秒～〇秒の間でアピールする。
+        moveTime += Time.deltaTime;
+        rb.velocity = Vector3.zero;
+        if (moveTime >= 2.0f)
+        {
+            moveIndex = currentMoveIndex;
+            moveTime = 0.0f;
+            
+            //一通りの処理を終えたら行動を書き込む
+            moveType = MoveType.APPEAL;
+            moveFlg = false;
+            anim.SetBool("AppealFlg", false);
+        }
+    }
+
 	//動きを決める関数
 	private void MoveEnter()
 	{
-		//動き決定の範囲
-        currentMoveType = (MoveType)Random.Range((int)MoveType.IDLE, (int)MoveType.TURN + 1);
-        moveFlg = true;
-        if(currentMoveType == MoveType.IDLE && moveType == MoveType.IDLE)
+        //動き決定の範囲
+        //アピールばかりだとちょっとむかついたので一回やったら最低でも一回は違う行動に出る
+        if (turnFlg == true)
         {
-            currentMoveType = (MoveType)Random.Range((int)MoveType.IDLE + 1, (int)MoveType.TURN + 1);
+            currentMoveType = (MoveType)Random.Range((int)MoveType.WALK, (int)MoveType.RUN + 1);
+            turnFlg = false;
         }
-		if(currentMoveType == MoveType.TURN)
+        else
+        {
+            if (moveType != MoveType.APPEAL)
+                currentMoveType = (MoveType)Random.Range((int)MoveType.IDLE, (int)MoveType.APPEAL + 1);
+            else
+                currentMoveType = (MoveType)Random.Range((int)MoveType.IDLE, (int)MoveType.TURN + 1);
+        }
+
+
+        moveFlg = true;
+        if (currentMoveType == MoveType.WALK)
+        {
+            anim.SetBool("WalkFlg", true);
+        }
+        if (currentMoveType == MoveType.RUN)
+        {
+            anim.SetBool("RunFlg", true);
+        }
+        if (currentMoveType == MoveType.APPEAL)
+        {
+            anim.SetBool("AppealFlg", true);
+        }
+        if (currentMoveType == MoveType.TURN)
 		{
+            anim.SetBool("TurnFlg", true);
             //終了地点がなるべくかぶらないようにするため違う場所になるまで回す。
             while (currentMoveIndex == moveIndex)
             {
@@ -229,7 +278,6 @@ public class PenguinMove : MonoBehaviour
             endPos = CircleRandamaiser(currentMoveIndex);
             
         }
-		
     }
 
     //0から半径分の範囲を取るためそれを指定された座標と計算することで若干位置をずらせる。
@@ -239,11 +287,32 @@ public class PenguinMove : MonoBehaviour
 		//範囲を決める。
         var startPoint = Random.insideUnitCircle * BoothAnimalManager.Instance.penguinsData.rangeArea;
 
+        
+
         //決めた範囲分動かした場所を決定し返す
         retVector = new Vector3(BoothAnimalManager.Instance.penguinsData.rangeList[index].x + startPoint.x,
                                 BoothAnimalManager.Instance.penguinsData.rangeList[index].y,
                                 BoothAnimalManager.Instance.penguinsData.rangeList[index].z + startPoint.y);
 		return retVector;
+    }
+
+    public bool PositionAreaJudge(Vector3 target,Vector3 end , float Area)
+    {
+        //左上と右下を取ってその中に到着しているかを判別する
+        var endLT = end;
+        var endRB = end;
+
+        endLT.x = end.x + Area;
+        endLT.z = end.z + Area;
+        endRB.x = end.x - Area;
+        endRB.z = end.z - Area;
+
+        if(target.x <= endLT.x && target.z <= endLT.z && target.x >= endRB.x && target.z >= endRB.z)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     private void Pause()

@@ -15,5 +15,4 @@ MonoBehaviour:
   list:
   - displayName: Penguin.prefab
     ID: 0
-    prefab: {fileID: 6413457729718553701, guid: efea8ce56548ddc44b07b80c8c2aee06,
-      type: 3}
+    prefab: {fileID: 100190145466701160, guid: efea8ce56548ddc44b07b80c8c2aee06, type: 3}
