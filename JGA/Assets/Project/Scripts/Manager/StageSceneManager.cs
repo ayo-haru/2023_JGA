@@ -63,6 +63,13 @@ public class StageSceneManager : BaseSceneManager {
     [Header("プレイヤースポーン")]
     [SerializeField]
     private bool isPlayerSpawn = true;
+    private enum PlayerMode {
+        Penguin = 0,
+        UnityChan = 1
+    }
+    [Header("プレイヤーのモデルどっちにするか選んでね")]
+    [SerializeField]
+    private PlayerMode playerMode = PlayerMode.Penguin;
     [Header("飼育員スポーン")]
     [SerializeField]
     private bool isZKSpawn = true;
@@ -140,8 +147,13 @@ public class StageSceneManager : BaseSceneManager {
         //----- プレイヤーの生成 -----
         if (isPlayerSpawn) {
             playerRespawn = GameObject.Find("PlayerSpawn");
-            playerObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Player.prefab");
+            if (playerMode == PlayerMode.Penguin) {
+                playerObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Player.prefab");
+            } else {
+                playerObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Player(old).prefab");
+            }
             playerInstance = Instantiate(playerObj, playerRespawn.transform.position, Quaternion.Euler(0.0f, 5.0f, 0.0f));
+            playerInstance.name = "Player";
         }
 
         //----- 飼育員の生成 -----

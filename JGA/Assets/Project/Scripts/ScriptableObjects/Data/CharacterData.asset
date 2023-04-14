@@ -13,15 +13,19 @@ MonoBehaviour:
   m_Name: CharacterData
   m_EditorClassIdentifier: 
   list:
-  - displayName: Player.prefab
+  - displayName: Player(old).prefab
     ID: 0
     prefab: {fileID: 6903381975108728195, guid: 5586ea2c0ee038e4ba2d458cda7b7fac,
       type: 3}
-  - displayName: ZooKeeper.prefab
+  - displayName: Player.prefab
     ID: 1
+    prefab: {fileID: 5281576900656472603, guid: c1e67d0513e35e647b21c89ab29787e4,
+      type: 3}
+  - displayName: ZooKeeper.prefab
+    ID: 2
     prefab: {fileID: 1960879353178395162, guid: d24efd05b62ceda4f88a2d5c28d78da8,
       type: 3}
   - displayName: Guest.prefab
-    ID: 2
+    ID: 3
     prefab: {fileID: 7104924354389222842, guid: 2540e751739d9204692ca7c8b186fced,
       type: 3}
