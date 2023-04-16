@@ -41,8 +41,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6550448531960634925}
   - component: {fileID: -7066145842646931364}
-  - component: {fileID: 4864485743885891143}
   - component: {fileID: 6097664708404571896}
+  - component: {fileID: 2677952704815899194}
+  - component: {fileID: 4864485743885891143}
   - component: {fileID: 8117644344165896880}
   - component: {fileID: 3768284602558779070}
   m_Layer: 10
@@ -89,20 +90,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
---- !u!136 &4864485743885891143
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5281576900656472603}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 1
-  m_Height: 2.7631943
-  m_Direction: 1
-  m_Center: {x: 0, y: 1.3848666, z: 0}
 --- !u!54 &6097664708404571896
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -118,7 +105,34 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
+--- !u!65 &2677952704815899194
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5281576900656472603}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.7810494, y: 0.50153446, z: 2.003156}
+  m_Center: {x: 0.02559644, y: 0.24063855, z: -0.1813618}
+--- !u!136 &4864485743885891143
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5281576900656472603}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  m_Radius: 1
+  m_Height: 2.7631943
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.3848666, z: 0}
 --- !u!82 &8117644344165896880
 AudioSource:
   m_ObjectHideFlags: 0
