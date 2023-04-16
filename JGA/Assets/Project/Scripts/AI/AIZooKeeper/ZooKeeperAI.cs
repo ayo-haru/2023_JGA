@@ -1,6 +1,6 @@
 //=============================================================================
 // @File	: [ZooKeeperAI.cs]
-// @Brief	: 飼育員の仮の処理
+// @Brief	: 飼育員のNavMeshを使った処理
 // @Author	: MAKIYA MIO
 // @Editer	: Ichida Mai
 // @Detail	: https://yttm-work.jp/unity/unity_0036.html
@@ -180,7 +180,7 @@ public class ZooKeeperAI : MonoBehaviour
     }
 
     /// <summary>
-    /// 飼育員とペンギン、ギミックの当たり判定
+    /// 飼育員とペンギン
     /// </summary>
     private void OnCollisionEnter(Collision collision)
     {
@@ -188,9 +188,9 @@ public class ZooKeeperAI : MonoBehaviour
         if (collision.gameObject.tag == "Player")
         {
             NavMeshStop();
-            MySceneManager.GameData.isCatchPenguin = true;
             chaseNow = false;
             navMesh.speed = data.speed * player.MaxMoveSpeed;
+            MySceneManager.GameData.isCatchPenguin = true;
         }
         #endregion
     }
@@ -205,7 +205,8 @@ public class ZooKeeperAI : MonoBehaviour
         {
             var pos = other.transform.position - transform.position;
             float targetAngle = Vector3.Angle(this.transform.forward, pos);
-            Debug.DrawRay(transform.position, pos * data.searchDistance, Color.red);
+            Debug.DrawRay(new Vector3(transform.position.x, 2.0f, transform.position.z),
+                pos * data.searchDistance, Color.red);
 
             // 視界の角度内に収まってRayが当たっているか
             if (targetAngle < data.searchAngle && RayHit(pos) == 1)
@@ -456,7 +457,8 @@ public class ZooKeeperAI : MonoBehaviour
         // RayHitレイヤーとだけ衝突する
         int layerMask = 1 << 10;
         // Rayが当たっているか
-        if (Physics.Raycast(transform.position, pos, out rayhit, data.searchDistance, layerMask))    // rayの開始地点、rayの向き、当たったオブジェクトの情報を格納、rayの発射距離、レイヤーマスク
+        if (Physics.Raycast(new Vector3(transform.position.x, 2.0f, transform.position.z),
+            pos, out rayhit, data.searchDistance, layerMask))    // rayの開始地点、rayの向き、当たったオブジェクトの情報を格納、rayの発射距離、レイヤーマスク
         {
             // 当たったオブジェクトがペンギンかどうか
             if (rayhit.collider.tag == "Player")
@@ -553,7 +555,7 @@ public class ZooKeeperAI : MonoBehaviour
         if (ResetFlg)
         {
             ResetFlg = false;
-            // 置くアニメーション開始（仮で驚くモーション）
+            // 置くアニメーション開始
             animator.SetBool("isWalk", false);
             animator.SetFloat("speed", -1f);
             animator.Play("Put", 0, 1f);
@@ -735,6 +737,7 @@ public class ZooKeeperAI : MonoBehaviour
     /// </summary>
     private void ReStart()
     {
+        chaseNow = false;
         // インスペクターで設定したリスポーン位置に再配置する
         navMesh.Warp(data.respawnTF.position);
     }
