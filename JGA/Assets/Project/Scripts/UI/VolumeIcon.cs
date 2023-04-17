@@ -21,15 +21,26 @@ public class VolumeIcon : MonoBehaviour
     [SerializeField] private int maxVol = 9;
     [SerializeField] private int minVol = 0;
     private int currentVol = 0;
-#if false
+    [SerializeField,Tooltip("BGM/true   SE/false")] private bool bBGM = true;
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
     /// </summary>
     void Awake()
 	{
-		
+        //現在の音量を取得する
+        if (bBGM)
+        {
+            //BGMの音量を取得
+            //currentVol = SoundManager.GetBGMVolume
+        }
+        else
+        {
+            //SEの音量を取得
+            //currentVol = SoundManager.GetSEVolume
+        }
 	}
 
+#if false
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
 	/// </summary>

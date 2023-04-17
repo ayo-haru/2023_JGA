@@ -47,7 +47,9 @@ public class OptionPanel : MonoBehaviour
     public enum EOptionSlide { MIN_SLIDE = -2,LEFT, CENTER, RIGHT,MAX_SLIDE };
     private int nSlide = (int)EOptionSlide.RIGHT;
     [SerializeField, Range(1.0f, 100.0f)] private float slideSpeed = 10.0f;
-
+    private float screenWidth = 1920.0f;
+    [SerializeField] private bool bSlide = false;
+    
 
 
 	void Awake()
@@ -57,14 +59,14 @@ public class OptionPanel : MonoBehaviour
 
         //初期位置設定
         Vector3 pos = rt.localPosition;
-        pos.x = 1920.0f;
+        pos.x = screenWidth;
         rt.localPosition = pos;
 	}
 
     private void Update()
     {
         if (nSlide != (int)EOptionSlide.CENTER) return;
-        if (rt.localPosition != Vector3.zero) return;
+        if (bSlide && rt.localPosition != Vector3.zero) return;
 
         //マウス、コントローラの値取得
         Gamepad gamepad = Gamepad.current;
@@ -102,11 +104,12 @@ public class OptionPanel : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!bSlide) return;
         if (nSlide >= (int)EOptionSlide.MAX_SLIDE || nSlide <= (int)EOptionSlide.MIN_SLIDE) return;
-        if (rt.localPosition.x == 1920.0f * nSlide) return;
-        rt.localPosition = Vector3.MoveTowards(rt.localPosition, new Vector3(1920.0f * nSlide, rt.localPosition.y, rt.localPosition.z), slideSpeed);
-
+        if (rt.localPosition.x == screenWidth * nSlide) return;
+        rt.localPosition = Vector3.MoveTowards(rt.localPosition, new Vector3(screenWidth * nSlide, rt.localPosition.y, rt.localPosition.z), slideSpeed);
     }
+    #region オプション画面ボタン
     /// <summary>
     /// 戻るボタン
     /// </summary>
@@ -124,6 +127,8 @@ public class OptionPanel : MonoBehaviour
     {
         SoundDecisionSE();
         //キーボード＆マウス設定を開く
+        nSlide = (int)EOptionSlide.LEFT;
+        ControllerNoneSelect();
     }
     /// <summary>
     /// コントローラ設定ボタン
@@ -132,6 +137,8 @@ public class OptionPanel : MonoBehaviour
     {
         SoundDecisionSE();
         //コントローラ設定を開く
+        nSlide = (int)EOptionSlide.LEFT;
+        ControllerNoneSelect();
     }
     /// <summary>
     /// BGM音量上げるボタン
@@ -177,7 +184,8 @@ public class OptionPanel : MonoBehaviour
             SoundDecisionSE();
         }
     }
-
+    #endregion
+    #region SE鳴らす関数
     public void SoundSelectSE()
     {
         if (!audioSource) return;
@@ -189,6 +197,12 @@ public class OptionPanel : MonoBehaviour
         if (!audioSource) return;
         SoundManager.Play(audioSource, SoundManager.ESE.DECISION_001);
     }
+    public void SoundSlideSE()
+    {
+        if (!audioSource) return;
+        SoundManager.Play(audioSource, SoundManager.ESE.SELECT_001);
+    }
+    #endregion
     /// <summary>
     /// 入力切替
     /// </summary>
@@ -279,6 +293,6 @@ public class OptionPanel : MonoBehaviour
     }
     public bool IsOpen()
     {
-        return nSlide < (int)EOptionSlide.RIGHT;
+        return nSlide == (int)EOptionSlide.CENTER;
     }
 }
