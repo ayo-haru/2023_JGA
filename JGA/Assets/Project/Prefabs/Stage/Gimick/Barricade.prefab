@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -429545356298759339}
   - component: {fileID: 5699440707844070782}
   - component: {fileID: -3123278023926323889}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Barricade
   m_TagString: Interact
   m_Icon: {fileID: 0}
@@ -202,7 +202,7 @@ GameObject:
   - component: {fileID: 3785231024363424688}
   - component: {fileID: 6609049162236771504}
   - component: {fileID: 8220286963136397559}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: barricade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
