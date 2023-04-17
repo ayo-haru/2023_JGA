@@ -185,6 +185,8 @@ public class Player : MonoBehaviour
 
 	private void Update()
 	{
+		Debug.Log($"rb:{rb.velocity}");
+
 		if (PauseManager.isPaused)
 		{
 			moveInputValue = Vector2.zero;
@@ -220,15 +222,15 @@ public class Player : MonoBehaviour
 		// アピール中のランダム鳴き
 		if (_IsAppeal)
 		{
-			if (callInterval > 0)
-			{
-				callInterval -= Time.deltaTime;
-			}
-			else
-			{
-				callInterval = Random.Range(callMin, callMax);
-				OnCall();
-			}
+			//if (callInterval > 0)
+			//{
+			//	callInterval -= Time.deltaTime;
+			//}
+			//else
+			//{
+			//	callInterval = Random.Range(callMin, callMax);
+			//	OnCall();
+			//}
 		}
 
 		// アニメーション
@@ -690,7 +692,7 @@ public class Player : MonoBehaviour
 	/// <summary>
 	/// 鳴く
 	/// </summary>
-	private void OnCall()
+	public void OnCall()
 	{
 		var obj = EffectManager.Create(transform.position + new Vector3(0, 4, 0), 0, transform.rotation);
 		obj.transform.localScale = Vector3.one * 5;
