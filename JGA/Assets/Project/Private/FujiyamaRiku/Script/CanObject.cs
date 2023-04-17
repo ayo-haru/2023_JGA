@@ -22,26 +22,15 @@ public class CanObject : BaseObj , IObjectSound
 	private bool fallFlg;
 	private bool flyFlg;
 
-    // ポーズ時の値保存用
-    private Vector3 pauseVelocity;
-    private Vector3 pauseAngularVelocity;
-
-    /// <summary>
-    /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
-    /// </summary>
-    void Awake()
-	{
+    protected override void Awake()
+    {
 		Init();
-		objType = ObjType.HIT_HOLD;
-
-		PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(this.gameObject);
-		PauseManager.OnResumed.Subscribe(x => { Resumed(); }).AddTo(this.gameObject);
-	}
-
-	/// <summary>
-	/// 最初のフレーム更新の前に呼び出される
-	/// </summary>
-	void Start()
+        objType = ObjType.HIT_HOLD;
+    }
+    /// <summary>
+    /// 最初のフレーム更新の前に呼び出される
+    /// </summary>
+    void Start()
 	{
 		if (player == null)
 		{
@@ -62,33 +51,26 @@ public class CanObject : BaseObj , IObjectSound
 	/// </summary>
 	void Update()
 	{
-		if(audioSource.isPlaying)
-		{
-			isPlaySound = true;
-		}
-		else
-		{
-			isPlaySound = false;
-		}
+		PlaySoundChecker();
 
-	}
-	private void OnCollisionEnter(Collision collison)
+    }
+	protected override void OnCollisionEnter(Collision collison)
 	{
 		if (collison.gameObject.tag == "Player"  && !fallFlg)
 		{
-			Debug.Log("蹴ったとき時の音");
 			SoundManager.Play(audioSource, SoundManager.ESE.CAN_ROLL);
-		}
-		if(collison.gameObject.tag == "Ground")
+        }
+		
+        if (collison.gameObject.tag == "Ground")
 		{
-			if (fallFlg)
+            
+            if (fallFlg)
 			{
-				PlayRelease();
+                PlayRelease();
 				fallFlg = false;
 			}
 			if(flyFlg)
 			{
-				Debug.Log("転がる音再生");
 				SoundManager.Play(audioSource, SoundManager.ESE.CAN_ROLL);
 				flyFlg = false;
 			}
@@ -97,7 +79,7 @@ public class CanObject : BaseObj , IObjectSound
 
 
 
-	private void OnTriggerEnter(Collider other)
+    protected override void OnTriggerEnter(Collider other)
 	{
 		if (other.tag == "Player")
 		{
@@ -109,11 +91,10 @@ public class CanObject : BaseObj , IObjectSound
 			
 		}
 	}
-	private void OnTriggerStay(Collider other)
+	protected override void OnTriggerStay(Collider other)
 	{
 		if (player.IsHit && other.tag == "Player")
 		{
-			Debug.Log("はたいて当たった時の音再生");
 			SoundManager.Play(audioSource, SoundManager.ESE.OBJECT_HIT);
 			flyFlg = true;
 		}
@@ -121,7 +102,6 @@ public class CanObject : BaseObj , IObjectSound
 
 	public void PlayPickUp()
 	{
-		Debug.Log("つかんだ音の再生");
 		SoundManager.Play(audioSource, SoundManager.ESE.CAN_CATCH);
 	}
 
@@ -132,24 +112,8 @@ public class CanObject : BaseObj , IObjectSound
 
 	public void PlayRelease()
 	{
-		Debug.Log("離した音再生");
 		SoundManager.Play(audioSource, SoundManager.ESE.CAN_RELEASE);
 	}
 
-	private void Pause()
-	{
-		audioSource.Pause();
-        pauseVelocity = rb.velocity;
-        pauseAngularVelocity = rb.angularVelocity;
-        rb.isKinematic = true;
-    }
-
-	private void Resumed()
-	{
-		audioSource.Play();
-        rb.velocity = pauseVelocity;
-        rb.angularVelocity = pauseAngularVelocity;
-        rb.isKinematic = false;
-    }
 
 }
