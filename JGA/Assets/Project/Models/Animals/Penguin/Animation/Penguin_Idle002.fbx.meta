@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 97342816ed6d39a49a43be929830e0b7
+guid: a4ab9435864a892479ac345141d67557
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
@@ -33,18 +33,18 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Penguin_PickUp02
-      takeName: Take 001
-      internalID: 1827226128182048838
+      name: Penguin_Idling02
+      takeName: idling2
+      internalID: 5041494796891569559
       firstFrame: 0
-      lastFrame: 11
+      lastFrame: 37
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
