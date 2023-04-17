@@ -19,7 +19,7 @@ MonoBehaviour:
       type: 3}
   - displayName: Player.prefab
     ID: 1
-    prefab: {fileID: 5281576900656472603, guid: c1e67d0513e35e647b21c89ab29787e4,
+    prefab: {fileID: 6059633014066229634, guid: c1e67d0513e35e647b21c89ab29787e4,
       type: 3}
   - displayName: ZooKeeper.prefab
     ID: 2

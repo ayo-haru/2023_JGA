@@ -8,7 +8,7 @@
 // [Date]
 // 2023/03/29	スクリプト作成
 // 2023/04/04   OutLineスクリプトを追加するようにattributeつけました(吉原)
-
+// 2023/04/18   ポーズ処理変更
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -76,9 +76,9 @@ public abstract class BaseObj : MonoBehaviour, IPlayObjectSound
     {
         // 物理挙動停止
         audioSource.Pause();
-        rb.velocity = pauseVelocity;
-        rb.angularVelocity = pauseAngleVelocity;
-        rb.isKinematic = false;
+        pauseVelocity = rb.velocity;
+        pauseAngleVelocity = rb.angularVelocity;
+        rb.isKinematic = true;
     }
 
     protected virtual void Resumed()
@@ -87,8 +87,7 @@ public abstract class BaseObj : MonoBehaviour, IPlayObjectSound
         // 物理挙動開始
         rb.velocity = pauseVelocity;
         rb.angularVelocity = pauseAngleVelocity;
-        rb.isKinematic = true;
-
+        rb.isKinematic = false;
     }
 
     /// <summary>
