@@ -56,10 +56,6 @@ public class Player : MonoBehaviour
 	//----------------------------------------------------------------------------------------
 
 	// フラグ --------------------------------------------------------------------------------
-	//[SerializeField]
-	//private bool _IsInteract;  // インタラクトフラグ
-	//public bool IsInteract { get { return _IsInteract; } set { _IsInteract = value; } }
-	//private bool DelayInteract;
 	[SerializeField]
 	private bool _IsHit;  // インタラクトフラグ
 	public bool IsHit { get { return _IsHit; } set { _IsHit = value; } }
@@ -71,9 +67,6 @@ public class Player : MonoBehaviour
 	[SerializeField]
 	private bool _IsMove;
 	public bool IsMove { get { return _IsMove; } }
-	//[SerializeField]
-	//private bool _IsWalk;
-	//public bool IsWalk { get { return _IsWalk; } }
 	[SerializeField]
 	private bool _IsRun;        // 走りフラグ
 	public bool IsRun { get { return _IsRun; } }
@@ -185,11 +178,17 @@ public class Player : MonoBehaviour
 
 	private void Update()
 	{
-		Debug.Log($"rb:{rb.velocity}");
+		//Debug.Log($"rb:{rb.velocity}");
+
+		//Debug.Log($"isPaused:{PauseManager.isPaused}");
 
 		if (PauseManager.isPaused)
 		{
 			moveInputValue = Vector2.zero;
+		}
+		else if (rb.isKinematic == true)
+		{
+			rb.isKinematic = false;
 		}
 
 		// ゲームパッドが接続されていないとnullになる。
@@ -363,8 +362,11 @@ public class Player : MonoBehaviour
 
 			// 制限速度内の場合、移動方向の力を与える
 			_vForce = new Vector3(moveInputValue.x, 0, moveInputValue.y) * force;
-			if (rb.velocity.magnitude < max)
+			if (rb.velocity.magnitude < max && _vForce != Vector3.zero)
+			{
 				rb.AddForce(_vForce);
+				Debug.Log($"AddForce:{_vForce}");
+			}
 
 			// 進行方向に向かって回転する
 			if (moveInputValue.normalized != Vector2.zero)
@@ -398,7 +400,7 @@ public class Player : MonoBehaviour
 
 			// 制限速度内の場合、移動方向の力を与える
 			_vForce = new Vector3(moveInputValue.x, 0, moveInputValue.y) * force;
-			if (rb.velocity.magnitude < max)
+			if (rb.velocity.magnitude < max && _vForce != Vector3.zero)
 				rb.AddForce(_vForce);
 
 			// 進行方向に向かって回転する
