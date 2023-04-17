@@ -84,7 +84,7 @@ public class TransitionInteract : AITransition
         //範囲内にあるインタラクトオブジェクトのフラグが立っているか
         for(int i = 0; i < interactObjecs.Count; ++i)
         {
-            if (Vector3.Distance(transform.position, interactObjecs[i].transform.position) > data.reactionArea) continue;
+            if (Vector3.Distance(transform.position + transform.forward * data.soundAreaOffset, interactObjecs[i].transform.position) > data.reactionArea) continue;
             if (interactObjecs[i].GetisPlaySound()) return true;
         }
         return false;
