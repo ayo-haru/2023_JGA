@@ -13,9 +13,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(AudioSource))]
 [RequireComponent(typeof(Outline))]
-public class BaseObj : MonoBehaviour
+public abstract class BaseObj : MonoBehaviour, IPlayObjectSound
 {
 	public enum ObjType
 	{
@@ -27,7 +30,7 @@ public class BaseObj : MonoBehaviour
 
 	}
 
-
+	//---変数宣言---
 	protected Rigidbody rb;
 	protected AudioSource audioSource;
 	protected Player player;
@@ -36,20 +39,109 @@ public class BaseObj : MonoBehaviour
 
 	protected bool isPlaySound; // 音が鳴っているか
 
+    //--- ポーズ用変数 ---
+    protected Vector3 pauseVelocity = Vector3.zero;
+    protected Vector3 pauseAngleVelocity = Vector3.zero;
+
+    protected virtual void Awake()
+    {
+        Init();
+    }
 
 
-	protected void Init()
+    protected void Init()
 	{
 		rb  = GetComponent<Rigidbody>();
 		audioSource = GetComponent<AudioSource>();
-	}
+        PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(this.gameObject);
+        PauseManager.OnResumed.Subscribe(x => { Resumed(); }).AddTo(this.gameObject);
+    }
 
-	/// <summary>
-	/// 音が鳴ってるかフラグの取得
+    protected void PlaySoundChecker()
+    {
+        if (audioSource.isPlaying)
+        {
+            isPlaySound = true;
+        }
+        else
+        {
+            isPlaySound = false;
+        }
+    }
+
+    /// <summary>
+	/// ポーズの処理
 	/// </summary>
-	/// <returns></returns>
-	public bool GetisPlaySound() {
+	protected virtual void Pause()
+    {
+        // 物理挙動停止
+        audioSource.Pause();
+        rb.velocity = pauseVelocity;
+        rb.angularVelocity = pauseAngleVelocity;
+        rb.isKinematic = false;
+    }
+
+    protected virtual void Resumed()
+    {
+        audioSource.Play();
+        // 物理挙動開始
+        rb.velocity = pauseVelocity;
+        rb.angularVelocity = pauseAngleVelocity;
+        rb.isKinematic = true;
+
+    }
+
+    /// <summary>
+    /// 音が鳴ってるかフラグの取得
+    /// </summary>
+    /// <returns></returns>
+    public bool GetisPlaySound() {
 		return isPlaySound;
 	}
 
+    public void PlayHit()
+    {
+        SoundManager.Play(audioSource, SoundManager.ESE.OBJECT_HIT);
+    }
+
+    public void PlayHit(AudioSource audioSource, SoundManager.ESE soundNumber)
+    {
+        SoundManager.Play(audioSource, (SoundManager.ESE)soundNumber);
+    }
+
+    public void PlayDrop()
+    {
+        SoundManager.Play(audioSource, SoundManager.ESE.OBJECT_DROP);
+    }
+
+    public void PlayDrop(AudioSource audioSource, SoundManager.ESE soundNumber)
+    {
+        SoundManager.Play(audioSource, (SoundManager.ESE)soundNumber);
+    }
+
+    protected virtual void OnCollisionEnter(Collision collision)
+    {
+
+        // 地面と当たった時の音
+        if (collision.gameObject.tag == "Ground")
+        {
+            PlayHit();
+        }
+
+        // それ以外のオブジェクトと当たった時
+        else
+        {
+            PlayHit();
+        }
+    }
+    protected virtual void OnCollisionStay(Collision collision) { }
+    protected virtual void OnCollisionExit(Collision collision) { }
+
+
+    protected virtual void OnTriggerEnter(Collider other)
+    {
+
+    }
+    protected virtual void OnTriggerStay(Collider other) { }
+    protected virtual void OnTriggerExit(Collider other) { }
 }

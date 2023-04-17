@@ -138,7 +138,7 @@ public abstract class BaseObject : MonoBehaviour,IPlayObjectSound
 	}
 
 	// ===================== インターフェースメソッド =========================
-	public  void PlayHit()
+	public void PlayHit()
 	{
 		SoundManager.Play(_audioSource,SoundManager.ESE.OBJECT_HIT);
 	}

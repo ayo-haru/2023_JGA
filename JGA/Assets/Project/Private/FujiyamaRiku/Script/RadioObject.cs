@@ -30,28 +30,22 @@ public class RadioObject : BaseObj, IObjectSound
 	const int RadioAudio = 1;
 	private bool pauseFlg;
 
-	// ポーズ時の値保存用
-	private Vector3 pauseVelocity;
-	private Vector3 pauseAngularVelocity;
-
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
 	/// </summary>
-	void Awake()
+	protected override void Awake()
 	{
-		Init();
-		objType = ObjType.HIT_HOLD;
-		//生成＆初期化
-		playAudio = this.GetComponents<AudioSource>();
+        Init();
+        objType = ObjType.HIT_HOLD;
+        //生成＆初期化
+        playAudio = this.GetComponents<AudioSource>();
+    }
 
-		PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(this.gameObject);
-		PauseManager.OnResumed.Subscribe(x => { Resumed(); }).AddTo(this.gameObject);
-	}
 
-	/// <summary>
-	/// 最初のフレーム更新の前に呼び出される
-	/// </summary>
-	void Start()
+    /// <summary>
+    /// 最初のフレーム更新の前に呼び出される
+    /// </summary>
+    void Start()
 	{
 		if (player == null)
 		{
@@ -72,16 +66,9 @@ public class RadioObject : BaseObj, IObjectSound
 	void Update()
 	{
 		//SEが鳴ってるときになっているフラグを返す
-		if (audioSource.isPlaying)
-		{
-			isPlaySound = true;
-		}
-		else
-		{
-			isPlaySound = false;
-		}
-		//ラジオが鳴っているときの処理
-		if (playAudio[RadioAudio].isPlaying && !pauseFlg)
+		PlaySoundChecker();
+        //ラジオが鳴っているときの処理
+        if (playAudio[RadioAudio].isPlaying && !pauseFlg)
 		{
 			isPlaySound = true;
 		}
@@ -96,35 +83,36 @@ public class RadioObject : BaseObj, IObjectSound
 		}
 	}
 
-	private void OnCollisionEnter(Collision collison)
+    protected override void OnCollisionEnter(Collision collison)
 	{
 		//プレイヤーと当たっていてプレイヤーが持っていなかったら
 		if (collison.gameObject.tag == "Player" && !fallFlg)
 		{
 			SoundManager.Play(audioSource, SoundManager.ESE.OBJECT_HIT);
 		}
+
 		//地面に当たったときにプレイヤーが持っている状態から落としたら
 		if (collison.gameObject.tag == "Ground" && fallFlg)
 		{
-			PlayRelease();
+            PlayRelease();
 			fallFlg = false;
 		}
 	}
-	private void OnTriggerEnter(Collider other)
+    protected override void OnTriggerEnter(Collider other)
 	{
 		//プレイヤーの判定に触れているときに
 		if (other.tag == "Player")
 		{
-			//持っている判定だったら
-			if (player.IsHold && !fallFlg)
+            //持っている判定だったら
+            if (player.IsHold && !fallFlg)
 			{
-				PlayPickUp();
+                PlayPickUp();
 				fallFlg = true;
 			}
 			
 		}
 	}
-	private void OnTriggerStay(Collider other)
+    protected override void OnTriggerStay(Collider other)
 	{
 		//プレイヤーがはたいたときにOnOffする
 		if (player.IsHit && other.tag == "Player")
@@ -163,23 +151,25 @@ public class RadioObject : BaseObj, IObjectSound
 		SoundManager.Play(audioSource, SoundManager.ESE.OBJECT_DROP);
 	}
 
-	private void Pause()
-	{
-		audioSource.Pause();
-		playAudio[RadioAudio].Pause();
-		pauseFlg = true;
-		pauseVelocity = rb.velocity;
-		pauseAngularVelocity = rb.angularVelocity;
-		rb.isKinematic = true;
-	}
+    protected override void Pause()
+    {
+        // 物理挙動停止
+        audioSource.Pause();
+        playAudio[RadioAudio].Pause();
+        rb.velocity = pauseVelocity;
+        rb.angularVelocity = pauseAngleVelocity;
+        rb.isKinematic = false;
+    }
 
-	private void Resumed()
-	{
-		audioSource.Play();
-		playAudio[RadioAudio].Play();
-		pauseFlg = false;
-		rb.velocity = pauseVelocity;
-		rb.angularVelocity = pauseAngularVelocity;
-		rb.isKinematic = false;
-	}
+    protected override void Resumed()
+    {
+        audioSource.Play();
+        playAudio[RadioAudio].Play();
+        // 物理挙動開始
+        rb.velocity = pauseVelocity;
+        rb.angularVelocity = pauseAngleVelocity;
+        rb.isKinematic = true;
+
+    }
+
 }
