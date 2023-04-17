@@ -737,7 +737,10 @@ public class ZooKeeperAI : MonoBehaviour
     /// </summary>
     private void ReStart()
     {
-        chaseNow = false;
+        if (chaseNow)
+        {
+            chaseNow = false;
+        }
         // インスペクターで設定したリスポーン位置に再配置する
         navMesh.Warp(data.respawnTF.position);
     }

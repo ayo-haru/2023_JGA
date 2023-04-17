@@ -120,19 +120,10 @@ public class ZooKeeper : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            StatusReset();
             MySceneManager.GameData.isCatchPenguin = true;
         }
     }
     #endregion
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if(other.GetComponent<BaseObj>())
-        {
-            //Debug.Log("Sound : " + other.GetComponent<BaseObj>().GetisPlaySound());
-        }
-    }
 
     #region 索敵範囲内の処理
     /// <summary>
