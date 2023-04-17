@@ -415,6 +415,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: OptionPanel
       objectReference: {fileID: 0}
+    - target: {fileID: 1477891532903698541, guid: 1fdb840198b1c0442883bd0d356cdfe9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1477891532903698542, guid: 1fdb840198b1c0442883bd0d356cdfe9,
         type: 3}
       propertyPath: m_Pivot.x
@@ -1006,6 +1011,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1292416833}
     m_Modifications:
+    - target: {fileID: 5552154508785800940, guid: cd7808725752fa44dbee40c5f12ba737,
+        type: 3}
+      propertyPath: animTime
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 5552154508785800941, guid: cd7808725752fa44dbee40c5f12ba737,
         type: 3}
       propertyPath: m_Pivot.x
@@ -1119,7 +1129,7 @@ PrefabInstance:
     - target: {fileID: 5552154508785800942, guid: cd7808725752fa44dbee40c5f12ba737,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cd7808725752fa44dbee40c5f12ba737, type: 3}
