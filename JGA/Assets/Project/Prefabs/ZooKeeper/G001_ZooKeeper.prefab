@@ -733,13 +733,11 @@ GameObject:
   - component: {fileID: 5396560914150009840}
   - component: {fileID: 5396560914150009854}
   - component: {fileID: 5396560914150009841}
-  - component: {fileID: 5396560914150009845}
-  - component: {fileID: 5396560914150009842}
   - component: {fileID: -6031804008901432818}
+  - component: {fileID: 4246997708752430066}
   - component: {fileID: 1764346376191501003}
-  - component: {fileID: 4062359305045753902}
   m_Layer: 9
-  m_Name: ZooKeeperAnim
+  m_Name: G001_ZooKeeper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -825,54 +823,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 15
   m_Center: {x: 0, y: 1, z: 0}
---- !u!195 &5396560914150009845
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1960879353178395162}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 0
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 0
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 1
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
---- !u!114 &5396560914150009842
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1960879353178395162}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8349bb4f8e0bf9846a22ec7a8fba34a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  chaseNow: 0
-  isDebug: 0
-  data:
-    name: Zookeeper
-    roots: 
-    rootTransforms: []
-    respawnTF: {fileID: 0}
-    status: 0
-    speed: 1.1
-    chaseSpeed: 1.1
-    search: 15
-    searchAngle: 45
-    searchDistance: 10
 --- !u!82 &-6031804008901432818
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1050,6 +1000,31 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4246997708752430066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1960879353178395162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a0c52802d64ee84eabbe418c750cbed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data:
+    name: Zookeeper
+    roots: 
+    rootTransforms: []
+    respawnTF: {fileID: 0}
+    status: 0
+    speed: 1.1
+    chaseSpeed: 1.1
+    search: 15
+    searchAngle: 45
+    searchDistance: 10
+  animator: {fileID: 1960879353169043914}
+  chaseNow: 0
 --- !u!114 &1764346376191501003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1063,18 +1038,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: -6031804008901432818}
---- !u!114 &4062359305045753902
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1960879353178395162}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e05bf74ae4af88499a551add999da02, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1960879353178395164
 GameObject:
   m_ObjectHideFlags: 0
