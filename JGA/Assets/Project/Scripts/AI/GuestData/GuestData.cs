@@ -12,6 +12,7 @@
 // 2023/03/27	(小楠)ペンギンに追従する時とブース内の速さを追加
 // 2023/03/30	(小楠)ペンギンブースのトランフォームをリストにした
 // 2023/04/10	(小楠)視野角を追加
+// 2023/04/17	(小楠)音が聞こえる範囲追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -47,6 +48,8 @@ public class GuestData : ScriptableObject
         [Range(30.0f, 180.0f)] public float viewAngle = 60.0f;
         [Header("反応する範囲")]
         [Range(15, 20), Tooltip("ペンギンに反応してくれる範囲(注目度がMAXの時)")] public float reactionArea = 15;
+        [Header("音が聞こえる範囲")]
+        [Range(0, 10)] public float soundAreaOffset = 10.0f;
         [Header("ペンギンエリアに到着する距離")]
         [Range(1, 50)] public float arrivalPenguinArea = 30.0f;
         [Header("ペンギンとの距離")]
