@@ -68,9 +68,6 @@ public abstract class BaseObject : MonoBehaviour,IPlayObjectSound
 
 	}
 
-
-
-
 	protected virtual void OnCollisionEnter(Collision collision) 
 	{
 		// 地面と当たった時の音
@@ -87,10 +84,7 @@ public abstract class BaseObject : MonoBehaviour,IPlayObjectSound
 	protected virtual void OnCollisionExit(Collision collision) { }
 
 
-	protected virtual void OnTriggerEnter(Collider other) 
-	{
-
-	}
+	protected virtual void OnTriggerEnter(Collider other) {}
 	protected virtual void OnTriggerStay(Collider other) { }
 	protected virtual void OnTriggerExit(Collider other) { }
 
