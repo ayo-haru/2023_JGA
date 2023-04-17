@@ -307,9 +307,8 @@ public class Player : MonoBehaviour
 
 		if (_IsHold)
 		{
-			InteractCollision.transform.localPosition = holdPos.transform.localPosition;
-			InteractCollision.transform.localRotation = holdPos.transform.localRotation;
-
+			InteractCollision.transform.position = holdPos.transform.position;
+			InteractCollision.transform.rotation = holdPos.transform.rotation;
 		}
 	}
 
@@ -323,6 +322,11 @@ public class Player : MonoBehaviour
 		anim.speed = 0.0f;
 
 		_IsAppeal = false;
+
+		// 持ったままポーズに入ると挙動おかしくなるので救済措置「捨てる」
+		_IsHold = false;
+		InteractCollision = null;
+		HoldObjectRb = null;
 	}
 
 	private void Resumed()
@@ -544,16 +548,16 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void OnHold(InputAction.CallbackContext context)
 	{
+        if (WithinRange.Count == 0 || PauseManager.isPaused)
+            return;
+
 		if (context.phase == InputActionPhase.Performed)
 			Debug.Log($"InputActionPhase.Performed");
 		if (context.phase == InputActionPhase.Canceled)
 			Debug.Log($"InputActionPhase.Canceled");
 
-		if (WithinRange.Count == 0 || PauseManager.isPaused)
-			return;
-
-		// 長押し開始
-		if (context.phase == InputActionPhase.Performed)
+        // 長押し開始
+        if (context.phase == InputActionPhase.Performed)
 		{
 			// 現在のインタラクト対象を登録
 			if (InteractOutline != null)
@@ -637,17 +641,10 @@ public class Player : MonoBehaviour
 		// 掴む処理
 		if (!_IsHold)
 		{
-			InteractCollision.transform.parent = transform;
-			InteractCollision.transform.localPosition = new Vector3(0, 0.5f, InteractCollision.transform.localPosition.z);
-			//InteractObject.transform.localRotation = Quaternion.identity;
-
 			if (InteractCollision.TryGetComponent(out Rigidbody rigidbody))
 			{
 				HoldObjectRb = rigidbody;
-				//HoldObjectRb.useGravity = false;
-				//HoldObjectRb.isKinematic = true;
 			}
-			//SoundManager.Play(audioSource, SoundManager.ESE.);
 		}
 
 		// 離す処理
@@ -656,13 +653,10 @@ public class Player : MonoBehaviour
 			_IsHold = false;
 			if (InteractCollision != null)
 			{
-				InteractCollision.transform.parent = null;
 				InteractCollision = null;
 			}
 			if (HoldObjectRb != null)
 			{
-				//HoldObjectRb.useGravity = true;
-				//HoldObjectRb.isKinematic = false;
 				HoldObjectRb = null;
 			}
 		}
@@ -735,6 +729,11 @@ public class Player : MonoBehaviour
 
 	public void ReStart()
 	{
+		// 捕まったら持ってるもの捨てる
+		_IsHold = false;
+		InteractCollision = null;
+		HoldObjectRb = null;
+
 		// インスペクターで設定したリスポーン位置に再配置する
 		this.gameObject.transform.position = respawnZone.position;
 	}

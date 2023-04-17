@@ -2,7 +2,7 @@
 // @File	: [BaseObject.cs]
 // @Brief	: オブジェクトベースの改訂版を作成してみる
 // @Author	: Yoshihara Asuka
-// @Editer	: 
+// @Editer	: Ichida Mai
 // @Detail	: 
 // 
 // [Date]
@@ -10,6 +10,7 @@
 // 2023/04/02	衝突時の判定で音を鳴らすvirtual関数の作成。
 //				音の登録をint型の配列で用意
 // 2023/04/03	ポーズの処理追加
+// 2023/04/18   ポーズ処理変更
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -117,9 +118,9 @@ public abstract class BaseObject : MonoBehaviour,IPlayObjectSound
 	protected virtual void Pause()
 	{
 		// 物理挙動停止
-		rb.velocity = pauseVelocity;
-		rb.angularVelocity = pauseAngleVelocity;
-		rb.isKinematic = false;
+		pauseVelocity = rb.velocity;
+		pauseAngleVelocity = rb.angularVelocity;
+		rb.isKinematic = true;
 	}
 
 	protected virtual void Resumed()
@@ -127,8 +128,7 @@ public abstract class BaseObject : MonoBehaviour,IPlayObjectSound
 		// 物理挙動開始
 		rb.velocity = pauseVelocity;
 		rb.angularVelocity = pauseAngleVelocity;
-		rb.isKinematic = true;
-
+		rb.isKinematic = false;
 	}
 
 	// ===================== インターフェースメソッド =========================
