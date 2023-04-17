@@ -334,6 +334,7 @@ public class ZooKeeper : MonoBehaviour
         if (surpriseFlg)
         {
             surpriseFlg = false;
+            chaseNow = true;
             // ストップ
             Stop();
             // エフェクト表示
@@ -348,7 +349,6 @@ public class ZooKeeper : MonoBehaviour
         if (exclamationEffect) Destroy(exclamationEffect);
         // ペンギンを追従開始
         Walk();
-        chaseNow = true;
     }
 
     /// <summary>
@@ -404,8 +404,11 @@ public class ZooKeeper : MonoBehaviour
 
     private void StatusReset()
     {
-        chaseNow = false;
-        surpriseFlg = true;
+        if (chaseNow)
+        {
+            chaseNow = false;
+            surpriseFlg = true;
+        }
         Stop();
     }
 
