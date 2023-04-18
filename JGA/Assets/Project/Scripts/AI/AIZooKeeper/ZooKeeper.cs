@@ -36,6 +36,8 @@ public class ZooKeeper : MonoBehaviour
     private bool moveFlg = false;
     private bool soundObjFlg = false;
     private bool surpriseFlg = true;
+    private bool questionFlg = true;
+    private bool dirFlg = false;
     private GameObject targetObj;
     private Vector3 target;     // 目的地
     private float speed;        // 速さ
@@ -112,15 +114,21 @@ public class ZooKeeper : MonoBehaviour
         }
     }
 
-    #region ペンギンを捕まえた時の処理
+    #region 当たり判定
     /// <summary>
-    /// 飼育員とペンギンの当たり判定
+    /// 飼育員との当たり判定
     /// </summary>
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Player")
         {
             MySceneManager.GameData.isCatchPenguin = true;
+        }
+
+        // フェンスに当たったら横に避ける
+        if(collision.gameObject.name == "StealFence")
+        {
+            Debug.Log("Fence Hit");
         }
     }
     #endregion
@@ -136,10 +144,16 @@ public class ZooKeeper : MonoBehaviour
         {
             if (other.GetComponent<BaseObj>().GetisPlaySound())
             {
-                soundObjFlg = true;
-                Walk();
-                targetObj = other.gameObject;
+                Dir();
                 target = other.transform.position;
+                // オブジェクトの方を向いたら一時停止して動く
+                if(dirFlg)
+                {
+                    // コルーチン開始
+                    StartCoroutine("MoveStop");
+                    targetObj = other.gameObject;
+                    dirFlg = false;
+                }
             }
         }
 
@@ -204,6 +218,7 @@ public class ZooKeeper : MonoBehaviour
         {
             var distance = Vector3.Distance(transform.position, _target);   // 距離
             var nowPos = _speed / distance;     // 現在の位置
+
             // 到着していなかったら
             if (nowPos >= 0)
             {
@@ -211,20 +226,28 @@ public class ZooKeeper : MonoBehaviour
                 AnimPlay(0);
                 transform.position = Vector3.Lerp(transform.position, _target, nowPos);
             }
-            // 到着したら
-            if (nowPos >= 1)
+            // 音が鳴ったオブジェクトに到着
+            if (soundObjFlg)
             {
-                Stop();
-                AnimPlay(1);
-                // 音が鳴ったオブジェクトに到着
-                if (soundObjFlg)
+                if (nowPos >= 0.05f)
                 {
+                    Stop();
+                    AnimPlay(1);
+                    questionFlg = true;
                     // コルーチン開始
                     StartCoroutine("SoundObj");
                 }
-                else  // 初期位置に到着
+            }
+            else
+            {
+                if(nowPos >= 1)
                 {
-                    this.transform.rotation = startDir;
+                    Stop();
+                    AnimPlay(1);
+                    if (!chaseNow)
+                    {
+                        this.transform.rotation = startDir;
+                    }
                 }
             }
         }
@@ -252,7 +275,8 @@ public class ZooKeeper : MonoBehaviour
             float angle = Vector3.Angle(targetDir, transform.forward);
             if (angle < 30.0f)
             {
-                transform.position += transform.forward * 5.0f * Time.deltaTime;
+                dirFlg = true;
+                //transform.position += transform.forward * 5.0f * Time.deltaTime;
             }
         }
     }
@@ -311,15 +335,16 @@ public class ZooKeeper : MonoBehaviour
             case Effect.exclamation:    // ！エフェクト
                 exclamationEffect =
                     EffectManager.Create(
-                        new Vector3(transform.position.x, transform.position.y + 4.5f, transform.position.z),
+                        new Vector3(transform.position.x, transform.position.y + 5.5f, transform.position.z),
                         3);
                 break;
             case Effect.question:       // ？エフェクト
                 // エフェクト表示
                 questionEffect =
                     EffectManager.Create(
-                        new Vector3(transform.position.x, transform.position.y + 4.5f, transform.position.z),
+                        new Vector3(transform.position.x, transform.position.y + 5.5f, transform.position.z),
                         4);
+                questionEffect.transform.parent = this.transform;
                 break;
         }
     }
@@ -352,20 +377,34 @@ public class ZooKeeper : MonoBehaviour
     }
 
     /// <summary>
+    /// 一時停止するコルーチン
+    /// </summary>
+    private IEnumerator MoveStop()
+    {
+        if (questionFlg)
+        {
+            questionFlg = false;
+            // エフェクト表示
+            CreateEffect(Effect.question);
+        }
+
+        yield return new WaitForSeconds(3.0f);
+
+        soundObjFlg = true;
+        Walk();
+    }
+
+    /// <summary>
     /// 音がなった地点で一時停止するコルーチン
     /// </summary>
     private IEnumerator SoundObj()
     {
-        // エフェクト表示
-        CreateEffect(Effect.question);
         // アニメーション再生
 
         yield return new WaitForSeconds(10.0f);
 
         // エフェクト削除
         if (questionEffect) Destroy(questionEffect);
-        yield return new WaitForSeconds(0.5f);
-
         // 元の位置に戻る
         soundObjFlg = false;
         Walk();
