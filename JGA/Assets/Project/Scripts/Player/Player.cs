@@ -73,6 +73,9 @@ public class Player : MonoBehaviour
 	[SerializeField]
 	private bool _IsAppeal;    // アピールフラグ
 	public bool IsAppeal { get { return _IsAppeal; } }
+	[SerializeField]
+	private bool _IsRandom;    // 待機中のランダムな挙動
+	public bool IsRandom { get { return _IsRandom; } }
 
 	[SerializeField] private bool bGamePad;     // ゲームパッド接続確認フラグ
 
@@ -103,8 +106,9 @@ public class Player : MonoBehaviour
 
 	private Transform respawnZone;              // リスポーン位置プレハブ設定用
 
-
 	private GameObject holdPos; // 持つときの位置
+
+	private float IdolTime = 0;
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -272,6 +276,38 @@ public class Player : MonoBehaviour
 		// 移動中判定
 		_IsMove = moveInputValue.normalized != Vector2.zero ? true : false;
 
+		// 待機中加算
+		if (!_IsMove && !_IsAppeal && !_IsRandom)
+		{
+			IdolTime += Time.deltaTime;
+
+			// もし２秒経過していたら
+			if (IdolTime > 2.0f)
+			{
+				if (Random.Range(0, 2) == 1) // ※ 0～1の範囲でランダムな整数値が返る
+				{
+					IdolTime = 0.0f;
+					_IsRandom = true;
+					anim.SetBool("Random", true);
+				}
+			}
+		}
+
+		if (_IsRandom)
+		{
+			AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
+			// 再生中か？
+			if (stateInfo.normalizedTime < 1.0f)
+			{
+				//Debug.Log($"再生中");
+			}
+			else
+			{
+				_IsRandom = false;
+				anim.SetBool("Random", false);
+			}
+		}
+
 
 		if (WithinRange.Count == 0 && InteractOutline != null)
 		{
@@ -365,7 +401,7 @@ public class Player : MonoBehaviour
 			if (rb.velocity.magnitude < max && _vForce != Vector3.zero)
 			{
 				rb.AddForce(_vForce);
-				Debug.Log($"AddForce:{_vForce}");
+
 			}
 
 			// 進行方向に向かって回転する
