@@ -22,7 +22,7 @@ using UnityEngine.EventSystems;
 public class TitleScenManager : BaseSceneManager
 {
     [SerializeField,Header("ゲームを始める")] private Button startButton;
-    [SerializeField,Header("オプション")] private Button optionButton;
+    [SerializeField,Header("オプション")] private Selectable optionButton;
     [SerializeField,Header("ゲームをやめる")] private Button exitButton;
 
     [SerializeField, Header("オプション")] private OptionPanel optionPanel;
