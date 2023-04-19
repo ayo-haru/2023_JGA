@@ -73,6 +73,14 @@ public class StageSceneManager : BaseSceneManager {
     [Header("飼育員スポーン")]
     [SerializeField]
     private bool isZKSpawn = true;
+    private enum ZookeeperMode {
+        OLD = 0,
+        NEW = 1
+    }
+    [Header("プレイヤーのモデルどっちにするか選んでね")]
+    [SerializeField]
+    private ZookeeperMode zookeeperMode = ZookeeperMode.NEW;
+
     [Header("客スポーン")]
     [SerializeField]
     private bool isGuestSpawn = true;
@@ -318,7 +326,12 @@ public class StageSceneManager : BaseSceneManager {
     /// </summary>
     private void SpawnZookeeper() {
         ZooKeeperData.Data[] _zooKeeperList = MySceneManager.GameData.zooKeeperData.list;    // 設定された人数分を生成する
-        GameObject zooKeeperObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "ZooKeeper.prefab");   // 生成するオブジェクト
+        GameObject zooKeeperObj;
+        if (zookeeperMode == ZookeeperMode.OLD) {
+            zooKeeperObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "ZooKeeper(old).prefab");   // 生成するオブジェクト
+        } else {
+            zooKeeperObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "ZooKeeper.prefab");   // 生成するオブジェクト
+        }
         GameObject parent = GameObject.Find("ZooKeepers");  //  生成するときの親にするオブジェクト
         for (int i = 0; i < _zooKeeperList.Length; i++) {
             GameObject spawnPos = GameObject.Find(_zooKeeperList[i].name + "Spawn"); // 生成位置を名前で取得する
