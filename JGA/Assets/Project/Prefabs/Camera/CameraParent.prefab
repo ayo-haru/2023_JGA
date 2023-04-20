@@ -172,7 +172,7 @@ MonoBehaviour:
     position: {x: -100, y: 2, z: -85}
     angles: {x: 45, y: 0, z: 0.3}
     distance: 15
-    fieldOfView: 60
+    fieldOfView: 75
     offsetPosition: {x: 0, y: 1, z: 0}
     offsetAngles: {x: 3, y: 0, z: 0}
 --- !u!114 &3636370307376643984
@@ -187,12 +187,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 407309181fa2c914fb0cae769c48d7e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  smoothTime: 0.1
-  maxSpeed: 10
+  targetObject: {fileID: 0}
+  smoothMove: 1
+  fieldLeftEdge: {fileID: 0}
+  fieldRightEdge: {fileID: 0}
+  fieldUpEdge: {fileID: 0}
+  fieldBottomEdge: {fileID: 0}
+  edgeDistance: 5
   zoomIn: 0.75
   zoomOut: 1.25
   zoomTime: 0.24
   zoomRetTime: 0.5
+  moveCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  guestZoomOut: 1
+  guestRetTime: 1
   guestValue: 5
   zoomObjChange: 0
 --- !u!1 &3636370307418565548

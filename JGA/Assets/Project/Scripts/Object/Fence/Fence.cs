@@ -2,11 +2,12 @@
 // @File	: [Fence.cs]
 // @Brief	: 
 // @Author	: Yoshihara Asuka
-// @Editer	: 
+// @Editer	: Ichida Mai
 // @Detail	: 
 // 
 // [Date]
 // 2023/04/03	スクリプト作成
+// 2023/04/18	ポーズ解除変更
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -44,11 +45,11 @@ public class Fence : BaseObject
 		CheckIsPlaySound();
 	}
 
-    protected override void Pause()
-    {
-		// 物理挙動停止
-		rb.velocity = pauseVelocity;
-		rb.angularVelocity = pauseAngleVelocity;
-
-	}
+    protected override void Resumed() {
+		/*
+		 * フェンスはフェンス同士で当たり判定させないため常にisKinematicがtrue
+		 * そのためほかのオブジェクトと違い、別でポーズ解除を用意
+		 */
+		rb.isKinematic = true;
+    }
 }

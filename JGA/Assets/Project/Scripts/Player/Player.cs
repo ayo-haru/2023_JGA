@@ -56,10 +56,6 @@ public class Player : MonoBehaviour
 	//----------------------------------------------------------------------------------------
 
 	// フラグ --------------------------------------------------------------------------------
-	//[SerializeField]
-	//private bool _IsInteract;  // インタラクトフラグ
-	//public bool IsInteract { get { return _IsInteract; } set { _IsInteract = value; } }
-	//private bool DelayInteract;
 	[SerializeField]
 	private bool _IsHit;  // インタラクトフラグ
 	public bool IsHit { get { return _IsHit; } set { _IsHit = value; } }
@@ -71,15 +67,15 @@ public class Player : MonoBehaviour
 	[SerializeField]
 	private bool _IsMove;
 	public bool IsMove { get { return _IsMove; } }
-	//[SerializeField]
-	//private bool _IsWalk;
-	//public bool IsWalk { get { return _IsWalk; } }
 	[SerializeField]
 	private bool _IsRun;        // 走りフラグ
 	public bool IsRun { get { return _IsRun; } }
 	[SerializeField]
 	private bool _IsAppeal;    // アピールフラグ
 	public bool IsAppeal { get { return _IsAppeal; } }
+	[SerializeField]
+	private bool _IsRandom;    // 待機中のランダムな挙動
+	public bool IsRandom { get { return _IsRandom; } }
 
 	[SerializeField] private bool bGamePad;     // ゲームパッド接続確認フラグ
 
@@ -110,8 +106,9 @@ public class Player : MonoBehaviour
 
 	private Transform respawnZone;              // リスポーン位置プレハブ設定用
 
-
 	private GameObject holdPos; // 持つときの位置
+
+	private float IdolTime = 0;
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -185,11 +182,17 @@ public class Player : MonoBehaviour
 
 	private void Update()
 	{
-		Debug.Log($"rb:{rb.velocity}");
+		//Debug.Log($"rb:{rb.velocity}");
+
+		//Debug.Log($"isPaused:{PauseManager.isPaused}");
 
 		if (PauseManager.isPaused)
 		{
 			moveInputValue = Vector2.zero;
+		}
+		else if (rb.isKinematic == true)
+		{
+			rb.isKinematic = false;
 		}
 
 		// ゲームパッドが接続されていないとnullになる。
@@ -273,6 +276,38 @@ public class Player : MonoBehaviour
 		// 移動中判定
 		_IsMove = moveInputValue.normalized != Vector2.zero ? true : false;
 
+		// 待機中加算
+		if (!_IsMove && !_IsAppeal && !_IsRandom)
+		{
+			IdolTime += Time.deltaTime;
+
+			// もし２秒経過していたら
+			if (IdolTime > 2.0f)
+			{
+				if (Random.Range(0, 2) == 1) // ※ 0～1の範囲でランダムな整数値が返る
+				{
+					IdolTime = 0.0f;
+					_IsRandom = true;
+					anim.SetBool("Random", true);
+				}
+			}
+		}
+
+		if (_IsRandom)
+		{
+			AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
+			// 再生中か？
+			if (stateInfo.normalizedTime < 1.0f)
+			{
+				//Debug.Log($"再生中");
+			}
+			else
+			{
+				_IsRandom = false;
+				anim.SetBool("Random", false);
+			}
+		}
+
 
 		if (WithinRange.Count == 0 && InteractOutline != null)
 		{
@@ -308,9 +343,8 @@ public class Player : MonoBehaviour
 
 		if (_IsHold)
 		{
-			InteractCollision.transform.localPosition = holdPos.transform.localPosition;
-			InteractCollision.transform.localRotation = holdPos.transform.localRotation;
-
+			InteractCollision.transform.position = holdPos.transform.position;
+			InteractCollision.transform.rotation = holdPos.transform.rotation;
 		}
 	}
 
@@ -324,6 +358,11 @@ public class Player : MonoBehaviour
 		anim.speed = 0.0f;
 
 		_IsAppeal = false;
+
+		// 持ったままポーズに入ると挙動おかしくなるので救済措置「捨てる」
+		_IsHold = false;
+		InteractCollision = null;
+		HoldObjectRb = null;
 	}
 
 	private void Resumed()
@@ -363,8 +402,11 @@ public class Player : MonoBehaviour
 
 			// 制限速度内の場合、移動方向の力を与える
 			_vForce = new Vector3(moveInputValue.x, 0, moveInputValue.y) * force;
-			if (rb.velocity.magnitude < max)
+			if (rb.velocity.magnitude < max && _vForce != Vector3.zero)
+			{
 				rb.AddForce(_vForce);
+
+			}
 
 			// 進行方向に向かって回転する
 			if (moveInputValue.normalized != Vector2.zero)
@@ -398,7 +440,7 @@ public class Player : MonoBehaviour
 
 			// 制限速度内の場合、移動方向の力を与える
 			_vForce = new Vector3(moveInputValue.x, 0, moveInputValue.y) * force;
-			if (rb.velocity.magnitude < max)
+			if (rb.velocity.magnitude < max && _vForce != Vector3.zero)
 				rb.AddForce(_vForce);
 
 			// 進行方向に向かって回転する
@@ -542,16 +584,16 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void OnHold(InputAction.CallbackContext context)
 	{
+        if (WithinRange.Count == 0 || PauseManager.isPaused)
+            return;
+
 		if (context.phase == InputActionPhase.Performed)
 			Debug.Log($"InputActionPhase.Performed");
 		if (context.phase == InputActionPhase.Canceled)
 			Debug.Log($"InputActionPhase.Canceled");
 
-		if (WithinRange.Count == 0 || PauseManager.isPaused)
-			return;
-
-		// 長押し開始
-		if (context.phase == InputActionPhase.Performed)
+        // 長押し開始
+        if (context.phase == InputActionPhase.Performed)
 		{
 			// 現在のインタラクト対象を登録
 			if (InteractOutline != null)
@@ -635,17 +677,10 @@ public class Player : MonoBehaviour
 		// 掴む処理
 		if (!_IsHold)
 		{
-			InteractCollision.transform.parent = transform;
-			InteractCollision.transform.localPosition = new Vector3(0, 0.5f, InteractCollision.transform.localPosition.z);
-			//InteractObject.transform.localRotation = Quaternion.identity;
-
 			if (InteractCollision.TryGetComponent(out Rigidbody rigidbody))
 			{
 				HoldObjectRb = rigidbody;
-				//HoldObjectRb.useGravity = false;
-				//HoldObjectRb.isKinematic = true;
 			}
-			//SoundManager.Play(audioSource, SoundManager.ESE.);
 		}
 
 		// 離す処理
@@ -654,13 +689,10 @@ public class Player : MonoBehaviour
 			_IsHold = false;
 			if (InteractCollision != null)
 			{
-				InteractCollision.transform.parent = null;
 				InteractCollision = null;
 			}
 			if (HoldObjectRb != null)
 			{
-				//HoldObjectRb.useGravity = true;
-				//HoldObjectRb.isKinematic = false;
 				HoldObjectRb = null;
 			}
 		}
@@ -733,6 +765,11 @@ public class Player : MonoBehaviour
 
 	public void ReStart()
 	{
+		// 捕まったら持ってるもの捨てる
+		_IsHold = false;
+		InteractCollision = null;
+		HoldObjectRb = null;
+
 		// インスペクターで設定したリスポーン位置に再配置する
 		this.gameObject.transform.position = respawnZone.position;
 	}

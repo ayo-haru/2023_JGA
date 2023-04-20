@@ -16,6 +16,7 @@
 // 2023/03/25	(伊地田）自動生成に対応
 // 2023/03/30	(小楠）複数個所のペンギンエリアに対応
 // 2023/04/10	(小楠）ナビメッシュが動かなくなってしまうバグを直した
+// 2023/04/17	(小楠）ペンギンのTransform取得した
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -161,7 +162,19 @@ public class StateStayArea : AIState
     public void GetAnimalTransrom()
     {
         if (animal != null) return;
+        //TargetAnimalsを取得
+        GameObject[] objList = GameObject.FindGameObjectsWithTag("TargetAnimals");
 
+        List<Transform> animals = new List<Transform>();
+        for(int i = 0; i < objList.Length; ++i)
+        {
+            //ペンギン用のスクリプトを持っているか
+            PenguinMove script = objList[i].GetComponent<PenguinMove>();
+            if (!script) continue;
+            animals.Add(objList[i].transform);
+        }
+        if(animals.Count > 0)animal = animals[Random.Range(0, animals.Count)];
+#if false
         //動物の名前から動物の親オブジェクトを取得
         int index = data.penguinTF[0].name.IndexOf("CagePos");
         if (index < 0) return;
@@ -169,5 +182,6 @@ public class StateStayArea : AIState
         if ((!obj) ? true : obj.transform.childCount <= 0) return;
         //子オブジェクトの中からランダムで1つ動物をanimalsに格納
         animal = obj.transform.GetChild(Random.Range(0, obj.transform.childCount));   
+#endif
     }
 }

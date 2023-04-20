@@ -19,13 +19,17 @@ MonoBehaviour:
       type: 3}
   - displayName: Player.prefab
     ID: 1
-    prefab: {fileID: 5281576900656472603, guid: c1e67d0513e35e647b21c89ab29787e4,
+    prefab: {fileID: 6059633014066229634, guid: c1e67d0513e35e647b21c89ab29787e4,
       type: 3}
-  - displayName: ZooKeeper.prefab
+  - displayName: ZooKeeper(old).prefab
     ID: 2
     prefab: {fileID: 1960879353178395162, guid: d24efd05b62ceda4f88a2d5c28d78da8,
       type: 3}
-  - displayName: Guest.prefab
+  - displayName: ZooKeeper.prefab
     ID: 3
+    prefab: {fileID: 6650489533873372784, guid: 45a6d0e0b0169ed4bb946d0af96e7d7a,
+      type: 3}
+  - displayName: Guest.prefab
+    ID: 4
     prefab: {fileID: 7104924354389222842, guid: 2540e751739d9204692ca7c8b186fced,
       type: 3}
