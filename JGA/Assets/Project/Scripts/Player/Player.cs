@@ -584,16 +584,16 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void OnHold(InputAction.CallbackContext context)
 	{
-        if (WithinRange.Count == 0 || PauseManager.isPaused)
-            return;
+		if (WithinRange.Count == 0 || PauseManager.isPaused)
+			return;
 
 		if (context.phase == InputActionPhase.Performed)
 			Debug.Log($"InputActionPhase.Performed");
 		if (context.phase == InputActionPhase.Canceled)
 			Debug.Log($"InputActionPhase.Canceled");
 
-        // 長押し開始
-        if (context.phase == InputActionPhase.Performed)
+		// 長押し開始
+		if (context.phase == InputActionPhase.Performed)
 		{
 			// 現在のインタラクト対象を登録
 			if (InteractOutline != null)
