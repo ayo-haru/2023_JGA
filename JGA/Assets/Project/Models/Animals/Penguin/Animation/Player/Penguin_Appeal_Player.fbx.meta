@@ -33,7 +33,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Penguin_Appeal
+      name: Penguin_Appeal_Player
       takeName: appeal
       internalID: -5881484192244452073
       firstFrame: 0
