@@ -278,7 +278,7 @@ public class StageSceneManager : BaseSceneManager {
                 guestInstace = Instantiate(guestObj_old, _guestList[i].rootTransforms[0].position, Quaternion.identity);
             } else {
                 int GuestIndex = UnityEngine.Random.Range(0, 3);
-                guestInstace = Instantiate(guestObj[GuestIndex], _guestList[i].rootTransforms[0].position, Quaternion.identity);
+                guestInstace = Instantiate(guestObj[0], _guestList[i].rootTransforms[0].position, Quaternion.identity);
             }
             if (guestParent) {
                 guestInstace.transform.parent = guestParent.transform;   // 親にする
@@ -338,12 +338,12 @@ public class StageSceneManager : BaseSceneManager {
         MySceneManager.GameData.randomGuestCnt++;
 
         GameObject guestInstace;
-        //if(guestMode == GuestMode.OLD) {
+        if(guestMode == GuestMode.OLD) {
             guestInstace = Instantiate(guestObj_old, rootPos[(int)MySceneManager.eRoot.ENTRANCE].position, Quaternion.identity);
-        //} else {
-        //    int GuestIndex = UnityEngine.Random.Range(0,3);
-            //guestInstace = Instantiate(guestObj[0], rootPos[(int)MySceneManager.eRoot.ENTRANCE].position, Quaternion.identity);
-        //}
+        } else {
+            int GuestIndex = UnityEngine.Random.Range(0,3);
+            guestInstace = Instantiate(guestObj[0], rootPos[(int)MySceneManager.eRoot.ENTRANCE].position, Quaternion.identity);
+        }
 
         if (guestParent) {
             guestInstace.transform.parent = guestParent.transform;   // 親にする
