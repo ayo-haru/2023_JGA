@@ -26,7 +26,7 @@ public class StageSceneManager : BaseSceneManager {
     [SerializeField] GameObject playerRespawn;
 
     //---各ブース
-    [NamedArrayAttribute(new string[] { "PENGUIN_N", "PENGUIN_S", "PENGUIN_W", "PENGUIN_E", "HORSE", "ELEPHANT", "LION", "POLARBEAR", "BIRD","ENTRANCE" })]
+    [NamedArrayAttribute(new string[] { "PENGUIN_N", "PENGUIN_S", "PENGUIN_W", "PENGUIN_E", "HORSE", "ELEPHANT", "LION", "POLARBEAR", "BIRD", "ENTRANCE" })]
     [SerializeField]
     [Header("それぞれのブースの場所を入れる(空でもOK)")]
     private Transform[] rootPos;
@@ -36,7 +36,8 @@ public class StageSceneManager : BaseSceneManager {
     [SerializeField]
     private int randomGuestMax = 1;
     [Header("ランダム生成させる客のルートの最大数\n(2～ペンギンとエントランス以外のブースの合計数)")]
-    [SerializeField][Range(2,(int)MySceneManager.eRoot.ENTRANCE-4)]
+    [SerializeField]
+    [Range(2, (int)MySceneManager.eRoot.ENTRANCE - 4)]
     private int guestRootMax = 5;
     [Header("ランダム生成する間隔(秒)")]
     [SerializeField]
@@ -50,6 +51,10 @@ public class StageSceneManager : BaseSceneManager {
     private GameObject timerUI;
     private TimerUI _TimerUI;
 
+    //---客人数UI
+    private GameObject guestNumUI;
+    private GuestNumUI _GuestNumUI;
+
 
     //---変数
     private bool isSceneChangeOnce; // 一度だけ処理をするときに使う
@@ -59,7 +64,7 @@ public class StageSceneManager : BaseSceneManager {
     // デバッグ用チェック
     [Space(100)]
     [Header("---デバッグ用！スポーンさせるかどうか---\n"
-        +"そのうちこの項目たちは消しちゃう。\n" +
+        + "そのうちこの項目たちは消しちゃう。\n" +
         "スポーンさせないやつはチェック外してや")]
     [Header("プレイヤースポーン")]
     [SerializeField]
@@ -135,7 +140,7 @@ public class StageSceneManager : BaseSceneManager {
 
         // 客ランダム生成の変数初期化
         guestSpawnTimer = guestSpawnTime * 60;
-        
+
         //----- それぞれのブースの座標の取得 -----
         rootPos = new Transform[Enum.GetNames(typeof(MySceneManager.eRoot)).Length];
         if (isGuestSpawn == true || isZKSpawn == true) {  // デバッグ用エラー出ないように囲んどく
@@ -198,7 +203,7 @@ public class StageSceneManager : BaseSceneManager {
             SpawnRondomGuest(); // 初めに一体生成しとく
         }
 
-
+        //----- タイマーUIの取得 -----
         timerUI = GameObject.Find("TimerUI");
         if (timerUI) {
             _TimerUI = timerUI.GetComponent<TimerUI>();
@@ -207,13 +212,32 @@ public class StageSceneManager : BaseSceneManager {
         } else {
             Debug.LogWarning("TimerUIがシーン上にありません");
         }
+
+        //----- 客人数カウントUIの取得 -----
+        guestNumUI = GameObject.Find("GuestNumUI");
+        if (guestNumUI) {
+            _GuestNumUI = guestNumUI.GetComponent<GuestNumUI>();
+        } else {
+            Debug.LogWarning("GuestNumUIがシーン上にありません");
+        }
     }
 
     void Update() {
+        //----- 制限時間のゲームオーバー -----
         if (timerUI) {
             if (_TimerUI.IsFinish()) {
                 if (!isSceneChangeOnce) {
                     SceneChange(MySceneManager.SceneState.SCENE_TITLE);
+                    isSceneChangeOnce = true;
+                }
+            }
+        }
+
+        //----- ゲームクリア -----
+        if (guestNumUI) {
+            if (_GuestNumUI.isClear()) {
+                if (!isSceneChangeOnce) {
+                    SceneChange(MySceneManager.SceneState.SCENE_GAME_002);
                     isSceneChangeOnce = true;
                 }
             }
@@ -338,10 +362,10 @@ public class StageSceneManager : BaseSceneManager {
         MySceneManager.GameData.randomGuestCnt++;
 
         GameObject guestInstace;
-        if(guestMode == GuestMode.OLD) {
+        if (guestMode == GuestMode.OLD) {
             guestInstace = Instantiate(guestObj_old, rootPos[(int)MySceneManager.eRoot.ENTRANCE].position, Quaternion.identity);
         } else {
-            int GuestIndex = UnityEngine.Random.Range(0,3);
+            int GuestIndex = UnityEngine.Random.Range(0, 3);
             guestInstace = Instantiate(guestObj[0], rootPos[(int)MySceneManager.eRoot.ENTRANCE].position, Quaternion.identity);
         }
 
