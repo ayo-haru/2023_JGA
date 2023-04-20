@@ -854,7 +854,7 @@ MonoBehaviour:
   seHold: {fileID: 0}
   seWalk: {fileID: 8300000, guid: 54f3c2dd230ba0c47b16525eb0e7259f, type: 3}
   anim: {fileID: 0}
-  moveForce: 250
+  moveForce: 25
   _maxMoveSpeed: 5
   runMagnification: 1.5
   joyRunZone: 0.8
@@ -866,6 +866,7 @@ MonoBehaviour:
   _IsMove: 0
   _IsRun: 0
   _IsAppeal: 0
+  _IsRandom: 0
   bGamePad: 0
   _vForce: {x: 0, y: 0, z: 0}
   InteractCollision: {fileID: 0}
