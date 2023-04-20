@@ -29,7 +29,19 @@ MonoBehaviour:
     ID: 3
     prefab: {fileID: 6650489533873372784, guid: 45a6d0e0b0169ed4bb946d0af96e7d7a,
       type: 3}
-  - displayName: Guest.prefab
+  - displayName: Guest(old).prefab
     ID: 4
     prefab: {fileID: 7104924354389222842, guid: 2540e751739d9204692ca7c8b186fced,
+      type: 3}
+  - displayName: Guest001.prefab
+    ID: 5
+    prefab: {fileID: 2771727122580385094, guid: 63f3ffa1785ec4e49a56be0f270bac1c,
+      type: 3}
+  - displayName: Guest002.prefab
+    ID: 6
+    prefab: {fileID: 2771727122580385094, guid: 307a2f4b7c89d184b86f3999f7cd841e,
+      type: 3}
+  - displayName: Guest003.prefab
+    ID: 7
+    prefab: {fileID: 2771727122580385094, guid: c5fb5cf9c85e46d4e9d0120392303676,
       type: 3}
