@@ -17,6 +17,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
+using UnityEngine.Rendering.VirtualTexturing;
 
 public class StageSceneManager : BaseSceneManager {
     //---プレイヤー
@@ -41,7 +42,7 @@ public class StageSceneManager : BaseSceneManager {
     [SerializeField]
     private int guestSpawnTime = 5;
     private GameObject guestParent; // 客を生成したときに親にするオブジェクト
-    private GameObject guestObj;    // 生成する客のプレハブ
+    private GameObject[] guestObj;    // 生成する客のプレハブ
     private int guestSum;           // 生成した数(連番振るのに使う)
     private int guestSpawnTimer;    // ランダム生成のカウントに使う
 
@@ -77,13 +78,22 @@ public class StageSceneManager : BaseSceneManager {
         OLD = 0,
         NEW = 1
     }
-    [Header("プレイヤーのモデルどっちにするか選んでね")]
+    [Header("飼育員のモデルどっちにするか選んでね")]
     [SerializeField]
     private ZookeeperMode zookeeperMode = ZookeeperMode.NEW;
 
     [Header("客スポーン")]
     [SerializeField]
     private bool isGuestSpawn = true;
+    private enum GuestMode {
+        OLD = 0,
+        NEW = 1
+    }
+    [Header("客のモデルどっちにするか選んでね")]
+    [SerializeField]
+    private GuestMode guestMode = GuestMode.NEW;
+    private GameObject guestObj_old;    // 生成する客のプレハブ
+
 
 
 
@@ -112,7 +122,16 @@ public class StageSceneManager : BaseSceneManager {
         guestParent = GameObject.Find("Guests");
 
         // 生成する客のプレハブ
-        guestObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Guest.prefab");
+        if (guestMode == GuestMode.OLD) {
+            guestObj_old = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Guest(old).prefab");
+        } else {
+            guestObj_old = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Guest(old).prefab");
+
+            guestObj = new GameObject[3];
+            guestObj[0] = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Guest001.prefab");
+            guestObj[1] = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Guest002.prefab");
+            guestObj[2] = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Guest003.prefab");
+        }
 
         // 客ランダム生成の変数初期化
         guestSpawnTimer = guestSpawnTime * 60;
@@ -254,7 +273,13 @@ public class StageSceneManager : BaseSceneManager {
             _guestList[i].entranceTF = rootPos[(int)MySceneManager.eRoot.ENTRANCE];
 
             // 生成
-            GameObject guestInstace = Instantiate(guestObj, _guestList[i].rootTransforms[0].position, Quaternion.identity);
+            GameObject guestInstace;
+            if (guestMode == GuestMode.OLD) {
+                guestInstace = Instantiate(guestObj_old, _guestList[i].rootTransforms[0].position, Quaternion.identity);
+            } else {
+                int GuestIndex = UnityEngine.Random.Range(0, 3);
+                guestInstace = Instantiate(guestObj[GuestIndex], _guestList[i].rootTransforms[0].position, Quaternion.identity);
+            }
             if (guestParent) {
                 guestInstace.transform.parent = guestParent.transform;   // 親にする
             }
@@ -312,7 +337,14 @@ public class StageSceneManager : BaseSceneManager {
         guestSum++;
         MySceneManager.GameData.randomGuestCnt++;
 
-        GameObject guestInstace = Instantiate(guestObj, rootPos[(int)MySceneManager.eRoot.ENTRANCE].position, Quaternion.identity);
+        GameObject guestInstace;
+        //if(guestMode == GuestMode.OLD) {
+            guestInstace = Instantiate(guestObj_old, rootPos[(int)MySceneManager.eRoot.ENTRANCE].position, Quaternion.identity);
+        //} else {
+        //    int GuestIndex = UnityEngine.Random.Range(0,3);
+            //guestInstace = Instantiate(guestObj[0], rootPos[(int)MySceneManager.eRoot.ENTRANCE].position, Quaternion.identity);
+        //}
+
         if (guestParent) {
             guestInstace.transform.parent = guestParent.transform;   // 親にする
         }
