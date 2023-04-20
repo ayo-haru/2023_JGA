@@ -67,7 +67,7 @@ public class StateAttention : AIState
         //コンポーネント取得
         if(!agent)agent = GetComponent<NavMeshAgent>();
         if (!target) target = GameObject.FindWithTag("Player").GetComponent<Transform>();
-        if(!animator) animator = GetComponent<Animator>();
+        if(!animator) animator = gameObject.transform.GetChild(0).GetComponent<Animator>();
 
         //エラーチェック
         if (!ErrorCheck()) return;
