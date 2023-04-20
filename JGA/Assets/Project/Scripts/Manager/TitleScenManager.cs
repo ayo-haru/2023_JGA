@@ -98,7 +98,7 @@ public class TitleScenManager : BaseSceneManager
     public void StartButton()
     {
         SoundSEDecision();
-        SceneChange(MySceneManager.SceneState.SCENE_GAME);
+        SceneChange(MySceneManager.SceneState.SCENE_GAME_001);
         //コントローラ入力の場合マウスカーソルが非表示のままになってしまうので表示する
         if (!bMouse)Cursor.visible = true;
     }

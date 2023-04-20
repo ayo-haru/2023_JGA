@@ -52,12 +52,14 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 	public enum SceneState
 	{    // シーン定数
 		SCENE_TITLE = 0,
-		SCENE_GAME,
+		SCENE_GAME_001,
+		SCENE_GAME_002,
 	};
 
 	private static string[] sceneName = {   // シーン名(実際に作ったシーンの名前入れてね)
 		"Title",
-		"Stage_001"
+		"Stage_001",
+		"Stage_002"
 	};
 
 	//----- 飼育員、客のルートに使用 -----
