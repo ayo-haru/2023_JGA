@@ -86,7 +86,7 @@ public class StateFollowPenguin : AIState
         if (!penguin) penguin = GameObject.FindWithTag("Player");
         if (!target && penguin) target = penguin.GetComponent<Transform>();
         if (!player && penguin) player = penguin.GetComponent<Player>();
-        if (!animator) animator = GetComponent<Animator>();
+        if (!animator) animator = gameObject.transform.GetChild(0).GetComponent<Animator>();
 
         //エラーチェック
         if (!ErrorCheck()) return;

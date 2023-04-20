@@ -58,7 +58,7 @@ public class StateStopFollowing : AIState
     public override void InitState()
     {
         //コンポーネント取得
-        if (!animator) animator = GetComponent<Animator>();
+        if (!animator) animator = gameObject.transform.GetChild(0).GetComponent<Animator>();
         if (!agent) agent = GetComponent<NavMeshAgent>();
 
         if (!ErrorCheck()) return;

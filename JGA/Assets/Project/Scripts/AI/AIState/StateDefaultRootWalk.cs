@@ -76,7 +76,7 @@ public class StateDefaultRootWalk : AIState
         //データ、コンポーネント取得
         if (!agent) agent = GetComponent<NavMeshAgent>();
         if (data==null) data = GetComponent<AIManager>().GetGuestData();
-        if (!animator) animator = GetComponent<Animator>();
+        if (!animator) animator = gameObject.transform.GetChild(0).GetComponent<Animator>();
         if (!player) player = GameObject.FindWithTag("Player").GetComponent<Player>();
         GetAnimalsTransrom();
 
