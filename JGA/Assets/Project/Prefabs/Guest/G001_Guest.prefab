@@ -491,7 +491,6 @@ GameObject:
   - component: {fileID: 7919769010039917443}
   - component: {fileID: 3297458320099124796}
   - component: {fileID: -5003685325952567730}
-  - component: {fileID: 5291446393384756323}
   - component: {fileID: 2851440303186915481}
   m_Layer: 8
   m_Name: G001_Guest
@@ -554,20 +553,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!136 &5291446393384756323
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2771727122580385094}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 1
-  m_Height: 8
-  m_Direction: 1
-  m_Center: {x: 0, y: 3.8, z: 0}
 --- !u!82 &2851440303186915481
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2333,7 +2318,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8402846592737737184}
-  - component: {fileID: 2485077286735717274}
+  - component: {fileID: 6218697985150913691}
+  - component: {fileID: 5082349059019220560}
   m_Layer: 8
   m_Name: Guest
   m_TagString: Untagged
@@ -2359,26 +2345,74 @@ Transform:
   m_Father: {fileID: 7919769010039917443}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &2485077286735717274
-Animator:
-  serializedVersion: 5
+--- !u!114 &6218697985150913691
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9211894063921079130}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: ac2b02fb12642004b8e66562b97890ed, type: 3}
-  m_Controller: {fileID: 9100000, guid: 0f046a6c46dba244f83bbd5a4b3eb9cd, type: 2}
-  m_CullingMode: 1
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 1
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d44bae29a682d548a83980b6a33b126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boneColliderBuilderProperty:
+    splitProperty:
+      boneWeightType: 0
+      boneWeight2: 50
+      boneWeight3: 33
+      boneWeight4: 25
+      greaterBoneWeight: 1
+      boneTriangleExtent: 1
+    reducerProperty:
+      shapeType: 2
+      fitType: 0
+      meshType: 3
+      maxTriangles: 255
+      sliceMode: 0
+      scale: {x: 1, y: 1, z: 1}
+      scaleElementType: 0
+      minThickness: {x: 0.01, y: 0.01, z: 0.01}
+      minThicknessElementType: 0
+      optimizeRotation:
+        x: 1
+        y: 1
+        z: 1
+      optimizeRotationElementType: 0
+      colliderToChild: 0
+      offset: {x: 0, y: 0, z: 0}
+      thicknessA: {x: 0, y: 0, z: 0}
+      thicknessB: {x: 0, y: 0, z: 0}
+      viewAdvanced: 0
+    colliderProperty:
+      convex: 1
+      isTrigger: 0
+      material: {fileID: 0}
+      isCreateAsset: 0
+    rigidbodyProperty:
+      mass: 1
+      drag: 0
+      angularDrag: 0.05
+      isKinematic: 1
+      useGravity: 0
+      interpolation: 0
+      collisionDetectionMode: 0
+      isCreate: 1
+      viewAdvanced: 0
+    modifyNameEnabled: 0
+--- !u!114 &5082349059019220560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9211894063921079130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ef2b87818a56064b926871454f01541, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &9222469335812290470
 GameObject:
   m_ObjectHideFlags: 0
