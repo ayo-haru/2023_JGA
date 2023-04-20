@@ -189,17 +189,38 @@ public class StateDefaultRootWalk : AIState
         if (animals != null) return;
         animals = new List<Transform>();
 
-        for(int i = 0; i < data.rootTransforms.Count; ++i)
+        //親オブジェクト取得
+        GameObject Animals = GameObject.Find("Animals");
+        if (!Animals) return;
+        //子オブジェクトに入っている景観用動物を取得
+        Transform[] allAnimal = Animals.transform.GetComponentsInChildren<Transform>();
+        if ((allAnimal == null) ? true : allAnimal.Length <= 0) return;
+
+        for (int i = 0; i < data.rootTransforms.Count; ++i)
         {
             animals.Add(null);
-            //動物の名前から動物の親オブジェクトを取得
+            //Transformの名前から動物の名前を取得
             int index = data.rootTransforms[targetNum].name.IndexOf("CagePos");
             if (index < 0) continue;
+
+            //景観用動物から動物の名前と名前の先頭が一致するものを抽出
+            List<Transform> transforms = new List<Transform>();
+            for(int j = 0; j < allAnimal.Length; ++j)
+            {
+                if (!allAnimal[j].name.StartsWith(data.rootTransforms[i].name.Substring(0, index))) continue;
+                transforms.Add(allAnimal[j]);
+            }
+
+            //名前が一致するものがあった場合は、ランダムで一つ保存する
+            if ((transforms == null) ? true : transforms.Count <= 0) continue;
+            animals[i] = transforms[Random.Range(0,transforms.Count)];
+#if false
             GameObject obj = GameObject.Find(data.rootTransforms[i].name.Substring(0, index));
             if ((!obj) ? true : obj.transform.childCount <= 0) continue;
 
             //子オブジェクトの中からランダムで1つ動物をanimalsに格納
             animals[i] = obj.transform.GetChild(Random.Range(0,obj.transform.childCount));
+#endif
         }
     }
 }
