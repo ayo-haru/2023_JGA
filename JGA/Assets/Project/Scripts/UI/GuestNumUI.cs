@@ -74,4 +74,9 @@ public class GuestNumUI : MonoBehaviour
         fTimer = animTime;
         guestNum.text = string.Format("<color=red><size={0:0}>{1:0}</size></color> / {2:0}", guestNum.fontSize * scaleValue, currentNum, clearNum);
     }
+
+    public bool isClear() {
+        return (currentNum == clearNum) ? true : false;
+    }
+
 }
