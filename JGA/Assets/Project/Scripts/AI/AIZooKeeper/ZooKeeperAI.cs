@@ -220,10 +220,11 @@ public class ZooKeeperAI : MonoBehaviour
             }
             else
             {
-                // 範囲外
+                // 範囲外か隠れたか
                 if (!chaseNow || RayHit(pos) == 3)
                 {
-                    PlayerOutOfRange();
+                    // コルーチン開始
+                    StartCoroutine("HidePenguin");
                 }
             }
         }
@@ -473,7 +474,6 @@ public class ZooKeeperAI : MonoBehaviour
             // 当たったオブジェクトが隠れるオブジェクトかどうか
             if(rayhit.collider.tag == "HideObj")
             {
-                chaseNow = false;
                 return 3;
             }
         }
@@ -483,7 +483,7 @@ public class ZooKeeperAI : MonoBehaviour
 
     #region コルーチン
     /// <summary>
-    /// ペンギンを追従するコルーチン
+    /// ペンギンを追従する
     /// </summary>
     private IEnumerator PenguinChase()
     {
@@ -498,7 +498,7 @@ public class ZooKeeperAI : MonoBehaviour
             animator.SetTrigger("isSurprise");
         }
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(2.5f);
             
         // ペンギンを追従開始
         chaseNow = true;
@@ -518,7 +518,34 @@ public class ZooKeeperAI : MonoBehaviour
     }
 
     /// <summary>
-    /// オブジェクトを運ぶコルーチン
+    /// ペンギンを見失う
+    /// </summary>
+    private IEnumerator HidePenguin()
+    {
+        if (ResetFlg)
+        {
+            ResetFlg = false;
+            // エフェクト表示
+            CreateEffect(Effect.question);
+            // 止まる
+            NavMeshStop();
+            animator.SetBool("isWalk", false);
+            PlayerOutOfRange();
+            chaseNow = false;
+        }
+
+        yield return new WaitForSeconds(2.5f);
+
+        // エフェクト削除
+        if (questionEffect) Destroy(questionEffect);
+        // 動く
+        NavMeshMove();
+        ResetFlg = true;
+        navMesh.SetDestination(data.rootTransforms[rootNum].position); // 目的地の再設定
+    }
+
+    /// <summary>
+    /// オブジェクトを運ぶ
     /// </summary>
     private IEnumerator CatchObj()
     {
@@ -546,7 +573,7 @@ public class ZooKeeperAI : MonoBehaviour
     }
 
     /// <summary>
-    /// オブジェクトを元に戻すコルーチン
+    /// オブジェクトを元に戻す
     /// </summary>
     private IEnumerator ResetObj()
     {
@@ -581,7 +608,7 @@ public class ZooKeeperAI : MonoBehaviour
     }
 
     /// <summary>
-    /// 音がなった地点で一時停止するコルーチン
+    /// 音がなった地点で一時停止する
     /// </summary>
     private IEnumerator SoundObj()
     {
@@ -680,15 +707,17 @@ public class ZooKeeperAI : MonoBehaviour
             case Effect.exclamation:    // ！エフェクト
                 exclamationEffect =
                     EffectManager.Create(
-                        new Vector3(transform.position.x, transform.position.y + 4.0f, transform.position.z),
+                        new Vector3(transform.position.x, transform.position.y + 7.5f, transform.position.z),
                         3);
+                exclamationEffect.transform.parent = this.transform;
                 break;
             case Effect.question:       // ？エフェクト
                 // エフェクト表示
                 questionEffect =
                     EffectManager.Create(
-                        new Vector3(transform.position.x, transform.position.y + 4.0f, transform.position.z),
+                        new Vector3(transform.position.x, transform.position.y + 7.5f, transform.position.z),
                         4);
+                questionEffect.transform.parent = this.transform;
                 break;
         }
     }
