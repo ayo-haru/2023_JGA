@@ -27,16 +27,6 @@ public class CanObject : BaseObj , IObjectSound
 		Init();
         objType = ObjType.HIT_HOLD;
     }
-    /// <summary>
-    /// 最初のフレーム更新の前に呼び出される
-    /// </summary>
-    void Start()
-	{
-		if (player == null)
-		{
-			player = GameObject.FindWithTag("Player").GetComponent<Player>();
-		}
-	}
 
 	/// <summary>
 	/// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
@@ -77,20 +67,6 @@ public class CanObject : BaseObj , IObjectSound
 		}
 	}
 
-
-
-    protected override void OnTriggerEnter(Collider other)
-	{
-		if (other.tag == "Player")
-		{
-			if(player.IsHold && !fallFlg)
-			{
-				PlayPickUp();
-				fallFlg = true;
-			}
-			
-		}
-	}
 	protected override void OnTriggerStay(Collider other)
 	{
 		if (player.IsHit && other.tag == "Player")
@@ -98,7 +74,18 @@ public class CanObject : BaseObj , IObjectSound
 			SoundManager.Play(audioSource, SoundManager.ESE.OBJECT_HIT);
 			flyFlg = true;
 		}
-	}
+
+        if (other.tag == "Player")
+        {
+            if (player.IsHold && !fallFlg)
+            {
+                PlayPickUp();
+                fallFlg = true;
+            }
+
+        }
+
+    }
 
 	public void PlayPickUp()
 	{
