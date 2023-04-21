@@ -28,12 +28,13 @@ public class ZooKeeper : MonoBehaviour
     private ZooKeeperData.Data data;    // 飼育員用の外部で設定できるパラメーターたち
     [SerializeField] private Animator animator;
     private AudioSource audioSource;
-    private RaycastHit rayhit;
     private SphereCollider sphereCollider;
+    private Rigidbody rb;
+    private RaycastHit rayhit;
     private Vector3 startPos;       // 初期位置
     private Quaternion startDir;    // 初期回転
     [SerializeField] private bool chaseNow = false;
-    private bool moveFlg = false;
+    [SerializeField] private bool moveFlg = false;
     private bool soundObjFlg = false;
     private bool surpriseFlg = true;
     private bool questionFlg = true;
@@ -73,11 +74,11 @@ public class ZooKeeper : MonoBehaviour
 	{
         if (animator == null) animator = GetComponent<Animator>();
         if (audioSource == null) audioSource = this.GetComponent<AudioSource>();
+        if (rb == null) rb = this.GetComponent<Rigidbody>();
         if (player == null) player = GameObject.FindWithTag("Player").GetComponent<Player>();
 
         startPos = this.transform.position;     // 初期位置を取得
         startDir = this.transform.rotation;     // 初期回転を取得
-        AnimPlay(1);
     }
 
     /// <summary>
@@ -126,10 +127,10 @@ public class ZooKeeper : MonoBehaviour
         }
 
         // フェンスに当たったら横に避ける
-        if(collision.gameObject.name == "StealFence")
-        {
-            Debug.Log("Fence Hit");
-        }
+        //if (collision.gameObject.GetComponent<Fence>())
+        //{
+        //    //Debug.Log("StealFence Hit");
+        //}
     }
     #endregion
 
@@ -144,6 +145,7 @@ public class ZooKeeper : MonoBehaviour
         {
             if (other.GetComponent<BaseObj>().GetisPlaySound())
             {
+                soundObjFlg = true;
                 Dir();
                 target = other.transform.position;
                 // オブジェクトの方を向いたら一時停止して動く
@@ -242,12 +244,7 @@ public class ZooKeeper : MonoBehaviour
             {
                 if(nowPos >= 1)
                 {
-                    Stop();
-                    AnimPlay(1);
-                    if (!chaseNow)
-                    {
-                        this.transform.rotation = startDir;
-                    }
+                    StatusReset();
                 }
             }
         }
@@ -269,14 +266,16 @@ public class ZooKeeper : MonoBehaviour
         {
             // その方向に向けて旋回する(120度/秒)
             Quaternion targetRotation = Quaternion.LookRotation(targetDir);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 120.0f * Time.deltaTime);
+            Quaternion rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 120.0f * Time.deltaTime);
+            rotation.x = 0.0f;
+            rotation.z = 0.0f;
+            transform.rotation = rotation;
 
             // 自分の向きと次の位置の角度差が30度以上の場合、その場で旋回
             float angle = Vector3.Angle(targetDir, transform.forward);
             if (angle < 30.0f)
             {
                 dirFlg = true;
-                //transform.position += transform.forward * 5.0f * Time.deltaTime;
             }
         }
     }
@@ -359,16 +358,16 @@ public class ZooKeeper : MonoBehaviour
         if (surpriseFlg)
         {
             surpriseFlg = false;
-            chaseNow = true;
             // ストップ
             Stop();
             // エフェクト表示
             CreateEffect(Effect.exclamation);
             // 驚くアニメーション開始
-            animator.Play("Surprised", 0, 0.0f);
+            animator.SetTrigger("isSurprise");
+            chaseNow = true;
         }
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(2.5f);
 
         // エフェクト削除
         if (exclamationEffect) Destroy(exclamationEffect);
@@ -384,13 +383,13 @@ public class ZooKeeper : MonoBehaviour
         if (questionFlg)
         {
             questionFlg = false;
+            //soundObjFlg = true;
             // エフェクト表示
             CreateEffect(Effect.question);
         }
 
         yield return new WaitForSeconds(3.0f);
 
-        soundObjFlg = true;
         Walk();
     }
 
@@ -443,12 +442,22 @@ public class ZooKeeper : MonoBehaviour
 
     private void StatusReset()
     {
+        Stop();
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        this.transform.position = startPos;
+        this.transform.rotation = startDir;
+        AnimPlay(1);
         if (chaseNow)
         {
             chaseNow = false;
             surpriseFlg = true;
         }
-        Stop();
+        if (soundObjFlg)
+        {
+            soundObjFlg = false;
+            questionFlg = true;
+        }
     }
 
     /// <summary>
@@ -467,9 +476,6 @@ public class ZooKeeper : MonoBehaviour
     private void ReStart()
     {
         StatusReset();
-        AnimPlay(1);
-        this.transform.position = startPos;
-        this.transform.rotation = startDir;
     }
 
     #region ポーズ処理
