@@ -48,6 +48,14 @@ public abstract class BaseObj : MonoBehaviour, IPlayObjectSound
         Init();
     }
 
+    protected virtual void Start()
+    {
+        if (player == null)
+        {
+            player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        }
+    }
+
 
     protected void Init()
 	{
@@ -65,7 +73,7 @@ public abstract class BaseObj : MonoBehaviour, IPlayObjectSound
         }
         else
         {
-            isPlaySound = false;
+            isPlaySound = false; 
         }
     }
 

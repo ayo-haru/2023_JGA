@@ -26,8 +26,9 @@ public class RadioObject : BaseObj, IObjectSound
 	private bool onOffFlg;
 	//ラジオが鳴ってる時用のAudioSource
 	private AudioSource[] playAudio;
-
+	//ラジオのオーディオを指定
 	const int RadioAudio = 1;
+	//ラジオ特有のポーズ処理
 	private bool pauseFlg;
 
 	/// <summary>
@@ -41,17 +42,6 @@ public class RadioObject : BaseObj, IObjectSound
         playAudio = this.GetComponents<AudioSource>();
     }
 
-
-    /// <summary>
-    /// 最初のフレーム更新の前に呼び出される
-    /// </summary>
-    void Start()
-	{
-		if (player == null)
-		{
-			player = GameObject.FindWithTag("Player").GetComponent<Player>();
-		}
-	}
 
 	/// <summary>
 	/// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
@@ -98,20 +88,7 @@ public class RadioObject : BaseObj, IObjectSound
 			fallFlg = false;
 		}
 	}
-    protected override void OnTriggerEnter(Collider other)
-	{
-		//プレイヤーの判定に触れているときに
-		if (other.tag == "Player")
-		{
-            //持っている判定だったら
-            if (player.IsHold && !fallFlg)
-			{
-                PlayPickUp();
-				fallFlg = true;
-			}
-			
-		}
-	}
+
     protected override void OnTriggerStay(Collider other)
 	{
 		//プレイヤーがはたいたときにOnOffする
@@ -134,7 +111,19 @@ public class RadioObject : BaseObj, IObjectSound
 
 			}
 		}
-	}
+
+        //プレイヤーの判定に触れているときに
+        if (other.tag == "Player")
+        {
+            //持っている判定だったら
+            if (player.IsHold && !fallFlg)
+            {
+                PlayPickUp();
+                fallFlg = true;
+            }
+
+        }
+    }
 
 	public void PlayPickUp()
 	{
@@ -159,6 +148,7 @@ public class RadioObject : BaseObj, IObjectSound
         rb.velocity = pauseVelocity;
         rb.angularVelocity = pauseAngleVelocity;
         rb.isKinematic = false;
+		pauseFlg = true;
     }
 
     protected override void Resumed()
@@ -169,7 +159,7 @@ public class RadioObject : BaseObj, IObjectSound
         rb.velocity = pauseVelocity;
         rb.angularVelocity = pauseAngleVelocity;
         rb.isKinematic = true;
-
+        pauseFlg = false;
     }
 
 }
