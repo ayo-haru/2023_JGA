@@ -76,6 +76,10 @@ public class Player : MonoBehaviour
 	[SerializeField]
 	private bool _IsRandom;    // 待機中のランダムな挙動
 	public bool IsRandom { get { return _IsRandom; } }
+	[SerializeField]
+	private bool _IsMegaphone;    // メガホン用フラグ
+	public bool IsMegaphone { get { return _IsMegaphone; } }
+	private bool DelayMegaphone;
 
 	[SerializeField] private bool bGamePad;     // ゲームパッド接続確認フラグ
 
@@ -222,18 +226,17 @@ public class Player : MonoBehaviour
 			}
 		}
 
-		// アピール中のランダム鳴き
-		if (_IsAppeal)
+		if (_IsMegaphone)
 		{
-			//if (callInterval > 0)
-			//{
-			//	callInterval -= Time.deltaTime;
-			//}
-			//else
-			//{
-			//	callInterval = Random.Range(callMin, callMax);
-			//	OnCall();
-			//}
+			if (!DelayMegaphone)
+			{
+				DelayMegaphone = true;
+			}
+			else
+			{
+				_IsMegaphone = false;
+				DelayMegaphone = false;
+			}
 		}
 
 		// アニメーション
@@ -587,11 +590,6 @@ public class Player : MonoBehaviour
 		if (WithinRange.Count == 0 || PauseManager.isPaused)
 			return;
 
-		if (context.phase == InputActionPhase.Performed)
-			Debug.Log($"InputActionPhase.Performed");
-		if (context.phase == InputActionPhase.Canceled)
-			Debug.Log($"InputActionPhase.Canceled");
-
 		// 長押し開始
 		if (context.phase == InputActionPhase.Performed)
 		{
@@ -640,6 +638,11 @@ public class Player : MonoBehaviour
 						_IsHold = true;
 					}
 				}
+
+				if (InteractCollision.name.Contains("Megaphone"))
+				{
+					_IsMegaphone = true;
+				}
 			}
 		}
 		else if (context.phase == InputActionPhase.Canceled)
@@ -686,7 +689,6 @@ public class Player : MonoBehaviour
 		// 離す処理
 		else
 		{
-			_IsHold = false;
 			if (InteractCollision != null)
 			{
 				InteractCollision = null;
