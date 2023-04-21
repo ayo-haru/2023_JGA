@@ -18,7 +18,7 @@ using UniRx;
 public class GuestAnimation : MonoBehaviour
 {
     [SerializeField] private Animator animator;
-    [SerializeField] private AudioSource audioSource;
+    //[SerializeField] private AudioSource audioSource;
 
 
 	/// <summary>
