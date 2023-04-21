@@ -534,7 +534,7 @@ public class ZooKeeperAI : MonoBehaviour
             chaseNow = false;
         }
 
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(1.0f);
 
         // エフェクト削除
         if (questionEffect) Destroy(questionEffect);
