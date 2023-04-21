@@ -476,6 +476,7 @@ GameObject:
   - component: {fileID: 3770384924816608937}
   - component: {fileID: 6626980772668384641}
   - component: {fileID: 4935511450356656070}
+  - component: {fileID: 2765033943766894518}
   - component: {fileID: 2899978219636829724}
   m_Layer: 8
   m_Name: AI_Guest003
@@ -594,6 +595,8 @@ MonoBehaviour:
       toNodeTransition: {fileID: 9195846287365707454}
     - toNode: 1
       toNodeTransition: {fileID: 9163578870697340357}
+    - toNode: 2
+      toNodeTransition: {fileID: 2765033943766894518}
   - stateNum: 1
     state: {fileID: 8217973912834838231}
     transitions:
@@ -601,6 +604,8 @@ MonoBehaviour:
       toNodeTransition: {fileID: 8326415522688295460}
     - toNode: 2
       toNodeTransition: {fileID: 7536148551764821564}
+    - toNode: 2
+      toNodeTransition: {fileID: 2765033943766894518}
   - stateNum: 2
     state: {fileID: -926316619228790716}
     transitions:
@@ -810,6 +815,18 @@ MonoBehaviour:
   timeLimit: 5
   inv: 0
   ui: {fileID: 619224843283914264}
+--- !u!114 &2765033943766894518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2771727122580385094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5f71f65beda7244398d7ad3d105d2b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &2899978219636829724
 MonoBehaviour:
   m_ObjectHideFlags: 0
