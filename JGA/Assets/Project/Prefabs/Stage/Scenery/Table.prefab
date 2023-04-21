@@ -11,9 +11,11 @@ GameObject:
   - component: {fileID: 6906808141304075430}
   - component: {fileID: 7527259886791138051}
   - component: {fileID: 5733862659161026505}
-  m_Layer: 0
+  - component: {fileID: 5435547270412823480}
+  - component: {fileID: 7231708968875353384}
+  m_Layer: 10
   m_Name: Table
-  m_TagString: Untagged
+  m_TagString: HideObj
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -83,3 +85,32 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &5435547270412823480
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6093996767152754204}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 6.5837574, y: 4.819354, z: 11.354456}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!208 &7231708968875353384
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6093996767152754204}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 3.292, y: 2.41, z: 5.677}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
