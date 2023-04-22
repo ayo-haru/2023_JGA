@@ -15,6 +15,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -28,6 +29,8 @@ public class Player : MonoBehaviour
 	[SerializeField] private AudioClip seHold;          // ＳＥ：つかむ
 	[SerializeField] private AudioClip seWalk;          // ＳＥ：歩く
 	[SerializeField] private Animator anim;             // Animatorへの参照
+	[SerializeField] private MultiParentConstraint constraint;              // 咥えるのやつ
+
 
 	[Header("ステータス")] //-----------------------------------------------------------------
 	[SerializeField, Tooltip("歩行時速度")]
@@ -123,8 +126,10 @@ public class Player : MonoBehaviour
 		PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(this.gameObject);
 		PauseManager.OnResumed.Subscribe(x => { Resumed(); }).AddTo(this.gameObject);
 
-		if (rb == null)
-			rb = GetComponent<Rigidbody>();
+		if (rb == null) rb = GetComponent<Rigidbody>();
+		if (audioSource == null) audioSource = GetComponent<AudioSource>();
+		if (anim == null) anim = GetComponent<Animator>();
+
 
 		// 回転固定
 		rb.constraints = RigidbodyConstraints.FreezeRotation;
@@ -132,12 +137,6 @@ public class Player : MonoBehaviour
 		// 持つときの場所を子オブジェクトから検索
 		holdPos = transform.Find("HoldPos").gameObject;
 
-		if (audioSource == null)
-			audioSource = GetComponent<AudioSource>();
-
-
-		if (anim == null)
-			anim = GetComponent<Animator>();
 
 		var respawn = GameObject.Find("PlayerSpawn");
 		if (respawn == null)
@@ -145,9 +144,6 @@ public class Player : MonoBehaviour
 		else
 			respawnZone = respawn.transform;
 
-
-		// seCallの音量クソでかいので小さくする
-		audioSource.volume = 0.2f;
 
 		// Input Actionインスタンス生成
 		gameInputs = new MyContorller();
@@ -190,20 +186,14 @@ public class Player : MonoBehaviour
 
 		//Debug.Log($"isPaused:{PauseManager.isPaused}");
 
+		// ポーズ中は移動しない
 		if (PauseManager.isPaused)
-		{
 			moveInputValue = Vector2.zero;
-		}
 		else if (rb.isKinematic == true)
-		{
 			rb.isKinematic = false;
-		}
 
-		// ゲームパッドが接続されていないとnullになる。
-		if (Gamepad.current == null)
-			bGamePad = false;
-		else
-			bGamePad = true;
+		// ゲームパッドが接続されているか
+		bGamePad = Gamepad.current != null;
 
 		// リスタート
 		if (MySceneManager.GameData.isCatchPenguin)
@@ -277,7 +267,7 @@ public class Player : MonoBehaviour
 		}
 
 		// 移動中判定
-		_IsMove = moveInputValue.normalized != Vector2.zero ? true : false;
+		_IsMove = moveInputValue.normalized != Vector2.zero;
 
 		// 待機中加算
 		if (!_IsMove && !_IsAppeal && !_IsRandom)
@@ -344,11 +334,11 @@ public class Player : MonoBehaviour
 			}
 		}
 
-		if (_IsHold)
-		{
-			InteractCollision.transform.position = holdPos.transform.position;
-			InteractCollision.transform.rotation = holdPos.transform.rotation;
-		}
+		//if (_IsHold)
+		//{
+		//	InteractCollision.transform.position = holdPos.transform.position;
+		//	InteractCollision.transform.rotation = holdPos.transform.rotation;
+		//}
 	}
 
 	private void Pause()
@@ -383,76 +373,38 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void Move()
 	{
-		if (!bGamePad)
+		if (bGamePad)
+			_IsRun = moveInputValue.magnitude >= joyRunZone;
+
+		float force, max;
+
+		if (_IsAppeal)
 		{
-			float force, max;
-
-			if (_IsAppeal)
-			{
-				force = appealForce;
-				max = _maxAppealSpeed;
-			}
-			else if (_IsRun)
-			{
-				force = runForce;
-				max = _maxRunSpeed;
-			}
-			else
-			{
-				force = moveForce;
-				max = _maxMoveSpeed;
-			}
-
-			// 制限速度内の場合、移動方向の力を与える
-			_vForce = new Vector3(moveInputValue.x, 0, moveInputValue.y) * force;
-			if (rb.velocity.magnitude < max && _vForce != Vector3.zero)
-			{
-				rb.AddForce(_vForce);
-
-			}
-
-			// 進行方向に向かって回転する
-			if (moveInputValue.normalized != Vector2.zero)
-			{
-				var fw = transform.forward - new Vector3(-moveInputValue.x, transform.position.y, -moveInputValue.y) / 2;
-				fw.y = 0;
-				transform.LookAt(transform.position + fw);
-			}
+			force = appealForce;
+			max = _maxAppealSpeed;
+		}
+		else if (_IsRun)
+		{
+			force = runForce;
+			max = _maxRunSpeed;
 		}
 		else
 		{
-			_IsRun = moveInputValue.magnitude >= joyRunZone;
+			force = moveForce;
+			max = _maxMoveSpeed;
+		}
 
-			float force, max;
+		// 制限速度内の場合、移動方向の力を与える
+		_vForce = new Vector3(moveInputValue.x, 0, moveInputValue.y) * force;
+		if (rb.velocity.magnitude < max && _vForce != Vector3.zero)
+			rb.AddForce(_vForce);
 
-			if (_IsAppeal)
-			{
-				force = appealForce;
-				max = _maxAppealSpeed;
-			}
-			else if (_IsRun)
-			{
-				force = runForce;
-				max = _maxRunSpeed;
-			}
-			else
-			{
-				force = moveForce;
-				max = _maxMoveSpeed;
-			}
-
-			// 制限速度内の場合、移動方向の力を与える
-			_vForce = new Vector3(moveInputValue.x, 0, moveInputValue.y) * force;
-			if (rb.velocity.magnitude < max && _vForce != Vector3.zero)
-				rb.AddForce(_vForce);
-
-			// 進行方向に向かって回転する
-			if (moveInputValue.normalized != Vector2.zero)
-			{
-				var fw = transform.forward - new Vector3(-moveInputValue.x, transform.position.y, -moveInputValue.y) / 2;
-				fw.y = 0;
-				transform.LookAt(transform.position + fw);
-			}
+		// 進行方向に向かって回転する
+		if (moveInputValue.normalized != Vector2.zero)
+		{
+			var fw = transform.forward - new Vector3(-moveInputValue.x, transform.position.y, -moveInputValue.y) / 2;
+			fw.y = 0;
+			transform.LookAt(transform.position + fw);
 		}
 	}
 
@@ -504,7 +456,7 @@ public class Player : MonoBehaviour
 
 		bHitMotion = true;
 		anim.SetBool("Hit", bHitMotion);
-		Debug.Log($"Hit");
+		//Debug.Log($"Hit");
 
 
 		if (WithinRange.Count == 0 || PauseManager.isPaused || _IsHold)
@@ -540,7 +492,6 @@ public class Player : MonoBehaviour
 			// BaseObjとBaseObject二つあるため、それぞれ出来るように書きました(吉原 04/04 4:25)
 			if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj))
 			{
-
 				if (baseObj.objType == BaseObj.ObjType.HIT ||
 					baseObj.objType == BaseObj.ObjType.HIT_HOLD)
 				{
@@ -549,7 +500,6 @@ public class Player : MonoBehaviour
 			}
 			else if (InteractCollision.TryGetComponent<BaseObject>(out var baseObject))
 			{
-
 				if (baseObject.objState == BaseObject.OBJState.HIT ||
 					baseObject.objState == BaseObject.OBJState.HITANDHOLD)
 				{
@@ -639,6 +589,7 @@ public class Player : MonoBehaviour
 					}
 				}
 
+				//Debug.Log($"InteractCollision:{InteractCollision}");
 				if (InteractCollision.name.Contains("Megaphone"))
 				{
 					_IsMegaphone = true;
@@ -650,7 +601,6 @@ public class Player : MonoBehaviour
 			// BaseObjとBaseObject二つあるため、それぞれ出来るように書きました(吉原 04/04 4:25)
 			if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj))
 			{
-
 				if (baseObj.objType == BaseObj.ObjType.HOLD ||
 					baseObj.objType == BaseObj.ObjType.HIT_HOLD)
 				{
@@ -678,24 +628,33 @@ public class Player : MonoBehaviour
 	private void Hold()
 	{
 		// 掴む処理
-		if (!_IsHold)
+		if (_IsHold)
+			return;
+
+		if (InteractCollision.TryGetComponent(out Rigidbody rigidbody))
 		{
-			if (InteractCollision.TryGetComponent(out Rigidbody rigidbody))
+			HoldObjectRb = rigidbody;
+
+			if (constraint != null)
 			{
-				HoldObjectRb = rigidbody;
+				constraint.data.constrainedObject = rigidbody.transform;
+				WeightedTransformArray sourceObjects = constraint.data.sourceObjects;
+				WeightedTransform wTransform;
+				wTransform.transform = rigidbody.transform;
+				wTransform.weight = 1;
+				sourceObjects.Add(wTransform);
 			}
 		}
 
 		// 離す処理
 		else
 		{
-			if (InteractCollision != null)
+			InteractCollision = null;
+			HoldObjectRb = null;
+			if (constraint != null)
 			{
-				InteractCollision = null;
-			}
-			if (HoldObjectRb != null)
-			{
-				HoldObjectRb = null;
+				constraint.data.constrainedObject = null;
+				constraint.data.sourceObjects.Clear();
 			}
 		}
 	}
@@ -731,7 +690,8 @@ public class Player : MonoBehaviour
 		var obj = EffectManager.Create(transform.position + new Vector3(0, 4, 0), 0, transform.rotation);
 		obj.transform.localScale = Vector3.one * 5;
 		obj.transform.parent = transform;
-		SoundManager.Play(audioSource, seCall);
+		if (!_IsMegaphone)
+			SoundManager.Play(audioSource, seCall);
 	}
 
 	#region 衝突判定
@@ -743,11 +703,12 @@ public class Player : MonoBehaviour
 			collision.transform.localPosition += Vector3.forward / 10;
 			Debug.Log("<color=blue>離す</color>");
 		}
+
 	}
 
 	private void OnTriggerEnter(Collider other)
 	{
-		if (/*other.tag != "holdObject" && */other.tag != "Interact")
+		if (other.tag != "Interact")
 			return;
 
 		WithinRange.Add(other);
