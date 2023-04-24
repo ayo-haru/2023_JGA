@@ -11,6 +11,8 @@
 // 2023/03/20	飼育員自動生成(伊地田)
 // 2023/03/21	飼育員自動生成バグとり(伊地田)
 // 2023/03/30	ペンギンブースをリストに変更しました。【小楠】
+// 2023/04/     客の自動生成
+// 2023/04/24   クリア
 //=============================================================================
 using System;
 using System.Collections;
@@ -18,6 +20,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
 using UnityEngine.Rendering.VirtualTexturing;
+using UnityEngine.SceneManagement;
 
 public class StageSceneManager : BaseSceneManager {
     //---プレイヤー
@@ -111,6 +114,18 @@ public class StageSceneManager : BaseSceneManager {
 
         isSceneChangeOnce = false;
 
+        //---デバッグ用------------------------------------------------------------------------------
+        /*
+         * デバッグ用ちゃんとシーンが出来たらこれは消す
+         * クリア作るのに次のシーンへいくのやりたかた
+         * 現在のシーン名からシーン番号を取得する
+         */
+        for(int i = 0;i < System.Enum.GetNames(typeof(MySceneManager.SceneState)).Length;i++) {
+            if(SceneManager.GetActiveScene().name == MySceneManager.sceneName[i]) {
+                MySceneManager.GameData.nowScene = i;
+            }
+        }
+        //-------------------------------------------------------------------------------------------
     }
 
     /// <summary>
@@ -237,7 +252,10 @@ public class StageSceneManager : BaseSceneManager {
         if (guestNumUI) {
             if (_GuestNumUI.isClear()) {
                 if (!isSceneChangeOnce) {
-                    SceneChange(MySceneManager.SceneState.SCENE_GAME_002);
+                    if (System.Enum.GetNames(typeof(MySceneManager.SceneState)).Length > MySceneManager.GameData.nowScene) {
+                        MySceneManager.GameData.nowScene++;
+                    }
+                    SceneChange(MySceneManager.GameData.nowScene);
                     isSceneChangeOnce = true;
                 }
             }

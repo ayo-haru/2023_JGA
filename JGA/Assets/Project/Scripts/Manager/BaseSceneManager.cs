@@ -49,9 +49,20 @@ public class BaseSceneManager : MonoBehaviour
 
         StartCoroutine(DelaySceneChange(_nextScene));
     }
+    protected void SceneChange(int _nextScene) {
+        FadeManager.StartFadeOut();
+
+        StartCoroutine(DelaySceneChange(_nextScene));
+    }
+
 
     IEnumerator DelaySceneChange(MySceneManager.SceneState _nextScene) {
         yield return new WaitUntil(() => FadeManager.fadeMode == FadeManager.eFade.FadeIn);
         MySceneManager.SceneChange(_nextScene);
     }
+    IEnumerator DelaySceneChange(int _nextScene) {
+        yield return new WaitUntil(() => FadeManager.fadeMode == FadeManager.eFade.FadeIn);
+        MySceneManager.SceneChange(_nextScene);
+    }
+
 }

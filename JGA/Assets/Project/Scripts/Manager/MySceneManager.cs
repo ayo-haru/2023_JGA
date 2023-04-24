@@ -31,7 +31,8 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 
 		//---データ
 		public static int randomGuestMax;   // ランダム生成させる客の最大数
-		public static int randomGuestCnt;	// ランダム生成させる客の今の数
+		public static int randomGuestCnt;   // ランダム生成させる客の今の数
+		public static int nowScene;			// 現在のシーン番号
 	}
 
 	public static class Sound
@@ -56,7 +57,7 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 		SCENE_GAME_002,
 	};
 
-	private static string[] sceneName = {   // シーン名(実際に作ったシーンの名前入れてね)
+	public static string[] sceneName = {   // シーン名(実際に作ったシーンの名前入れてね)
 		"Title",
 		"Stage_001",
 		"Stage_002"
@@ -118,12 +119,15 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 	{
 		SceneManager.LoadScene(sceneName[(int)_nextScene]);
 	}
+    public static void SceneChange(int _nextScene) {
+        SceneManager.LoadScene(sceneName[_nextScene]);
+    }
 
 
-	/// <summary>
-	/// 呼ばれたらシーン読み込み直す
-	/// </summary>
-	public static void SceneReload()
+    /// <summary>
+    /// 呼ばれたらシーン読み込み直す
+    /// </summary>
+    public static void SceneReload()
 	{
 		/*
 		 * 一応作ってみたんだけどInitializeSceneは再読み込みされないのでちょっとどうしようかなって感じ
