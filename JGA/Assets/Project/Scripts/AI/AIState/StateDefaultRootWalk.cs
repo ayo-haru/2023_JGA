@@ -187,22 +187,17 @@ public class StateDefaultRootWalk : AIState
     public void GetAnimalsTransrom()
     {
         if (animals != null) return;
-        animals = new List<Transform>();
-#if true
-        GameObject Object = GameObject.Find("GuestSharedObject");
-        GuestSharedObject sharedObject = null;
-        if (Object) sharedObject = Object.GetComponent<GuestSharedObject>();
-        if (sharedObject)
-        {
-            for(int i = 0; i < data.rootTransforms.Count; ++i)
-            {
-                animals.Add(sharedObject.GetAnimalTransform(data.rootTransforms[i].name));
-            }
-            return;
-        }
 
+        animals = new List<Transform>();
+        GameObject Object = GameObject.Find("GuestSharedObject");
+        if (!Object) return;
+        GuestSharedObject sharedObject = Object.GetComponent<GuestSharedObject>();
+        if (!sharedObject) return;
+        for(int i = 0; i < data.rootTransforms.Count; ++i){
+            animals.Add(sharedObject.GetAnimalTransform(data.rootTransforms[i].name));
+        }
+#if false
         Debug.LogWarning("GuestSharedObjectなかった");
-#endif
         //親オブジェクト取得
         GameObject Animals = GameObject.Find("Animals");
         if (!Animals) return;
@@ -229,5 +224,6 @@ public class StateDefaultRootWalk : AIState
             if ((transforms == null) ? true : transforms.Count <= 0) continue;
             animals[i] = transforms[Random.Range(0,transforms.Count)];
         }
+#endif
     }
 }
