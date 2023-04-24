@@ -162,6 +162,14 @@ public class StateStayArea : AIState
     public void GetAnimalTransrom()
     {
         if (animal != null) return;
+        GuestSharedObject sharedObject = GameObject.Find("GuestSharedObject").GetComponent<GuestSharedObject>();
+        if (sharedObject)
+        {
+            animal = sharedObject.GetAnimalTransform(MySceneManager.eRoot.PENGUIN_E);
+            return;
+        }
+
+        Debug.LogWarning("GuestSharedObjectなかった");
         //TargetAnimalsを取得
         GameObject[] objList = GameObject.FindGameObjectsWithTag("TargetAnimals");
 
@@ -174,14 +182,5 @@ public class StateStayArea : AIState
             animals.Add(objList[i].transform);
         }
         if(animals.Count > 0)animal = animals[Random.Range(0, animals.Count)];
-#if false
-        //動物の名前から動物の親オブジェクトを取得
-        int index = data.penguinTF[0].name.IndexOf("CagePos");
-        if (index < 0) return;
-        GameObject obj = GameObject.Find(data.penguinTF[0].name.Substring(0, index));
-        if ((!obj) ? true : obj.transform.childCount <= 0) return;
-        //子オブジェクトの中からランダムで1つ動物をanimalsに格納
-        animal = obj.transform.GetChild(Random.Range(0, obj.transform.childCount));   
-#endif
     }
 }

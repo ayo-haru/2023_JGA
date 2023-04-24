@@ -188,7 +188,19 @@ public class StateDefaultRootWalk : AIState
     {
         if (animals != null) return;
         animals = new List<Transform>();
+#if true
+        GuestSharedObject sharedObject = GameObject.Find("GuestSharedObject").GetComponent<GuestSharedObject>();
+        if (sharedObject)
+        {
+            for(int i = 0; i < data.rootTransforms.Count; ++i)
+            {
+                animals.Add(sharedObject.GetAnimalTransform(data.rootTransforms[i].name));
+            }
+            return;
+        }
 
+        Debug.LogWarning("GuestSharedObjectなかった");
+#endif
         //親オブジェクト取得
         GameObject Animals = GameObject.Find("Animals");
         if (!Animals) return;
@@ -214,13 +226,6 @@ public class StateDefaultRootWalk : AIState
             //名前が一致するものがあった場合は、ランダムで一つ保存する
             if ((transforms == null) ? true : transforms.Count <= 0) continue;
             animals[i] = transforms[Random.Range(0,transforms.Count)];
-#if false
-            GameObject obj = GameObject.Find(data.rootTransforms[i].name.Substring(0, index));
-            if ((!obj) ? true : obj.transform.childCount <= 0) continue;
-
-            //子オブジェクトの中からランダムで1つ動物をanimalsに格納
-            animals[i] = obj.transform.GetChild(Random.Range(0,obj.transform.childCount));
-#endif
         }
     }
 }
