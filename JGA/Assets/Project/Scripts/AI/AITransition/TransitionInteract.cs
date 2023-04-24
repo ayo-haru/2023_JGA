@@ -62,13 +62,20 @@ public class TransitionInteract : AITransition
         if (data==null) data = GetComponent<AIManager>().GetGuestData();
         if (interactObjecs == null)
         {
-            GameObject[] interactObjectList = GameObject.FindGameObjectsWithTag("Interact");
-            interactObjecs = new List<BaseObj>();
-            for(int i = 0; i < interactObjectList.Length; ++i)
+            GuestSharedObject sharedObject = GameObject.Find("GuestSharedObject").GetComponent<GuestSharedObject>();
+            if (sharedObject)
             {
-                BaseObj baseObjComponent = interactObjectList[i].GetComponent<BaseObj>();
-                if (!baseObjComponent) continue;
-                interactObjecs.Add(baseObjComponent);
+                interactObjecs = new List<BaseObj>();
+                interactObjecs = sharedObject.GetInteractObjects();
+            }else{
+                Debug.LogWarning("GuestSharedObjectなかった");
+                GameObject[] interactObjectList = GameObject.FindGameObjectsWithTag("Interact");
+                interactObjecs = new List<BaseObj>();
+                for (int i = 0; i < interactObjectList.Length; ++i){
+                    BaseObj baseObjComponent = interactObjectList[i].GetComponent<BaseObj>();
+                    if (!baseObjComponent) continue;
+                    interactObjecs.Add(baseObjComponent);
+                }
             }
         }
     }
