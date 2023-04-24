@@ -162,7 +162,9 @@ public class StateStayArea : AIState
     public void GetAnimalTransrom()
     {
         if (animal != null) return;
-        GuestSharedObject sharedObject = GameObject.Find("GuestSharedObject").GetComponent<GuestSharedObject>();
+        GameObject Object = GameObject.Find("GuestSharedObject");
+        GuestSharedObject sharedObject = null;
+        if (Object) sharedObject = Object.GetComponent<GuestSharedObject>();
         if (sharedObject)
         {
             animal = sharedObject.GetAnimalTransform(MySceneManager.eRoot.PENGUIN_E);
