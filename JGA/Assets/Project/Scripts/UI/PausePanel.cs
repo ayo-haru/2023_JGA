@@ -200,8 +200,7 @@ public class PausePanel : MonoBehaviour
 	private void Back()
 	{
 		PauseManager.Resume();
-
-		//Resumed();
+		PauseManager.isPaused = false;
 	}
 
 	private void ChangeTitle()

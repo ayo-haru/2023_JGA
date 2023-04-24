@@ -14,6 +14,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UniRx;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
@@ -29,7 +30,6 @@ public class Player : MonoBehaviour
 	[SerializeField] private AudioClip seHold;          // ＳＥ：つかむ
 	[SerializeField] private AudioClip seWalk;          // ＳＥ：歩く
 	[SerializeField] private Animator anim;             // Animatorへの参照
-	[SerializeField] private MultiParentConstraint constraint;              // 咥えるのやつ
 
 
 	[Header("ステータス")] //-----------------------------------------------------------------
@@ -94,7 +94,7 @@ public class Player : MonoBehaviour
 
 	private Transform respawnZone;              // リスポーン位置プレハブ設定用
 
-	private GameObject holdPos; // 持つときの位置
+	[SerializeField] private GameObject holdPos; // 持つときの位置
 
 	private float IdolTime = 0;
 
@@ -116,7 +116,8 @@ public class Player : MonoBehaviour
 		rb.constraints = RigidbodyConstraints.FreezeRotation;
 
 		// 持つときの場所を子オブジェクトから検索
-		holdPos = transform.Find("HoldPos").gameObject;
+		if (holdPos == null)
+			holdPos = transform.Find("HoldPos").gameObject;
 
 
 		var respawn = GameObject.Find("PlayerSpawn");
@@ -317,8 +318,8 @@ public class Player : MonoBehaviour
 
 		if (_IsHold)
 		{
-			InteractCollision.transform.position = holdPos.transform.position;
-			InteractCollision.transform.rotation = holdPos.transform.rotation;
+			//InteractCollision.transform.position = holdPos.transform.position;
+			//InteractCollision.transform.rotation = holdPos.transform.rotation;
 		}
 	}
 
@@ -609,34 +610,42 @@ public class Player : MonoBehaviour
 	private void Hold()
 	{
 		// 掴む処理
-		if (_IsHold)
-			return;
-
-		if (InteractCollision.TryGetComponent(out Rigidbody rigidbody))
+		if (!_IsHold)
 		{
-			HoldObjectRb = rigidbody;
-
-			if (constraint != null)
+			if (InteractCollision.TryGetComponent(out Rigidbody rigidbody))
 			{
-				constraint.data.constrainedObject = rigidbody.transform;
-				WeightedTransformArray sourceObjects = constraint.data.sourceObjects;
-				WeightedTransform wTransform;
-				wTransform.transform = rigidbody.transform;
-				wTransform.weight = 1;
-				sourceObjects.Add(wTransform);
+				HoldObjectRb = rigidbody;
+
+				if (InteractCollision.GetComponent<HingeJoint>() == null)
+				{
+					var joint = rigidbody.AddComponent<HingeJoint>();
+					joint.connectedBody = rb;
+					joint.anchor = new Vector3(0, 1.0f, 0);
+				}
+
+				//if (constraint != null)
+				//{
+				//	constraint.data.constrainedObject = rigidbody.transform;
+				//	WeightedTransformArray sourceObjects = constraint.data.sourceObjects;
+				//	WeightedTransform wTransform;
+				//	wTransform.transform = rigidbody.transform;
+				//	wTransform.weight = 1;
+				//	sourceObjects.Add(wTransform);
+				//}
 			}
 		}
-
 		// 離す処理
 		else
 		{
+			Destroy(InteractCollision.GetComponent<HingeJoint>());
+
 			InteractCollision = null;
 			HoldObjectRb = null;
-			if (constraint != null)
-			{
-				constraint.data.constrainedObject = null;
-				constraint.data.sourceObjects.Clear();
-			}
+			//if (constraint != null)
+			//{
+			//	constraint.data.constrainedObject = null;
+			//	constraint.data.sourceObjects.Clear();
+			//}
 		}
 	}
 
