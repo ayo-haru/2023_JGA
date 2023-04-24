@@ -12,17 +12,16 @@
 // 2023/02/28	スクリプト作成
 // 2023/02/28	スピードをスライダーで変更可能にした
 // 2023/02/28	Raycastの追加
-// 2023/03/02	オブジェクトのListを追加
 // 2023/03/02   ギミックオブジェクトとの当たり判定処理の作成
-// 2023/03/08   ギアニメーション追加、Move()に記述(吉原)
+// 2023/03/08   アニメーション追加、Move()に記述(吉原)
 // 2023/03/10   Rayで追従する処理追加
 // 2023/03/19   飼育員をプログラムで配置するためにインスペクターで値決めてたのをScriptableObjectで決めるように変えた(伊地田)
-// 2023/03/21   一時停止処理の作成開始
-// 2023/03/25   飼育員の速度変更
+// 2023/03/21   一時停止処理の作成
 // 2023/03/29   足滑りの無い移動実装
 // 2023/03/30   オブジェクトの音に反応する処理作成
 // 2023/03/31   プレイヤーを追いかける時の角度を調整する処理追加
 // 2023/04/08   RayHitのレイヤーにだけ当たり判定をとるようにした
+// 2023/04/21   見失う処理追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -283,19 +282,19 @@ public class ZooKeeperAI : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         #region ペンギン
-        if (other.gameObject.tag == "Player")
-        {
-            chaseNow = false;
-            navMesh.speed = data.speed * player.MaxMoveSpeed;
-            if (data.rootTransforms.Count >= 1)
-            {
-                navMesh.SetDestination(data.rootTransforms[rootNum].position);     // 目的地の再設定
-            }
-            else
-            {
-                NavMeshStop();
-            }
-        }
+        //if (other.gameObject.tag == "Player")
+        //{
+        //    chaseNow = false;
+        //    navMesh.speed = data.speed * player.MaxMoveSpeed;
+        //    if (data.rootTransforms.Count >= 1)
+        //    {
+        //        navMesh.SetDestination(data.rootTransforms[rootNum].position);     // 目的地の再設定
+        //    }
+        //    else
+        //    {
+        //        NavMeshStop();
+        //    }
+        //}
         #endregion
     }
 
@@ -496,12 +495,12 @@ public class ZooKeeperAI : MonoBehaviour
             CreateEffect(Effect.exclamation);
             // 驚くアニメーション開始
             animator.SetTrigger("isSurprise");
+            chaseNow = true;
         }
 
         yield return new WaitForSeconds(2.5f);
             
         // ペンギンを追従開始
-        chaseNow = true;
         NavMeshMove();
 
         // オブジェクトを持っていたら置く
