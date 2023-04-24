@@ -33,7 +33,8 @@ public class ResultCamera : MonoBehaviour
 	/// </summary>
 	void Start()
 	{
-		
+        mainCamera.SetActive(true);
+        resultCamera.SetActive(false);  
 	}
 
 	/// <summary>
@@ -41,7 +42,10 @@ public class ResultCamera : MonoBehaviour
 	/// </summary>
 	void FixedUpdate()
 	{
-		
+		if(Input.GetKeyDown(KeyCode.K)) 
+		{
+			ChangeCamera();
+		}
 	}
 
 	/// <summary>
@@ -54,7 +58,6 @@ public class ResultCamera : MonoBehaviour
 
 	private void ChangeCamera()
 	{
-		
 		mainCamera.SetActive(!mainCamera.activeSelf);
         resultCamera.SetActive(!resultCamera.activeSelf);
 
