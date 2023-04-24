@@ -23,13 +23,16 @@ public class RadioObject : BaseObj, IObjectSound
 	//ペンギンが持った後に落とすときまでのフラグ
 	private bool fallFlg;
 	//ラジオをオンオフするフラグ
-	private bool onOffFlg;
+	private bool onOffFlg = false;
 	//ラジオが鳴ってる時用のAudioSource
 	private AudioSource[] playAudio;
 	//ラジオのオーディオを指定
 	const int RadioAudio = 1;
 	//ラジオ特有のポーズ処理
 	private bool pauseFlg = false;
+
+	// プレイヤーと当たっているかどうか
+	private bool isTouchPlayer = false;
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -55,6 +58,22 @@ public class RadioObject : BaseObj, IObjectSound
 	/// </summary>
 	void Update()
 	{
+		if(isTouchPlayer && player.IsHit) {	// プレイヤーと当たっていてはたいたフラグが立ったら
+			onOffFlg = !onOffFlg;
+
+			if (onOffFlg) {
+                playAudio[RadioAudio].Stop();
+
+                SoundManager.Play(audioSource, SoundManager.ESE.RADIO_RELEASE);
+			} else {
+                SoundManager.Play(audioSource, SoundManager.ESE.RADIO_CATCH);
+            }
+		}
+		Debug.Log("onoff"+onOffFlg);
+		Debug.Log("istouch"+isTouchPlayer);
+		isTouchPlayer = false;
+		
+
 		//SEが鳴ってるときになっているフラグを返す
 		PlaySoundChecker();
         //ラジオが鳴っているときの処理
@@ -71,7 +90,7 @@ public class RadioObject : BaseObj, IObjectSound
 			}
 			isPlaySound = false;
 		}
-	}
+    }
 
     protected override void OnCollisionEnter(Collision collison)
 	{
@@ -80,39 +99,41 @@ public class RadioObject : BaseObj, IObjectSound
 		{
 			SoundManager.Play(audioSource, SoundManager.ESE.OBJECT_HIT);
 		}
+		//プレイヤーがはたいたときにOnOffする
+		if (collison.gameObject.tag == "Player") {
 
-		//地面に当たったときにプレイヤーが持っている状態から落としたら
-		if (collison.gameObject.tag == "Ground" && fallFlg)
+			//if (onOffFlg) {
+			//    onOffFlg = false;
+
+			//    playAudio[RadioAudio].Stop();
+
+			//    SoundManager.Play(audioSource, SoundManager.ESE.RADIO_RELEASE);
+
+			//} else if (!onOffFlg) {
+			//    onOffFlg = true;
+
+			//    SoundManager.Play(audioSource, SoundManager.ESE.RADIO_CATCH);
+
+			//}
+			isTouchPlayer = true;
+        }
+
+        //地面に当たったときにプレイヤーが持っている状態から落としたら
+        if (collison.gameObject.tag == "Ground" && fallFlg)
 		{
             PlayRelease();
 			fallFlg = false;
 		}
 	}
 
+    new private void OnCollisionExit(Collision collision) {
+		if (collision.gameObject.tag == "Player") {
+			//isTouchPlayer = false;
+		}
+    }
 
     new private void OnCollisionStay(Collision other)
 	{
-		//プレイヤーがはたいたときにOnOffする
-		if (player.IsHit && other.gameObject.tag == "Player")
-		{
-			if (onOffFlg)
-			{
-				onOffFlg = false;
-
-				playAudio[RadioAudio].Stop();
-
-				SoundManager.Play(audioSource, SoundManager.ESE.RADIO_RELEASE);
-
-			}
-			else if (!onOffFlg)
-			{
-				onOffFlg = true;
-				
-				SoundManager.Play(audioSource, SoundManager.ESE.RADIO_CATCH);
-
-			}
-		}
-
         //プレイヤーの判定に触れているときに
         if (other.gameObject.tag == "Player")
         {
