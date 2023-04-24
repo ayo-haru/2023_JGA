@@ -19,6 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering.VirtualTexturing;
 using UnityEngine.SceneManagement;
 
@@ -238,6 +239,11 @@ public class StageSceneManager : BaseSceneManager {
     }
 
     void Update() {
+
+        if (Input.GetKeyUp(KeyCode.U)) {
+            GameObject.Find("Radio_002").GetComponent<RadioObject>().StopRadio();
+        }
+
         //----- 制限時間のゲームオーバー -----
         if (timerUI) {
             if (_TimerUI.IsFinish()) {

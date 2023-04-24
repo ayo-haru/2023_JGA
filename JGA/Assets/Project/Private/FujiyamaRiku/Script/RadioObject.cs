@@ -29,7 +29,7 @@ public class RadioObject : BaseObj, IObjectSound
 	//ラジオのオーディオを指定
 	const int RadioAudio = 1;
 	//ラジオ特有のポーズ処理
-	private bool pauseFlg;
+	private bool pauseFlg = false;
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -89,10 +89,11 @@ public class RadioObject : BaseObj, IObjectSound
 		}
 	}
 
-    protected override void OnTriggerStay(Collider other)
+
+    new private void OnCollisionStay(Collision other)
 	{
 		//プレイヤーがはたいたときにOnOffする
-		if (player.IsHit && other.tag == "Player")
+		if (player.IsHit && other.gameObject.tag == "Player")
 		{
 			if (onOffFlg)
 			{
@@ -113,7 +114,7 @@ public class RadioObject : BaseObj, IObjectSound
 		}
 
         //プレイヤーの判定に触れているときに
-        if (other.tag == "Player")
+        if (other.gameObject.tag == "Player")
         {
             //持っている判定だったら
             if (player.IsHold && !fallFlg)
@@ -139,6 +140,14 @@ public class RadioObject : BaseObj, IObjectSound
 	{
 		SoundManager.Play(audioSource, SoundManager.ESE.OBJECT_DROP);
 	}
+
+	/// <summary>
+	/// ラジオの音を止める
+	/// </summary>
+	public void StopRadio() {
+		playAudio[RadioAudio].Stop();
+		onOffFlg = false;
+    }
 
     protected override void Pause()
     {
