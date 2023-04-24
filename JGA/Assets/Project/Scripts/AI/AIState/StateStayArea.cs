@@ -162,15 +162,13 @@ public class StateStayArea : AIState
     public void GetAnimalTransrom()
     {
         if (animal != null) return;
-        GameObject Object = GameObject.Find("GuestSharedObject");
-        GuestSharedObject sharedObject = null;
-        if (Object) sharedObject = Object.GetComponent<GuestSharedObject>();
-        if (sharedObject)
-        {
-            animal = sharedObject.GetAnimalTransform(MySceneManager.eRoot.PENGUIN_E);
-            return;
-        }
 
+        GameObject Object = GameObject.Find("GuestSharedObject");
+        if (!Object) return;
+        GuestSharedObject sharedObject = Object.GetComponent<GuestSharedObject>();
+        if (!sharedObject) return;
+        animal = sharedObject.GetAnimalTransform(MySceneManager.eRoot.PENGUIN_E);
+#if false
         Debug.LogWarning("GuestSharedObjectなかった");
         //TargetAnimalsを取得
         GameObject[] objList = GameObject.FindGameObjectsWithTag("TargetAnimals");
@@ -184,5 +182,6 @@ public class StateStayArea : AIState
             animals.Add(objList[i].transform);
         }
         if(animals.Count > 0)animal = animals[Random.Range(0, animals.Count)];
+#endif
     }
 }
