@@ -189,7 +189,9 @@ public class StateDefaultRootWalk : AIState
         if (animals != null) return;
         animals = new List<Transform>();
 #if true
-        GuestSharedObject sharedObject = GameObject.Find("GuestSharedObject").GetComponent<GuestSharedObject>();
+        GameObject Object = GameObject.Find("GuestSharedObject");
+        GuestSharedObject sharedObject = null;
+        if (Object) sharedObject = Object.GetComponent<GuestSharedObject>();
         if (sharedObject)
         {
             for(int i = 0; i < data.rootTransforms.Count; ++i)
