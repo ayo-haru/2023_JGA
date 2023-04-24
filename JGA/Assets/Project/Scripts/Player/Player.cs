@@ -575,11 +575,6 @@ public class Player : MonoBehaviour
 					}
 				}
 
-				//Debug.Log($"InteractCollision:{InteractCollision}");
-				if (InteractCollision != null && InteractCollision.name.Contains("Megaphone"))
-				{
-					_IsMegaphone = true;
-				}
 			}
 		}
 		else if (context.phase == InputActionPhase.Canceled)
@@ -677,6 +672,13 @@ public class Player : MonoBehaviour
 		var obj = EffectManager.Create(transform.position + new Vector3(0, 4, 0), 0, transform.rotation);
 		obj.transform.localScale = Vector3.one * 5;
 		obj.transform.parent = transform;
+
+		//Debug.Log($"InteractCollision:{InteractCollision}");
+		if (InteractCollision != null && InteractCollision.name.Contains("Megaphone"))
+		{
+			_IsMegaphone = true;
+		}
+
 		if (!_IsMegaphone)
 			SoundManager.Play(audioSource, seCall);
 	}
