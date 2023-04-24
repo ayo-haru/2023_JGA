@@ -11,6 +11,7 @@
 // 2023/03/20	動きの方式を変更
 // 2023/03/21	動きがなるべくかぶらないように乱数にて終了地点の調整
 // 2023/04/14   アニメーションを追加
+// 2023/04/24   クリア用演出追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -29,6 +30,7 @@ public class PenguinMove : MonoBehaviour
         APPEAL,
         JUMP,
 		SWIM,
+        CLEAR_APPEAL,
 		MAX_MOVE
 	}
 
@@ -60,6 +62,9 @@ public class PenguinMove : MonoBehaviour
     //ターン用フラグ
     private bool turnFlg;
 
+    private GameObject guestNumUI;
+    private GuestNumUI _GuestNumUI;
+
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
     /// </summary>
@@ -85,10 +90,19 @@ public class PenguinMove : MonoBehaviour
     /// </summary>
     void Start()
 	{
-		
-		currentMoveIndex = BoothAnimalManager.Instance.penguinStartIndex;
+   
+        currentMoveIndex = BoothAnimalManager.Instance.penguinStartIndex;
         moveIndex = currentMoveIndex;
-
+        //----- 客人数カウントUIの取得 -----
+        guestNumUI = GameObject.Find("GuestNumUI");
+        if (guestNumUI)
+        {
+            _GuestNumUI = guestNumUI.GetComponent<GuestNumUI>();
+        }
+        else
+        {
+            Debug.LogWarning("GuestNumUIがシーン上にありません");
+        }
 
     }
 
@@ -100,6 +114,15 @@ public class PenguinMove : MonoBehaviour
         if (pauseFlg)
         {
             return;
+        }
+        //----- ゲームクリア -----
+        if (guestNumUI)
+        {
+            if (_GuestNumUI.isClear())
+            {
+                currentMoveType = MoveType.CLEAR_APPEAL;
+                CrearAppeal();
+            }
         }
         if (!moveFlg)
         {
@@ -132,8 +155,10 @@ public class PenguinMove : MonoBehaviour
             case MoveType.SWIM:
                 moveFlg = false;
                 break;
-        }
 
+
+        }
+      
     }
 
 	/// <summary>
@@ -234,8 +259,17 @@ public class PenguinMove : MonoBehaviour
         }
     }
 
-	//動きを決める関数
-	private void MoveEnter()
+    private void CrearAppeal()
+    {
+        anim.SetBool("WalkFlg", false);
+        anim.SetBool("RunFlg", false);
+        anim.SetBool("TurnFlg", false);
+        anim.SetBool("AppealFlg", true);
+    }
+
+
+    //動きを決める関数
+    private void MoveEnter()
 	{
         //動き決定の範囲
         //アピールばかりだとちょっとむかついたので一回やったら最低でも一回は違う行動に出る
