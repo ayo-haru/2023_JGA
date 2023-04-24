@@ -96,6 +96,8 @@ public class Player : MonoBehaviour
 
 	[SerializeField] private GameObject holdPos; // 持つときの位置
 
+	private GameObject InteractObjectParent;
+
 	private float IdolTime = 0;
 
 	/// <summary>
@@ -125,6 +127,8 @@ public class Player : MonoBehaviour
 			Debug.LogError("<color=red>プレイヤーのリスポーン位置が見つかりません[Player.cs]</color>");
 		else
 			respawnZone = respawn.transform;
+
+		InteractObjectParent = GameObject.Find("InteractObject");
 
 
 		// Input Actionインスタンス生成
@@ -572,7 +576,7 @@ public class Player : MonoBehaviour
 				}
 
 				//Debug.Log($"InteractCollision:{InteractCollision}");
-				if (InteractCollision.name.Contains("Megaphone"))
+				if (InteractCollision != null && InteractCollision.name.Contains("Megaphone"))
 				{
 					_IsMegaphone = true;
 				}
@@ -616,22 +620,15 @@ public class Player : MonoBehaviour
 			{
 				HoldObjectRb = rigidbody;
 
+				InteractCollision.transform.parent = transform;
+				InteractCollision.transform.rotation = transform.rotation;
+
 				if (InteractCollision.GetComponent<HingeJoint>() == null)
 				{
 					var joint = rigidbody.AddComponent<HingeJoint>();
 					joint.connectedBody = rb;
 					joint.anchor = new Vector3(0, 1.0f, 0);
 				}
-
-				//if (constraint != null)
-				//{
-				//	constraint.data.constrainedObject = rigidbody.transform;
-				//	WeightedTransformArray sourceObjects = constraint.data.sourceObjects;
-				//	WeightedTransform wTransform;
-				//	wTransform.transform = rigidbody.transform;
-				//	wTransform.weight = 1;
-				//	sourceObjects.Add(wTransform);
-				//}
 			}
 		}
 		// 離す処理
@@ -639,13 +636,13 @@ public class Player : MonoBehaviour
 		{
 			Destroy(InteractCollision.GetComponent<HingeJoint>());
 
+			if (InteractObjectParent != null)
+				InteractCollision.transform.parent = InteractObjectParent.transform;
+			else
+				InteractCollision.transform.parent = null;
+
 			InteractCollision = null;
 			HoldObjectRb = null;
-			//if (constraint != null)
-			//{
-			//	constraint.data.constrainedObject = null;
-			//	constraint.data.sourceObjects.Clear();
-			//}
 		}
 	}
 

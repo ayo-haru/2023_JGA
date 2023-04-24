@@ -13,6 +13,7 @@ using UniRx;
 using Unity.VisualScripting;
 using UnityEditor.Rendering;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SoundManager : MonoBehaviour
 {
@@ -108,6 +109,7 @@ public class SoundManager : MonoBehaviour
 		PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(this.gameObject);
 		PauseManager.OnResumed.Subscribe(x => { Resumed(); }).AddTo(this.gameObject);
 
+		SceneManager.activeSceneChanged += ActiveSceneChanged;
 	}
 
 
@@ -399,6 +401,9 @@ public class SoundManager : MonoBehaviour
 
 	void Pause()
 	{
+		if (Source == null || Source.Count == 0)
+			return;
+
 		foreach (var item in Source)
 		{
 			item.Pause();
@@ -407,9 +412,17 @@ public class SoundManager : MonoBehaviour
 
 	void Resumed()
 	{
+		if (Source == null || Source.Count == 0)
+			return;
+
 		foreach (var item in Source)
 		{
 			item.Play();
 		}
+	}
+
+	void ActiveSceneChanged(Scene thisScene, Scene nextScene)
+	{
+		Source.Clear();
 	}
 }
