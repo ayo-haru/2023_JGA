@@ -33,60 +33,45 @@ public class Player : MonoBehaviour
 
 
 	[Header("ステータス")] //-----------------------------------------------------------------
-	[SerializeField, Tooltip("歩行時速度")]
-	private float moveForce = 7;
-	[SerializeField, Tooltip("歩行時最高速度")]
-	private float _maxMoveSpeed = 5;
+	[SerializeField] private float moveForce = 7;       // 歩行時速度
+	[SerializeField] private float _maxMoveSpeed = 5;   // 歩行時最高速度
 	public float MaxMoveSpeed { get { return _maxMoveSpeed; } }
-	[SerializeField, Tooltip("疾走速度倍率")]
-	private float runMagnification = 1.5f;
+	[SerializeField] private float runMagnification = 1.5f; // 疾走速度倍率
 
-	private float runForce;         //疾走時速度
-	private float _maxRunSpeed;     //疾走時最高速度
+	private float runForce;                             // 疾走時速度
+	private float _maxRunSpeed;                         // 疾走時最高速度
 	public float MaxRunSpeed { get { return _maxRunSpeed; } }
-	private float appealForce;      //アピール時速度
-	private float _maxAppealSpeed;  //アピール時最高速度
+	private float appealForce;                          // アピール時速度
+	private float _maxAppealSpeed;                      // アピール時最高速度
 	public float MaxAppealSpeed { get { return _maxAppealSpeed; } }
 
-	[SerializeField, Tooltip("ジョイスティックで走り始めるゾーン")]
-	private float joyRunZone = 0.8f;
-	[SerializeField, Tooltip("鳴く間隔の最小値"), Range(0.0f, 30.0f)]
-	private float callMin = 0.5f;
-	[SerializeField, Tooltip("鳴く間隔の最大値"), Range(0.0f, 30.0f)]
-	private float callMax = 5.0f;
-	[SerializeField]
-	private float callInterval = 0;
+	[SerializeField] private float joyRunZone = 0.8f;   // ジョイスティックで走り始めるゾーン
+	[SerializeField] private float callMin = 0.5f;      // 鳴く間隔の最小値
+	[SerializeField] private float callMax = 5.0f;      // 鳴く間隔の最大値
+	[SerializeField] private float callInterval = 0;
 	//----------------------------------------------------------------------------------------
 
 	// フラグ --------------------------------------------------------------------------------
-	[SerializeField]
-	private bool _IsHit;  // インタラクトフラグ
+	[SerializeField] private bool _IsHit;  // インタラクトフラグ
 	public bool IsHit { get { return _IsHit; } set { _IsHit = value; } }
 	private bool DelayHit;
 
-	[SerializeField]
-	private bool _IsHold;       // つかみフラグ
+	[SerializeField] private bool _IsHold;       // つかみフラグ
 	public bool IsHold { get { return _IsHold; } }
-	[SerializeField]
-	private bool _IsMove;
+	[SerializeField] private bool _IsMove;
 	public bool IsMove { get { return _IsMove; } }
-	[SerializeField]
-	private bool _IsRun;        // 走りフラグ
+	[SerializeField] private bool _IsRun;        // 走りフラグ
 	public bool IsRun { get { return _IsRun; } }
-	[SerializeField]
-	private bool _IsAppeal;    // アピールフラグ
+	[SerializeField] private bool _IsAppeal;    // アピールフラグ
 	public bool IsAppeal { get { return _IsAppeal; } }
-	[SerializeField]
-	private bool _IsRandom;    // 待機中のランダムな挙動
+	[SerializeField] private bool _IsRandom;    // 待機中のランダムな挙動
 	public bool IsRandom { get { return _IsRandom; } }
-	[SerializeField]
-	private bool _IsMegaphone;    // メガホン用フラグ
+
+	[SerializeField] private bool _IsMegaphone;    // メガホン用フラグ
 	public bool IsMegaphone { get { return _IsMegaphone; } }
 	private bool DelayMegaphone;
 
 	[SerializeField] private bool bGamePad;     // ゲームパッド接続確認フラグ
-
-	private bool bAnimHit;
 
 	private bool bHitMotion;
 	//----------------------------------------------------------------------------------------
@@ -101,15 +86,11 @@ public class Player : MonoBehaviour
 	private MyContorller gameInputs;            // 方向キー入力取得
 	private Vector2 moveInputValue;             // 移動方向
 
-	[SerializeField]
-	private Collider InteractCollision;            // 掴んでいるオブジェクト：コリジョン
-	[SerializeField]
-	private Rigidbody HoldObjectRb;             // 掴んでいるオブジェクト：重力関連
-	[SerializeField]
-	private Outline InteractOutline;            // 掴んでいるオブジェクト：アウトライン
+	[SerializeField] private Collider InteractCollision;            // 掴んでいるオブジェクト：コリジョン
+	[SerializeField] private Rigidbody HoldObjectRb;             // 掴んでいるオブジェクト：重力関連
+	[SerializeField] private Outline InteractOutline;            // 掴んでいるオブジェクト：アウトライン
 
-	[SerializeField]
-	private List<Collider> WithinRange = new List<Collider>();  // インタラクト範囲内にあるオブジェクトリスト
+	[SerializeField] private List<Collider> WithinRange = new List<Collider>();  // インタラクト範囲内にあるオブジェクトリスト
 
 	private Transform respawnZone;              // リスポーン位置プレハブ設定用
 
@@ -334,11 +315,11 @@ public class Player : MonoBehaviour
 			}
 		}
 
-		//if (_IsHold)
-		//{
-		//	InteractCollision.transform.position = holdPos.transform.position;
-		//	InteractCollision.transform.rotation = holdPos.transform.rotation;
-		//}
+		if (_IsHold)
+		{
+			InteractCollision.transform.position = holdPos.transform.position;
+			InteractCollision.transform.rotation = holdPos.transform.rotation;
+		}
 	}
 
 	private void Pause()
