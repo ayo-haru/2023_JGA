@@ -19,6 +19,12 @@ public class GuestSharedObject : MonoBehaviour
     //インタラクトオブジェクト
     private List<BaseObj> interactObjects;
 
+    [NamedArrayAttribute(new string[] {"ペンギン","馬","象","ライオン","白熊","鳥"})]
+    [SerializeField,Header("TargetAnimalsの名前")] private string[] targetAnimalName = { "Penguin","Horse","Elephant","Lion","Bear","Bird",};
+    [NamedArrayAttribute(new string[] {"ペンギン","馬","象","ライオン","白熊","鳥"})]
+    [SerializeField,Header("CagePosの名前")] private string[] cagePosName = { "Penguin", "Horse", "Elephant", "Lion", "PolarBear", "Bird", };
+
+
 #if false
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -66,16 +72,12 @@ public class GuestSharedObject : MonoBehaviour
             GameObject[] targetAnimals = GameObject.FindGameObjectsWithTag("TargetAnimals");
             for (int i = 0; i < targetAnimals.Length; ++i)
             {
-                int index = -1;
-                if (targetAnimals[i].name.StartsWith("Penguin")) index = (int)MySceneManager.eRoot.PENGUIN_E;
-                if (targetAnimals[i].name.StartsWith("Horse")) index = (int)MySceneManager.eRoot.HORSE;
-                if (targetAnimals[i].name.StartsWith("Elephant")) index = (int)MySceneManager.eRoot.ELEPHANT;
-                if (targetAnimals[i].name.StartsWith("Lion")) index = (int)MySceneManager.eRoot.LION;
-                if (targetAnimals[i].name.StartsWith("PolarBear")) index = (int)MySceneManager.eRoot.POLARBEAR;
-                if (targetAnimals[i].name.StartsWith("Bird")) index = (int)MySceneManager.eRoot.BIRD;
-
-                if (index == -1) continue;
-                animalsTransform[index - (int)MySceneManager.eRoot.PENGUIN_E].Add(targetAnimals[i].transform);
+                for(int j = 0; j < targetAnimalName.Length; ++j)
+                {
+                    if (!targetAnimals[i].name.StartsWith(targetAnimalName[j])) continue;
+                    animalsTransform[j].Add(targetAnimals[i].transform);
+                    break;
+                }
             }
         }
         if (interactObjects == null)
@@ -108,18 +110,14 @@ public class GuestSharedObject : MonoBehaviour
     public Transform GetAnimalTransform(string _name)
     {
         Init();
-        int index = -(int)MySceneManager.eRoot.PENGUIN_E;
-        if (_name.StartsWith("Penguin")) index += (int)MySceneManager.eRoot.PENGUIN_E;
-        if (_name.StartsWith("Horse")) index += (int)MySceneManager.eRoot.HORSE;
-        if (_name.StartsWith("Elephant")) index += (int)MySceneManager.eRoot.ELEPHANT;
-        if (_name.StartsWith("Lion")) index += (int)MySceneManager.eRoot.LION;
-        if (_name.StartsWith("PolarBear")) index += (int)MySceneManager.eRoot.POLARBEAR;
-        if (_name.StartsWith("Bird")) index += (int)MySceneManager.eRoot.BIRD;
+        for(int i = 0; i < cagePosName.Length; ++i)
+        {
+            if (!_name.StartsWith(cagePosName[i])) continue;
+            if (animalsTransform[i].Count <= 0) return null;
+            return animalsTransform[i][Random.Range(0, animalsTransform[i].Count)];
+        }
 
-        if (index < 0) return null;
-        if (animalsTransform[index].Count <= 0) return null;
-
-        return animalsTransform[index][Random.Range(0, animalsTransform[index].Count)];
+        return null;
     }
 
     public List<BaseObj> GetInteractObjects()
