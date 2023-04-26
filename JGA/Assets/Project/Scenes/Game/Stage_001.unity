@@ -1628,7 +1628,7 @@ PrefabInstance:
     - target: {fileID: 4419493214707989071, guid: f6ee386947dc3f846bcd6a04073118d4,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -58.83
+      value: -55.92
       objectReference: {fileID: 0}
     - target: {fileID: 4419493214707989071, guid: f6ee386947dc3f846bcd6a04073118d4,
         type: 3}
@@ -20049,7 +20049,12 @@ PrefabInstance:
     - target: {fileID: -3998445837940424697, guid: e61fda9d1c86133468a72ec4ecde6dbf,
         type: 3}
       propertyPath: m_Radius
-      value: 15
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: -3998445837940424697, guid: e61fda9d1c86133468a72ec4ecde6dbf,
+        type: 3}
+      propertyPath: m_Center.z
+      value: 7.5
       objectReference: {fileID: 0}
     - target: {fileID: 2241847668470102944, guid: e61fda9d1c86133468a72ec4ecde6dbf,
         type: 3}
@@ -20108,13 +20113,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4391209207475845992, guid: e61fda9d1c86133468a72ec4ecde6dbf,
         type: 3}
+      propertyPath: data.search
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 4391209207475845992, guid: e61fda9d1c86133468a72ec4ecde6dbf,
+        type: 3}
       propertyPath: data.searchAngle
       value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 4391209207475845992, guid: e61fda9d1c86133468a72ec4ecde6dbf,
         type: 3}
       propertyPath: data.searchDistance
-      value: 16.8
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 6650489533873372784, guid: e61fda9d1c86133468a72ec4ecde6dbf,
         type: 3}
