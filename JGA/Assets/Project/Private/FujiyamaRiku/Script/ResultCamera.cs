@@ -13,6 +13,7 @@
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Timeline;
 using UnityEngine;
 
 public class ResultCamera : MonoBehaviour
@@ -23,15 +24,11 @@ public class ResultCamera : MonoBehaviour
     private GameObject guestNumUI;
     private GuestNumUI _GuestNumUI;
 
-	private bool Crear;
+	private bool clear;
 
-	[SerializeField] private float RotateTime;
-    [SerializeField] private float radius;
-    private float NowTime;
+	[SerializeField] private float rotateTime;
+    private float rotateFlame;
     
-
-    private Vector3 StartPos;
-	private Vector3 EndPos;
 
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -48,11 +45,12 @@ public class ResultCamera : MonoBehaviour
         {
             Debug.LogWarning("resultCameraがシーン上にありません");
         }
-        StartPos = resultCamera.transform.position;
-        EndPos = resultCamera.transform.position;
-        RotateTime = 5.0f;
-        NowTime = 0.0f;
-        Crear = false;
+        if (rotateTime == 0)
+        {
+            rotateTime = 10.0f;
+        }
+        clear = false;
+        rotateFlame = 0;
     }
 
 	/// <summary>
@@ -82,29 +80,28 @@ public class ResultCamera : MonoBehaviour
 	{
 		if(Input.GetKeyDown(KeyCode.K)) 
 		{
-            Crear = true;
+            clear = true;
             ChangeCamera();
         }
-		if (Crear)
-		{
-            CameraRotate();
-
-        }
+		
 
             //----- ゲームクリア -----
-            if (guestNumUI)
+        if (guestNumUI)
 		{
 			if (_GuestNumUI.isClear())
 			{
-				if (!Crear)
+				if (!clear)
 				{
-                    Crear = true;
+                    clear = true;
 					ChangeCamera();
 				}
-				CameraRotate();
             }
 
 		}
+        if (clear)
+        {
+            CameraRotate();
+        }
     }
 
 	/// <summary>
@@ -123,8 +120,19 @@ public class ResultCamera : MonoBehaviour
 	}
 	private void CameraRotate()
 	{
-        
+        Debug.Log(rotateFlame);
+        if (rotateFlame >= rotateTime)
+        {
+            //clear = false;
+            return;
+        }
+        rotateFlame += Time.deltaTime;
 
+        var buf = resultCamera.transform.position;
+        resultCamera.transform.RotateAround(Vector3.zero,
+                                            Vector3.up,
+                                            360 / rotateTime * Time.deltaTime);
+        
     }
 
 }
