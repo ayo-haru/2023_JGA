@@ -63,7 +63,7 @@ public class StageSceneManager : BaseSceneManager {
     //---変数
     private bool isSceneChangeOnce; // 一度だけ処理をするときに使う
 
-
+    MyContorller inputAction;
 
     // デバッグ用チェック
     [Space(100)]
@@ -114,6 +114,9 @@ public class StageSceneManager : BaseSceneManager {
         Application.targetFrameRate = 60;       // FPSを60に固定
 
         isSceneChangeOnce = false;
+
+        inputAction = new MyContorller();
+        inputAction.Enable();
 
         //---デバッグ用------------------------------------------------------------------------------
         /*
@@ -239,17 +242,14 @@ public class StageSceneManager : BaseSceneManager {
     }
 
     void Update() {
-
-        if (Input.GetKeyUp(KeyCode.U)) {
-            GameObject.Find("Radio_002").GetComponent<RadioObject>().StopRadio();
-        }
-
         //----- 制限時間のゲームオーバー -----
         if (timerUI) {
             if (_TimerUI.IsFinish()) {
                 if (!isSceneChangeOnce) {
-                    SceneChange(MySceneManager.SceneState.SCENE_TITLE);
-                    isSceneChangeOnce = true;
+                    if (inputAction.Menu.Decision.ReadValue<float>() >= InputSystem.settings.defaultButtonPressPoint) { // 入力があったら
+                        SceneChange(MySceneManager.SceneState.SCENE_TITLE);
+                        isSceneChangeOnce = true;
+                    }
                 }
             }
         }
@@ -257,12 +257,14 @@ public class StageSceneManager : BaseSceneManager {
         //----- ゲームクリア -----
         if (guestNumUI) {
             if (_GuestNumUI.isClear()) {
-                if (!isSceneChangeOnce) {
-                    if (System.Enum.GetNames(typeof(MySceneManager.SceneState)).Length > MySceneManager.GameData.nowScene) {
-                        MySceneManager.GameData.nowScene++;
+                if (!isSceneChangeOnce) {   // 一度だけ処理
+                    if (inputAction.Menu.Decision.ReadValue<float>() >= InputSystem.settings.defaultButtonPressPoint) { // 入力があったら
+                        if (System.Enum.GetNames(typeof(MySceneManager.SceneState)).Length > MySceneManager.GameData.nowScene) {  // 最大シーンではないとき
+                            MySceneManager.GameData.nowScene++;
+                        }
+                        SceneChange(MySceneManager.GameData.nowScene);  // シーン遷移
+                        isSceneChangeOnce = true;   // 二回目の処理を走らせない
                     }
-                    SceneChange(MySceneManager.GameData.nowScene);
-                    isSceneChangeOnce = true;
                 }
             }
         }
