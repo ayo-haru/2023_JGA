@@ -60,6 +60,7 @@ public class Player : MonoBehaviour
 	public bool IsHold { get { return _IsHold; } }
 	[SerializeField] private bool _IsMove;
 	public bool IsMove { get { return _IsMove; } }
+	private bool bRunButton;
 	[SerializeField] private bool _IsRun;        // 走りフラグ
 	public bool IsRun { get { return _IsRun; } }
 	[SerializeField] private bool _IsAppeal;    // アピールフラグ
@@ -240,7 +241,11 @@ public class Player : MonoBehaviour
 			}
 		}
 
-
+		// 走っているか
+		if (bRunButton && moveInputValue.normalized != Vector2.zero)
+			_IsRun = true;
+		else
+			_IsRun = false;
 
 		float length;
 		if (InteractOutline != null)
@@ -406,11 +411,11 @@ public class Player : MonoBehaviour
 		{
 			// 押された時
 			case InputActionPhase.Performed:
-				if (moveInputValue.normalized != Vector2.zero)
-					_IsRun = true;
+				bRunButton = true;
 				break;
 			// 離された時
 			case InputActionPhase.Canceled:
+				bRunButton = false;
 				_IsRun = false;
 				break;
 		}
@@ -638,6 +643,8 @@ public class Player : MonoBehaviour
 		// 離す処理
 		else
 		{
+			anim.SetFloat("AnimSpeed", 1.0f);
+
 			Destroy(InteractCollision.GetComponent<HingeJoint>());
 
 			if (InteractObjectParent != null)
@@ -690,6 +697,16 @@ public class Player : MonoBehaviour
 
 		if (!_IsMegaphone)
 			SoundManager.Play(audioSource, seCall);
+	}
+
+	public void AnimStop()
+	{
+		anim.SetFloat("AnimSpeed", 0.0f);
+	}
+
+	public void PlaySoundWalk()
+	{
+		SoundManager.Play(audioSource, seWalk);
 	}
 
 	#region 衝突判定
