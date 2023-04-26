@@ -295,12 +295,12 @@
             "actions": [
                 {
                     "name": "Pause",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "49e503b1-b684-4e37-b3cc-7048c6b6cf51",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Move",
@@ -313,12 +313,12 @@
                 },
                 {
                     "name": "Decision",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "8268a9a9-9622-4ff2-b310-aa2f89cf0ab0",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -414,6 +414,17 @@
                     "name": "",
                     "id": "2135461e-57eb-42f9-92c0-cec48d453348",
                     "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Decision",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a5f2f0ea-2703-436e-a4a2-ea2fc7f44061",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

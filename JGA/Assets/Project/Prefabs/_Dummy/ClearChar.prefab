@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3903224437707833412}
   - component: {fileID: 3903224437707833413}
   m_Layer: 5
-  m_Name: Text (Legacy)
+  m_Name: ClearChar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -79,4 +79,5 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u30B9\u30C6\u30FC\u30B8\u30AF\u30EA\u30A2\U0001F600( \xB7\u3142\xB7)\u0648"
+  m_Text: "\u30B9\u30C6\u30FC\u30B8\u30AF\u30EA\u30A2\U0001F600( \uFF65\u229D\uFF65
+    )\n(\u30AF\u30EA\u30C3\u30AF\u3067\u6B21\u306E\u30B9\u30C6\u30FC\u30B8)"
