@@ -76,7 +76,7 @@ public class GuestNumUI : MonoBehaviour
     }
 
     public bool isClear() {
-        return (currentNum == clearNum) ? true : false;
+        return (currentNum >= clearNum) ? true : false;
     }
 
 }

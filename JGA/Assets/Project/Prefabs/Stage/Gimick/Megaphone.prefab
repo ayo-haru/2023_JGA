@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2439645048806532663}
   - component: {fileID: 558724734948222647}
   - component: {fileID: 5776913066072667924}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: megahon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,9 +97,9 @@ GameObject:
   - component: {fileID: -1704636144667093880}
   - component: {fileID: -3637665993273057639}
   - component: {fileID: -8306689729176307778}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Megaphone
-  m_TagString: Untagged
+  m_TagString: Interact
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

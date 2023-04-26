@@ -61,7 +61,7 @@ public class StageSceneManager : BaseSceneManager {
 
 
     //---変数
-    private bool isSceneChangeOnce; // 一度だけ処理をするときに使う
+    private bool isOnce; // 一度だけ処理をするときに使う
 
     MyContorller inputAction;
 
@@ -113,7 +113,7 @@ public class StageSceneManager : BaseSceneManager {
         Init();
         Application.targetFrameRate = 60;       // FPSを60に固定
 
-        isSceneChangeOnce = false;
+        isOnce = false;
 
         inputAction = new MyContorller();
         inputAction.Enable();
@@ -245,10 +245,10 @@ public class StageSceneManager : BaseSceneManager {
         //----- 制限時間のゲームオーバー -----
         if (timerUI) {
             if (_TimerUI.IsFinish()) {
-                if (!isSceneChangeOnce) {
+                if (!isOnce) {
                     if (inputAction.Menu.Decision.ReadValue<float>() >= InputSystem.settings.defaultButtonPressPoint) { // 入力があったら
                         SceneChange(MySceneManager.SceneState.SCENE_TITLE);
-                        isSceneChangeOnce = true;
+                        isOnce = true;
                     }
                 }
             }
@@ -257,13 +257,15 @@ public class StageSceneManager : BaseSceneManager {
         //----- ゲームクリア -----
         if (guestNumUI) {
             if (_GuestNumUI.isClear()) {
-                if (!isSceneChangeOnce) {   // 一度だけ処理
+                if (!isOnce) {   // 一度だけ処理
+                                     //gameObject.AddComponent<ResultCamera>();
                     if (inputAction.Menu.Decision.ReadValue<float>() >= InputSystem.settings.defaultButtonPressPoint) { // 入力があったら
                         if (System.Enum.GetNames(typeof(MySceneManager.SceneState)).Length > MySceneManager.GameData.nowScene) {  // 最大シーンではないとき
                             MySceneManager.GameData.nowScene++;
+                            Debug.Log(MySceneManager.GameData.nowScene);
                         }
                         SceneChange(MySceneManager.GameData.nowScene);  // シーン遷移
-                        isSceneChangeOnce = true;   // 二回目の処理を走らせない
+                        isOnce = true;   // 二回目の処理を走らせない
                     }
                 }
             }
