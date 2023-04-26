@@ -523,6 +523,11 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void OnHold(InputAction.CallbackContext context)
 	{
+		//if (context.phase == InputActionPhase.Performed)
+		//	Debug.Log($"InputActionPhase.Performed");
+		//if (context.phase == InputActionPhase.Canceled)
+		//	Debug.Log($"InputActionPhase.Canceled");
+
 		if (WithinRange.Count == 0 || PauseManager.isPaused)
 			return;
 
@@ -560,7 +565,7 @@ public class Player : MonoBehaviour
 					if (baseObj.objType == BaseObj.ObjType.HOLD ||
 						baseObj.objType == BaseObj.ObjType.HIT_HOLD)
 					{
-						Hold();
+						Hold(true);
 						_IsHold = true;
 					}
 				}
@@ -570,13 +575,15 @@ public class Player : MonoBehaviour
 					if (baseObject.objState == BaseObject.OBJState.HOLD ||
 						baseObject.objState == BaseObject.OBJState.HITANDHOLD)
 					{
-						Hold();
+						Hold(true);
 						_IsHold = true;
 					}
 				}
 
 			}
 		}
+
+		// 長押し終了
 		else if (context.phase == InputActionPhase.Canceled)
 		{
 			// BaseObjとBaseObject二つあるため、それぞれ出来るように書きました(吉原 04/04 4:25)
@@ -585,7 +592,7 @@ public class Player : MonoBehaviour
 				if (baseObj.objType == BaseObj.ObjType.HOLD ||
 					baseObj.objType == BaseObj.ObjType.HIT_HOLD)
 				{
-					Hold();
+					Hold(false);
 					_IsHold = false;
 				}
 			}
@@ -595,7 +602,7 @@ public class Player : MonoBehaviour
 				if (baseObject.objState == BaseObject.OBJState.HOLD ||
 					baseObject.objState == BaseObject.OBJState.HITANDHOLD)
 				{
-					Hold();
+					Hold(false);
 					_IsHold = false;
 				}
 			}
@@ -606,10 +613,12 @@ public class Player : MonoBehaviour
 	/// <summary>
 	/// 咥える
 	/// </summary>
-	private void Hold()
+	private void Hold(bool hold)
 	{
+		anim.SetBool("Hold", !_IsHold);
+
 		// 掴む処理
-		if (!_IsHold)
+		if (hold)
 		{
 			if (InteractCollision.TryGetComponent(out Rigidbody rigidbody))
 			{
