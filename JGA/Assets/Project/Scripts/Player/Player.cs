@@ -704,10 +704,10 @@ public class Player : MonoBehaviour
 		anim.SetFloat("AnimSpeed", 0.0f);
 	}
 
-	public void PlaySoundWalk()
-	{
-		SoundManager.Play(audioSource, seWalk);
-	}
+	//public void PlaySoundWalk()
+	//{
+	//	SoundManager.Play(audioSource, seWalk);
+	//}
 
 	#region 衝突判定
 	private void OnCollisionStay(Collision collision)

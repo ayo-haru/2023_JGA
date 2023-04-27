@@ -653,6 +653,7 @@ GameObject:
   - component: {fileID: 6059633014066229637}
   - component: {fileID: 6059633014066229636}
   - component: {fileID: 6059633014066229635}
+  - component: {fileID: 3789616992787296143}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -867,12 +868,27 @@ MonoBehaviour:
   _IsRun: 0
   _IsAppeal: 0
   _IsRandom: 0
+  _IsMegaphone: 0
   bGamePad: 0
   _vForce: {x: 0, y: 0, z: 0}
   InteractCollision: {fileID: 0}
   HoldObjectRb: {fileID: 0}
   InteractOutline: {fileID: 0}
   WithinRange: []
+  holdPos: {fileID: 0}
+--- !u!114 &3789616992787296143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6059633014066229634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a77e8120de8036f45b1c637d92f9961f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _audioSource: {fileID: 0}
 --- !u!1 &7144897059089238918
 GameObject:
   m_ObjectHideFlags: 0
