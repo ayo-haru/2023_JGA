@@ -14,6 +14,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UniRx;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
@@ -29,7 +30,6 @@ public class Player : MonoBehaviour
 	[SerializeField] private AudioClip seHold;          // ＳＥ：つかむ
 	[SerializeField] private AudioClip seWalk;          // ＳＥ：歩く
 	[SerializeField] private Animator anim;             // Animatorへの参照
-	[SerializeField] private MultiParentConstraint constraint;              // 咥えるのやつ
 
 
 	[Header("ステータス")] //-----------------------------------------------------------------
@@ -60,6 +60,7 @@ public class Player : MonoBehaviour
 	public bool IsHold { get { return _IsHold; } }
 	[SerializeField] private bool _IsMove;
 	public bool IsMove { get { return _IsMove; } }
+	private bool bRunButton;
 	[SerializeField] private bool _IsRun;        // 走りフラグ
 	public bool IsRun { get { return _IsRun; } }
 	[SerializeField] private bool _IsAppeal;    // アピールフラグ
@@ -94,7 +95,9 @@ public class Player : MonoBehaviour
 
 	private Transform respawnZone;              // リスポーン位置プレハブ設定用
 
-	private GameObject holdPos; // 持つときの位置
+	[SerializeField] private GameObject holdPos; // 持つときの位置
+
+	private GameObject InteractObjectParent;
 
 	private float IdolTime = 0;
 
@@ -116,7 +119,8 @@ public class Player : MonoBehaviour
 		rb.constraints = RigidbodyConstraints.FreezeRotation;
 
 		// 持つときの場所を子オブジェクトから検索
-		holdPos = transform.Find("HoldPos").gameObject;
+		if (holdPos == null)
+			holdPos = transform.Find("HoldPos").gameObject;
 
 
 		var respawn = GameObject.Find("PlayerSpawn");
@@ -124,6 +128,8 @@ public class Player : MonoBehaviour
 			Debug.LogError("<color=red>プレイヤーのリスポーン位置が見つかりません[Player.cs]</color>");
 		else
 			respawnZone = respawn.transform;
+
+		InteractObjectParent = GameObject.Find("InteractObject");
 
 
 		// Input Actionインスタンス生成
@@ -235,7 +241,11 @@ public class Player : MonoBehaviour
 			}
 		}
 
-
+		// 走っているか
+		if (bRunButton && moveInputValue.normalized != Vector2.zero)
+			_IsRun = true;
+		else
+			_IsRun = false;
 
 		float length;
 		if (InteractOutline != null)
@@ -317,8 +327,8 @@ public class Player : MonoBehaviour
 
 		if (_IsHold)
 		{
-			InteractCollision.transform.position = holdPos.transform.position;
-			InteractCollision.transform.rotation = holdPos.transform.rotation;
+			//InteractCollision.transform.position = holdPos.transform.position;
+			//InteractCollision.transform.rotation = holdPos.transform.rotation;
 		}
 	}
 
@@ -401,11 +411,11 @@ public class Player : MonoBehaviour
 		{
 			// 押された時
 			case InputActionPhase.Performed:
-				if (moveInputValue.normalized != Vector2.zero)
-					_IsRun = true;
+				bRunButton = true;
 				break;
 			// 離された時
 			case InputActionPhase.Canceled:
+				bRunButton = false;
 				_IsRun = false;
 				break;
 		}
@@ -518,6 +528,11 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void OnHold(InputAction.CallbackContext context)
 	{
+		//if (context.phase == InputActionPhase.Performed)
+		//	Debug.Log($"InputActionPhase.Performed");
+		//if (context.phase == InputActionPhase.Canceled)
+		//	Debug.Log($"InputActionPhase.Canceled");
+
 		if (WithinRange.Count == 0 || PauseManager.isPaused)
 			return;
 
@@ -555,7 +570,7 @@ public class Player : MonoBehaviour
 					if (baseObj.objType == BaseObj.ObjType.HOLD ||
 						baseObj.objType == BaseObj.ObjType.HIT_HOLD)
 					{
-						Hold();
+						Hold(true);
 						_IsHold = true;
 					}
 				}
@@ -565,18 +580,15 @@ public class Player : MonoBehaviour
 					if (baseObject.objState == BaseObject.OBJState.HOLD ||
 						baseObject.objState == BaseObject.OBJState.HITANDHOLD)
 					{
-						Hold();
+						Hold(true);
 						_IsHold = true;
 					}
 				}
 
-				//Debug.Log($"InteractCollision:{InteractCollision}");
-				if (InteractCollision.name.Contains("Megaphone"))
-				{
-					_IsMegaphone = true;
-				}
 			}
 		}
+
+		// 長押し終了
 		else if (context.phase == InputActionPhase.Canceled)
 		{
 			// BaseObjとBaseObject二つあるため、それぞれ出来るように書きました(吉原 04/04 4:25)
@@ -585,7 +597,7 @@ public class Player : MonoBehaviour
 				if (baseObj.objType == BaseObj.ObjType.HOLD ||
 					baseObj.objType == BaseObj.ObjType.HIT_HOLD)
 				{
-					Hold();
+					Hold(false);
 					_IsHold = false;
 				}
 			}
@@ -595,7 +607,7 @@ public class Player : MonoBehaviour
 				if (baseObject.objState == BaseObject.OBJState.HOLD ||
 					baseObject.objState == BaseObject.OBJState.HITANDHOLD)
 				{
-					Hold();
+					Hold(false);
 					_IsHold = false;
 				}
 			}
@@ -606,37 +618,42 @@ public class Player : MonoBehaviour
 	/// <summary>
 	/// 咥える
 	/// </summary>
-	private void Hold()
+	private void Hold(bool hold)
 	{
+		anim.SetBool("Hold", !_IsHold);
+
 		// 掴む処理
-		if (_IsHold)
-			return;
-
-		if (InteractCollision.TryGetComponent(out Rigidbody rigidbody))
+		if (hold)
 		{
-			HoldObjectRb = rigidbody;
-
-			if (constraint != null)
+			if (InteractCollision.TryGetComponent(out Rigidbody rigidbody))
 			{
-				constraint.data.constrainedObject = rigidbody.transform;
-				WeightedTransformArray sourceObjects = constraint.data.sourceObjects;
-				WeightedTransform wTransform;
-				wTransform.transform = rigidbody.transform;
-				wTransform.weight = 1;
-				sourceObjects.Add(wTransform);
+				HoldObjectRb = rigidbody;
+
+				InteractCollision.transform.parent = transform;
+				InteractCollision.transform.rotation = transform.rotation;
+
+				if (InteractCollision.GetComponent<HingeJoint>() == null)
+				{
+					var joint = rigidbody.AddComponent<HingeJoint>();
+					joint.connectedBody = rb;
+					joint.anchor = new Vector3(0, 1.0f, 0);
+				}
 			}
 		}
-
 		// 離す処理
 		else
 		{
+			anim.SetFloat("AnimSpeed", 1.0f);
+
+			Destroy(InteractCollision.GetComponent<HingeJoint>());
+
+			if (InteractObjectParent != null)
+				InteractCollision.transform.parent = InteractObjectParent.transform;
+			else
+				InteractCollision.transform.parent = null;
+
 			InteractCollision = null;
 			HoldObjectRb = null;
-			if (constraint != null)
-			{
-				constraint.data.constrainedObject = null;
-				constraint.data.sourceObjects.Clear();
-			}
 		}
 	}
 
@@ -671,8 +688,25 @@ public class Player : MonoBehaviour
 		var obj = EffectManager.Create(transform.position + new Vector3(0, 4, 0), 0, transform.rotation);
 		obj.transform.localScale = Vector3.one * 5;
 		obj.transform.parent = transform;
+
+		//Debug.Log($"InteractCollision:{InteractCollision}");
+		if (InteractCollision != null && InteractCollision.name.Contains("Megaphone"))
+		{
+			_IsMegaphone = true;
+		}
+
 		if (!_IsMegaphone)
 			SoundManager.Play(audioSource, seCall);
+	}
+
+	public void AnimStop()
+	{
+		anim.SetFloat("AnimSpeed", 0.0f);
+	}
+
+	public void PlaySoundWalk()
+	{
+		SoundManager.Play(audioSource, seWalk);
 	}
 
 	#region 衝突判定

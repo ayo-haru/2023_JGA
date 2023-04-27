@@ -60,17 +60,24 @@ public class TransitionInteract : AITransition
         //コンポーネント、オブジェクトの取得
         if (!playerTransform) playerTransform = GameObject.FindWithTag("Player").GetComponent<Transform>();
         if (data==null) data = GetComponent<AIManager>().GetGuestData();
-        if (interactObjecs == null)
-        {
-            GameObject[] interactObjectList = GameObject.FindGameObjectsWithTag("Interact");
-            interactObjecs = new List<BaseObj>();
-            for(int i = 0; i < interactObjectList.Length; ++i)
-            {
-                BaseObj baseObjComponent = interactObjectList[i].GetComponent<BaseObj>();
-                if (!baseObjComponent) continue;
-                interactObjecs.Add(baseObjComponent);
-            }
-        }
+        if (interactObjecs != null) return;
+
+        interactObjecs = new List<BaseObj>();
+        GameObject Object = GameObject.Find("GuestSharedObject");
+        if (!Object) return;
+        GuestSharedObject sharedObject = Object.GetComponent<GuestSharedObject>();
+        if (!sharedObject) return;
+        interactObjecs = sharedObject.GetInteractObjects();
+#if false
+             Debug.LogWarning("GuestSharedObjectなかった");
+                GameObject[] interactObjectList = GameObject.FindGameObjectsWithTag("Interact");
+                interactObjecs = new List<BaseObj>();
+                for (int i = 0; i < interactObjectList.Length; ++i){
+                    BaseObj baseObjComponent = interactObjectList[i].GetComponent<BaseObj>();
+                    if (!baseObjComponent) continue;
+                    interactObjecs.Add(baseObjComponent);
+                }
+#endif
     }
 
     public override bool IsTransition()

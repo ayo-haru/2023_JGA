@@ -114,14 +114,15 @@ public class AIManager : MonoBehaviour
         //ステートの更新処理
         if (nodeList[currentState].state) nodeList[currentState].state.UpdateState();
     }
-
-	/// <summary>
-	/// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
-	/// </summary>
-	void Update()
+#if false
+    /// <summary>
+    /// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
+    /// </summary>
+    void Update()
 	{
 
     }
+#endif
     /// <summary>
     /// ステートの切り替え
     /// </summary>
@@ -186,7 +187,7 @@ public class AIManager : MonoBehaviour
     private void OnDrawGizmos()
     {
         //ペンギン到着エリア
-        Handles.color = new Color(1, 0, 0, 0.3f);
+        Handles.color = new Color(1, 0, 0, 0.1f);
         Handles.DrawSolidArc(transform.position, Vector3.up,transform.forward, 360.0f, data.arrivalPenguinArea);
         //アピール反応エリア
         Handles.color = new Color(0, 1, 0, 0.3f);
