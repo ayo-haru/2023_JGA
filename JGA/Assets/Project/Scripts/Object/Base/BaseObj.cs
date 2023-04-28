@@ -2,13 +2,14 @@
 // @File	: [BaseObj.cs]
 // @Brief	: ギミックオブジェクトのベース
 // @Author	: Ichida Mai
-// @Editer	: 
+// @Editer	: Ogusu Yuuko
 // @Detail	: 
 // 
 // [Date]
 // 2023/03/29	スクリプト作成
 // 2023/04/04   OutLineスクリプトを追加するようにattributeつけました(吉原)
 // 2023/04/18   ポーズ処理変更
+// 2023/04/26   (小楠)ObjTypeにDRAGを追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -27,6 +28,7 @@ public abstract class BaseObj : MonoBehaviour, IPlayObjectSound
 		HOLD,
 		HIT_HOLD,
 		RETURN,
+        DRAG,   //引きずる
 
 	}
 
