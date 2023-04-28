@@ -22,7 +22,6 @@ public class PenguinMove : MonoBehaviour
 {
 	enum MoveType
 	{
-		
 		WALK,
 		RUN,
         IDLE,
@@ -34,22 +33,19 @@ public class PenguinMove : MonoBehaviour
 		MAX_MOVE
 	}
 
-    private Animator anim;
+    private Animator anim;                  //アニメーター格納用
 
-	private MoveType currentMoveType;
-	//現在の動き
-	private MoveType moveType;
-	//動いているかどうか
-	private bool moveFlg;
-	//動きのデータの情報の数値
-	private int movedata;
-	//動きの数値
-	private int currentMoveIndex;
-	//現在の動きの数値
-	private int moveIndex;
+	private MoveType currentMoveType;       //現在の動き
+	private MoveType moveType;              //一つ前にした動き
 
-	//終了地点を格納しておく変数
-	private Vector3 endPos;
+	private bool moveFlg;                   //動いているかどうかのフラグ
+	
+	private int movedata;                   //動きのデータの情報の数値
+	private int currentMoveIndex;           //動きの数値
+	private int moveIndex;                  //現在の動きの数値
+
+    //終了地点を格納しておく変数F
+    private Vector3 endPos;
 
     private Rigidbody rb; 
 

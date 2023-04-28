@@ -366,7 +366,7 @@ PrefabInstance:
     - target: {fileID: 1680828955082991398, guid: d638d426e9cc2624284238320dd145d2,
         type: 3}
       propertyPath: isGuestSpawn
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1680828955082991398, guid: d638d426e9cc2624284238320dd145d2,
         type: 3}
@@ -15348,7 +15348,7 @@ PrefabInstance:
     - target: {fileID: 1559787619860390211, guid: 01eb5b54d8149be439800ab13cb5d514,
         type: 3}
       propertyPath: m_RootOrder
-      value: 17
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 1954997938522557127, guid: 01eb5b54d8149be439800ab13cb5d514,
         type: 3}
@@ -26168,6 +26168,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: GuestNumUIParent
+      objectReference: {fileID: 0}
+    - target: {fileID: 8565385349919716402, guid: ce240564607aa1e4cb44534f23cdfda6,
+        type: 3}
+      propertyPath: clearNum
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ce240564607aa1e4cb44534f23cdfda6, type: 3}
