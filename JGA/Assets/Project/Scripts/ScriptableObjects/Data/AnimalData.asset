@@ -16,3 +16,7 @@ MonoBehaviour:
   - displayName: Penguin.prefab
     ID: 0
     prefab: {fileID: 100190145466701160, guid: efea8ce56548ddc44b07b80c8c2aee06, type: 3}
+  - displayName: Bear.prefab
+    ID: 1
+    prefab: {fileID: 6732405395171645797, guid: 39f4ae3a86d3c06429ab3ef7a4235cbb,
+      type: 3}

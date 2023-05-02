@@ -269,6 +269,7 @@ public class PenguinMove : MonoBehaviour
 	{
         //動き決定の範囲
         //アピールばかりだとちょっとむかついたので一回やったら最低でも一回は違う行動に出る
+        //ココ変かもしれない。ちょっと作り直しを待たれよ
         if (turnFlg == true)
         {
             currentMoveType = (MoveType)Random.Range((int)MoveType.WALK, (int)MoveType.RUN + 1);

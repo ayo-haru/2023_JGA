@@ -25,6 +25,14 @@ public class BoothAnimalManager : SingletonMonoBehaviour<BoothAnimalManager>
     [SerializeField] public PenguinsData penguinsData;
 	[NonSerialized] public int penguinStartIndex;
 
+	//熊の生成に使う用
+	private GameObject bearObj;
+	//熊の数
+	[SerializeField] private int bearCount;
+	//ペンギンの総合データ
+	[SerializeField] public BearsData bearData;
+	[NonSerialized] public int bearStartIndex;
+
     /// <summary>
     /// 最初のフレーム更新の前に呼び出される
     /// </summary>
@@ -35,7 +43,7 @@ public class BoothAnimalManager : SingletonMonoBehaviour<BoothAnimalManager>
         for (int i = 0;i < penguinCount;i++)
 		{
             penguinStartIndex = UnityEngine.Random.Range(0, penguinsData.rangeList.Count);
-            var startPoint = UnityEngine.Random.insideUnitCircle * BoothAnimalManager.Instance.penguinsData.rangeArea;
+            var startPoint = UnityEngine.Random.insideUnitCircle * penguinsData.rangeArea;
 
 			//決めた範囲分動かした場所を決定し返す
 			var setVector = new Vector3(penguinsData.rangeList[penguinStartIndex].x + startPoint.x,
@@ -45,6 +53,21 @@ public class BoothAnimalManager : SingletonMonoBehaviour<BoothAnimalManager>
 			Instantiate(penguinObj, setVector, Quaternion.identity);
 
         }
+
+		bearObj = PrefabContainerFinder.Find(MySceneManager.GameData.animalDatas, "Bear.prefab");
+		for(int i = 0; i < bearCount;i++) 
+		{
+			bearStartIndex = UnityEngine.Random.Range(0, bearData.rangeList.Count);
+			var startPoint = UnityEngine.Random.insideUnitCircle * bearData.rangeArea;
+
+            var setVector = new Vector3(bearData.rangeList[bearStartIndex].x + startPoint.x,
+                                        bearData.rangeList[bearStartIndex].y,
+                                        bearData.rangeList[bearStartIndex].z + startPoint.y);
+
+			Instantiate(bearObj, setVector, Quaternion.identity);
+        }
+
+		
 	}
 
 	/// <summary>
