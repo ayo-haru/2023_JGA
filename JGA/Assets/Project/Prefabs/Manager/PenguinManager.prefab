@@ -44,5 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682cabcc7ffb3c5439bd042b46014282, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  penguinCount: 0
-  penguinsData: {fileID: 0}
+  penguinCount: 5
+  penguinsData: {fileID: 11400000, guid: 3d81b8c286d701f4b8fadcef04fe4c77, type: 2}
+  bearCount: 2
+  bearData: {fileID: 11400000, guid: 5e43a404833cc9d4c8811883186e73c0, type: 2}

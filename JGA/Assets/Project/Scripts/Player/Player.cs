@@ -2,7 +2,7 @@
 // @File	: [Player.cs]
 // @Brief	: 
 // @Author	: Sakai Ryotaro
-// @Editer	: Ichida Mai
+// @Editer	: Ichida Mai    Ogusu Yuuko
 // @Detail	: 
 // 
 // [Date]
@@ -10,6 +10,7 @@
 // 2023/03/08	リスポーンするよ
 // 2023/04/04	インタラクトオブジェクトの所を手直ししました～(吉原)
 //				OnHit(コールバック関数)とOnHit(メインの処理)で名前がまったく同じだからメインの処理はHitにさせていただきましたわ！！！
+// 2023/04/28   引きずる処理追加しました(小楠)
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -58,7 +59,9 @@ public class Player : MonoBehaviour
 
 	[SerializeField] private bool _IsHold;       // つかみフラグ
 	public bool IsHold { get { return _IsHold; } }
-	[SerializeField] private bool _IsMove;
+    [SerializeField] private bool _IsDrag;      //引きずりフラグ
+    public bool IsDrag { get { return _IsDrag; } }
+    [SerializeField] private bool _IsMove;
 	public bool IsMove { get { return _IsMove; } }
 	private bool bRunButton;
 	[SerializeField] private bool _IsRun;        // 走りフラグ
@@ -344,7 +347,7 @@ public class Player : MonoBehaviour
 		_IsAppeal = false;
 
 		// 持ったままポーズに入ると挙動おかしくなるので救済措置「捨てる」
-		_IsHold = false;
+		_IsHold = _IsDrag = false;
 		InteractCollision = null;
 		HoldObjectRb = null;
 	}
@@ -384,9 +387,37 @@ public class Player : MonoBehaviour
 			force = moveForce;
 			max = _maxMoveSpeed;
 		}
+        // 制限速度内の場合、移動方向の力を与える
+        _vForce = new Vector3(moveInputValue.x, 0, moveInputValue.y) * force;
 
-		// 制限速度内の場合、移動方向の力を与える
-		_vForce = new Vector3(moveInputValue.x, 0, moveInputValue.y) * force;
+        //引きずっているとき
+        if (_IsDrag)
+        {
+            //移動
+            if (Vector3.Dot(vForce.normalized, transform.forward.normalized) <= -0.5f)
+            {
+                if (rb.velocity.magnitude < max && _vForce != Vector3.zero) rb.AddForce(_vForce);
+            }
+            //回転
+            if (moveInputValue.normalized == Vector2.zero) return;
+            float dragMoveAngle = (Vector3.SignedAngle(vForce.normalized, transform.forward.normalized, Vector3.up) <= 0.0f) ? -1.0f : 1.0f;
+            transform.rotation *= Quaternion.AngleAxis(dragMoveAngle, Vector3.up);
+        }
+
+        //引きずっていないとき
+        if (!_IsDrag)
+        {
+            //移動
+            if (rb.velocity.magnitude < max && _vForce != Vector3.zero) rb.AddForce(_vForce);
+            //回転
+            if (moveInputValue.normalized == Vector2.zero) return;
+            var fw = transform.forward - new Vector3(-moveInputValue.x, transform.position.y, -moveInputValue.y) / 2;
+            fw.y = 0.0f;
+            transform.LookAt(transform.position + fw);
+        }
+#if false
+        // 制限速度内の場合、移動方向の力を与える
+        _vForce = new Vector3(moveInputValue.x, 0, moveInputValue.y) * force;
 		if (rb.velocity.magnitude < max && _vForce != Vector3.zero)
 			rb.AddForce(_vForce);
 
@@ -397,7 +428,8 @@ public class Player : MonoBehaviour
 			fw.y = 0;
 			transform.LookAt(transform.position + fw);
 		}
-	}
+#endif
+    }
 
 	/// <summary>
 	/// 走る
@@ -566,14 +598,27 @@ public class Player : MonoBehaviour
 				// BaseObjとBaseObject二つあるため、それぞれ出来るように書きました(吉原 04/04 4:25)
 				if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj))
 				{
-
-					if (baseObj.objType == BaseObj.ObjType.HOLD ||
+                    switch (baseObj.objType)
+                    {
+                        case BaseObj.ObjType.HOLD:
+                        case BaseObj.ObjType.HIT_HOLD:
+                            Hold(true);
+                            _IsHold = true;
+                            break;
+                        case BaseObj.ObjType.DRAG:
+                            Drag(true);
+                            _IsHold = _IsDrag = true;
+                            break;
+                    }
+#if false
+                    if (baseObj.objType == BaseObj.ObjType.HOLD ||
 						baseObj.objType == BaseObj.ObjType.HIT_HOLD)
 					{
 						Hold(true);
 						_IsHold = true;
 					}
-				}
+#endif
+                }
 				else if (InteractCollision.TryGetComponent<BaseObject>(out var baseObject))
 				{
 
@@ -594,13 +639,27 @@ public class Player : MonoBehaviour
 			// BaseObjとBaseObject二つあるため、それぞれ出来るように書きました(吉原 04/04 4:25)
 			if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj))
 			{
-				if (baseObj.objType == BaseObj.ObjType.HOLD ||
+                switch (baseObj.objType)
+                {
+                    case BaseObj.ObjType.HOLD:
+                    case BaseObj.ObjType.HIT_HOLD:
+                        Hold(false);
+                        _IsHold = false;
+                        break;
+                    case BaseObj.ObjType.DRAG:
+                        Drag(false);
+                        _IsHold = _IsDrag = false;
+                        break;
+                }
+#if false
+                if (baseObj.objType == BaseObj.ObjType.HOLD ||
 					baseObj.objType == BaseObj.ObjType.HIT_HOLD)
 				{
 					Hold(false);
 					_IsHold = false;
 				}
-			}
+#endif
+            }
 			else if (InteractCollision.TryGetComponent<BaseObject>(out var baseObject))
 			{
 
@@ -656,12 +715,42 @@ public class Player : MonoBehaviour
 			HoldObjectRb = null;
 		}
 	}
+    /// <summary>
+    /// 引きずる処理
+    /// </summary>
+    /// <param name="bDrag"></param>
+    private void Drag(bool bDrag)
+    {
+        //引きずり開始
+        if (bDrag)
+        {
+            anim.SetBool("Hold", !_IsHold);
+            if (!InteractCollision.TryGetComponent(out Rigidbody rigidbody)) return;
+            HoldObjectRb = rigidbody;
+
+            HingeJoint joint = InteractCollision.GetComponent<HingeJoint>();
+            if (!joint) joint = rigidbody.AddComponent<HingeJoint>();
+            joint.connectedBody = rb;
+            joint.anchor = joint.transform.InverseTransformPoint(holdPos.transform.TransformPoint(holdPos.transform.localPosition));//HoldPosを設定
+            joint.axis = Vector3.up;
+            joint.useLimits = true;
+            JointLimits jointLimits = joint.limits;
+            jointLimits.min = -45.0f;
+            jointLimits.max = 45.0f;
+            joint.limits = jointLimits;
+            joint.enableCollision = true;
+            return;
+        }
+
+        //離す処理
+        Hold(bDrag);
+    }
 
 
-	/// <summary>
-	/// アピール
-	/// </summary>
-	private void OnAppeal(InputAction.CallbackContext context)
+    /// <summary>
+    /// アピール
+    /// </summary>
+    private void OnAppeal(InputAction.CallbackContext context)
 	{
 		if (PauseManager.isPaused)
 			return;
@@ -709,7 +798,7 @@ public class Player : MonoBehaviour
 	//	SoundManager.Play(audioSource, seWalk);
 	//}
 
-	#region 衝突判定
+#region 衝突判定
 	private void OnCollisionStay(Collision collision)
 	{
 		// Playerと掴んでいるオブジェクトが接触していると、ぶっ飛ぶので離す
@@ -739,12 +828,12 @@ public class Player : MonoBehaviour
 		if (other.TryGetComponent(out Outline outline))
 			outline.enabled = false;
 	}
-	#endregion
+#endregion
 
 	public void ReStart()
 	{
 		// 捕まったら持ってるもの捨てる
-		_IsHold = false;
+		_IsHold = _IsDrag = false;
 		InteractCollision = null;
 		HoldObjectRb = null;
 

@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 829b5e9e3b06d3a43b6bd6c9c97b8653, type: 3}
+  m_Name: BearsData
+  m_EditorClassIdentifier: 
+  dataList:
+  - walkSpeed: 5
+    runSpeed: 8
+    rotateAngle: 5
+    minIdleTime: 4
+    maxIdleTime: 5
+  rangeList:
+  - {x: 142.42282, y: 1.9216876, z: 150.76714}
+  - {x: 140.9, y: 1.9216876, z: 138.3}
+  - {x: 156.3, y: 1.9216876, z: 127.7}
+  - {x: 179, y: 1.9216876, z: 121.2}
+  - {x: 183.3, y: 8.1, z: 146.3}
+  - {x: 169.8, y: 8.1, z: 162.6}
+  - {x: 161.6, y: 8.1, z: 150.4}
+  - {x: 169.6, y: 8.1, z: 141.4}
+  rangeButtom: 3
+  rangeArea: 2
