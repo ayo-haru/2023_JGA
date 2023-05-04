@@ -33,18 +33,17 @@ public class Player : MonoBehaviour
 	[SerializeField] private AudioClip seWalk;          // ＳＥ：歩く
 	[SerializeField] private Animator anim;             // Animatorへの参照
 
-
 	[Header("ステータス")] //-----------------------------------------------------------------
-	[SerializeField] private float moveForce = 7;       // 歩行時速度
-	[SerializeField] private float _maxMoveSpeed = 5;   // 歩行時最高速度
-	public float MaxMoveSpeed { get { return _maxMoveSpeed; } }
+	[SerializeField] private float moveForce = 7;           // 歩行時速度
+	[SerializeField] private float _maxMoveSpeed = 5;       // 歩行時最高速度
 	[SerializeField] private float runMagnification = 1.5f; // 疾走速度倍率
+	private float runForce;                                 // 疾走時速度
+	private float _maxRunSpeed;                             // 疾走時最高速度
+	private float appealForce;                              // アピール時速度
+	private float _maxAppealSpeed;                          // アピール時最高速度
 
-	private float runForce;                             // 疾走時速度
-	private float _maxRunSpeed;                         // 疾走時最高速度
-	public float MaxRunSpeed { get { return _maxRunSpeed; } }
-	private float appealForce;                          // アピール時速度
-	private float _maxAppealSpeed;                      // アピール時最高速度
+	public float MaxMoveSpeed	{ get { return _maxMoveSpeed; } }
+	public float MaxRunSpeed	{ get { return _maxRunSpeed; } }
 	public float MaxAppealSpeed { get { return _maxAppealSpeed; } }
 
 	[SerializeField] private float joyRunZone = 0.8f;   // ジョイスティックで走り始めるゾーン
@@ -54,85 +53,87 @@ public class Player : MonoBehaviour
 	//----------------------------------------------------------------------------------------
 
 	// フラグ --------------------------------------------------------------------------------
-	[SerializeField] private bool _IsHit;  // インタラクトフラグ
-	public bool IsHit { get { return _IsHit; } set { _IsHit = value; } }
-	private bool DelayHit;
-
-	[SerializeField] private bool _IsHold;       // つかみフラグ
-	public bool IsHold { get { return _IsHold; } }
-    [SerializeField] private bool _IsDrag;      //引きずりフラグ
-    public bool IsDrag { get { return _IsDrag; } }
-    [SerializeField] private bool _IsMove;
-	public bool IsMove { get { return _IsMove; } }
-	private bool bRunButton;
-	[SerializeField] private bool _IsRun;        // 走りフラグ
-	public bool IsRun { get { return _IsRun; } }
-	[SerializeField] private bool _IsAppeal;    // アピールフラグ
-	public bool IsAppeal { get { return _IsAppeal; } }
-	[SerializeField] private bool _IsRandom;    // 待機中のランダムな挙動
-	public bool IsRandom { get { return _IsRandom; } }
-
-	[SerializeField] private bool _IsMegaphone;    // メガホン用フラグ
-	public bool IsMegaphone { get { return _IsMegaphone; } }
-	private bool DelayMegaphone;
-
+	private bool bRunButton;                    // [PC]シフトキー入力状態
 	[SerializeField] private bool bGamePad;     // ゲームパッド接続確認フラグ
 
-	private bool bHitMotion;
+	[SerializeField] private bool _IsHit;       // インタラクトフラグ
+	[SerializeField] private bool _IsHold;      // つかみフラグ
+	[SerializeField] private bool _IsDrag;      // 引きずりフラグ
+	[SerializeField] private bool _IsMove;      // 移動フラグ
+	[SerializeField] private bool _IsRun;       // 走りフラグ
+	[SerializeField] private bool _IsAppeal;    // アピールフラグ
+	[SerializeField] private bool _IsRandom;    // 待機中のランダムな挙動
+	[SerializeField] private bool _IsMegaphone; // メガホン用フラグ
+
+	public bool IsHit		{ get { return _IsHit; } set { _IsHit = value; } }
+	public bool IsHold		{ get { return _IsHold; } }
+	public bool IsDrag		{ get { return _IsDrag; } }
+	public bool IsMove		{ get { return _IsMove; } }
+	public bool IsRun		{ get { return _IsRun; } }
+	public bool IsAppeal	{ get { return _IsAppeal; } }
+	public bool IsRandom	{ get { return _IsRandom; } }
+	public bool IsMegaphone	{ get { return _IsMegaphone; } }
+
+	private bool bHitMotion;                    // はたくモーション中は他のモーションさせないフラグ
+
+	private bool DelayHit;
+	private bool DelayMegaphone;
 	//----------------------------------------------------------------------------------------
 
-	[SerializeField] private Vector3 _vForce;
+	// 移動 ----------------------------------------------------------------------------------
+	[SerializeField] private Vector3 _vForce;               // 移動方向
 	public Vector3 vForce { get { return _vForce; } }
 
-	private Vector3 pauseVelocity;
-	private Vector3 pauseAngularVelocity;
+	private Vector3 pauseVelocity;                          // ポーズ時の加速度保存
+	private Vector3 pauseAngularVelocity;                   // ポーズ時の加速度保存
 
+	private MyContorller gameInputs;                        // 方向キー入力取得
+	private Vector2 moveInputValue;                         // 移動方向
 
-	private MyContorller gameInputs;            // 方向キー入力取得
-	private Vector2 moveInputValue;             // 移動方向
-
-	[SerializeField] private Collider InteractCollision;            // 掴んでいるオブジェクト：コリジョン
-	[SerializeField] private Rigidbody HoldObjectRb;             // 掴んでいるオブジェクト：重力関連
-	[SerializeField] private Outline InteractOutline;            // 掴んでいるオブジェクト：アウトライン
+	[SerializeField] private Collider InteractCollision;    // 掴んでいるオブジェクト：コリジョン
+	[SerializeField] private Rigidbody HoldObjectRb;        // 掴んでいるオブジェクト：重力関連
+	[SerializeField] private Outline InteractOutline;       // 掴んでいるオブジェクト：アウトライン
 
 	[SerializeField] private List<Collider> WithinRange = new List<Collider>();  // インタラクト範囲内にあるオブジェクトリスト
 
-	private Transform respawnZone;              // リスポーン位置プレハブ設定用
+	private Transform respawnZone;                          // リスポーン位置プレハブ設定用
+															//----------------------------------------------------------------------------------------
 
-	[SerializeField] private GameObject holdPos; // 持つときの位置
+	[SerializeField] private GameObject holdPos;    // 持つときの位置
 
-	private GameObject InteractObjectParent;
+	private GameObject InteractObjectParent;        // シーン上の「InteractObject」
 
-	private float IdolTime = 0;
+	private float IdolTime = 0;                     // 待機中のランダムな挙動用カウンタ
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
 	/// </summary>
 	void Awake()
 	{
-		// ポーズ時の動作を登録
+		//--- ポーズ時の動作を登録
 		PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(this.gameObject);
 		PauseManager.OnResumed.Subscribe(x => { Resumed(); }).AddTo(this.gameObject);
 
+		//--- NULLリファレンス回避
 		if (rb == null) rb = GetComponent<Rigidbody>();
 		if (audioSource == null) audioSource = GetComponent<AudioSource>();
 		if (anim == null) anim = GetComponent<Animator>();
 
-
-		// 回転固定
+		//--- 回転固定
 		rb.constraints = RigidbodyConstraints.FreezeRotation;
 
-		// 持つときの場所を子オブジェクトから検索
+		//--- 持つときの場所を子オブジェクトから検索
 		if (holdPos == null)
 			holdPos = transform.Find("HoldPos").gameObject;
 
-
+		//--- プレイヤー初期位置
 		var respawn = GameObject.Find("PlayerSpawn");
 		if (respawn == null)
 			Debug.LogError("<color=red>プレイヤーのリスポーン位置が見つかりません[Player.cs]</color>");
 		else
 			respawnZone = respawn.transform;
 
+		//--- 物を離した際に元の階層に戻すためのやつ
 		InteractObjectParent = GameObject.Find("InteractObject");
 
 
@@ -173,10 +174,6 @@ public class Player : MonoBehaviour
 
 	private void Update()
 	{
-		//Debug.Log($"rb:{rb.velocity}");
-
-		//Debug.Log($"isPaused:{PauseManager.isPaused}");
-
 		// ポーズ中は移動しない
 		if (PauseManager.isPaused)
 			moveInputValue = Vector2.zero;
@@ -388,37 +385,37 @@ public class Player : MonoBehaviour
 			force = moveForce;
 			max = _maxMoveSpeed;
 		}
-        // 制限速度内の場合、移動方向の力を与える
-        _vForce = new Vector3(moveInputValue.x, 0, moveInputValue.y) * force;
+		// 制限速度内の場合、移動方向の力を与える
+		_vForce = new Vector3(moveInputValue.x, 0, moveInputValue.y) * force;
 
-        //引きずっているとき
-        if (_IsDrag)
-        {
-            //移動
-            if (Vector3.Dot(vForce.normalized, transform.forward.normalized) <= -0.5f)
-            {
-                if (rb.velocity.magnitude < max && _vForce != Vector3.zero) rb.AddForce(_vForce);
-            }
-            //回転
-            if (moveInputValue.normalized == Vector2.zero) return;
-            float dragMoveAngle = (Vector3.SignedAngle(vForce.normalized, transform.forward.normalized, Vector3.up) <= 0.0f) ? -1.0f : 1.0f;
-            transform.rotation *= Quaternion.AngleAxis(dragMoveAngle, Vector3.up);
-        }
+		//引きずっているとき
+		if (_IsDrag)
+		{
+			//移動
+			if (Vector3.Dot(vForce.normalized, transform.forward.normalized) <= -0.5f)
+			{
+				if (rb.velocity.magnitude < max && _vForce != Vector3.zero) rb.AddForce(_vForce);
+			}
+			//回転
+			if (moveInputValue.normalized == Vector2.zero) return;
+			float dragMoveAngle = (Vector3.SignedAngle(vForce.normalized, transform.forward.normalized, Vector3.up) <= 0.0f) ? -1.0f : 1.0f;
+			transform.rotation *= Quaternion.AngleAxis(dragMoveAngle, Vector3.up);
+		}
 
-        //引きずっていないとき
-        if (!_IsDrag)
-        {
-            //移動
-            if (rb.velocity.magnitude < max && _vForce != Vector3.zero) rb.AddForce(_vForce);
-            //回転
-            if (moveInputValue.normalized == Vector2.zero) return;
-            var fw = transform.forward - new Vector3(-moveInputValue.x, transform.position.y, -moveInputValue.y) / 2;
-            fw.y = 0.0f;
-            transform.LookAt(transform.position + fw);
-        }
+		//引きずっていないとき
+		if (!_IsDrag)
+		{
+			//移動
+			if (rb.velocity.magnitude < max && _vForce != Vector3.zero) rb.AddForce(_vForce);
+			//回転
+			if (moveInputValue.normalized == Vector2.zero) return;
+			var fw = transform.forward - new Vector3(-moveInputValue.x, transform.position.y, -moveInputValue.y) / 2;
+			fw.y = 0.0f;
+			transform.LookAt(transform.position + fw);
+		}
 #if false
-        // 制限速度内の場合、移動方向の力を与える
-        _vForce = new Vector3(moveInputValue.x, 0, moveInputValue.y) * force;
+		// 制限速度内の場合、移動方向の力を与える
+		_vForce = new Vector3(moveInputValue.x, 0, moveInputValue.y) * force;
 		if (rb.velocity.magnitude < max && _vForce != Vector3.zero)
 			rb.AddForce(_vForce);
 
@@ -430,7 +427,7 @@ public class Player : MonoBehaviour
 			transform.LookAt(transform.position + fw);
 		}
 #endif
-    }
+	}
 
 	/// <summary>
 	/// 走る
@@ -599,27 +596,27 @@ public class Player : MonoBehaviour
 				// BaseObjとBaseObject二つあるため、それぞれ出来るように書きました(吉原 04/04 4:25)
 				if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj))
 				{
-                    switch (baseObj.objType)
-                    {
-                        case BaseObj.ObjType.HOLD:
-                        case BaseObj.ObjType.HIT_HOLD:
-                            Hold(true);
-                            _IsHold = true;
-                            break;
-                        case BaseObj.ObjType.DRAG:
-                            Drag(true);
-                            _IsHold = _IsDrag = true;
-                            break;
-                    }
+					switch (baseObj.objType)
+					{
+						case BaseObj.ObjType.HOLD:
+						case BaseObj.ObjType.HIT_HOLD:
+							Hold(true);
+							_IsHold = true;
+							break;
+						case BaseObj.ObjType.DRAG:
+							Drag(true);
+							_IsHold = _IsDrag = true;
+							break;
+					}
 #if false
-                    if (baseObj.objType == BaseObj.ObjType.HOLD ||
+					if (baseObj.objType == BaseObj.ObjType.HOLD ||
 						baseObj.objType == BaseObj.ObjType.HIT_HOLD)
 					{
 						Hold(true);
 						_IsHold = true;
 					}
 #endif
-                }
+				}
 				else if (InteractCollision.TryGetComponent<BaseObject>(out var baseObject))
 				{
 
@@ -640,27 +637,27 @@ public class Player : MonoBehaviour
 			// BaseObjとBaseObject二つあるため、それぞれ出来るように書きました(吉原 04/04 4:25)
 			if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj))
 			{
-                switch (baseObj.objType)
-                {
-                    case BaseObj.ObjType.HOLD:
-                    case BaseObj.ObjType.HIT_HOLD:
-                        Hold(false);
-                        _IsHold = false;
-                        break;
-                    case BaseObj.ObjType.DRAG:
-                        Drag(false);
-                        _IsHold = _IsDrag = false;
-                        break;
-                }
+				switch (baseObj.objType)
+				{
+					case BaseObj.ObjType.HOLD:
+					case BaseObj.ObjType.HIT_HOLD:
+						Hold(false);
+						_IsHold = false;
+						break;
+					case BaseObj.ObjType.DRAG:
+						Drag(false);
+						_IsHold = _IsDrag = false;
+						break;
+				}
 #if false
-                if (baseObj.objType == BaseObj.ObjType.HOLD ||
+				if (baseObj.objType == BaseObj.ObjType.HOLD ||
 					baseObj.objType == BaseObj.ObjType.HIT_HOLD)
 				{
 					Hold(false);
 					_IsHold = false;
 				}
 #endif
-            }
+			}
 			else if (InteractCollision.TryGetComponent<BaseObject>(out var baseObject))
 			{
 
@@ -716,45 +713,48 @@ public class Player : MonoBehaviour
 			HoldObjectRb = null;
 		}
 	}
-    /// <summary>
-    /// 引きずる処理
-    /// </summary>
-    /// <param name="bDrag"></param>
-    private void Drag(bool bDrag)
-    {
+	/// <summary>
+	/// 引きずる処理
+	/// </summary>
+	/// <param name="bDrag"></param>
+	private void Drag(bool bDrag)
+	{
+		//引きずり開始
 
-        anim.SetBool("Hold", !_IsHold);
-        if (bDrag)
-        {
-            //引きずり開始
-            if (!InteractCollision.TryGetComponent(out Rigidbody rigidbody)) return;
-            HoldObjectRb = rigidbody;
-            //HingeJointの設定
-            HingeJoint joint = InteractCollision.GetComponent<HingeJoint>();
-            if (!joint) joint = rigidbody.AddComponent<HingeJoint>();
-            joint.connectedBody = rb;
-            joint.anchor = joint.transform.InverseTransformPoint(transform.TransformPoint(holdPos.transform.localPosition));//HoldPosを設定
-            joint.axis = Vector3.up;
-            joint.useLimits = true;
-            JointLimits jointLimits = joint.limits;
-            jointLimits.min = -45.0f;
-            jointLimits.max = 45.0f;
-            joint.limits = jointLimits;
-            joint.enableCollision = true;
-        }else{
-            //離す処理
-            anim.SetFloat("AnimSpeed", 1.0f);
-            Destroy(InteractCollision.GetComponent<HingeJoint>());
-            InteractCollision = null;
-            HoldObjectRb = null;
-        }
-    }
+		anim.SetBool("Hold", !_IsHold);
+		if (bDrag)
+		{
+			//引きずり開始
+			if (!InteractCollision.TryGetComponent(out Rigidbody rigidbody)) return;
+			HoldObjectRb = rigidbody;
+			//HingeJointの設定
+			HingeJoint joint = InteractCollision.GetComponent<HingeJoint>();
+			if (!joint) joint = rigidbody.AddComponent<HingeJoint>();
+			joint.connectedBody = rb;
+			joint.anchor = joint.transform.InverseTransformPoint(transform.TransformPoint(holdPos.transform.localPosition));//HoldPosを設定
+			joint.axis = Vector3.up;
+			joint.useLimits = true;
+			JointLimits jointLimits = joint.limits;
+			jointLimits.min = -45.0f;
+			jointLimits.max = 45.0f;
+			joint.limits = jointLimits;
+			joint.enableCollision = true;
+		}
+		else
+		{
+			//離す処理
+			anim.SetFloat("AnimSpeed", 1.0f);
+			Destroy(InteractCollision.GetComponent<HingeJoint>());
+			InteractCollision = null;
+			HoldObjectRb = null;
+		}
+	}
 
 
-    /// <summary>
-    /// アピール
-    /// </summary>
-    private void OnAppeal(InputAction.CallbackContext context)
+	/// <summary>
+	/// アピール
+	/// </summary>
+	private void OnAppeal(InputAction.CallbackContext context)
 	{
 		if (PauseManager.isPaused)
 			return;
@@ -802,7 +802,7 @@ public class Player : MonoBehaviour
 	//	SoundManager.Play(audioSource, seWalk);
 	//}
 
-#region 衝突判定
+	#region 衝突判定
 	private void OnCollisionStay(Collision collision)
 	{
 		// Playerと掴んでいるオブジェクトが接触していると、ぶっ飛ぶので離す
@@ -832,7 +832,7 @@ public class Player : MonoBehaviour
 		if (other.TryGetComponent(out Outline outline))
 			outline.enabled = false;
 	}
-#endregion
+	#endregion
 
 	public void ReStart()
 	{
