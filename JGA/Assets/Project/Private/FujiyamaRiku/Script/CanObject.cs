@@ -22,11 +22,16 @@ public class CanObject : BaseObj , IObjectSound
 	private bool fallFlg;
 	private bool flyFlg;
 
-    protected override void Awake()
-    {
+	protected override void Awake()
+	{
 		Init();
-        objType = ObjType.HIT_HOLD;
-    }
+		objType = ObjType.HIT_HOLD;
+	}
+
+	private void Start()
+	{
+		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+	}
 
 	/// <summary>
 	/// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
@@ -43,20 +48,20 @@ public class CanObject : BaseObj , IObjectSound
 	{
 		PlaySoundChecker();
 
-    }
+	}
 	protected override void OnCollisionEnter(Collision collison)
 	{
 		if (collison.gameObject.tag == "Player"  && !fallFlg)
 		{
 			SoundManager.Play(audioSource, SoundManager.ESE.CAN_ROLL);
-        }
+		}
 		
-        if (collison.gameObject.tag == "Ground")
+		if (collison.gameObject.tag == "Ground")
 		{
-            
-            if (fallFlg)
+			
+			if (fallFlg)
 			{
-                PlayRelease();
+				PlayRelease();
 				fallFlg = false;
 			}
 			if(flyFlg)
@@ -75,17 +80,17 @@ public class CanObject : BaseObj , IObjectSound
 			flyFlg = true;
 		}
 
-        if (other.tag == "Player")
-        {
-            if (player.IsHold && !fallFlg)
-            {
-                PlayPickUp();
-                fallFlg = true;
-            }
+		if (other.tag == "Player")
+		{
+			if (player.IsHold && !fallFlg)
+			{
+				PlayPickUp();
+				fallFlg = true;
+			}
 
-        }
+		}
 
-    }
+	}
 
 	public void PlayPickUp()
 	{

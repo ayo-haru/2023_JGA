@@ -14,7 +14,7 @@ using UnityEngine;
 
 public class Door : BaseObject
 {
-    [SerializeField] private Animator _animator;
+	[SerializeField] private Animator _animator;
 
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
