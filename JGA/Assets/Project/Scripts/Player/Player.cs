@@ -11,6 +11,7 @@
 // 2023/04/04	インタラクトオブジェクトの所を手直ししました～(吉原)
 //				OnHit(コールバック関数)とOnHit(メインの処理)で名前がまったく同じだからメインの処理はHitにさせていただきましたわ！！！
 // 2023/04/28   引きずる処理追加しました(小楠)
+// 2023/05/04   引きずり終了する時の処理を少し変更しました(小楠)
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -721,17 +722,18 @@ public class Player : MonoBehaviour
     /// <param name="bDrag"></param>
     private void Drag(bool bDrag)
     {
-        //引きずり開始
+
+        anim.SetBool("Hold", !_IsHold);
         if (bDrag)
         {
-            anim.SetBool("Hold", !_IsHold);
+            //引きずり開始
             if (!InteractCollision.TryGetComponent(out Rigidbody rigidbody)) return;
             HoldObjectRb = rigidbody;
-
+            //HingeJointの設定
             HingeJoint joint = InteractCollision.GetComponent<HingeJoint>();
             if (!joint) joint = rigidbody.AddComponent<HingeJoint>();
             joint.connectedBody = rb;
-            joint.anchor = joint.transform.InverseTransformPoint(holdPos.transform.TransformPoint(holdPos.transform.localPosition));//HoldPosを設定
+            joint.anchor = joint.transform.InverseTransformPoint(transform.TransformPoint(holdPos.transform.localPosition));//HoldPosを設定
             joint.axis = Vector3.up;
             joint.useLimits = true;
             JointLimits jointLimits = joint.limits;
@@ -739,11 +741,13 @@ public class Player : MonoBehaviour
             jointLimits.max = 45.0f;
             joint.limits = jointLimits;
             joint.enableCollision = true;
-            return;
+        }else{
+            //離す処理
+            anim.SetFloat("AnimSpeed", 1.0f);
+            Destroy(InteractCollision.GetComponent<HingeJoint>());
+            InteractCollision = null;
+            HoldObjectRb = null;
         }
-
-        //離す処理
-        Hold(bDrag);
     }
 
 
