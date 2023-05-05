@@ -225,9 +225,9 @@ public class Player : MonoBehaviour
 		}
 		else
 		{
-			if (anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
+			AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
+			if (stateInfo.IsName("Hit"))
 			{
-				AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
 				// 再生中か？
 				if (stateInfo.normalizedTime < 1.0f)
 				{
@@ -563,12 +563,15 @@ public class Player : MonoBehaviour
 		//if (context.phase == InputActionPhase.Canceled)
 		//	Debug.Log($"InputActionPhase.Canceled");
 
-		if (WithinRange.Count == 0 || PauseManager.isPaused)
+		if (PauseManager.isPaused)
 			return;
 
 		// 長押し開始
 		if (context.phase == InputActionPhase.Performed)
 		{
+			if (WithinRange.Count == 0)
+				return;
+
 			// 現在のインタラクト対象を登録
 			if (InteractOutline != null)
 			{
@@ -604,6 +607,7 @@ public class Player : MonoBehaviour
 							_IsHold = true;
 							break;
 						case BaseObj.ObjType.DRAG:
+						case BaseObj.ObjType.HIT_DRAG:
 							Drag(true);
 							_IsHold = _IsDrag = true;
 							break;
@@ -677,7 +681,7 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void Hold(bool hold)
 	{
-		anim.SetBool("Hold", !_IsHold);
+		anim.SetBool("Carry", !_IsHold);
 
 		// 掴む処理
 		if (hold)
@@ -687,6 +691,7 @@ public class Player : MonoBehaviour
 				HoldObjectRb = rigidbody;
 
 				InteractCollision.transform.parent = transform;
+				InteractCollision.transform.localPosition = holdPos.transform.localPosition;
 				InteractCollision.transform.rotation = transform.rotation;
 
 				if (InteractCollision.GetComponent<HingeJoint>() == null)
@@ -721,7 +726,7 @@ public class Player : MonoBehaviour
 	{
 		//引きずり開始
 
-		anim.SetBool("Hold", !_IsHold);
+		anim.SetBool("Drag", !_IsHold);
 		if (bDrag)
 		{
 			//引きずり開始
@@ -797,6 +802,11 @@ public class Player : MonoBehaviour
 		anim.SetFloat("AnimSpeed", 0.0f);
 	}
 
+	public void AnimCarryStop()
+	{
+		anim.SetBool("Carry", false);
+	}
+
 	//public void PlaySoundWalk()
 	//{
 	//	SoundManager.Play(audioSource, seWalk);
@@ -827,7 +837,8 @@ public class Player : MonoBehaviour
 
 	private void OnTriggerExit(Collider other)
 	{
-		WithinRange.Remove(other);
+		if (_IsHold)
+			WithinRange.Remove(other);
 
 		if (other.TryGetComponent(out Outline outline))
 			outline.enabled = false;
