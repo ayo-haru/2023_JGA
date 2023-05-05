@@ -13,8 +13,8 @@
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using UniRx;
+using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(AudioSource))]
@@ -29,8 +29,8 @@ public abstract class BaseObj : MonoBehaviour, IPlayObjectSound
 		HOLD     = 2,	// 掴む
 		DRAG     = 3,	// ひきずる 
 		HIT_HOLD = 4,	// 叩く&掴む
-		HIT_DRAG = 4,	// 叩く&ひきずる
-		RETURN   = 5,	// 元に戻す(飼育員)
+		HIT_DRAG = 5,	// 叩く&ひきずる
+		RETURN   = 6,	// 元に戻す(飼育員)
 	}
 
 	//----- 変数宣言 -----
