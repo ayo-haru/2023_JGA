@@ -13,6 +13,7 @@
 // 2023/03/30	ペンギンブースをリストに変更しました。【小楠】
 // 2023/04/     客の自動生成
 // 2023/04/24   クリア
+// 2023/05/06   クリア画面を差し替え【小楠】
 //=============================================================================
 using System;
 using System.Collections;
@@ -58,6 +59,10 @@ public class StageSceneManager : BaseSceneManager {
     //---客人数UI
     private GameObject guestNumUI;
     private GuestNumUI _GuestNumUI;
+
+    //-----クリア画面
+    private GameObject clearPanel;
+    private ClearPanel _ClearPanel;
 
 
     //---変数
@@ -239,6 +244,8 @@ public class StageSceneManager : BaseSceneManager {
         } else {
             Debug.LogWarning("GuestNumUIがシーン上にありません");
         }
+
+
     }
 
     void Update() {
@@ -257,8 +264,22 @@ public class StageSceneManager : BaseSceneManager {
         //----- ゲームクリア -----
         if (guestNumUI) {
             if (_GuestNumUI.isClear()) {
+
+                //----クリア画面取得
+                if(!clearPanel) clearPanel = GameObject.Find("ClearPanel");
+                if(clearPanel && !_ClearPanel) _ClearPanel = clearPanel.GetComponent<ClearPanel>();
+
                 if (!isOnce) {   // 一度だけ処理
-                                     //gameObject.AddComponent<ResultCamera>();
+                    int next = -1;
+                    if(_ClearPanel)next = _ClearPanel.GetNextScene();
+                    if (next != -1)
+                    {
+                        MySceneManager.GameData.nowScene = next;
+                        SceneChange(next);  // シーン遷移
+                        isOnce = true;
+                    }
+#if false
+                    //gameObject.AddComponent<ResultCamera>();
                     if (inputAction.Menu.Decision.ReadValue<float>() >= InputSystem.settings.defaultButtonPressPoint) { // 入力があったら
                         if (System.Enum.GetNames(typeof(MySceneManager.SceneState)).Length > MySceneManager.GameData.nowScene) {  // 最大シーンではないとき
                             MySceneManager.GameData.nowScene++;
@@ -267,6 +288,7 @@ public class StageSceneManager : BaseSceneManager {
                         SceneChange(MySceneManager.GameData.nowScene);  // シーン遷移
                         isOnce = true;   // 二回目の処理を走らせない
                     }
+#endif
                 }
             }
         }
