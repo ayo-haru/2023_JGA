@@ -22,7 +22,8 @@ MonoBehaviour:
       type: 3}
   - displayName: ClearUI.prefab
     ID: 2
-    prefab: {fileID: 741918520072266560, guid: 100c50c92ee82b445b39e439f1078d32, type: 3}
+    prefab: {fileID: 8049274093542162502, guid: 0d114544ebc21a14692310d2d9534c1f,
+      type: 3}
   - displayName: FailedUI.prefab
     ID: 3
     prefab: {fileID: 4987223338100863340, guid: 2ac9ba295396a8a4583d55d6f142567c,
