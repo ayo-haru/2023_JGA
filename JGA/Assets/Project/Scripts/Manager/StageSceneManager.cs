@@ -54,7 +54,7 @@ public class StageSceneManager : BaseSceneManager {
 
     //---時間UI
     private GameObject timerUI;
-    private TimerUI _TimerUI;
+    private TimerSliderUI _TimerUI;
 
     //---客人数UI
     private GameObject guestNumUI;
@@ -228,9 +228,9 @@ public class StageSceneManager : BaseSceneManager {
         }
 
         //----- タイマーUIの取得 -----
-        timerUI = GameObject.Find("TimerUI");
+        timerUI = GameObject.Find("TimerSlider");
         if (timerUI) {
-            _TimerUI = timerUI.GetComponent<TimerUI>();
+            _TimerUI = timerUI.GetComponent<TimerSliderUI>();
 
             _TimerUI.CountStart();
         } else {
