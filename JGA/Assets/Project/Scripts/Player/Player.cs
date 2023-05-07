@@ -802,7 +802,7 @@ public class Player : MonoBehaviour
 		anim.SetFloat("AnimSpeed", 0.0f);
 	}
 
-	public void AnimCarryStop()
+	public void w()
 	{
 		anim.SetBool("Carry", false);
 	}
