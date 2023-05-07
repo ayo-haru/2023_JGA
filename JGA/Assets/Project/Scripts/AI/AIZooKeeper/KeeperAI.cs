@@ -26,7 +26,7 @@ public class KeeperAI : MonoBehaviour
     [SerializeField] private Animator animator;
     private bool surpriseFlg = true;
     private bool questionFlg = true;
-    [SerializeField] private bool moveFlg = false;
+    private bool moveFlg = false;
     private AudioSource audioSource;
     private SphereCollider sphereCollider;
     private Rigidbody rb;
@@ -42,16 +42,16 @@ public class KeeperAI : MonoBehaviour
     private Player player;
 
     private GameObject parentObj;       // 親オブジェクト取得
-    [SerializeField] private bool gimmickFlg = false;    // ギミックオブジェクトを見つけたか
-    [SerializeField] private bool catchFlg = false;      // ギミックオブジェクトを掴んだか
-    [SerializeField] private bool soundObjFlg = false;   // 音がなったオブジェクトがあるか
+    private bool gimmickFlg = false;    // ギミックオブジェクトを見つけたか
+    private bool catchFlg = false;      // ギミックオブジェクトを掴んだか
+    private bool soundObjFlg = false;   // 音がなったオブジェクトがあるか
+    private bool bResetPos = false;
 
     private BaseObj soundObj;
     private RadioObject radioObj;
-    private GameObject hand;
     private Vector3 soundStartPos;
     private Quaternion soundStartDir;
-    [SerializeField] private bool radioResetFlg = true;
+    private bool radioResetFlg = true;
     private bool flg = false;
     private bool dirFlg = false;
 
@@ -95,7 +95,6 @@ public class KeeperAI : MonoBehaviour
         if (soundObj == null) soundObj = GameObject.Find("Radio_002").GetComponent<BaseObj>();
         if (radioObj == null) radioObj = GameObject.Find("Radio_002").GetComponent<RadioObject>();
         if (parentObj == null) parentObj = soundObj.gameObject.transform.root.gameObject; // 親オブジェクト取得
-        if (hand == null) hand = GameObject.Find("siikuin7");
 
         // 初期位置と初期回転を取得
         startPos = this.transform.position;
@@ -245,8 +244,8 @@ public class KeeperAI : MonoBehaviour
         // ペンギンを追いかける
         if (chaseNow)
         {
-            //if (navMesh.isStopped) return;
             navMesh.destination = player.transform.position;
+            return;
         }
         // 音がなったオブジェクトの位置に行く
         if (soundObjFlg)
@@ -257,37 +256,48 @@ public class KeeperAI : MonoBehaviour
             {
                 // コルーチン開始
                 StartCoroutine("SoundObj");
+                return;
             }
         }
         // オブジェクトを元の位置に戻す
         if (gimmickFlg)
         {
-            if (!catchFlg) return;
-            // オブジェクトの元の位置に到着したか
-            if (navMesh.remainingDistance <= 1.5f    // 目標地点までの距離が1.5ｍ以下になったら到着
-                 && !navMesh.pathPending)            // 経路計算中かどうか（計算中：true　計算完了：false）
+            if (radioResetFlg) return;
+            if (!catchFlg)
             {
-                // コルーチン開始
-                StartCoroutine("ResetObj");
+                StartCoroutine("CatchObj");
+                return;
+            }
+            else
+            {
+                // オブジェクトの元の位置に到着したか
+                if (navMesh.remainingDistance <= 1.5f    // 目標地点までの距離が1.5ｍ以下になったら到着
+                     && !navMesh.pathPending)            // 経路計算中かどうか（計算中：true　計算完了：false）
+                {
+                    // コルーチン開始
+                    StartCoroutine("ResetObj");
+                    return;
+                }
             }
         }
+            
         // 元の位置に戻る
-        //if (!chaseNow && !soundObjFlg && !gimmickFlg)
-        //{
-        //    //if (navMesh.isStopped) return;
-        //    if (navMesh.remainingDistance <= 1.5f   // 目標地点までの距離が1.5ｍ以下になったら到着
-        //        && !navMesh.pathPending)            // 経路計算中かどうか（計算中：true　計算完了：false）
-        //    {
-        //        moveFlg = false;
-        //        NavMeshStop();
-        //        this.transform.position = startPos;
-        //        this.transform.rotation = startDir;
-        //    }
-        //}
+        if (bResetPos)
+        {
+            if (navMesh.remainingDistance <= 1.5f   // 目標地点までの距離が1.5ｍ以下になったら到着
+                && !navMesh.pathPending)            // 経路計算中かどうか（計算中：true　計算完了：false）
+            {
+                bResetPos = false;
+                moveFlg = false;
+                NavMeshStop();
+                this.transform.position = startPos;
+                this.transform.rotation = startDir;
+            }
+        }
     }
     #endregion
 
-    #region navMeshを使わず移動する
+#region navMeshを使わず移動する
     /// <summary>
     /// navMeshを使わず移動する
     /// </summary>
@@ -300,10 +310,10 @@ public class KeeperAI : MonoBehaviour
         
         // nextPositionからdeltaPositionを算出
         targetDeltaPosition = navMesh.nextPosition - transform.position;
-
+    
         // エージェントの移動を正とする
         transform.position = navMesh.nextPosition;
-
+    
         // エージェントに追従する
         if (targetDeltaPosition.magnitude > navMesh.radius)
             transform.position = navMesh.nextPosition - 0.9f * targetDeltaPosition;
@@ -487,9 +497,10 @@ public class KeeperAI : MonoBehaviour
             animator.SetBool("isWalk", true);
             animator.Play("Walk");
             // 動く
-            //NavMeshMove();
-            //moveFlg = true;
-            //navMesh.SetDestination(startPos); // 目的地の再設定
+            NavMeshMove();
+            moveFlg = true;
+            bResetPos = true;
+            navMesh.SetDestination(startPos); // 目的地の再設定
         }
     }
 
@@ -524,7 +535,6 @@ public class KeeperAI : MonoBehaviour
         radioObj.StopRadio();
         soundObjFlg = false;
         gimmickFlg = true;
-        StartCoroutine("CatchObj");
     }
     #endregion
 
@@ -539,11 +549,12 @@ public class KeeperAI : MonoBehaviour
             // 掴む
             soundObj.GetComponent<Rigidbody>().isKinematic = true;   // 物理演算の影響を受けないようにする
             soundObj.GetComponent<Rigidbody>().useGravity = false;
+            var pos = transform.position;
             soundObj.gameObject.transform.position =
-                new Vector3(hand.transform.position.x - 1f,
-                            hand.transform.position.y + 5f,
-                            hand.transform.position.z);
-            soundObj.gameObject.transform.parent = hand.transform;
+                new Vector3(pos.x - 2f,
+                            pos.y + 5f,
+                            pos.z);
+            soundObj.gameObject.transform.parent = this.transform;
             soundObj.gameObject.transform.rotation = new Quaternion(0, 0, 0, 0);
         }
         else if (radioResetFlg)
