@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DebugClockUI : MonoBehaviour
 {
-    [SerializeField] private ClockUI ui;
+    [SerializeField] private TimerSliderUI ui;
     [SerializeField] private GuestNumUI guestNumUI;
     [SerializeField] private TimerUI timerUI;
     [SerializeField] private OptionPanel optionPanel;
