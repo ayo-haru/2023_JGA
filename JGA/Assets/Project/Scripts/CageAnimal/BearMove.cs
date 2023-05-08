@@ -243,7 +243,7 @@ public class BearMove : MonoBehaviour
                                                     BoothAnimalManager.Instance.bearData.rangeList.Count);
             }
 
-            Debug.Log("きまったで"+currentMoveIndex);
+            //Debug.Log("きまったで"+currentMoveIndex);
             //終了地点が決まったらランダムで若干ずらす。
             endPos = CircleRandamaiser(currentMoveIndex);
 

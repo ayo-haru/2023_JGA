@@ -135,9 +135,8 @@ public class ZooKeeperAI : MonoBehaviour
         if (data.rootTransforms.Count >= 1)
         {
             rootNum = 0;
-            navMesh.SetDestination(data.rootTransforms[rootNum].position); // 目的地の設定
-            // 速度設定(始めは歩いてる)
-            navMesh.speed = data.speed * player.MaxMoveSpeed;
+            navMesh.SetDestination(data.rootTransforms[rootNum].position);  // 目的地の設定
+            navMesh.speed = data.speed * player.MaxMoveSpeed;               // 速度設定
         }
         else
         {
