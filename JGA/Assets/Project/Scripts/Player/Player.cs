@@ -47,9 +47,6 @@ public class Player : MonoBehaviour
 	public float MaxAppealSpeed { get { return _maxAppealSpeed; } }
 
 	[SerializeField] private float joyRunZone = 0.8f;   // ジョイスティックで走り始めるゾーン
-	[SerializeField] private float callMin = 0.5f;      // 鳴く間隔の最小値
-	[SerializeField] private float callMax = 5.0f;      // 鳴く間隔の最大値
-	[SerializeField] private float callInterval = 0;
 	//----------------------------------------------------------------------------------------
 
 	// フラグ --------------------------------------------------------------------------------
@@ -177,6 +174,7 @@ public class Player : MonoBehaviour
 		// ポーズ中は移動しない
 		if (PauseManager.isPaused)
 			moveInputValue = Vector2.zero;
+		// ポーズでない時にisKinematicをfalseにする
 		else if (rb.isKinematic == true)
 			rb.isKinematic = false;
 
@@ -193,10 +191,12 @@ public class Player : MonoBehaviour
 		// インタラクトして１フレーム経過後
 		if (_IsHit)
 		{
+			// インタラクトして１フレーム経過後
 			if (!DelayHit)
 			{
 				DelayHit = true;
 			}
+			// インタラクトして２フレーム経過後
 			else
 			{
 				DelayHit = false;
@@ -204,12 +204,15 @@ public class Player : MonoBehaviour
 			}
 		}
 
+		// インタラクトしたオブジェクトがメガホンの場合
 		if (_IsMegaphone)
 		{
+			// １フレーム経過後
 			if (!DelayMegaphone)
 			{
 				DelayMegaphone = true;
 			}
+			// ２フレーム経過後
 			else
 			{
 				_IsMegaphone = false;
@@ -223,6 +226,7 @@ public class Player : MonoBehaviour
 			anim.SetBool("move", _IsMove);
 			anim.SetBool("run", _IsRun);
 		}
+		// はたくモーション中は他のモーションさせない
 		else
 		{
 			AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
@@ -242,26 +246,23 @@ public class Player : MonoBehaviour
 			}
 		}
 
-		// 走っているか
-		if (bRunButton && moveInputValue.normalized != Vector2.zero)
-			_IsRun = true;
-		else
-			_IsRun = false;
+		// 走っているか判定
+		_IsRun = bRunButton && moveInputValue.normalized != Vector2.zero;
 
-		float length;
+		float length;       // プレイヤーと一番近いオブジェクトの距離
 		if (InteractOutline != null)
 		{
 			length = Vector3.Distance(transform.position, InteractOutline.transform.position);
 		}
 		else
 		{
-			length = 10.0f;
+			length = 10.0f; // とりあえず10.0f
 		}
 
 		// 移動中判定
 		_IsMove = moveInputValue.normalized != Vector2.zero;
 
-		// 待機中加算
+		// 待機中のランダムな挙動のための処理
 		if (!_IsMove && !_IsAppeal && !_IsRandom)
 		{
 			IdolTime += Time.deltaTime;
@@ -269,6 +270,7 @@ public class Player : MonoBehaviour
 			// もし２秒経過していたら
 			if (IdolTime > 2.0f)
 			{
+				// 50％の確立で再生
 				if (Random.Range(0, 2) == 1) // ※ 0～1の範囲でランダムな整数値が返る
 				{
 					IdolTime = 0.0f;
@@ -281,44 +283,51 @@ public class Player : MonoBehaviour
 		if (_IsRandom)
 		{
 			AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
-			// 再生中か？
-			if (stateInfo.normalizedTime < 1.0f)
-			{
-				//Debug.Log($"再生中");
-			}
-			else
+			// ランダムな挙動の再生が終了した時
+			if (stateInfo.normalizedTime >= 1.0f)
 			{
 				_IsRandom = false;
 				anim.SetBool("Random", false);
 			}
 		}
 
-
+		// 範囲内にオブジェクトがない && 一番近くのオブジェクト情報を保持している　の場合
 		if (WithinRange.Count == 0 && InteractOutline != null)
 		{
+			// アウトラインを非表示にする
 			InteractOutline.enabled = false;
 			InteractOutline = null;
 		}
-		// プレイヤーに一番近いオブジェクトをインタラクト対象とする
+
+		// 範囲内にオブジェクトがある || 一番近くのオブジェクト情報を保持していない　の場合
 		else
 		{
+			// プレイヤーに一番近いオブジェクトをインタラクト対象とする
 			foreach (Collider obj in WithinRange)
 			{
+				// 一番近くのオブジェクト情報を保持していた場合
 				if (InteractOutline != null && obj == InteractOutline.gameObject)
 				{
+					// アウトラインを有効化
 					InteractOutline.enabled = true;
 					continue;
 				}
 
+				// オブジェクトとの距離を計算
 				float distance = Vector3.Distance(transform.position, obj.transform.position);
 
+				// もし一番近くのオブジェクト情報と比較して、より距離が短かった場合
 				if (length > distance)
 				{
+					// 距離を更新
 					length = distance;
 					if (obj.TryGetComponent(out Outline outline))
 					{
+						// 有効になっているアウトラインを無効化
 						if (InteractOutline != null)
 							InteractOutline.enabled = false;
+
+						// より短い方のオブジェクトのアウトラインを登録、有効化
 						InteractOutline = outline;
 						InteractOutline.enabled = true;
 					}
@@ -472,27 +481,28 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void OnHit(InputAction.CallbackContext context)
 	{
-		if (bHitMotion || IsAppeal)
+		// 既にはたいている、アピール中、ポーズ中、掴んでいる場合は実行しない
+		if (bHitMotion || IsAppeal || PauseManager.isPaused || _IsHold)
 			return;
 
 		bHitMotion = true;
 		anim.SetBool("Hit", bHitMotion);
 		//Debug.Log($"Hit");
 
-
-		if (WithinRange.Count == 0 || PauseManager.isPaused || _IsHold)
+		// 範囲内に何もなければ、はたくモーションのみ再生
+		if (WithinRange.Count == 0 )
 			return;
 
 
 		// 押された瞬間
 		if (context.phase == InputActionPhase.Performed)
 		{
-			// 現在のインタラクト対象を登録
+			//--- 現在のインタラクト対象を登録
 			if (InteractOutline != null)
 			{
 				InteractCollision = InteractOutline.GetComponent<Collider>();
 			}
-			else
+			else	// もし一番近くのオブジェクト情報を保持していない場合
 			{
 				float length = 10.0f;
 
@@ -541,6 +551,8 @@ public class Player : MonoBehaviour
 
 		// プレイヤーが範囲内にいる時にインタラクトフラグがTrueになったらふき飛ぶよ
 		rigidbody.isKinematic = false;
+
+		// 吹っ飛ばし処理
 		Vector3 vec = (InteractCollision.transform.position + new Vector3(0.0f, topvector, 0.0f) - transform.position).normalized;
 		rigidbody.velocity = vec * blowpower;
 		vec = (InteractCollision.transform.position - transform.position).normalized;
@@ -566,9 +578,10 @@ public class Player : MonoBehaviour
 		if (PauseManager.isPaused)
 			return;
 
-		// 長押し開始
+		//--- 長押し開始
 		if (context.phase == InputActionPhase.Performed)
 		{
+			// 範囲内のオブジェクトが無い場合は実行しない
 			if (WithinRange.Count == 0)
 				return;
 
@@ -577,7 +590,7 @@ public class Player : MonoBehaviour
 			{
 				InteractCollision = InteractOutline.GetComponent<Collider>();
 			}
-			else
+			else    // もし一番近くのオブジェクト情報を保持していない場合
 			{
 				float length = 10.0f;
 
@@ -783,11 +796,12 @@ public class Player : MonoBehaviour
 	/// </summary>
 	public void OnCall()
 	{
+		// エフェクトを生成
 		var obj = EffectManager.Create(transform.position + new Vector3(0, 4, 0), 0, transform.rotation);
 		obj.transform.localScale = Vector3.one * 5;
 		obj.transform.parent = transform;
 
-		//Debug.Log($"InteractCollision:{InteractCollision}");
+		// もしメガホンを保持している場合は、再生しない
 		if (InteractCollision != null && InteractCollision.name.Contains("Megaphone"))
 		{
 			_IsMegaphone = true;
