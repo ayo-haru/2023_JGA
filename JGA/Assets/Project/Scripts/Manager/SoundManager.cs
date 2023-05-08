@@ -69,9 +69,9 @@ public class SoundManager : MonoBehaviour
 		CAN_ROLLING,            // 地面にある時に転がる音2
 
 		// ラジオ
-		RADIO_CATCH,            // ラジオつかむとき
+		RADIO_ON,            // ラジオつかむとき
 		RADIO_PLAY,             // ラジオプレイ
-		RADIO_RELEASE,          // ラジオ離した時
+		RADIO_OFF,          // ラジオ離した時
 
 
 		// フェンス

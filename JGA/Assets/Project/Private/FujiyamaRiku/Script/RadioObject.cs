@@ -87,12 +87,12 @@ public class RadioObject : BaseObj, IObjectSound {
 
                 playAudio[RadioAudio].Stop();
 
-                SoundManager.Play(audioSource, SoundManager.ESE.RADIO_RELEASE);
+                SoundManager.Play(audioSource, SoundManager.ESE.RADIO_OFF);
 
             } else if (!onOffFlg) {
                 onOffFlg = true;
 
-                SoundManager.Play(audioSource, SoundManager.ESE.RADIO_CATCH);
+                SoundManager.Play(audioSource, SoundManager.ESE.RADIO_ON);
 
             }
         }
