@@ -44,7 +44,7 @@ public class Radio : BaseObject
 		Debug.Log(radioAudioSource);
 
 		CheckisGround();                        // 地面との接触判定
-		CheckIsPlaySound();                     // 再生中判定
+		CheckIsPlaySound(radioAudioSource.isPlaying);     // 再生中判定
 	}
 	
 
@@ -99,6 +99,7 @@ public class Radio : BaseObject
 	{
 		if (checkSwitch) {
 			StartCoroutine("PlayRadio");
+
 		}
 		else{radioAudioSource.Stop();}
 	}
@@ -111,6 +112,7 @@ public class Radio : BaseObject
 	{
 		yield return new WaitForSeconds(1.5f);
 		radioAudioSource.Play();
+
 	}
 
 }

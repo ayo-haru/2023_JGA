@@ -124,6 +124,20 @@ public abstract class BaseObject : MonoBehaviour,IPlayObjectSound
 		}
 	}
 
+	protected bool CheckIsPlaySound(bool audioPlayflg)
+	{
+		if (_audioSource.isPlaying || audioPlayflg)
+		{
+			return isPlaySound = true;
+		}
+		else
+		{
+			return isPlaySound = false;
+		}
+
+	}
+
+
 	/// <summary>
 	/// レイを使用した地面との接触判定
 	/// </summary>
