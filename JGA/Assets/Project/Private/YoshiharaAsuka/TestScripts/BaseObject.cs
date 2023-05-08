@@ -42,8 +42,19 @@ public abstract class BaseObject : MonoBehaviour,IPlayObjectSound
 	public OBJState objState;					// オブジェクトのステート
 
 	protected bool isPlaySound;                 // サウンド再生中フラグ
+	//----------------
 
-	//----- ポーズ用変数 ----
+	// 地面との接触判定に使用する変数----------
+	protected Ray _ray;                         // 飛ばすレイ
+	protected float rayDistance;                // レイを飛ばす距離
+	protected RaycastHit _hit;                  // レイの衝突情報
+	protected Vector3 rayPos;					// レイの発射位置
+
+	public bool isGround { get; set; }			// 地面との接触判定
+	//-----------------------------------
+
+
+	// ポーズ用変数 ----
 	protected Vector3 pauseVelocity = Vector3.zero;
 	protected Vector3 pauseAngleVelocity = Vector3.zero;
 	//---------------------
@@ -66,6 +77,7 @@ public abstract class BaseObject : MonoBehaviour,IPlayObjectSound
 
 		objState = OBJState.NONE;				// 初期値はNONE
 		isPlaySound = false;
+		isGround = false;
 
 	}
 
@@ -109,6 +121,26 @@ public abstract class BaseObject : MonoBehaviour,IPlayObjectSound
 		}
 		else{
 			return isPlaySound = false;
+		}
+	}
+
+	/// <summary>
+	/// レイを使用した地面との接触判定
+	/// </summary>
+	protected void CheckisGround()
+	{
+		rayPos = transform.position + new Vector3(0.0f,-0.5f,0.0f);		// レイの発射位置を設定
+		_ray = new Ray(rayPos, transform.up * -1);                  // レイを下方向に飛ばす
+		Debug.DrawRay(_ray.origin, _ray.direction * rayDistance, Color.red);    // レイを赤色で表示
+		//print(isGround);
+
+		if(Physics.Raycast(_ray,out _hit, rayDistance)){
+			if(_hit.collider.tag == "Ground"){
+				isGround = true;
+			}
+			else{
+				isGround = false;
+			}
 		}
 	}
 
