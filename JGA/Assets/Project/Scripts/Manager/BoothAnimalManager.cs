@@ -7,10 +7,12 @@
 // 
 // [Date]
 // 2023/03/25	スクリプト作成
+// 2023/05/08	名前変更＆親子関係の追加
 //=============================================================================
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BoothAnimalManager : SingletonMonoBehaviour<BoothAnimalManager>
@@ -33,12 +35,33 @@ public class BoothAnimalManager : SingletonMonoBehaviour<BoothAnimalManager>
 	[SerializeField] public BearsData bearData;
 	[NonSerialized] public int bearStartIndex;
 
+	//アニマルオブジェクトを入れる用
+	private GameObject animalObject;
+
     /// <summary>
     /// 最初のフレーム更新の前に呼び出される
     /// </summary>
     void Start()
 	{
-		penguinObj = PrefabContainerFinder.Find(MySceneManager.GameData.animalDatas, "Penguin.prefab");
+		animalObject = GameObject.Find("Animals");
+        if (!animalObject)
+        {
+            Debug.LogWarning("Animalsがシーン上にありません");
+            return;
+        }
+		if(!penguinsData)
+		{
+            Debug.LogWarning("PenguinsDataがシーン上にありません");
+			return;
+        }
+		if (!bearData)
+        {
+            Debug.LogWarning("BearsDataがシーン上にありません");
+            return;
+        }
+
+        penguinObj = PrefabContainerFinder.Find(MySceneManager.GameData.animalDatas, "Penguin.prefab");
+       
 
         for (int i = 0;i < penguinCount;i++)
 		{
@@ -50,11 +73,13 @@ public class BoothAnimalManager : SingletonMonoBehaviour<BoothAnimalManager>
 										penguinsData.rangeList[penguinStartIndex].y,
 										penguinsData.rangeList[penguinStartIndex].z + startPoint.y);
 
-			Instantiate(penguinObj, setVector, Quaternion.identity);
-
+			var penguinObject =  Instantiate(penguinObj, setVector, Quaternion.identity);
+            penguinObject.gameObject.name = Rename("Penguin_", i);
+			penguinObject.transform.parent = animalObject.transform;
         }
 
 		bearObj = PrefabContainerFinder.Find(MySceneManager.GameData.animalDatas, "Bear.prefab");
+
 		for(int i = 0; i < bearCount;i++) 
 		{
 			bearStartIndex = UnityEngine.Random.Range(0, bearData.rangeList.Count);
@@ -64,8 +89,11 @@ public class BoothAnimalManager : SingletonMonoBehaviour<BoothAnimalManager>
                                         bearData.rangeList[bearStartIndex].y,
                                         bearData.rangeList[bearStartIndex].z + startPoint.y);
 
-			Instantiate(bearObj, setVector, Quaternion.identity);
+			var bearOBject = Instantiate(bearObj, setVector, Quaternion.identity);
+			bearOBject.gameObject.name = Rename("Bear_", i);
+            bearOBject.transform.parent = animalObject.transform;
         }
+
 
 		
 	}
@@ -77,5 +105,31 @@ public class BoothAnimalManager : SingletonMonoBehaviour<BoothAnimalManager>
 	{
 		
 	}
+
+	private string Rename(string nameBase,int Number)
+	{
+		int[] serialNumber = new int[3];
+		int count = 10;
+		int i = serialNumber.Length - 1;
+		Number++;
+
+		serialNumber[i] = Number % count;
+		i--;
+
+        while(i >= 0)
+		{
+            serialNumber[i] = Number / count;
+			count *= 10;
+			i--;
+        }
+
+		for(i = 0; i < serialNumber.Length; i++)
+		{
+			nameBase += serialNumber[i].ToString();
+		}
+
+		return nameBase;
+	}
+
 }
 
