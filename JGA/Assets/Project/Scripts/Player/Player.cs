@@ -697,14 +697,23 @@ public class Player : MonoBehaviour
 			if (InteractCollision.TryGetComponent(out Rigidbody rigidbody))
 			{
 				InteractCollision.transform.parent = transform;
-				InteractCollision.transform.localPosition = holdPos.transform.localPosition;
+				
+				// メッシュのサイズを取得
+				Bounds maxBounds = new Bounds(Vector3.zero, Vector3.zero);
+				Bounds bounds = InteractCollision.GetComponentInChildren<MeshFilter>().mesh.bounds;
+				maxBounds.Encapsulate(bounds);
+
+				var point = InteractCollision.transform.Find("HoldPoint");
+
+				var pos = holdPos.transform.localPosition - point.localPosition;
+				InteractCollision.transform.localPosition = pos;
 				InteractCollision.transform.rotation = transform.rotation;
 
 				if (InteractCollision.GetComponent<HingeJoint>() == null)
 				{
 					var joint = rigidbody.AddComponent<HingeJoint>();
 					joint.connectedBody = rb;
-					joint.anchor = new Vector3(0, 1.0f, 0);
+					joint.anchor = new Vector3(0, point.localPosition.y / (maxBounds.size.y / 2), 0);
 				}
 			}
 		}
