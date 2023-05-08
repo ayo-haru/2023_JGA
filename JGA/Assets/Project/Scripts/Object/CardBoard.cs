@@ -18,17 +18,28 @@ public class CardBoard : BaseObj
 
 	private bool isPlay = false;
     private bool isNPosition = false;
+    private bool isBreak = false;
+
+    [SerializeField] private Collider collision0;
+    private GameObject collision1;
+    private GameObject collision2;
+    private GameObject collision3;
     
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
 	/// </summary>
-	void Start()
+	protected override void Start()
 	{
 		Init();
 		_animator = GetComponent<Animator>();
 		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        collision1 = transform.GetChild(1).gameObject;
+        collision2 = transform.GetChild(2).gameObject;
+        collision3 = transform.GetChild(3).gameObject;
+        collision1.SetActive(false);
+        collision2.SetActive(false);
+        collision3.SetActive(false);
         objType = ObjType.HIT_HOLD;
-
 	}
 
 	/// <summary>
@@ -47,7 +58,10 @@ public class CardBoard : BaseObj
 
 		// 段ボールが地面に当たった時の音を変更
 		if(collision.gameObject.tag == "Ground"){
-			PlayDrop(audioSource, SoundManager.ESE.CARDBOARDBOX_002);
+            if(!isPlaySound && isPlay)
+            {
+                PlayDrop(audioSource, SoundManager.ESE.CARDBOARDBOX_002);
+            }
 
             // 段ボールの角度が正常か
             foreach (ContactPoint point in collision.contacts)
@@ -63,6 +77,8 @@ public class CardBoard : BaseObj
                     isNPosition = false;
                 }
             }
+            if(!isPlay)
+                isPlay = true;
         }
 		else{
 			PlayHit();
@@ -75,21 +91,39 @@ public class CardBoard : BaseObj
             {
                 Vector3 relativePoint = transform.InverseTransformPoint(point.point);   // 物がぶつかった座標を取得
 
-                if(relativePoint.y > 0.5 && relativePoint.x < 1.0 && relativePoint.x > -1.0 && relativePoint.z < 1.0 && relativePoint.z > -1.0 && isNPosition)
+                if(relativePoint.y > 0.5 && relativePoint.x < 1.0 && relativePoint.x > -1.0 && relativePoint.z < 1.0 && relativePoint.z > -1.0 && isNPosition && !isBreak)
                 {
                     _animator.SetTrigger("Broken");
+                    isBreak = true;
+                    
+                    // コライダー切替
+                    collision0.enabled = false;
+                    collision1.SetActive(true);
+                    collision2.SetActive(true);
+                    collision3.SetActive(true);
+
+                    // 潰れたときの音を鳴らす
+                    PlayDrop(audioSource, SoundManager.ESE.CARDBOARDBOX_002);
+
+                    break;
+                }
+                if(isBreak)
+                {
+                    break;
                 }
             }
         }
-
 	}
 
-    protected override void OnTriggerEnter(Collider other)
+    protected override void OnTriggerStay(Collider other)
     {
-		//if (other.gameObject.tag == "Player"){
-		//		_animator.SetTrigger("Broken");
-
-  //      }
+        if(other.gameObject.tag == "Player")
+        {
+            // 殴られたら音を出す
+            if (player.IsHit)
+            {
+                PlayHit();
+            }
+        }
     }
-
 }
