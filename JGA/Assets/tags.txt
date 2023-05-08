@@ -1,0 +1,15 @@
+Untagged
+Respawn
+Finish
+EditorOnly
+MainCamera
+Player
+GameController
+Ground
+Scenery
+Interact
+TargetAnimals
+Guest
+ZooKeeper
+Target
+HideObj
