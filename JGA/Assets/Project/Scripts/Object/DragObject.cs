@@ -14,13 +14,13 @@ using UnityEngine;
 
 public class DragObject : BaseObj
 {
-    
+	
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
 	/// </summary>
 	protected override void Awake()
 	{
-        Init();
-        objType = ObjType.DRAG;
-    }
+		Init();
+		objType = ObjType.DRAG;
+	}
 }

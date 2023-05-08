@@ -22,12 +22,13 @@ public abstract class BaseObj : MonoBehaviour, IPlayObjectSound
 {
 	public enum ObjType
 	{
-		None = 0,   
-		HIT,
-		HOLD,
-		HIT_HOLD,
-		RETURN,
-
+		None		= 0,    // 通常
+		HIT			= 1,    // 叩く
+		HOLD		= 2,    // 掴む
+		DRAG		= 3,    // ひきずる 
+		HIT_HOLD	= 4,    // 叩く&掴む
+		HIT_DRAG	= 5,    // 叩く&ひきずる
+		RETURN		= 6,    // 元に戻す(飼育員)
 	}
 
 	//---変数宣言---
