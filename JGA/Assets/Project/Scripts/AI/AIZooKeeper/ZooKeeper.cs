@@ -34,8 +34,9 @@ public class ZooKeeper : MonoBehaviour
     private Vector3 startPos;       // 初期位置
     private Quaternion startDir;    // 初期回転
     [SerializeField] private bool chaseNow = false;
-    [SerializeField] private bool moveFlg = false;
+    private bool moveFlg = false;
     private bool soundObjFlg = false;
+    private bool flg = false;
     private bool surpriseFlg = true;
     private bool questionFlg = true;
     private bool dirFlg = false;
@@ -43,6 +44,7 @@ public class ZooKeeper : MonoBehaviour
     private Vector3 target;     // 目的地
     private float speed;        // 速さ
     private Player player;
+    private BaseObj soundObj;
 
 
     /// <summary>
@@ -51,9 +53,6 @@ public class ZooKeeper : MonoBehaviour
     private void OnValidate()
     {
         sphereCollider = this.GetComponent<SphereCollider>();
-        /*
-         * 最初からシーン上に配置しないので一回コメントアウトさせていただいた（伊地田）
-         */
         sphereCollider.radius = data.search; // colliderのradiusを変更する
     }
 
@@ -76,6 +75,7 @@ public class ZooKeeper : MonoBehaviour
         if (audioSource == null) audioSource = this.GetComponent<AudioSource>();
         if (rb == null) rb = this.GetComponent<Rigidbody>();
         if (player == null) player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        if (soundObj == null) soundObj = GameObject.Find("Radio_002").GetComponent<BaseObj>();
 
         startPos = this.transform.position;     // 初期位置を取得
         startDir = this.transform.rotation;     // 初期回転を取得
@@ -91,6 +91,7 @@ public class ZooKeeper : MonoBehaviour
             return;
         }
 
+        //Debug.Log(soundObj.GetisPlaySound());
         if (moveFlg)
         {
             Move();
@@ -141,25 +142,25 @@ public class ZooKeeper : MonoBehaviour
     private void OnTriggerStay(Collider other)
     {
         // 音がなってるか
-        if (other.GetComponent<BaseObj>())
+        if (other.gameObject == soundObj.gameObject && soundObj.GetisPlaySound() && !soundObjFlg)
         {
-            if (other.GetComponent<BaseObj>().GetisPlaySound())
+            if (!flg)
             {
-                soundObjFlg = true;
                 Dir();
                 target = other.transform.position;
                 // オブジェクトの方を向いたら一時停止して動く
-                if(dirFlg)
+                if (dirFlg)
                 {
                     // コルーチン開始
                     StartCoroutine("MoveStop");
                     targetObj = other.gameObject;
                     dirFlg = false;
+                    flg = true;
                 }
             }
         }
 
-        if (!soundObjFlg && other.gameObject.tag == "Player")
+        if (!flg && !soundObjFlg && other.gameObject.tag == "Player")
         {
             var pos = other.transform.position - transform.position;
             float targetAngle = Vector3.Angle(this.transform.forward, pos);
@@ -188,7 +189,7 @@ public class ZooKeeper : MonoBehaviour
         // 音がなってるか
         if (soundObjFlg)
         {
-            target = targetObj.transform.position;
+            //target = targetObj.transform.position;
             speed = (data.speed * player.MaxMoveSpeed) * Time.deltaTime;
             SetPos(target, speed);
         }
@@ -220,7 +221,6 @@ public class ZooKeeper : MonoBehaviour
         {
             var distance = Vector3.Distance(transform.position, _target);   // 距離
             var nowPos = _speed / distance;     // 現在の位置
-
             // 到着していなかったら
             if (nowPos >= 0)
             {
@@ -231,8 +231,9 @@ public class ZooKeeper : MonoBehaviour
             // 音が鳴ったオブジェクトに到着
             if (soundObjFlg)
             {
-                if (nowPos >= 0.05f)
+                if (nowPos >= 0.02f)
                 {
+                    soundObjFlg = false;
                     Stop();
                     AnimPlay(1);
                     questionFlg = true;
@@ -244,6 +245,7 @@ public class ZooKeeper : MonoBehaviour
             {
                 if(nowPos >= 1)
                 {
+                    flg = false;
                     StatusReset();
                 }
             }
@@ -334,14 +336,15 @@ public class ZooKeeper : MonoBehaviour
             case Effect.exclamation:    // ！エフェクト
                 exclamationEffect =
                     EffectManager.Create(
-                        new Vector3(transform.position.x, transform.position.y + 5.5f, transform.position.z),
+                        new Vector3(transform.position.x, transform.position.y + 7.5f, transform.position.z),
                         3);
+                exclamationEffect.transform.parent = this.transform;
                 break;
             case Effect.question:       // ？エフェクト
                 // エフェクト表示
                 questionEffect =
                     EffectManager.Create(
-                        new Vector3(transform.position.x, transform.position.y + 5.5f, transform.position.z),
+                        new Vector3(transform.position.x, transform.position.y + 7.5f, transform.position.z),
                         4);
                 questionEffect.transform.parent = this.transform;
                 break;
@@ -383,12 +386,12 @@ public class ZooKeeper : MonoBehaviour
         if (questionFlg)
         {
             questionFlg = false;
-            //soundObjFlg = true;
+            soundObjFlg = true;
             // エフェクト表示
             CreateEffect(Effect.question);
         }
 
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(1.0f);
 
         Walk();
     }
@@ -405,7 +408,6 @@ public class ZooKeeper : MonoBehaviour
         // エフェクト削除
         if (questionEffect) Destroy(questionEffect);
         // 元の位置に戻る
-        soundObjFlg = false;
         Walk();
         target = startPos;
     }
