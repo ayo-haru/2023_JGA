@@ -25,13 +25,13 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(AudioSource))]
 public class Player : MonoBehaviour
 {
-	[SerializeField] private Rigidbody rb;
-	[SerializeField] private AudioSource audioSource;
-	[SerializeField] private AudioClip seCall;          // ＳＥ：鳴き声
-	[SerializeField] private AudioClip seHit;           // ＳＥ：はたく
-	[SerializeField] private AudioClip seHold;          // ＳＥ：つかむ
-	[SerializeField] private AudioClip seWalk;          // ＳＥ：歩く
-	[SerializeField] private Animator anim;             // Animatorへの参照
+	[SerializeField] private Rigidbody		rb;
+	[SerializeField] private AudioSource	audioSource;
+	[SerializeField] private AudioClip		seCall;			// ＳＥ：鳴き声
+	[SerializeField] private AudioClip		seHit;			// ＳＥ：はたく
+	[SerializeField] private AudioClip		seHold;			// ＳＥ：つかむ
+	[SerializeField] private AudioClip		seWalk;			// ＳＥ：歩く
+	[SerializeField] private Animator		anim;			// Animatorへの参照
 
 	[Header("ステータス")] //-----------------------------------------------------------------
 	[SerializeField] private float moveForce = 7;           // 歩行時速度
@@ -81,20 +81,17 @@ public class Player : MonoBehaviour
 	[SerializeField] private Vector3 _vForce;               // 移動方向
 	public Vector3 vForce { get { return _vForce; } }
 
-	private Vector3 pauseVelocity;                          // ポーズ時の加速度保存
-	private Vector3 pauseAngularVelocity;                   // ポーズ時の加速度保存
-
-	private MyContorller gameInputs;                        // 方向キー入力取得
-	private Vector2 moveInputValue;                         // 移動方向
-
 	[SerializeField] private Collider InteractCollision;    // 掴んでいるオブジェクト：コリジョン
-	[SerializeField] private Rigidbody HoldObjectRb;        // 掴んでいるオブジェクト：重力関連
-	[SerializeField] private Outline InteractOutline;       // 掴んでいるオブジェクト：アウトライン
+	[SerializeField] private Outline  InteractOutline;      // 掴んでいるオブジェクト：アウトライン
 
-	[SerializeField] private List<Collider> WithinRange = new List<Collider>();  // インタラクト範囲内にあるオブジェクトリスト
+	[SerializeField] private HashSet<Collider> WithinRange = new HashSet<Collider>();  // インタラクト範囲内にあるオブジェクトリスト
 
-	private Transform respawnZone;                          // リスポーン位置プレハブ設定用
-															//----------------------------------------------------------------------------------------
+	private MyContorller	gameInputs;						// 方向キー入力取得
+	private Vector2			moveInputValue;					// 移動方向
+	private Vector3			pauseVelocity;					// ポーズ時の加速度保存
+	private Vector3			pauseAngularVelocity;			// ポーズ時の加速度保存
+	private Transform		respawnZone;					// リスポーン位置プレハブ設定用
+	//----------------------------------------------------------------------------------------
 
 	[SerializeField] private GameObject holdPos;    // 持つときの位置
 
@@ -267,16 +264,12 @@ public class Player : MonoBehaviour
 		{
 			IdolTime += Time.deltaTime;
 
-			// もし２秒経過していたら
-			if (IdolTime > 2.0f)
+			// もし２秒経過していたら50％の確立で再生
+			if (IdolTime > 2.0f && Random.Range(0, 2) == 1) // ※ 0～1の範囲でランダムな整数値が返る
 			{
-				// 50％の確立で再生
-				if (Random.Range(0, 2) == 1) // ※ 0～1の範囲でランダムな整数値が返る
-				{
-					IdolTime = 0.0f;
-					_IsRandom = true;
-					anim.SetBool("Random", true);
-				}
+				IdolTime = 0.0f;
+				_IsRandom = true;
+				anim.SetBool("Random", true);
 			}
 		}
 
@@ -356,7 +349,6 @@ public class Player : MonoBehaviour
 		// 持ったままポーズに入ると挙動おかしくなるので救済措置「捨てる」
 		_IsHold = _IsDrag = false;
 		InteractCollision = null;
-		HoldObjectRb = null;
 	}
 
 	private void Resumed()
@@ -377,18 +369,21 @@ public class Player : MonoBehaviour
 		if (bGamePad)
 			_IsRun = moveInputValue.magnitude >= joyRunZone;
 
+		//--- 速度、制限速度を定義
 		float force, max;
-
+		// アピール中の場合
 		if (_IsAppeal)
 		{
 			force = appealForce;
 			max = _maxAppealSpeed;
 		}
+		// 走り中の場合
 		else if (_IsRun)
 		{
 			force = runForce;
 			max = _maxRunSpeed;
 		}
+		// 歩いている場合
 		else
 		{
 			force = moveForce;
@@ -701,8 +696,6 @@ public class Player : MonoBehaviour
 		{
 			if (InteractCollision.TryGetComponent(out Rigidbody rigidbody))
 			{
-				HoldObjectRb = rigidbody;
-
 				InteractCollision.transform.parent = transform;
 				InteractCollision.transform.localPosition = holdPos.transform.localPosition;
 				InteractCollision.transform.rotation = transform.rotation;
@@ -728,7 +721,6 @@ public class Player : MonoBehaviour
 				InteractCollision.transform.parent = null;
 
 			InteractCollision = null;
-			HoldObjectRb = null;
 		}
 	}
 	/// <summary>
@@ -744,7 +736,6 @@ public class Player : MonoBehaviour
 		{
 			//引きずり開始
 			if (!InteractCollision.TryGetComponent(out Rigidbody rigidbody)) return;
-			HoldObjectRb = rigidbody;
 			//HingeJointの設定
 			HingeJoint joint = InteractCollision.GetComponent<HingeJoint>();
 			if (!joint) joint = rigidbody.AddComponent<HingeJoint>();
@@ -764,7 +755,6 @@ public class Player : MonoBehaviour
 			anim.SetFloat("AnimSpeed", 1.0f);
 			Destroy(InteractCollision.GetComponent<HingeJoint>());
 			InteractCollision = null;
-			HoldObjectRb = null;
 		}
 	}
 
@@ -843,7 +833,7 @@ public class Player : MonoBehaviour
 		if (other.tag != "Interact")
 			return;
 
-		WithinRange.Add(other);
+			WithinRange.Add(other);
 
 		if (WithinRange.Count == 1 && other.TryGetComponent(out Outline outline))
 			outline.enabled = true;
@@ -851,7 +841,7 @@ public class Player : MonoBehaviour
 
 	private void OnTriggerExit(Collider other)
 	{
-		if (_IsHold)
+		//if (_IsHold)
 			WithinRange.Remove(other);
 
 		if (other.TryGetComponent(out Outline outline))
@@ -864,7 +854,6 @@ public class Player : MonoBehaviour
 		// 捕まったら持ってるもの捨てる
 		_IsHold = _IsDrag = false;
 		InteractCollision = null;
-		HoldObjectRb = null;
 
 		// インスペクターで設定したリスポーン位置に再配置する
 		this.gameObject.transform.position = respawnZone.position;
