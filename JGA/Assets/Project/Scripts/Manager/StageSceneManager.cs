@@ -258,6 +258,13 @@ public class StageSceneManager : BaseSceneManager {
                         isOnce = true;
                     }
                 }
+
+                if (!PauseManager.isPaused) {
+                    PauseManager.isPaused = true;
+                    PauseManager.NoMenu = true;
+                    PauseManager.Pause();
+                }
+
             }
         }
 
