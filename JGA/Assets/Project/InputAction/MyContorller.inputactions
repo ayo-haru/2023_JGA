@@ -175,17 +175,6 @@
                 },
                 {
                     "name": "",
-                    "id": "ad9bac0e-100a-4e37-93b9-d9ae6b799715",
-                    "path": "<Keyboard>/f",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Hit",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "ba2c22a7-8cd4-4dd4-995b-81220a353569",
                     "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
@@ -200,17 +189,6 @@
                     "id": "ef1cb05f-e57a-48a4-816a-0e4f29bacc10",
                     "path": "<Mouse>/rightButton",
                     "interactions": "Hold(duration=0.01,pressPoint=0.02)",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Hold",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "d575d52e-2c8d-4cb3-8be1-3b7a0a8e5ebd",
-                    "path": "<Keyboard>/r",
-                    "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Hold",
