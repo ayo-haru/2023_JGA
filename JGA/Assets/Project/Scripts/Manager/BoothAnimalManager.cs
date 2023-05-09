@@ -62,7 +62,6 @@ public class BoothAnimalManager : SingletonMonoBehaviour<BoothAnimalManager>
 
         penguinObj = PrefabContainerFinder.Find(MySceneManager.GameData.animalDatas, "Penguin.prefab");
        
-
         for (int i = 0;i < penguinCount;i++)
 		{
             penguinStartIndex = UnityEngine.Random.Range(0, penguinsData.rangeList.Count);
@@ -105,7 +104,7 @@ public class BoothAnimalManager : SingletonMonoBehaviour<BoothAnimalManager>
 	{
 		
 	}
-
+	//名前の後ろに連番を入れこむ処理
 	private string Rename(string nameBase,int Number)
 	{
 		int[] serialNumber = new int[3];
@@ -113,16 +112,17 @@ public class BoothAnimalManager : SingletonMonoBehaviour<BoothAnimalManager>
 		int i = serialNumber.Length - 1;
 		Number++;
 
+		//一桁目のみ処理が違うため最初に処理する
 		serialNumber[i] = Number % count;
 		i--;
-
+		//ループで残りの数値を処理する
         while(i >= 0)
 		{
             serialNumber[i] = Number / count;
 			count *= 10;
 			i--;
         }
-
+		//ここで連番になるように打ち込む
 		for(i = 0; i < serialNumber.Length; i++)
 		{
 			nameBase += serialNumber[i].ToString();
