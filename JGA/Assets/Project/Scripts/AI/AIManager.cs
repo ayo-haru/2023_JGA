@@ -22,7 +22,10 @@ using UnityEngine;
 using System;
 using UniRx;
 using UnityEngine.AI;
+
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 public class AIManager : MonoBehaviour
 {
@@ -186,6 +189,7 @@ public class AIManager : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+#if UNITY_EDITOR
         //ペンギン到着エリア
         Handles.color = new Color(1, 0, 0, 0.1f);
         Handles.DrawSolidArc(transform.position, Vector3.up,transform.forward, 360.0f, data.arrivalPenguinArea);
@@ -199,5 +203,6 @@ public class AIManager : MonoBehaviour
         Handles.color = new Color(0, 0, 1, 0.3f);
         Handles.DrawSolidArc(transform.position, Vector3.up,
             Quaternion.Euler(0f, -data.viewAngle, 0f) * transform.forward, data.viewAngle * 2.0f, data.rayLength);
+#endif
     }
 }
