@@ -99,6 +99,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: TestPanda
       objectReference: {fileID: 0}
+    - target: {fileID: 8100448407109448897, guid: bb577e123ce9ffa47a9355666aa09641,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 84e65b3e5c2bb2347aa216c67c983ef5, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bb577e123ce9ffa47a9355666aa09641, type: 3}
 --- !u!4 &970138887496346291 stripped
