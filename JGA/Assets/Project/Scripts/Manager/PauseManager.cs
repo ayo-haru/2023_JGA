@@ -9,8 +9,10 @@
 // 2023/03/11	スクリプト作成
 //=============================================================================
 using System;
+using System.Diagnostics;
 using UniRx;
 using UnityEngine.InputSystem;
+using UnityEngine;
 
 public class PauseManager : SingletonMonoBehaviour<PauseManager>
 {
@@ -42,9 +44,14 @@ public class PauseManager : SingletonMonoBehaviour<PauseManager>
 		gameInputs.Enable();
 	}
 
-	private void Pause(InputAction.CallbackContext context)
+    private void OnDisable() {
+		// Input Actionを無効化
+        gameInputs.Disable();
+    }
+
+    private void Pause(InputAction.CallbackContext context)
 	{
-		if (FadeManager.fadeMode != FadeManager.eFade.Default)
+        if (FadeManager.fadeMode != FadeManager.eFade.Default)
 		{       // フェード中はポーズの開始の入力を受け付けない
 			return;
 		}

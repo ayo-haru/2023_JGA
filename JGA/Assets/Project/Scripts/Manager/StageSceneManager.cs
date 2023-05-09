@@ -278,17 +278,6 @@ public class StageSceneManager : BaseSceneManager {
                         SceneChange(next);  // シーン遷移
                         isOnce = true;
                     }
-#if false
-                    //gameObject.AddComponent<ResultCamera>();
-                    if (inputAction.Menu.Decision.ReadValue<float>() >= InputSystem.settings.defaultButtonPressPoint) { // 入力があったら
-                        if (System.Enum.GetNames(typeof(MySceneManager.SceneState)).Length > MySceneManager.GameData.nowScene) {  // 最大シーンではないとき
-                            MySceneManager.GameData.nowScene++;
-                            Debug.Log(MySceneManager.GameData.nowScene);
-                        }
-                        SceneChange(MySceneManager.GameData.nowScene);  // シーン遷移
-                        isOnce = true;   // 二回目の処理を走らせない
-                    }
-#endif
                 }
             }
         }
@@ -307,7 +296,6 @@ public class StageSceneManager : BaseSceneManager {
                 }
             }
         }
-
     }
 
     private void LateUpdate() {
