@@ -28,7 +28,7 @@ public class CardBoard : BaseObj
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
 	/// </summary>
-	protected override void Start()
+	void Start()
 	{
 		Init();
 		_animator = GetComponent<Animator>();
