@@ -338,10 +338,12 @@ public class PenguinMove : MonoBehaviour
     private void Pause()
     {
         pauseFlg = true;
+        anim.speed = 0.0f;
     }
 
     private void ReGame()
     {
         pauseFlg = false;
+        anim.speed = 1.0f;
     }
 }
