@@ -44,20 +44,17 @@ public class PenguinMove : MonoBehaviour
 	private int currentMoveIndex;           //動きの数値
 	private int moveIndex;                  //現在の動きの数値
 
-    //終了地点を格納しておく変数F
-    private Vector3 endPos;
+    private Vector3 endPos;                 //終了地点を格納しておく変数
 
-    private Rigidbody rb; 
+    private Rigidbody rb;                   //押し合う用
 
-	//動いてるときの時間
-	private float moveTime;
+	private float moveTime;                 //動いてるときの時間
 
-	//ポーズ用フラグ
-	private bool pauseFlg;
+    private bool pauseFlg;                  //ポーズ用フラグ
 
-    //ターン用フラグ
-    private bool turnFlg;
+    private bool turnFlg;                   //ターン用フラグ
 
+    //クリア用に使う変数
     private GameObject guestNumUI;
     private GuestNumUI _GuestNumUI;
 
@@ -129,11 +126,9 @@ public class PenguinMove : MonoBehaviour
             case MoveType.IDLE:
                 Idle();
                 break;
-
             case MoveType.WALK:
                 Walk();
                 break;
-
             case MoveType.RUN:
                 Run();
                 break;
@@ -143,16 +138,12 @@ public class PenguinMove : MonoBehaviour
             case MoveType.JUMP:
                 moveFlg = false;
                 break;
-
             case MoveType.APPEAL:
                 Appeal();
                 break;
-
             case MoveType.SWIM:
                 moveFlg = false;
                 break;
-
-
         }
       
     }
@@ -269,7 +260,6 @@ public class PenguinMove : MonoBehaviour
 	{
         //動き決定の範囲
         //アピールばかりだとちょっとむかついたので一回やったら最低でも一回は違う行動に出る
-        //ココ変かもしれない。ちょっと作り直しを待たれよ
         if (turnFlg == true)
         {
             currentMoveType = (MoveType)Random.Range((int)MoveType.WALK, (int)MoveType.RUN + 1);
@@ -282,7 +272,6 @@ public class PenguinMove : MonoBehaviour
             else
                 currentMoveType = (MoveType)Random.Range((int)MoveType.IDLE, (int)MoveType.TURN + 1);
         }
-
 
         moveFlg = true;
         if (currentMoveType == MoveType.WALK)

@@ -15,6 +15,7 @@ using UniRx;
 
 public class BearMove : MonoBehaviour
 {
+    
     enum MoveType
     {
         WALK,
@@ -36,25 +37,23 @@ public class BearMove : MonoBehaviour
     private int currentMoveIndex;           //動きの数値
     private int moveIndex;                  //現在の動きの数値
 
-    //終了地点を格納しておく変数F
-    private Vector3 endPos;
+    
+    private Vector3 endPos;                 //終了地点を格納しておく変数
 
-    private Rigidbody rb;
+    private Rigidbody rb;                   //リジッドボディ
 
-    //動いてるときの時間
-    private float moveTime;
+    private float moveTime;                 //動いてるときの時間
 
-    //ポーズ用フラグ
-    private bool pauseFlg;
+    private bool pauseFlg;                  //ポーズ用フラグ
 
-    //ターン用フラグ
-    private bool turnFlg;
+    private bool turnFlg;                   //ターン用フラグ
 
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
     /// </summary>
     void Awake()
 	{
+        //初期化
         currentMoveType = MoveType.IDLE;
         moveType = MoveType.IDLE;
         moveFlg = false;
@@ -83,11 +82,12 @@ public class BearMove : MonoBehaviour
 	/// </summary>
 	void FixedUpdate()
 	{
+        //ポーズ時に他の処理をしないようにする
 		if(pauseFlg)
         {
             return;
         }
-
+        //動きのフラグが下りてたら動きの更新をかける
         if (!moveFlg)
         {
             MoveEnter();
@@ -110,10 +110,7 @@ public class BearMove : MonoBehaviour
                 Turn();
                 break;
             case MoveType.GIMMICK:
-
                 break;
-
-
         }
     }
 
@@ -122,10 +119,7 @@ public class BearMove : MonoBehaviour
 	/// </summary>
 	void Update()
 	{
-        if (pauseFlg)
-        {
-            return;
-        }
+        
     }
 
     private void Idle()
