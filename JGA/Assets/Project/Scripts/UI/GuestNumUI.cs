@@ -57,14 +57,16 @@ public class GuestNumUI : MonoBehaviour
         }
 	}
 
-#if false
-	/// <summary>
-	/// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
-	/// </summary>
-	void Update()
-	{
-
-	}
+#if UNITY_EDITOR
+    /// <summary>
+    /// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
+    /// </summary>
+    void Update() {
+        //デバッグ用f1でクリア画面になる
+        if (Input.GetKeyUp(KeyCode.F1)) {
+            currentNum = clearNum;
+        }
+    }
 #endif
 
     public void Add()
