@@ -31,21 +31,18 @@ public class StageSceneManager : BaseSceneManager {
     [SerializeField] GameObject playerRespawn;
 
     //---イベント
-    [NamedArrayAttribute(new string[] { "1st", "2nd", "3rd", "4th", "5th","6th","7th" })]
-    [SerializeField]
     [Header("タイマーの丸のそれぞれのイベント")]
-    private MySceneManager.eEvent[] eventState;
+    [SerializeField]
+    private EventParam[] events = default;
+    
 
     //---各ブース
+    [Header("それぞれのブースの場所を入れる(空でもOK)")]
     [NamedArrayAttribute(new string[] { "PENGUIN_N", "PENGUIN_S", "PENGUIN_W", "PENGUIN_E", "HORSE", "ELEPHANT", "LION", "POLARBEAR", "BIRD", "ENTRANCE" })]
     [SerializeField]
-    [Header("それぞれのブースの場所を入れる(空でもOK)")]
     private Transform[] rootPos;
 
     //---客
-    //[Header("ランダム生成させる客の合計の数")]
-    //[SerializeField]
-    //private int randomGuestMax = 1;
     [Header("ランダム生成させる客のルートの最大数\n(2～ペンギンとエントランス以外のブースの合計数)")]
     [SerializeField]
     [Range(2, (int)MySceneManager.eRoot.ENTRANCE - 4)]
@@ -53,7 +50,7 @@ public class StageSceneManager : BaseSceneManager {
     [Header("ランダム生成する間隔(秒)")]
     [SerializeField]
     [Range(1, 30)]
-    private readonly int guestSpawnTime = 1;
+    private int guestSpawnTime = 1;
     private GameObject guestParent; // 客を生成したときに親にするオブジェクト
     private GameObject[] guestObj;  // 生成する客のプレハブ
     private int guestSum;           // 生成した数(連番振るのに使う)
@@ -136,8 +133,16 @@ public class StageSceneManager : BaseSceneManager {
         inputAction = new MyContorller();
         inputAction.Enable();
 
-        // イベントを静的クラスに保存
-        MySceneManager.GameData.eventStates = this.eventState;
+        //----- イベントを静的クラスに保存 -----
+        MySceneManager.GameData.events = new EventParam[this.events.Length];
+        for(int i = 0;i < events.Length; i++) {
+            /*
+             * 上の ”new EventParam[this.events.Length]"ではサイズを確保しているだけで初期化はされていないので
+             * 下の ”new EventParam()”というように ”()” をつけコンストラクタを呼び出し初期化する
+             */
+            MySceneManager.GameData.events[i] = new EventParam();
+            MySceneManager.GameData.events[i].eventState = this.events[i].eventState;
+        }
 
         //---デバッグ用------------------------------------------------------------------------------
         /*
@@ -158,11 +163,6 @@ public class StageSceneManager : BaseSceneManager {
     /// </summary>
     void Start() {
         //----- 変数初期化 -----
-        // 実際に使うデータとデバッグ用に登録していたデータが違ったら変更
-        //if (this.randomGuestMax != MySceneManager.GameData.randomGuestMax) {
-        //    MySceneManager.GameData.randomGuestMax = this.randomGuestMax;
-        //}
-
         // 客の生成する親オブジェクトの取得
         guestParent = GameObject.Find("Guests");
 
@@ -238,9 +238,6 @@ public class StageSceneManager : BaseSceneManager {
         if (isGuestSpawn) {
             //----- データで決められた客 -----
             SpawnFixGuest();
-
-            ////----- ランダムで生成する客 -----
-            //SpawnRondomGuest(); // 初めに一体生成しとく
         }
 
         //----- タイマーUIの取得 -----
@@ -265,8 +262,9 @@ public class StageSceneManager : BaseSceneManager {
     }
 
     void Update() {
-        //----- 制限時間のゲームオーバー -----
+        //----- 時間系の処理 -----
         if (timerUI) {
+            //----- 制限時間のゲームオーバー -----
             if (_TimerUI.IsFinish()) {
                 if (!isOnce) {
                     if (inputAction.Menu.Decision.ReadValue<float>() >= InputSystem.settings.defaultButtonPressPoint) { // 入力があったら
@@ -281,6 +279,19 @@ public class StageSceneManager : BaseSceneManager {
                     PauseManager.Pause();
                 }
 
+            }
+
+            //----- ランダムで生成する客 -----
+            if (isGuestSpawn) {
+                guestSpawnTimer--;
+                if (guestSpawnTimer <= 0) { // 間隔開けて生成
+                    if (events[_TimerUI.CurrentTimerPoint()].eventState == MySceneManager.eEvent.GUEST_ENTER) {  // 現在のイベントがエントランスに入るだったら
+                        // 生成
+                        SpawnRondomGuest();
+                        // カウントリセット
+                        guestSpawnTimer = guestSpawnTime * 60;
+                    }
+                }
             }
         }
 
@@ -312,22 +323,13 @@ public class StageSceneManager : BaseSceneManager {
         }
 #endif
 
-        //----- ランダムで生成する客 -----
-        if (isGuestSpawn) {
-            guestSpawnTimer--;
-            if (guestSpawnTimer <= 0) { // 間隔開けて生成
-                if (eventState[stateCnt] == MySceneManager.eEvent.GUEST_ENTER) {  // 現在のイベントがエントランスに入るだったら
-                    SpawnRondomGuest();
-                    /*
-                     * カウント完了時でなく生成完了時にカウントリセット
-                     */
-                    guestSpawnTimer = guestSpawnTime * 60;
-                }
-            }
-        }
     }
 
     private void LateUpdate() {
+        //----- 飼育員に捕まったフラグを下す -----
+        /*
+         * Updateで下ろすと各処理と同フレーム中にフラグが降りてしまうためLateに書いた
+         */
         if (MySceneManager.GameData.isCatchPenguin) {
             MySceneManager.GameData.isCatchPenguin = false;
         }

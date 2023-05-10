@@ -64,7 +64,7 @@ public class TimerSliderUI : MonoBehaviour
 
         float width = gameObject.GetComponent<RectTransform>().rect.width;
         //イベントの数を取得
-        int nEvent = MySceneManager.GameData.eventStates.Length;
+        int nEvent = MySceneManager.GameData.events.Length;
         timerPoins = new List<GameObject>();
         //イベントの数＋最初と最後の丸を生成
         for (int i = 0; i < nEvent + 2; ++i)
