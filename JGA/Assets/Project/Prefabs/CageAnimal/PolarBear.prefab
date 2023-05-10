@@ -2491,6 +2491,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7535056807155738527}
   - component: {fileID: 4499600612942806501}
+  - component: {fileID: 3692032497584314794}
+  - component: {fileID: -775425879589665593}
+  - component: {fileID: -4744660420734302012}
   m_Layer: 0
   m_Name: PolarBear
   m_TagString: Untagged
@@ -2536,6 +2539,48 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!136 &3692032497584314794
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7195123359571016997}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 3.5312896
+  m_Height: 7.639078
+  m_Direction: 1
+  m_Center: {x: 0.05553198, y: 3.6168528, z: -0.013667107}
+--- !u!54 &-775425879589665593
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7195123359571016997}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 116
+  m_CollisionDetection: 0
+--- !u!114 &-4744660420734302012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7195123359571016997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5633e99b78e3e3c4d97a608063f281a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7418796491741655008
 GameObject:
   m_ObjectHideFlags: 0
