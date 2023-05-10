@@ -155,6 +155,12 @@ public class Player : MonoBehaviour
 		_maxAppealSpeed = (_maxMoveSpeed + _maxRunSpeed) / 2;
 	}
 
+	private void OnDisable()
+	{
+		// inout actionを無効化
+		gameInputs.Disable();
+	}
+
 	/// <summary>
 	/// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
 	/// </summary>
@@ -646,6 +652,9 @@ public class Player : MonoBehaviour
 		// 長押し終了
 		else if (context.phase == InputActionPhase.Canceled)
 		{
+			if (InteractCollision == null)
+				return;
+
 			// BaseObjとBaseObject二つあるため、それぞれ出来るように書きました(吉原 04/04 4:25)
 			if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj))
 			{
@@ -815,7 +824,7 @@ public class Player : MonoBehaviour
 		anim.SetFloat("AnimSpeed", 0.0f);
 	}
 
-	public void w()
+	public void AnimCarryStop()
 	{
 		anim.SetBool("Carry", false);
 	}
