@@ -21,8 +21,8 @@ MonoBehaviour:
     swimSpeed: 0
     minIdleTime: 1
     maxIdleTime: 5
-  - walkSpeed: 2
-    runSpeed: 4
+  - walkSpeed: 3
+    runSpeed: 6
     rotateAngle: 1
     minAppealTime: 0
     maxAppealTime: 0

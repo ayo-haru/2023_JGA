@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BearsData
   m_EditorClassIdentifier: 
   dataList:
-  - walkSpeed: 5
+  - walkSpeed: 4
     runSpeed: 8
     rotateAngle: 5
     minIdleTime: 4

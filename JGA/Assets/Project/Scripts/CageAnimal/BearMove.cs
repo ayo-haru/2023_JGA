@@ -135,6 +135,8 @@ public class BearMove : MonoBehaviour
             //一通りの処理を終えたら行動を書き込む
             moveType = MoveType.IDLE;
             moveFlg = false;
+            anim.SetBool("IdleFlg1", false);
+            anim.SetBool("IdleFlg2", false);
         }
     }
 
@@ -152,6 +154,7 @@ public class BearMove : MonoBehaviour
             moveIndex = currentMoveIndex;
             currentMoveType = MoveType.IDLE;
             moveType = MoveType.WALK;
+            anim.SetBool("WalkFlg", false);
         }
 
     }
@@ -172,6 +175,7 @@ public class BearMove : MonoBehaviour
             moveIndex = currentMoveIndex;
             currentMoveType = MoveType.IDLE;
             moveType = MoveType.RUN;
+            anim.SetBool("RunFlg", false);
         }
     }
 
@@ -189,12 +193,14 @@ public class BearMove : MonoBehaviour
             moveFlg = false;
             turnFlg = true;
             moveType = MoveType.TURN;
+            anim.SetBool("TurnFlg", false);
         }
     }
 
     private void MoveEnter()
     {
-        if(moveType == MoveType.GIMMICK)
+        moveFlg = true;
+        if (moveType == MoveType.GIMMICK)
         {
             return;
         }
@@ -207,9 +213,23 @@ public class BearMove : MonoBehaviour
         {
             currentMoveType = (MoveType)Random.Range((int)MoveType.IDLE, (int)MoveType.TURN + 1);
         }
-
-        moveFlg = true;
-
+        
+        if (currentMoveType == MoveType.WALK)
+        {
+            anim.SetBool("WalkFlg", true);
+        }
+        if (currentMoveType == MoveType.RUN)
+        {
+            anim.SetBool("RunFlg", true);
+        }
+        if (currentMoveType == MoveType.IDLE)
+        {
+            var turnRand = Random.Range(0, 2);
+            if (turnRand == 0)
+                anim.SetBool("IdleFlg1", true);
+            if (turnRand == 1)
+                anim.SetBool("IdleFlg2", true);
+        }
         if (currentMoveType == MoveType.TURN)
         {
 
@@ -237,7 +257,6 @@ public class BearMove : MonoBehaviour
                                                     BoothAnimalManager.Instance.bearData.rangeList.Count);
             }
 
-            //Debug.Log("きまったで"+currentMoveIndex);
             //終了地点が決まったらランダムで若干ずらす。
             endPos = CircleRandamaiser(currentMoveIndex);
 
@@ -282,10 +301,12 @@ public class BearMove : MonoBehaviour
     private void Pause()
     {
         pauseFlg = true;
+        anim.speed = 0.0f;
     }
 
     private void ReGame()
     {
         pauseFlg = false;
+        anim.speed = 1.0f;
     }
 }
