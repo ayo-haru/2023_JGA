@@ -30,6 +30,12 @@ public class StageSceneManager : BaseSceneManager {
     private GameObject playerInstance;
     [SerializeField] GameObject playerRespawn;
 
+    //---イベント
+    [NamedArrayAttribute(new string[] { "1st", "2nd", "3rd", "4th", "5th","6th","7th" })]
+    [SerializeField]
+    [Header("タイマーの丸のそれぞれのイベント")]
+    private MySceneManager.eEvent[] eventState;
+
     //---各ブース
     [NamedArrayAttribute(new string[] { "PENGUIN_N", "PENGUIN_S", "PENGUIN_W", "PENGUIN_E", "HORSE", "ELEPHANT", "LION", "POLARBEAR", "BIRD", "ENTRANCE" })]
     [SerializeField]
@@ -37,18 +43,19 @@ public class StageSceneManager : BaseSceneManager {
     private Transform[] rootPos;
 
     //---客
-    [Header("ランダム生成させる客の合計の数")]
-    [SerializeField]
-    private int randomGuestMax = 1;
+    //[Header("ランダム生成させる客の合計の数")]
+    //[SerializeField]
+    //private int randomGuestMax = 1;
     [Header("ランダム生成させる客のルートの最大数\n(2～ペンギンとエントランス以外のブースの合計数)")]
     [SerializeField]
     [Range(2, (int)MySceneManager.eRoot.ENTRANCE - 4)]
     private int guestRootMax = 5;
     [Header("ランダム生成する間隔(秒)")]
     [SerializeField]
-    private int guestSpawnTime = 5;
+    [Range(1, 30)]
+    private readonly int guestSpawnTime = 1;
     private GameObject guestParent; // 客を生成したときに親にするオブジェクト
-    private GameObject[] guestObj;    // 生成する客のプレハブ
+    private GameObject[] guestObj;  // 生成する客のプレハブ
     private int guestSum;           // 生成した数(連番振るのに使う)
     private int guestSpawnTimer;    // ランダム生成のカウントに使う
 
@@ -111,6 +118,12 @@ public class StageSceneManager : BaseSceneManager {
 
 
 
+    //-0510デバッグ用---------------------------
+    int stateCnt = 0;
+    //----------------------------
+
+
+
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
     /// </summary>
@@ -122,6 +135,9 @@ public class StageSceneManager : BaseSceneManager {
 
         inputAction = new MyContorller();
         inputAction.Enable();
+
+        // イベントを静的クラスに保存
+        MySceneManager.GameData.eventStates = this.eventState;
 
         //---デバッグ用------------------------------------------------------------------------------
         /*
@@ -143,9 +159,9 @@ public class StageSceneManager : BaseSceneManager {
     void Start() {
         //----- 変数初期化 -----
         // 実際に使うデータとデバッグ用に登録していたデータが違ったら変更
-        if (this.randomGuestMax != MySceneManager.GameData.randomGuestMax) {
-            MySceneManager.GameData.randomGuestMax = this.randomGuestMax;
-        }
+        //if (this.randomGuestMax != MySceneManager.GameData.randomGuestMax) {
+        //    MySceneManager.GameData.randomGuestMax = this.randomGuestMax;
+        //}
 
         // 客の生成する親オブジェクトの取得
         guestParent = GameObject.Find("Guests");
@@ -223,8 +239,8 @@ public class StageSceneManager : BaseSceneManager {
             //----- データで決められた客 -----
             SpawnFixGuest();
 
-            //----- ランダムで生成する客 -----
-            SpawnRondomGuest(); // 初めに一体生成しとく
+            ////----- ランダムで生成する客 -----
+            //SpawnRondomGuest(); // 初めに一体生成しとく
         }
 
         //----- タイマーUIの取得 -----
@@ -289,15 +305,21 @@ public class StageSceneManager : BaseSceneManager {
             }
         }
 
+#if UNITY_EDITOR
+        // デバッグ用イベントのカウント上がります
+        if(Input.GetKeyDown(KeyCode.F2)) {
+            stateCnt++;
+        }
+#endif
+
         //----- ランダムで生成する客 -----
         if (isGuestSpawn) {
             guestSpawnTimer--;
             if (guestSpawnTimer <= 0) { // 間隔開けて生成
-                if (MySceneManager.GameData.randomGuestCnt < randomGuestMax) {  // 最大数以下だったら生成
+                if (eventState[stateCnt] == MySceneManager.eEvent.GUEST_ENTER) {  // 現在のイベントがエントランスに入るだったら
                     SpawnRondomGuest();
                     /*
                      * カウント完了時でなく生成完了時にカウントリセット
-                     * （退園した客がいたら即時に生成する）
                      */
                     guestSpawnTimer = guestSpawnTime * 60;
                 }

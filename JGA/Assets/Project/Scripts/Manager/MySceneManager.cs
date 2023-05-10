@@ -30,9 +30,9 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 		public static bool isCatchPenguin;
 
 		//---データ
-		public static int randomGuestMax;   // ランダム生成させる客の最大数
 		public static int randomGuestCnt;   // ランダム生成させる客の今の数
-		public static int nowScene;			// 現在のシーン番号
+		public static int nowScene;         // 現在のシーン番号
+		public static eEvent[] eventStates;	// 各シーンのイベント
 	}
 
 	public static class Sound
@@ -79,8 +79,14 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 		ENTRANCE
 	}
 
-
-
+	//----- イベント -----
+	public enum eEvent {
+		GUEST_ENTER,	// 客入場
+		SOUND_BELL,		// 鐘
+		GO_POLARBEAR,	// しろくま
+		GO_HOURSE,		// うま
+		OBJ_MEGAPHON,	// メガホン使え
+	}
 
 	private void Awake()
 	{
