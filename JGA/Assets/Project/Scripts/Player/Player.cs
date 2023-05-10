@@ -712,8 +712,25 @@ public class Player : MonoBehaviour
 				Bounds bounds = InteractCollision.GetComponentInChildren<MeshFilter>().mesh.bounds;
 				maxBounds.Encapsulate(bounds);
 
-				// 掴む座標を取得
-				var point = InteractCollision.transform.Find("HoldPoint");
+				//--- 掴む座標を取得
+				Transform point = null;
+				float distance = 10.0f;	// とりあえず10.0f
+
+				for (int i = 0; i < InteractCollision.transform.childCount; i++)
+				{
+					var children = InteractCollision.transform.GetChild(i); // GetChild()で子オブジェクトを取得
+					if (children.name == "HoldPoint")
+					{
+						// pointが空 || 現状のpointより距離が近い場合
+						if (point == null ||
+							(point != null && distance > Vector3.Distance(transform.position, children.transform.position)))
+						{
+							point = children.transform;
+							distance = Vector3.Distance(transform.position, point.position);
+						}
+					}
+
+				}
 
 				// オブジェクトをくちばし辺りに移動
 				var pos = holdPos.transform.localPosition - point.localPosition;
