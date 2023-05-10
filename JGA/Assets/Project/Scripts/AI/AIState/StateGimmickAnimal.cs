@@ -16,6 +16,8 @@ using UnityEngine.AI;
 
 public class StateGimmickAnimal : AIState
 {
+    //animator
+    private Animator animator;
     //感情ui
     [SerializeField] private EmosionUI ui;
     //ナビメッシュエージェント
@@ -61,26 +63,29 @@ public class StateGimmickAnimal : AIState
     {
         //コンポーネント取得
         if (!agent) agent = GetComponent<NavMeshAgent>();
-        if (!ErrorCheck()) return;
-
-        ui.SetEmotion(EEmotion.HIGH_TENSION);
-
+        if(!animator) animator = gameObject.transform.GetChild(0).GetComponent<Animator>();
         //ケージポス取得
         GetCagePos();
         //動物のトランスフォーム取得
-        GetAnimal();
-        
+        if (!GetAnimal()) Debug.LogWarning("動物が取得できませんでした");
+
+        if (!ErrorCheck()) return;
+
+        ui.SetEmotion(EEmotion.HIGH_TENSION);
+        animator.SetBool("isWalk", true);
+
+
     }
 
     public override void UpdateState()
     {
         if (!ErrorCheck()) return;
+        if (agent.velocity.normalized.magnitude > 0.0f) return;
         //動物の方を見る
-        //動物のトランスフォーム取得方法は検討中
-        //仮でagentの目的地の方を向かせます
-       // Quaternion rot = Quaternion.LookRotation(agent.destination);
         Quaternion rot = Quaternion.LookRotation((animalTransform) ? animalTransform.position : agent.destination);
         transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime);
+
+        animator.SetBool("isWalk", false);
     }
 
     public override void FinState()
@@ -92,8 +97,8 @@ public class StateGimmickAnimal : AIState
     {
         if (!ui) Debug.LogError("感情UIが設定されていません");
         if (!agent) Debug.LogError("ナビメッシュエージェントが取得されていません");
-        if(!animalTransform) Debug.LogWarning("動物のトランスフォームが取得されていません");
-        return ui && agent;
+        if (!animator) Debug.LogError("アニメーターが取得されていません");
+        return ui && agent && animator;
     }
 
     private bool GetAnimal()
@@ -105,7 +110,7 @@ public class StateGimmickAnimal : AIState
         GuestSharedObject sharedObject = Object.GetComponent<GuestSharedObject>();
         if (!sharedObject) return false;
         animalTransform = sharedObject.GetAnimalTransform(animal);
-        return true;
+        return animalTransform;
     }
     private bool GetCagePos()
     {
@@ -121,5 +126,10 @@ public class StateGimmickAnimal : AIState
        agent.SetDestination(pos);
 
         return true;
+    }
+
+    public Transform GetTargetAnimal()
+    {
+        return animalTransform;
     }
 }
