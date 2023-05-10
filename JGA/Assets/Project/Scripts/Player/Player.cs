@@ -712,17 +712,26 @@ public class Player : MonoBehaviour
 				Bounds bounds = InteractCollision.GetComponentInChildren<MeshFilter>().mesh.bounds;
 				maxBounds.Encapsulate(bounds);
 
+				// 掴む座標を取得
 				var point = InteractCollision.transform.Find("HoldPoint");
 
+				// オブジェクトをくちばし辺りに移動
 				var pos = holdPos.transform.localPosition - point.localPosition;
 				InteractCollision.transform.localPosition = pos;
 				InteractCollision.transform.rotation = transform.rotation;
 
 				if (InteractCollision.GetComponent<HingeJoint>() == null)
 				{
+					// HingeJonitの角度制限を有効化
 					var joint = rigidbody.AddComponent<HingeJoint>();
 					joint.connectedBody = rb;
+					joint.useLimits = true;
 					joint.anchor = new Vector3(0, point.localPosition.y / (maxBounds.size.y / 2), 0);
+					JointLimits jointLimits = joint.limits;
+					jointLimits.min = -90.0f;
+					jointLimits.max = 20.0f;
+					jointLimits.bounciness = 0;
+					joint.limits = jointLimits;
 				}
 			}
 		}
