@@ -29,6 +29,7 @@ public class TimerSliderUI : MonoBehaviour
     [SerializeField,Range(1,60)] private int soundSeconds = 10;
     //時間計測用
     private float fTimer = 0.0f;
+
     [SerializeField] private AudioSource audioSource;
 
     //HURRY！！
@@ -36,9 +37,11 @@ public class TimerSliderUI : MonoBehaviour
     [SerializeField] private float hurryUIPosY = 200.0f;
 
     //TimerPoint
-    [SerializeField] private Image[] timerPoins;
-    [SerializeField] private Sprite timerPoinWhite;
+    [SerializeField] private GameObject timerPointPrefab;       //プレハブ
+    [SerializeField] private Transform timerPointsPearent;      //親オブジェクト
+    private List<GameObject> timerPoins;
     [SerializeField] private Sprite timerPointYellow;
+    private int nCurrentPoint = -1;
 
     //残り秒数表示用のテキスト
     [SerializeField] private TextMeshProUGUI text;
@@ -48,9 +51,8 @@ public class TimerSliderUI : MonoBehaviour
     /// </summary>
     void Awake()
 	{
-		
+        
 	}
-
 #endif
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
@@ -58,6 +60,21 @@ public class TimerSliderUI : MonoBehaviour
 	void Start()
 	{
 		text.text = text.text = string.Format("{0:0}", (int)(playMinutes * 60.0f));
+        nCurrentPoint = -1;
+
+        float width = gameObject.GetComponent<RectTransform>().rect.width;
+        //イベントの数を取得
+        int nEvent = MySceneManager.GameData.eventStates.Length;
+        timerPoins = new List<GameObject>();
+        //イベントの数＋最初と最後の丸を生成
+        for (int i = 0; i < nEvent + 2; ++i)
+        {
+            timerPoins.Add(Instantiate(timerPointPrefab));
+            timerPoins[i].transform.parent = timerPointsPearent;
+            timerPoins[i].transform.localPosition = new Vector3((-width / 2) + (i * width / (nEvent + 1)), 0.0f, 0.0f);
+            //timerPoins[i].transform.localPosition = new Vector3((-width / 2) + (width * value)), 0.0f, 0.0f);
+        }
+
     }
 	/// <summary>
 	/// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
@@ -89,10 +106,12 @@ public class TimerSliderUI : MonoBehaviour
         timerSlider.value = fTimer / (playMinutes * 60.0f);
 
         //TimerPointの位置を経過していたら画像を変更
-        for(int i = 0; i < timerPoins.Length; ++i)
+        for(int i = nCurrentPoint + 1; i < timerPoins.Count; ++i)
         {
-            if (timerSlider.value < i / (timerPoins.Length - 1.0f)) continue;
-            timerPoins[i].sprite = timerPointYellow;
+            if (timerSlider.value < i / (timerPoins.Count - 1.0f)) continue;
+
+            if (timerPoins[i].TryGetComponent(out Image image)) image.sprite = timerPointYellow;
+            nCurrentPoint = i;
         }
 
         //残り秒数の表示更新
@@ -120,5 +139,10 @@ public class TimerSliderUI : MonoBehaviour
     public void CountStop()
     {
         bStart = false;
+    }
+
+    public int CurrentTimerPoint()
+    {
+        return nCurrentPoint;
     }
 }
