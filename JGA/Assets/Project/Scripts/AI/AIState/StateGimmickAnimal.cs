@@ -7,6 +7,7 @@
 // 
 // [Date]
 // 2023/04/05	スクリプト作成
+// 2023/05/10	動物の方向を取得
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -19,7 +20,10 @@ public class StateGimmickAnimal : AIState
     [SerializeField] private EmosionUI ui;
     //ナビメッシュエージェント
     private NavMeshAgent agent;
+    //注目する動物
     [SerializeField] private MySceneManager.eRoot animal = MySceneManager.eRoot.POLARBEAR;
+    //動物のTransform
+    private Transform animalTransform;
 #if false
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -60,14 +64,12 @@ public class StateGimmickAnimal : AIState
         if (!ErrorCheck()) return;
 
         ui.SetEmotion(EEmotion.HIGH_TENSION);
-        StageSceneManager manager = GameObject.Find("StageSceneManager").GetComponent<StageSceneManager>();
-        if (manager)
-        {
-            Vector3 pos = manager.GetRootTransform(animal).position;
-            pos.x += Random.Range(-10.0f, 10.0f);
-            pos.z += Random.Range(-10.0f, 10.0f);
-            agent.SetDestination(pos);
-        }
+
+        //ケージポス取得
+        GetCagePos();
+        //動物のトランスフォーム取得
+        GetAnimal();
+        
     }
 
     public override void UpdateState()
@@ -76,7 +78,8 @@ public class StateGimmickAnimal : AIState
         //動物の方を見る
         //動物のトランスフォーム取得方法は検討中
         //仮でagentの目的地の方を向かせます
-        Quaternion rot = Quaternion.LookRotation(agent.destination);
+       // Quaternion rot = Quaternion.LookRotation(agent.destination);
+        Quaternion rot = Quaternion.LookRotation((animalTransform) ? animalTransform.position : agent.destination);
         transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime);
     }
 
@@ -89,6 +92,34 @@ public class StateGimmickAnimal : AIState
     {
         if (!ui) Debug.LogError("感情UIが設定されていません");
         if (!agent) Debug.LogError("ナビメッシュエージェントが取得されていません");
+        if(!animalTransform) Debug.LogWarning("動物のトランスフォームが取得されていません");
         return ui && agent;
+    }
+
+    private bool GetAnimal()
+    {
+        if (animalTransform != null) return false;
+
+        GameObject Object = GameObject.Find("GuestSharedObject");
+        if (!Object) return false;
+        GuestSharedObject sharedObject = Object.GetComponent<GuestSharedObject>();
+        if (!sharedObject) return false;
+        animalTransform = sharedObject.GetAnimalTransform(animal);
+        return true;
+    }
+    private bool GetCagePos()
+    {
+        if (!agent) return false;
+        StageSceneManager manager = GameObject.Find("StageSceneManager").GetComponent<StageSceneManager>();
+        if (!manager) return false;
+        //ケージポス取得
+        Vector3 pos = manager.GetRootTransform(animal).position;
+        //ばらけさせる
+        pos.x += Random.Range(-10.0f, 10.0f);
+        pos.z += Random.Range(-10.0f, 10.0f);
+       //ケージポスを目的地に設定
+       agent.SetDestination(pos);
+
+        return true;
     }
 }
