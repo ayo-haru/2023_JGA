@@ -86,6 +86,8 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 		GO_POLARBEAR,	// しろくま
 		GO_HOURSE,		// うま
 		OBJ_MEGAPHON,	// メガホン使え
+
+		TIMEOUT_ALERT	// HURRYのUI 
 	}
 
 	private void Awake()

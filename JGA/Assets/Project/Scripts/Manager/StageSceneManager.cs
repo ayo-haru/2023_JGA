@@ -23,6 +23,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering.VirtualTexturing;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class StageSceneManager : BaseSceneManager {
     //---プレイヤー
@@ -34,7 +35,12 @@ public class StageSceneManager : BaseSceneManager {
     [Header("タイマーの丸のそれぞれのイベント")]
     [SerializeField]
     private EventParam[] events = default;
-    
+    private string[] eventChar = new string[] { "エントランスに向かおう", "鐘を鳴らそう", "しろくまブースへ向かおう", "うまブースへ向かおう", "メガホンを使ってみよう", "もうすぐ、時間切れ" };
+    [SerializeField]
+    [Header("イベントのテキスト")]
+    private GameObject eventText;
+    private GameObject eventTextInstance;
+    private Text eventTextChar;
 
     //---各ブース
     [Header("それぞれのブースの場所を入れる(空でもOK)")]
@@ -135,13 +141,14 @@ public class StageSceneManager : BaseSceneManager {
 
         //----- イベントを静的クラスに保存 -----
         MySceneManager.GameData.events = new EventParam[this.events.Length];
-        for(int i = 0;i < events.Length; i++) {
+        for (int i = 0; i < events.Length; i++) {
             /*
              * 上の ”new EventParam[this.events.Length]"ではサイズを確保しているだけで初期化はされていないので
              * 下の ”new EventParam()”というように ”()” をつけコンストラクタを呼び出し初期化する
              */
             MySceneManager.GameData.events[i] = new EventParam();
             MySceneManager.GameData.events[i].eventState = this.events[i].eventState;
+            MySceneManager.GameData.events[i].percent = this.events[i].percent;
         }
 
         //---デバッグ用------------------------------------------------------------------------------
@@ -150,8 +157,8 @@ public class StageSceneManager : BaseSceneManager {
          * クリア作るのに次のシーンへいくのやりたかた
          * 現在のシーン名からシーン番号を取得する
          */
-        for(int i = 0;i < System.Enum.GetNames(typeof(MySceneManager.SceneState)).Length;i++) {
-            if(SceneManager.GetActiveScene().name == MySceneManager.sceneName[i]) {
+        for (int i = 0; i < System.Enum.GetNames(typeof(MySceneManager.SceneState)).Length; i++) {
+            if (SceneManager.GetActiveScene().name == MySceneManager.sceneName[i]) {
                 MySceneManager.GameData.nowScene = i;
             }
         }
@@ -258,7 +265,8 @@ public class StageSceneManager : BaseSceneManager {
             Debug.LogWarning("GuestNumUIがシーン上にありません");
         }
 
-
+        //eventTextInstance = Instantiate(eventText, canvas.GetComponent<RectTransform>());
+        //eventTextChar = eventTextInstance.GetComponent<Text>();
     }
 
     void Update() {
@@ -283,14 +291,45 @@ public class StageSceneManager : BaseSceneManager {
 
             //----- ランダムで生成する客 -----
             if (isGuestSpawn) {
-                guestSpawnTimer--;
-                if (guestSpawnTimer <= 0) { // 間隔開けて生成
-                    if (events[_TimerUI.CurrentTimerPoint()].eventState == MySceneManager.eEvent.GUEST_ENTER) {  // 現在のイベントがエントランスに入るだったら
-                        // 生成
-                        SpawnRondomGuest();
-                        // カウントリセット
-                        guestSpawnTimer = guestSpawnTime * 60;
+                if (_TimerUI.CurrentTimerPoint() - 1 > -1) {    // タイマーはスタート0イベント1個目は1。イベントは0番目から格納されているので帳尻合わせの条件分岐
+
+                    guestSpawnTimer--;
+                    if (guestSpawnTimer <= 0) { // 間隔開けて生成
+                        if (events[_TimerUI.CurrentTimerPoint() - 1].eventState == MySceneManager.eEvent.GUEST_ENTER) {  // 現在のイベントがエントランスに入るだったら
+                            // 生成
+                            SpawnRondomGuest();
+                            // カウントリセット
+                            guestSpawnTimer = guestSpawnTime * 60;
+                        }
                     }
+
+                    // テキスト
+                    //switch (events[_TimerUI.CurrentTimerPoint() - 1].eventState) {
+                    //    case MySceneManager.eEvent.GUEST_ENTER:
+                    //        eventTextChar.text = eventChar[(int)MySceneManager.eEvent.GUEST_ENTER];
+                    //        break;
+                    //    case MySceneManager.eEvent.SOUND_BELL:
+                    //        eventTextChar.text = eventChar[(int)MySceneManager.eEvent.SOUND_BELL];
+                    //        break;
+                    //    case MySceneManager.eEvent.GO_POLARBEAR:
+                    //        eventTextChar.text = eventChar[(int)MySceneManager.eEvent.GO_POLARBEAR];
+                    //        break;
+                    //    case MySceneManager.eEvent.GO_HOURSE:
+                    //        eventTextChar.text = eventChar[(int)MySceneManager.eEvent.GO_HOURSE];
+
+                    //        break;
+                    //    case MySceneManager.eEvent.OBJ_MEGAPHON:
+                    //        eventTextChar.text = eventChar[(int)MySceneManager.eEvent.OBJ_MEGAPHON];
+
+                    //        break;
+                    //    case MySceneManager.eEvent.TIMEOUT_ALERT:
+                    //        eventTextChar.text = eventChar[(int)MySceneManager.eEvent.TIMEOUT_ALERT];
+
+                    //        break;
+                    //    default:
+                    //        Debug.LogWarning("イベント番号が無効な値を受け取りました");
+                    //        break;
+                    //};
                 }
             }
         }
@@ -300,14 +339,13 @@ public class StageSceneManager : BaseSceneManager {
             if (_GuestNumUI.isClear()) {
 
                 //----クリア画面取得
-                if(!clearPanel) clearPanel = GameObject.Find("ClearPanel");
-                if(clearPanel && !_ClearPanel) _ClearPanel = clearPanel.GetComponent<ClearPanel>();
+                if (!clearPanel) clearPanel = GameObject.Find("ClearPanel");
+                if (clearPanel && !_ClearPanel) _ClearPanel = clearPanel.GetComponent<ClearPanel>();
 
                 if (!isOnce) {   // 一度だけ処理
                     int next = -1;
-                    if(_ClearPanel)next = _ClearPanel.GetNextScene();
-                    if (next != -1)
-                    {
+                    if (_ClearPanel) next = _ClearPanel.GetNextScene();
+                    if (next != -1) {
                         MySceneManager.GameData.nowScene = next;
                         SceneChange(next);  // シーン遷移
                         isOnce = true;
@@ -318,7 +356,7 @@ public class StageSceneManager : BaseSceneManager {
 
 #if UNITY_EDITOR
         // デバッグ用イベントのカウント上がります
-        if(Input.GetKeyDown(KeyCode.F2)) {
+        if (Input.GetKeyDown(KeyCode.F2)) {
             stateCnt++;
         }
 #endif
