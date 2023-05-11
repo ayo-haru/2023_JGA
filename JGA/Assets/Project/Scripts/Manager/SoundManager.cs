@@ -29,6 +29,7 @@ public class SoundManager : MonoBehaviour
 
 		// ペンギン関連-------
 		PENGUIN_VOICE,
+		PENGUIN_MEGAVOICE,
 		PENGUIN_CATCH,
 		PENGUIN_HIT_001,
 		PENGUIN_WALK_001,

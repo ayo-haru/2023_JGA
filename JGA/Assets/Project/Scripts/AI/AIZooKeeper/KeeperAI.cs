@@ -625,8 +625,9 @@ public class KeeperAI : MonoBehaviour
             navMesh.speed = data.speed * player.MaxMoveSpeed;
         }
     }
-#endregion
+    #endregion
 
+#if UNITY_EDITOR
     /// <summary>
     /// 視界範囲内（扇状視界）を可視化
     /// </summary>
@@ -638,6 +639,7 @@ public class KeeperAI : MonoBehaviour
             -data.searchAngle, 0f) * transform.forward, 
             data.searchAngle * 2.0f, data.searchDistance);
     }
+#endif
 
     /// <summary>
     /// 初期配置に戻す

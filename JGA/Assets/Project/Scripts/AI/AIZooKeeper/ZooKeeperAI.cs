@@ -758,6 +758,7 @@ public class ZooKeeperAI : MonoBehaviour
     }
     #endregion
 
+#if UNITY_EDITOR
     /// <summary>
     /// 視界範囲内（扇状視界）を可視化
     /// </summary>
@@ -767,6 +768,7 @@ public class ZooKeeperAI : MonoBehaviour
         Handles.DrawSolidArc(transform.position, Vector3.up,
             Quaternion.Euler(0f, -data.searchAngle, 0f) * transform.forward, data.searchAngle * 2.0f, data.searchDistance);
     }
+#endif
 
     /// <summary>
     /// 初期配置に戻す
