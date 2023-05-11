@@ -39,7 +39,7 @@ public class CardBoard : BaseObj
         collision1.SetActive(false);
         collision2.SetActive(false);
         collision3.SetActive(false);
-        objType = ObjType.HIT_HOLD;
+        objType = ObjType.HIT_DRAG;
 	}
 
 	/// <summary>
