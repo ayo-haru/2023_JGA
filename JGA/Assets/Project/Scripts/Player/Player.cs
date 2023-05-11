@@ -341,6 +341,9 @@ public class Player : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// ポーズ開始時の
+	/// </summary>
 	private void Pause()
 	{
 		// 物理
@@ -489,54 +492,57 @@ public class Player : MonoBehaviour
 		bHitMotion = true;
 		anim.SetBool("Hit", bHitMotion);
 		//Debug.Log($"Hit");
+	}
+
+	/// <summary>
+	/// アニメーションから呼び出す用
+	/// </summary>
+	public void AnimHit()
+	{
+		Debug.Log($"Hit");
 
 		// 範囲内に何もなければ、はたくモーションのみ再生
-		if (WithinRange.Count == 0 )
+		if (WithinRange.Count == 0)
 			return;
 
-
-		// 押された瞬間
-		if (context.phase == InputActionPhase.Performed)
+		//--- 現在のインタラクト対象を登録
+		if (InteractOutline != null)
 		{
-			//--- 現在のインタラクト対象を登録
-			if (InteractOutline != null)
-			{
-				InteractCollision = InteractOutline.GetComponent<Collider>();
-			}
-			else	// もし一番近くのオブジェクト情報を保持していない場合
-			{
-				float length = 10.0f;
+			InteractCollision = InteractOutline.GetComponent<Collider>();
+		}
+		else    // もし一番近くのオブジェクト情報を保持していない場合
+		{
+			float length = 10.0f;
 
-				// プレイヤーに一番近いオブジェクトをインタラクト対象とする
-				foreach (Collider obj in WithinRange)
+			// プレイヤーに一番近いオブジェクトをインタラクト対象とする
+			foreach (Collider obj in WithinRange)
+			{
+				float distance = Vector3.Distance(transform.position, obj.transform.position);
+
+				if (length > distance)
 				{
-					float distance = Vector3.Distance(transform.position, obj.transform.position);
-
-					if (length > distance)
-					{
-						length = distance;
-						InteractCollision = obj;
-						break;
-					}
+					length = distance;
+					InteractCollision = obj;
+					break;
 				}
 			}
+		}
 
-			// BaseObjとBaseObject二つあるため、それぞれ出来るように書きました(吉原 04/04 4:25)
-			if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj))
+		// BaseObjとBaseObject二つあるため、それぞれ出来るように書きました(吉原 04/04 4:25)
+		if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj))
+		{
+			if (baseObj.objType == BaseObj.ObjType.HIT ||
+				baseObj.objType == BaseObj.ObjType.HIT_HOLD)
 			{
-				if (baseObj.objType == BaseObj.ObjType.HIT ||
-					baseObj.objType == BaseObj.ObjType.HIT_HOLD)
-				{
-					Hit();
-				}
+				Hit();
 			}
-			else if (InteractCollision.TryGetComponent<BaseObject>(out var baseObject))
+		}
+		else if (InteractCollision.TryGetComponent<BaseObject>(out var baseObject))
+		{
+			if (baseObject.objState == BaseObject.OBJState.HIT ||
+				baseObject.objState == BaseObject.OBJState.HITANDHOLD)
 			{
-				if (baseObject.objState == BaseObject.OBJState.HIT ||
-					baseObject.objState == BaseObject.OBJState.HITANDHOLD)
-				{
-					Hit();
-				}
+				Hit();
 			}
 		}
 	}
@@ -560,10 +566,6 @@ public class Player : MonoBehaviour
 		rigidbody.AddTorque(vec * blowpower);
 
 		_IsHit = true;
-
-		//InteractObject.GetComponent<AudioSource>().Play();
-
-		//SoundManager.Play(audioSource, SoundManager.ESE.);
 	}
 
 	/// <summary>
@@ -767,6 +769,7 @@ public class Player : MonoBehaviour
 			InteractCollision = null;
 		}
 	}
+
 	/// <summary>
 	/// 引きずる処理
 	/// </summary>
@@ -845,6 +848,11 @@ public class Player : MonoBehaviour
 			SoundManager.Play(audioSource, seCall);
 	}
 
+	public void StartHold()
+	{
+
+	}
+
 	public void AnimStop()
 	{
 		anim.SetFloat("AnimSpeed", 0.0f);
@@ -854,11 +862,6 @@ public class Player : MonoBehaviour
 	{
 		anim.SetBool("Carry", false);
 	}
-
-	//public void PlaySoundWalk()
-	//{
-	//	SoundManager.Play(audioSource, seWalk);
-	//}
 
 	#region 衝突判定
 	private void OnCollisionStay(Collision collision)
