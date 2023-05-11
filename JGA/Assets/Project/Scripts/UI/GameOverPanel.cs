@@ -1,5 +1,5 @@
 //=============================================================================
-// @File	: [ClearPanel.cs]
+// @File	: [GameOverPanel.cs]
 // @Brief	: 
 // @Author	: Ogusu Yuuko
 // @Editer	: 
@@ -8,13 +8,12 @@
 // [Date]
 // 2023/05/6	スクリプト作成
 //=============================================================================
-using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 
-public class ClearPanel : MonoBehaviour
+public class GameOverPanel : MonoBehaviour
 {
     private AudioSource audioSource;
 
@@ -22,10 +21,10 @@ public class ClearPanel : MonoBehaviour
     [SerializeField, Header("ボタンの色")] private Color buttonColor;
 
     //ボタン
-    [SerializeField, Header("NEXT DAY")] private Button nextDayButton;
+    [SerializeField, Header("RETRY")] private Button retryButton;
     [SerializeField, Header("BACK TO TITLE")] private Button backToTitleButton;
 
-    public enum EClearPanelButton {NEXT_DAY,BACK_TO_TITLE,};
+    public enum EClearPanelButton {RETRY,BACK_TO_TITLE,};
 
     //マウス
     private Vector3 mousePos = Vector3.zero;
@@ -75,19 +74,14 @@ public class ClearPanel : MonoBehaviour
         }
     }
 
-    #region クリア画面のボタン
+    #region ゲームオーバー画面のボタン
     /// <summary>
     /// NEXT DAYボタン
     /// </summary>
-    public void NextDayButton()
+    public void RetryButton()
     {
         SoundDecisionSE();
-        if (System.Enum.GetNames(typeof(MySceneManager.SceneState)).Length > MySceneManager.GameData.nowScene)
-        {  // 最大シーンではないとき
-            nextScene = MySceneManager.GameData.nowScene + 1;
-        }else{
-            nextScene = MySceneManager.GameData.nowScene;
-        }
+        nextScene = MySceneManager.GameData.nowScene;
     }
     /// <summary>
     /// BACK TO TITLEボタン
@@ -122,21 +116,21 @@ public class ClearPanel : MonoBehaviour
             //マウスカーソル非表示
             Cursor.visible = false;
 
-            ColorBlock colors = nextDayButton.colors;
+            ColorBlock colors = retryButton.colors;
             colors.highlightedColor = Color.white;
-            nextDayButton.colors = backToTitleButton.colors = colors;
+            retryButton.colors = backToTitleButton.colors = colors;
 
             //デフォルトのボタンを選択
-            ControllerChangeSelect(EClearPanelButton.NEXT_DAY);
+            ControllerChangeSelect(EClearPanelButton.RETRY);
         }
         else//コントローラ→マウス
         {
             //マウスカーソル表示
             Cursor.visible = true;
 
-            ColorBlock colors = nextDayButton.colors;
+            ColorBlock colors = retryButton.colors;
             colors.highlightedColor = buttonColor;
-            nextDayButton.colors = backToTitleButton.colors = colors;
+            retryButton.colors = backToTitleButton.colors = colors;
             ControllerNoneSelect();
         }
 
@@ -148,8 +142,8 @@ public class ClearPanel : MonoBehaviour
         ControllerNoneSelect();
         switch (_select)
         {
-            case EClearPanelButton.NEXT_DAY:
-                nextDayButton.Select();
+            case EClearPanelButton.RETRY:
+                retryButton.Select();
                 break;
             case EClearPanelButton.BACK_TO_TITLE:
                 backToTitleButton.Select();
