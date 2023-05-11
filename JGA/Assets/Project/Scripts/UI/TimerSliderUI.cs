@@ -7,6 +7,7 @@
 // 
 // [Date]
 // 2023/05/07	スクリプト作成
+// 2023/05/11	最初と最後の丸消した
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -46,7 +47,7 @@ public class TimerSliderUI : MonoBehaviour
     }
     private TimerPointObject[] timerPoints;
     [SerializeField] private Sprite timerPointYellow;
-    private int nCurrentPoint = -1;
+    private int nCurrentPoint = 0;
 
     //残り秒数表示用のテキスト
     [SerializeField] private TextMeshProUGUI text;
@@ -65,18 +66,18 @@ public class TimerSliderUI : MonoBehaviour
 	void Start()
 	{
 		text.text = text.text = string.Format("{0:0}", (int)(playMinutes * 60.0f));
-        nCurrentPoint = -1;
+        nCurrentPoint = 0;
 
         float width = gameObject.GetComponent<RectTransform>().rect.width;
         //イベントの数を取得
-        int nEvent = MySceneManager.GameData.events.Length + 2;
+        int nEvent = MySceneManager.GameData.events.Length;
         timerPoints = new TimerPointObject[nEvent];
         //イベントの数＋最初と最後の丸を生成
         for (int i = 0; i < nEvent; ++i)
         {
             timerPoints[i].timerPoint = Instantiate(timerPointPrefab);
-            timerPoints[i].percent = (i == 0) ? 0.0f : (i == nEvent - 1) ? 1.0f : MySceneManager.GameData.events[i - 1].percent / 100.0f;
-            timerPoints[i].timerPoint.transform.parent = timerPointsPearent;
+            timerPoints[i].percent = MySceneManager.GameData.events[i].percent / 100.0f;
+            timerPoints[i].timerPoint.transform.SetParent(timerPointsPearent);
             timerPoints[i].timerPoint.transform.localPosition = new Vector3(timerPoints[i].percent * width + -width / 2, 0.0f, 0.0f);
         }
     }
@@ -110,12 +111,12 @@ public class TimerSliderUI : MonoBehaviour
         timerSlider.value = fTimer / (playMinutes * 60.0f);
 
         //TimerPointの位置を経過していたら画像を変更
-        for(int i = nCurrentPoint + 1; i < timerPoints.Length; ++i)
+        for(int i = nCurrentPoint; i < timerPoints.Length; ++i)
         {
             if (timerSlider.value < timerPoints[i].percent) continue;
             if (timerPoints[i].timerPoint.TryGetComponent(out Image image)) image.sprite = timerPointYellow;
             if(i > 0 && i < timerPoints.Length - 1)SoundManager.Play(audioSource, SoundManager.ESE.DECISION_001);
-            nCurrentPoint = i;
+            nCurrentPoint = i + 1;
         }
 
         //残り秒数の表示更新
