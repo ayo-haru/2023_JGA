@@ -39,7 +39,12 @@ public class TimerSliderUI : MonoBehaviour
     //TimerPoint
     [SerializeField] private GameObject timerPointPrefab;       //プレハブ
     [SerializeField] private Transform timerPointsPearent;      //親オブジェクト
-    private List<GameObject> timerPoins;
+    public struct TimerPointObject
+    {
+        public GameObject timerPoint;
+        public float percent;
+    }
+    private TimerPointObject[] timerPoints;
     [SerializeField] private Sprite timerPointYellow;
     private int nCurrentPoint = -1;
 
@@ -64,17 +69,16 @@ public class TimerSliderUI : MonoBehaviour
 
         float width = gameObject.GetComponent<RectTransform>().rect.width;
         //イベントの数を取得
-        int nEvent = MySceneManager.GameData.events.Length;
-        timerPoins = new List<GameObject>();
+        int nEvent = MySceneManager.GameData.events.Length + 2;
+        timerPoints = new TimerPointObject[nEvent];
         //イベントの数＋最初と最後の丸を生成
-        for (int i = 0; i < nEvent + 2; ++i)
+        for (int i = 0; i < nEvent; ++i)
         {
-            timerPoins.Add(Instantiate(timerPointPrefab));
-            timerPoins[i].transform.parent = timerPointsPearent;
-            timerPoins[i].transform.localPosition = new Vector3((-width / 2) + (i * width / (nEvent + 1)), 0.0f, 0.0f);
-            //timerPoins[i].transform.localPosition = new Vector3((-width / 2) + (width * value)), 0.0f, 0.0f);
+            timerPoints[i].timerPoint = Instantiate(timerPointPrefab);
+            timerPoints[i].percent = (i == 0) ? 0.0f : (i == nEvent - 1) ? 1.0f : MySceneManager.GameData.events[i - 1].percent / 100.0f;
+            timerPoints[i].timerPoint.transform.parent = timerPointsPearent;
+            timerPoints[i].timerPoint.transform.localPosition = new Vector3(timerPoints[i].percent * width + -width / 2, 0.0f, 0.0f);
         }
-
     }
 	/// <summary>
 	/// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
@@ -106,11 +110,11 @@ public class TimerSliderUI : MonoBehaviour
         timerSlider.value = fTimer / (playMinutes * 60.0f);
 
         //TimerPointの位置を経過していたら画像を変更
-        for(int i = nCurrentPoint + 1; i < timerPoins.Count; ++i)
+        for(int i = nCurrentPoint + 1; i < timerPoints.Length; ++i)
         {
-            if (timerSlider.value < i / (timerPoins.Count - 1.0f)) continue;
-
-            if (timerPoins[i].TryGetComponent(out Image image)) image.sprite = timerPointYellow;
+            if (timerSlider.value < timerPoints[i].percent) continue;
+            if (timerPoints[i].timerPoint.TryGetComponent(out Image image)) image.sprite = timerPointYellow;
+            if(i > 0 && i < timerPoints.Length - 1)SoundManager.Play(audioSource, SoundManager.ESE.DECISION_001);
             nCurrentPoint = i;
         }
 
@@ -120,13 +124,14 @@ public class TimerSliderUI : MonoBehaviour
         if (!bSound) return;
         if (fTimer < (playMinutes * 60.0f - soundSeconds)) return;
         
+        //制限時間間近の場合は音鳴らす
         SoundManager.Play(audioSource, SoundManager.ESE.COUNTDOWN_001);
+        bSound = false;
+
         //HURRY!!を生成
         GameObject ui = Instantiate(hurryUI);
         ui.transform.SetParent(gameObject.transform.parent);
-        RectTransform rt = gameObject.GetComponent<RectTransform>();
-        ui.GetComponent<RectTransform>().localPosition = new Vector3(0.0f, rt.localPosition.y - hurryUIPosY, 0.0f);
-        bSound = false;
+        ui.transform.localPosition = new Vector3(0.0f, transform.localPosition.y - hurryUIPosY, 0.0f);
     }
     public bool IsFinish()
     {
