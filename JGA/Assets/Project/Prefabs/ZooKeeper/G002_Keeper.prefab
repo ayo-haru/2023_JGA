@@ -1976,7 +1976,7 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 1
   m_Speed: 0
-  m_Acceleration: 8
+  m_Acceleration: 0
   avoidancePriority: 50
   m_AngularSpeed: 0
   m_StoppingDistance: 0
@@ -2014,6 +2014,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   moveFlg: 0
   chaseNow: 0
+  cube: {fileID: 0}
   data:
     name: Zookeeper
     roots: 
