@@ -123,7 +123,8 @@ Transform:
   m_LocalPosition: {x: -0.38407367, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7466276696426553219}
   m_Father: {fileID: 6177679627659053900}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -607,37 +608,6 @@ Transform:
   m_Father: {fileID: 3432890404469527993}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &6059633012091096058
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6059633012091096059}
-  m_Layer: 10
-  m_Name: HoldPos
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6059633012091096059
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6059633012091096058}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.857, z: 1.25}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6059633014066229641}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6059633014066229634
 GameObject:
   m_ObjectHideFlags: 0
@@ -674,7 +644,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9131242777102501835}
-  - {fileID: 6059633012091096059}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -851,31 +820,28 @@ MonoBehaviour:
   rb: {fileID: 0}
   audioSource: {fileID: 0}
   seCall: {fileID: 8300000, guid: fb8d8f05280cdd945b7f2fc17e933289, type: 3}
-  seHit: {fileID: 0}
-  seHold: {fileID: 0}
   seWalk: {fileID: 8300000, guid: 54f3c2dd230ba0c47b16525eb0e7259f, type: 3}
   anim: {fileID: 0}
   moveForce: 25
   _maxMoveSpeed: 5
   runMagnification: 1.5
   joyRunZone: 0.8
-  callMin: 0.5
-  callMax: 5
-  callInterval: 0
+  bGamePad: 0
   _IsHit: 0
   _IsHold: 0
+  _IsDrag: 0
   _IsMove: 0
   _IsRun: 0
   _IsAppeal: 0
   _IsRandom: 0
   _IsMegaphone: 0
-  bGamePad: 0
   _vForce: {x: 0, y: 0, z: 0}
   InteractCollision: {fileID: 0}
-  HoldObjectRb: {fileID: 0}
   InteractOutline: {fileID: 0}
-  WithinRange: []
-  holdPos: {fileID: 0}
+  InteractJoint: {fileID: 0}
+  InteractPoint: {fileID: 0}
+  InteractBoundsSizeY: 0
+  holdPos: {fileID: 8282720429427746078}
 --- !u!114 &3789616992787296143
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1096,6 +1062,37 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.67092633, y: 0.00000023841858, z: -0.67558193}
     m_Extent: {x: 1.7936146, y: 2.3052242, z: 1.8361595}
   m_DirtyAABB: 0
+--- !u!1 &8282720429427746078
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7466276696426553219}
+  m_Layer: 10
+  m_Name: HoldPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7466276696426553219
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8282720429427746078}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 474204176142531781}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8499242757250588017
 GameObject:
   m_ObjectHideFlags: 0

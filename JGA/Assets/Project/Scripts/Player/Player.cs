@@ -28,8 +28,6 @@ public class Player : MonoBehaviour
 	[SerializeField] private Rigidbody		rb;
 	[SerializeField] private AudioSource	audioSource;
 	[SerializeField] private AudioClip		seCall;			// ＳＥ：鳴き声
-	[SerializeField] private AudioClip		seHit;			// ＳＥ：はたく
-	[SerializeField] private AudioClip		seHold;			// ＳＥ：つかむ
 	[SerializeField] private AudioClip		seWalk;			// ＳＥ：歩く
 	[SerializeField] private Animator		anim;			// Animatorへの参照
 
@@ -81,8 +79,11 @@ public class Player : MonoBehaviour
 	[SerializeField] private Vector3 _vForce;               // 移動方向
 	public Vector3 vForce { get { return _vForce; } }
 
-	[SerializeField] private Collider InteractCollision;    // 掴んでいるオブジェクト：コリジョン
-	[SerializeField] private Outline  InteractOutline;      // 掴んでいるオブジェクト：アウトライン
+	[SerializeField] private Collider	InteractCollision;		// 掴んでいるオブジェクト：コリジョン
+	[SerializeField] private Outline	InteractOutline;		// 掴んでいるオブジェクト：アウトライン
+	[SerializeField] private HingeJoint	InteractJoint;			// 掴んでいるオブジェクト：HingeJoint
+	[SerializeField] private Transform	InteractPoint;			// 掴んでいるオブジェクト：HoldPoint
+	[SerializeField] private float		InteractBoundsSizeY;     // 掴んでいるオブジェクト：BoundsSize.y
 
 	[SerializeField] private HashSet<Collider> WithinRange = new HashSet<Collider>();  // インタラクト範囲内にあるオブジェクトリスト
 
@@ -170,6 +171,10 @@ public class Player : MonoBehaviour
 		if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
 			Move();
 
+		if (InteractJoint != null && InteractPoint != null)
+		{
+			InteractJoint.anchor = new Vector3(0, InteractPoint.localPosition.y / InteractBoundsSizeY, 0);
+		}
 	}
 
 	private void Update()
@@ -646,6 +651,9 @@ public class Player : MonoBehaviour
 		{
 			float length = 10.0f;
 
+			if (WithinRange.Count == 0)
+				Debug.LogError($"WithinRange.Countが0です");
+
 			// プレイヤーに一番近いオブジェクトをインタラクト対象とする
 			foreach (Collider obj in WithinRange)
 			{
@@ -714,11 +722,11 @@ public class Player : MonoBehaviour
 				
 				// メッシュのサイズを取得
 				Bounds maxBounds = new Bounds(Vector3.zero, Vector3.zero);
-				Bounds bounds = InteractCollision.GetComponentInChildren<MeshFilter>().mesh.bounds;
-				maxBounds.Encapsulate(bounds);
+				maxBounds.Encapsulate(InteractCollision.GetComponentInChildren<MeshFilter>().mesh.bounds);
+				InteractBoundsSizeY = maxBounds.size.y / 2;
 
 				//--- 掴む座標を取得
-				Transform point = null;
+				InteractPoint = null;
 				float distance = 10.0f;	// とりあえず10.0f
 
 				for (int i = 0; i < InteractCollision.transform.childCount; i++)
@@ -727,33 +735,37 @@ public class Player : MonoBehaviour
 					if (children.name == "HoldPoint")
 					{
 						// pointが空 || 現状のpointより距離が近い場合
-						if (point == null ||
-							(point != null && distance > Vector3.Distance(transform.position, children.transform.position)))
+						if (InteractPoint == null ||
+							(InteractPoint != null && distance > Vector3.Distance(transform.position, children.transform.position)))
 						{
-							point = children.transform;
-							distance = Vector3.Distance(transform.position, point.position);
+							InteractPoint = children.transform;
+							distance = Vector3.Distance(transform.position, InteractPoint.position);
 						}
 					}
 
 				}
 
 				// オブジェクトをくちばし辺りに移動
-				var pos = holdPos.transform.localPosition - point.localPosition;
-				InteractCollision.transform.localPosition = pos;
-				InteractCollision.transform.rotation = transform.rotation;
+				//var pos = holdPos.transform.localPosition - point.localPosition;
+				//InteractCollision.transform.localPosition = pos;
+				InteractCollision.transform.parent = holdPos.transform;
+				InteractCollision.transform.localPosition = Vector3.zero;
+				//InteractCollision.transform.rotation = transform.rotation;
+				InteractCollision.transform.rotation = Quaternion.identity;
 
 				if (InteractCollision.GetComponent<HingeJoint>() == null)
 				{
 					// HingeJonitの角度制限を有効化
-					var joint = rigidbody.AddComponent<HingeJoint>();
-					joint.connectedBody = rb;
-					joint.useLimits = true;
-					joint.anchor = new Vector3(0, point.localPosition.y / (maxBounds.size.y / 2), 0);
-					JointLimits jointLimits = joint.limits;
+					InteractJoint = rigidbody.AddComponent<HingeJoint>();
+					InteractJoint.connectedBody = rb;
+					InteractJoint.useLimits = true;
+					InteractJoint.anchor = new Vector3(0, InteractPoint.localPosition.y / InteractBoundsSizeY, 0);
+					//InteractJoint.anchor = new Vector3(0, 1, 0);
+					JointLimits jointLimits = InteractJoint.limits;
 					jointLimits.min = -90.0f;
 					jointLimits.max = 20.0f;
 					jointLimits.bounciness = 0;
-					joint.limits = jointLimits;
+					InteractJoint.limits = jointLimits;
 				}
 			}
 		}
@@ -762,6 +774,8 @@ public class Player : MonoBehaviour
 		{
 			anim.SetFloat("AnimSpeed", 1.0f);
 
+			InteractPoint = null;
+			InteractJoint = null;
 			Destroy(InteractCollision.GetComponent<HingeJoint>());
 
 			if (InteractObjectParent != null)
@@ -787,17 +801,17 @@ public class Player : MonoBehaviour
 			//引きずり開始
 			if (!InteractCollision.TryGetComponent(out Rigidbody rigidbody)) return;
 			//HingeJointの設定
-			HingeJoint joint = InteractCollision.GetComponent<HingeJoint>();
-			if (!joint) joint = rigidbody.AddComponent<HingeJoint>();
-			joint.connectedBody = rb;
-			joint.anchor = joint.transform.InverseTransformPoint(transform.TransformPoint(holdPos.transform.localPosition));//HoldPosを設定
-			joint.axis = Vector3.up;
-			joint.useLimits = true;
-			JointLimits jointLimits = joint.limits;
+			InteractJoint = InteractCollision.GetComponent<HingeJoint>();
+			if (!InteractJoint) InteractJoint = rigidbody.AddComponent<HingeJoint>();
+			InteractJoint.connectedBody = rb;
+			InteractJoint.anchor = InteractJoint.transform.InverseTransformPoint(transform.TransformPoint(holdPos.transform.localPosition));//HoldPosを設定
+			InteractJoint.axis = Vector3.up;
+			InteractJoint.useLimits = true;
+			JointLimits jointLimits = InteractJoint.limits;
 			jointLimits.min = -45.0f;
 			jointLimits.max = 45.0f;
-			joint.limits = jointLimits;
-			joint.enableCollision = true;
+			InteractJoint.limits = jointLimits;
+			InteractJoint.enableCollision = true;
 		}
 		else
 		{
@@ -849,11 +863,6 @@ public class Player : MonoBehaviour
 
 		if (!_IsMegaphone)
 			SoundManager.Play(audioSource, seCall);
-	}
-
-	public void StartHold()
-	{
-
 	}
 
 	public void AnimStop()
