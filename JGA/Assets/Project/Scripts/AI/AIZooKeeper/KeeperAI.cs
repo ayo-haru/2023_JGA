@@ -13,7 +13,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UniRx;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 public class KeeperAI : MonoBehaviour
 {
@@ -41,6 +43,7 @@ public class KeeperAI : MonoBehaviour
     [SerializeField] private bool chaseNow = false;    // ペンギンを追いかけているフラグ
     private Player player;
 
+    private Vector3 destinationPos;
     private GameObject parentObj;       // 親オブジェクト取得
     private bool gimmickFlg = false;    // ギミックオブジェクトを見つけたか
     private bool catchFlg = false;      // ギミックオブジェクトを掴んだか
@@ -53,6 +56,8 @@ public class KeeperAI : MonoBehaviour
     private bool radioResetFlg = true;
     private bool flg = false;
     private bool dirFlg = false;
+
+    public GameObject cube;
 
     [SerializeField]
     private ZooKeeperData.Data data;    // 飼育員用の外部で設定できるパラメーターたち
@@ -70,7 +75,7 @@ public class KeeperAI : MonoBehaviour
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
     /// </summary>
     void Awake()
-	{
+    {
         // ポーズ時の動作を登録
         PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(this.gameObject);
         PauseManager.OnResumed.Subscribe(x => { Resumed(); }).AddTo(this.gameObject);
@@ -82,17 +87,18 @@ public class KeeperAI : MonoBehaviour
         navMesh = GetComponent<NavMeshAgent>();
     }
 
-	/// <summary>
-	/// 最初のフレーム更新の前に呼び出される
-	/// </summary>
-	void Start()
-	{
+    /// <summary>
+    /// 最初のフレーム更新の前に呼び出される
+    /// </summary>
+    void Start()
+    {
         if (animator == null) animator = GetComponent<Animator>();
         if (audioSource == null) audioSource = this.GetComponent<AudioSource>();
         if (rb == null) rb = this.GetComponent<Rigidbody>();
         if (player == null) player = GameObject.FindWithTag("Player").GetComponent<Player>();
         if (soundObj == null) soundObj = GameObject.Find("Radio_002").GetComponent<BaseObj>();
         if (parentObj == null) parentObj = soundObj.gameObject.transform.root.gameObject; // 親オブジェクト取得
+        if (cube == null) Debug.LogWarning("cubeにNavmeshStopを入れてください。");
 
         // 初期位置と初期回転を取得
         startPos = this.transform.position;
@@ -106,33 +112,32 @@ public class KeeperAI : MonoBehaviour
         NavMeshStop();
     }
 
-	/// <summary>
-	/// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
-	/// </summary>
-	void FixedUpdate()
-	{
+    /// <summary>
+    /// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
+    /// </summary>
+    void FixedUpdate()
+    {
         if (PauseManager.isPaused && !MySceneManager.GameData.isCatchPenguin)
         {
             return;
         }
 
-        //Debug.Log("sound : " + soundObj.GetisPlaySound());
+        Debug.Log("sound : " + soundObj.GetisPlaySound());
         //Debug.Log("navMesh : " + navMesh.isStopped);
 
-        Move();
-        if (!navMesh.isStopped) CharControl();
         if (moveFlg)
         {
-            AnimPlay();
             Dir();
+            AnimPlay();
         }
+        if (!chaseNow) Distance();
     }
 
     /// <summary>
     /// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
     /// </summary>
     void Update()
-	{
+    {
         if (PauseManager.isPaused && !MySceneManager.GameData.isCatchPenguin)
         {
             NavMeshStop();
@@ -157,6 +162,7 @@ public class KeeperAI : MonoBehaviour
         {
             NavMeshStop();
             chaseNow = false;
+            moveFlg = false;
             MySceneManager.GameData.isCatchPenguin = true;
         }
         #endregion
@@ -177,13 +183,14 @@ public class KeeperAI : MonoBehaviour
             if (radioResetFlg) return;
             if (flg) return;
             soundObjFlg = true;
+            destinationPos = other.gameObject.transform.position;
             navMesh.SetDestination(other.gameObject.transform.position);
-            Dir();  // 向きを変える
+            if (dirFlg) dirFlg = false;
+            Dir();
             // オブジェクトの方を向いたら一時停止して動く
             if (dirFlg)
             {
                 StartCoroutine("MoveStop");
-                dirFlg = false;
                 flg = true;
             }
         }
@@ -209,7 +216,7 @@ public class KeeperAI : MonoBehaviour
         #endregion
     }
 
-#region ラジオが元の位置にあるか
+    #region ラジオが元の位置にあるか
     /// <summary>
     /// ラジオが元の位置にあるか
     /// </summary>
@@ -229,18 +236,14 @@ public class KeeperAI : MonoBehaviour
             radioResetFlg = true;
         }
     }
-#endregion
+    #endregion
 
-#region 飼育員の移動
+    #region 飼育員が到着したか
     /// <summary>
     /// 飼育員の移動
     /// </summary>
-    private void Move()
+    private void Distance()
     {
-        if (chaseNow)
-        {
-            navMesh.destination = player.transform.position;
-        }
         // 音がなったオブジェクトの位置に行く
         if (soundObjFlg)
         {
@@ -266,6 +269,7 @@ public class KeeperAI : MonoBehaviour
                 if (navMesh.remainingDistance <= 1.5f    // 目標地点までの距離が1.5ｍ以下になったら到着
                      && !navMesh.pathPending)            // 経路計算中かどうか（計算中：true　計算完了：false）
                 {
+                    if (!dirFlg) return;
                     // コルーチン開始
                     StartCoroutine("ResetObj");
                 }
@@ -287,55 +291,45 @@ public class KeeperAI : MonoBehaviour
     }
     #endregion
 
-#region navMeshを使わず移動する
+    #region navMeshを使わず移動する
     /// <summary>
     /// navMeshを使わず移動する
     /// </summary>
-    private void CharControl()
+    private void Move()
     {
-        if (dirFlg) transform.position += transform.forward * navMesh.speed * Time.deltaTime;
-        navMesh.nextPosition = transform.position;
-
-        //// 差分取得用
-        //Vector3 targetDeltaPosition;
-        //// nextPositionからdeltaPositionを算出
-        //targetDeltaPosition = navMesh.nextPosition - transform.position;
-        //// エージェントの移動を正とする
-        //transform.position = navMesh.nextPosition;
-        //// エージェントに追従する
-        //if (targetDeltaPosition.magnitude > navMesh.radius)
-        //    transform.position = navMesh.nextPosition - 0.9f * targetDeltaPosition;
+        if (chaseNow)
+        {
+            transform.position += transform.forward * navMesh.speed * Time.deltaTime;
+        }
+        else
+        {
+            if (!dirFlg) return;
+            transform.position += transform.forward * navMesh.speed * Time.deltaTime;
+        }
     }
-#endregion
+    #endregion
 
-#region アニメーション
+    #region アニメーション
     /// <summary>
     /// アニメーションさせるかどうか
     /// </summary>
     private void AnimPlay()
     {
-        if (navMesh.isStopped)
-        {
-            animator.SetBool("isChase", false);
-            animator.SetBool("isWalk", false);
-        }
-
         // ペンギン追従中
-        if(chaseNow)
+        if (chaseNow)
         {
             if (animator.GetBool("isChase")) return;
 
             var distance = Vector3.Distance(transform.position, player.transform.position);   // 距離
             var speed = (data.speed * player.MaxRunSpeed) * Time.deltaTime;
             var nowPos = speed / distance;     // 現在の位置
-            
+
             if (nowPos <= 0.02f) return;
 
             // 距離が近くなったら
             animator.SetBool("isChase", true);
         }
-        // NavMeshの計算が終わっている、NavMeshが停止していない、ペンギン追従していない
-        if (!navMesh.pathPending && !chaseNow)
+        if (!navMesh.pathPending && !chaseNow && !navMesh.isStopped)
         {
             if (animator.GetBool("isWalk")) return;
 
@@ -343,11 +337,11 @@ public class KeeperAI : MonoBehaviour
             animator.SetBool("isWalk", true);
         }
     }
-#endregion
+    #endregion
 
-#region 飼育員の向きを変える処理
+    #region 飼育員の向きを変えて移動する処理
     /// <summary>
-    /// 向きの調整
+    /// 向きを変えて移動する処理
     /// </summary>
     private void Dir()
     {
@@ -358,27 +352,38 @@ public class KeeperAI : MonoBehaviour
         // ゼロベクトルじゃなかったら
         if (targetDir != Vector3.zero)
         {
-            // その方向に向けて旋回する(120度/秒)
+            // その方向に向けて旋回する
             Quaternion targetRotation = Quaternion.LookRotation(targetDir);
             Quaternion rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 120.0f * Time.deltaTime);
             rotation.x = 0.0f;
             rotation.z = 0.0f;
             transform.rotation = rotation;
-            
-            // 自分の向きと次の位置の角度差が30度以下
+
+            // 自分の向きと次の位置の角度差
             float angle = Vector3.Angle(targetDir, transform.forward);
             if (angle < 30.0f)
             {
-                if(!dirFlg) dirFlg = true;
-                //transform.position += transform.forward * navMesh.speed * Time.deltaTime;
+                if (!dirFlg) dirFlg = true;
             }
+            else
+            {
+                if (dirFlg) dirFlg = false;
+            }
+            //if(angle < 50.0f)
+            {
+                if (!navMesh.isStopped) Move();
+            }
+            if (navMesh.isStopped) return;
+            if (chaseNow)
+                navMesh.SetDestination(player.transform.position);
+            else
+                navMesh.SetDestination(destinationPos);
+            navMesh.nextPosition = transform.position;
         }
-        //if (chaseNow) navMesh.SetDestination(player.transform.position);
-        //navMesh.nextPosition = transform.position;
     }
-#endregion
+    #endregion
 
-#region Rayの当たり判定
+    #region Rayの当たり判定
     /// <summary>
     /// Rayが当たっているか
     /// </summary>
@@ -408,9 +413,9 @@ public class KeeperAI : MonoBehaviour
         }
         return -1;
     }
-#endregion
+    #endregion
 
-#region コルーチン
+    #region コルーチン
     /// <summary>
     /// ペンギンを追従する
     /// </summary>
@@ -419,6 +424,7 @@ public class KeeperAI : MonoBehaviour
         if (surpriseFlg)
         {
             surpriseFlg = false;
+            moveFlg = false;
             // 驚きモーション中は移動させない
             NavMeshStop();
             // エフェクト表示
@@ -434,6 +440,7 @@ public class KeeperAI : MonoBehaviour
         if (exclamationEffect) Destroy(exclamationEffect);
         // ペンギンを追従開始
         NavMeshMove();
+        navMesh.SetDestination(player.transform.position);
     }
 
     /// <summary>
@@ -443,6 +450,7 @@ public class KeeperAI : MonoBehaviour
     {
         // 止まる
         NavMeshStop();
+        if (cube != null) cube.SetActive(true);
         if (moveFlg)
         {
             moveFlg = false;
@@ -451,11 +459,13 @@ public class KeeperAI : MonoBehaviour
         }
 
         Bring();
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(2.5f);
 
+        animator.SetBool("isWalk", true);
+        destinationPos = soundStartPos;
+        navMesh.SetDestination(soundStartPos);
         // 動く
         NavMeshMove();
-        navMesh.SetDestination(soundStartPos);
         catchFlg = true;
         // エフェクト削除
         if (questionEffect) Destroy(questionEffect);
@@ -468,13 +478,13 @@ public class KeeperAI : MonoBehaviour
     {
         // 止まる
         NavMeshStop();
+        if (cube != null) cube.SetActive(false);
         if (moveFlg)
         {
             moveFlg = false;
             // 置くアニメーション開始
             animator.SetBool("isWalk", false);
             animator.SetFloat("speed", -1f);
-            //animator.SetTrigger("isPickUp");
             animator.Play("Pick", 0, 1f);
         }
 
@@ -491,11 +501,12 @@ public class KeeperAI : MonoBehaviour
             animator.SetFloat("speed", 1f);
             animator.SetBool("isWalk", true);
             animator.Play("Walk");
-            // 動く
-            NavMeshMove();
+            destinationPos = startPos;
+            navMesh.SetDestination(startPos); // 目的地の再設定
             moveFlg = true;
             bResetPos = true;
-            navMesh.SetDestination(startPos); // 目的地の再設定
+            // 動く
+            NavMeshMove();
         }
     }
 
@@ -533,7 +544,7 @@ public class KeeperAI : MonoBehaviour
     }
     #endregion
 
-#region オブジェクトを掴む、はなす処理
+    #region オブジェクトを掴む、はなす処理
     /// <summary>
     /// オブジェクトを運ぶ
     /// </summary>
@@ -544,12 +555,8 @@ public class KeeperAI : MonoBehaviour
             // 掴む
             soundObj.GetComponent<Rigidbody>().isKinematic = true;   // 物理演算の影響を受けないようにする
             soundObj.GetComponent<Rigidbody>().useGravity = false;
-            var pos = transform.position;
-            soundObj.gameObject.transform.position =
-                new Vector3(pos.x - 2f,
-                            pos.y + 5f,
-                            pos.z);
             soundObj.gameObject.transform.parent = this.transform;
+            soundObj.gameObject.transform.localPosition = new Vector3(0.0f, 5.0f, 2.0f);
             soundObj.gameObject.transform.rotation = new Quaternion(0, 0, 0, 0);
         }
         else if (radioResetFlg)
@@ -563,9 +570,9 @@ public class KeeperAI : MonoBehaviour
             soundObj.gameObject.transform.rotation = soundStartDir;
         }
     }
-#endregion
+    #endregion
 
-#region エフェクト作成
+    #region エフェクト作成
     /// <summary>
     /// エフェクト作成
     /// </summary>
@@ -590,22 +597,22 @@ public class KeeperAI : MonoBehaviour
                 break;
         }
     }
-#endregion
+    #endregion
 
-#region NavMeshをストップ、動かす
+    #region NavMeshをストップ、動かす
     /// <summary>
     /// NavMeshストップ
     /// </summary>
     private void NavMeshStop()
     {
-        //if (navMesh.updateRotation) navMesh.updateRotation = false; // 回転を止める
         if (!navMesh.isStopped) navMesh.isStopped = true;
         navMesh.velocity = Vector3.zero;
         navMesh.speed = 0.0f;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         // 待機モーションにする
-        animator.SetBool("isWalk", false);
+        if (animator.GetBool("isWalk")) animator.SetBool("isWalk", false);
+        if (animator.GetBool("isChase")) animator.SetBool("isChase", false);
     }
 
     /// <summary>
@@ -615,7 +622,6 @@ public class KeeperAI : MonoBehaviour
     {
         if (!moveFlg) moveFlg = true;
         if (navMesh.isStopped) navMesh.isStopped = false;
-        //if (!navMesh.updateRotation) navMesh.updateRotation = true; // 回転する
         if (chaseNow)
         {
             navMesh.speed = data.speed * player.MaxRunSpeed;
@@ -635,8 +641,8 @@ public class KeeperAI : MonoBehaviour
     {
         Handles.color = new Color(0, 0, 1, 0.3f);
         Handles.DrawSolidArc(transform.position, Vector3.up,
-            Quaternion.Euler(0f, 
-            -data.searchAngle, 0f) * transform.forward, 
+            Quaternion.Euler(0f,
+            -data.searchAngle, 0f) * transform.forward,
             data.searchAngle * 2.0f, data.searchDistance);
     }
 #endif
@@ -664,7 +670,7 @@ public class KeeperAI : MonoBehaviour
         data = _data;
     }
 
-#region ポーズ処理
+    #region ポーズ処理
     /// <summary>
     /// ポーズ開始
     /// </summary>
@@ -683,11 +689,11 @@ public class KeeperAI : MonoBehaviour
     private void Resumed()
     {
         // 追いかけている時、navMeshが動いている時
-        if(chaseNow || !navMesh.isStopped)
+        if (chaseNow || !navMesh.isStopped)
             NavMeshMove();
         // アニメーション
         animator.speed = 1.0f;
     }
-#endregion
+    #endregion
 
 }
