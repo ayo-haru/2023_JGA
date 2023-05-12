@@ -14,6 +14,7 @@
 // 2023/04/     客の自動生成
 // 2023/04/24   クリア
 // 2023/05/06   クリア画面を差し替え【小楠】
+// 2023/05/12   ゲームオーバー画面を差し替え【小楠】
 //=============================================================================
 using System;
 using System.Collections;
@@ -74,6 +75,9 @@ public class StageSceneManager : BaseSceneManager {
     private GameObject clearPanel;
     private ClearPanel _ClearPanel;
 
+    //-----ゲームオーバー画面
+    private GameObject gameOverPanel;
+    private GameOverPanel _GameOverPanel;
 
     //---変数
     private bool isOnce; // 一度だけ処理をするときに使う
@@ -274,13 +278,28 @@ public class StageSceneManager : BaseSceneManager {
         if (timerUI) {
             //----- 制限時間のゲームオーバー -----
             if (_TimerUI.IsFinish()) {
+                if (!gameOverPanel) gameOverPanel = GameObject.Find("GameOverPanel");
+                if (gameOverPanel && !_GameOverPanel) _GameOverPanel = gameOverPanel.GetComponent<GameOverPanel>();
+
+                if (!isOnce)
+                {
+                    int next = -1;
+                    if (_GameOverPanel) next = _GameOverPanel.GetNextScene();
+                    if (next != -1)
+                    {
+                        MySceneManager.GameData.nowScene = next;
+                        SceneChange(next);  // シーン遷移
+                        isOnce = true;
+                    }
+                }
+#if false
                 if (!isOnce) {
                     if (inputAction.Menu.Decision.ReadValue<float>() >= InputSystem.settings.defaultButtonPressPoint) { // 入力があったら
                         SceneChange(MySceneManager.SceneState.SCENE_TITLE);
                         isOnce = true;
                     }
                 }
-
+#endif
                 if (!PauseManager.isPaused) {
                     PauseManager.isPaused = true;
                     PauseManager.NoMenu = true;
