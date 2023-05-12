@@ -482,7 +482,17 @@ public class Player : MonoBehaviour
 		if (PauseManager.isPaused)
 			return;
 
-		moveInputValue = context.ReadValue<Vector2>();
+		if (moveInputValue != context.ReadValue<Vector2>())
+		{
+			moveInputValue = context.ReadValue<Vector2>();
+			rb.velocity = rb.velocity/2;
+			rb.angularVelocity = rb.angularVelocity/2;
+		}
+		if (context.phase == InputActionPhase.Canceled)
+		{
+			rb.velocity = Vector3.zero;
+			rb.angularVelocity = Vector3.zero;
+		}
 	}
 
 	/// <summary>
@@ -593,7 +603,54 @@ public class Player : MonoBehaviour
 			if (WithinRange.Count == 0)
 				return;
 
-			anim.SetBool("Carry", !_IsHold);
+			// 現在のインタラクト対象を登録
+			if (InteractOutline != null)
+			{
+				InteractCollision = InteractOutline.GetComponent<Collider>();
+			}
+			else    // もし一番近くのオブジェクト情報を保持していない場合
+			{
+				float length = 10.0f;
+
+				if (WithinRange.Count == 0)
+					Debug.LogError($"WithinRange.Countが0です");
+
+				// プレイヤーに一番近いオブジェクトをインタラクト対象とする
+				foreach (Collider obj in WithinRange)
+				{
+					float distance = Vector3.Distance(transform.position, obj.transform.position);
+
+					if (length > distance)
+					{
+						length = distance;
+						InteractCollision = obj;
+					}
+				}
+			}
+
+			if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj))
+			{
+				switch (baseObj.objType)
+				{
+					case BaseObj.ObjType.HOLD:
+					case BaseObj.ObjType.HIT_HOLD:
+						anim.SetBool("Carry", !_IsHold);
+						break;
+					case BaseObj.ObjType.DRAG:
+					case BaseObj.ObjType.HIT_DRAG:
+						anim.SetBool("Drag", !_IsHold);
+						break;
+				}
+			}
+			else if (InteractCollision.TryGetComponent<BaseObject>(out var baseObject))
+			{
+
+				if (baseObject.objState == BaseObject.OBJState.HOLD ||
+					baseObject.objState == BaseObject.OBJState.HITANDHOLD)
+				{
+					anim.SetBool("Carry", !_IsHold);
+				}
+			}
 		}
 
 		// 長押し終了
@@ -613,6 +670,7 @@ public class Player : MonoBehaviour
 						_IsHold = false;
 						break;
 					case BaseObj.ObjType.DRAG:
+					case BaseObj.ObjType.HIT_DRAG:
 						Drag(false);
 						_IsHold = _IsDrag = false;
 						break;
@@ -642,31 +700,6 @@ public class Player : MonoBehaviour
 
 	public void AnimHold()
 	{
-		// 現在のインタラクト対象を登録
-		if (InteractOutline != null)
-		{
-			InteractCollision = InteractOutline.GetComponent<Collider>();
-		}
-		else    // もし一番近くのオブジェクト情報を保持していない場合
-		{
-			float length = 10.0f;
-
-			if (WithinRange.Count == 0)
-				Debug.LogError($"WithinRange.Countが0です");
-
-			// プレイヤーに一番近いオブジェクトをインタラクト対象とする
-			foreach (Collider obj in WithinRange)
-			{
-				float distance = Vector3.Distance(transform.position, obj.transform.position);
-
-				if (length > distance)
-				{
-					length = distance;
-					InteractCollision = obj;
-				}
-			}
-		}
-
 		if (InteractCollision.tag == "Interact")
 		{
 			// BaseObjとBaseObject二つあるため、それぞれ出来るように書きました(吉原 04/04 4:25)
