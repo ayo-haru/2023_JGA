@@ -12,6 +12,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using Unity.VisualScripting;
 
 public class BearMove : MonoBehaviour
 {
@@ -23,6 +24,14 @@ public class BearMove : MonoBehaviour
         IDLE,
         TURN,
 		GIMMICK,
+        MAX_MOVE
+    }
+    enum FISHTYPE
+    {
+        FISH_WALK,
+        FISH_HAVE,
+        FISH_RETURN,
+        FISH_TURN,
         MAX_MOVE
     }
 
@@ -48,6 +57,10 @@ public class BearMove : MonoBehaviour
 
     private bool turnFlg;                   //ターン用フラグ
 
+    private BearArea bearArea;              //魚が探索範囲に入っているかの処理
+
+    private FISHTYPE fishTyep;              //魚の状態
+
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
     /// </summary>
@@ -64,6 +77,8 @@ public class BearMove : MonoBehaviour
         currentMoveIndex = BoothAnimalManager.Instance.bearStartIndex;
 
         anim = this.GetComponent<Animator>();
+
+        bearArea = GameObject.Find("BearArea").GetComponent<BearArea>();
 
         PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(gameObject);
         PauseManager.OnResumed.Subscribe(x => { ReGame(); }).AddTo(gameObject);
@@ -91,18 +106,15 @@ public class BearMove : MonoBehaviour
         if (!moveFlg)
         {
             MoveEnter();
-             
         }
         switch (currentMoveType)
         {
             case MoveType.IDLE:
                 Idle();
                 break;
-
             case MoveType.WALK:
                 Walk();
                 break;
-
             case MoveType.RUN:
                 Run();
                 break;
@@ -110,6 +122,7 @@ public class BearMove : MonoBehaviour
                 Turn();
                 break;
             case MoveType.GIMMICK:
+                Gimmick();
                 break;
         }
     }
@@ -197,23 +210,76 @@ public class BearMove : MonoBehaviour
         }
     }
 
+    private void Gimmick()
+    {
+        if(fishTyep == FISHTYPE.FISH_TURN)
+        {
+            var fishPos = bearArea.fishObj.transform.position;
+            fishPos.y = this.transform.position.y;
+            endPos = fishPos;
+
+            var endRot = Quaternion.LookRotation(endPos - this.transform.position);
+            var befRot = this.transform.rotation;
+            this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, endRot, BoothAnimalManager.Instance.bearData.dataList[movedata].rotateAngle);
+
+            rb.velocity = Vector3.zero;
+            if (befRot == this.transform.rotation)
+            {
+                fishTyep = FISHTYPE.FISH_WALK;
+            }
+        }
+        if(fishTyep == FISHTYPE.FISH_WALK)
+        {
+
+                var fishPos = bearArea.fishObj.transform.position;
+                float dis = Vector3.Distance(this.transform.position, fishPos);
+            Debug.Log(dis);
+            if (dis >= 2.0f)
+            {
+                endPos = fishPos;
+
+                //速度を決定してその速度で終了地点まで動く
+                this.transform.position = Vector3.MoveTowards(this.transform.position,
+                                                                endPos,
+                                                                BoothAnimalManager.Instance.bearData.dataList[movedata].walkSpeed * Time.deltaTime);
+            }
+            else
+            {
+                fishTyep = FISHTYPE.FISH_HAVE;
+            }
+                rb.velocity = Vector3.zero;
+            
+            
+        }
+    }
+
     private void MoveEnter()
     {
         moveFlg = true;
-        if (moveType == MoveType.GIMMICK)
-        {
-            return;
-        }
+
+        
         if (turnFlg == true)
         {
-            currentMoveType = (MoveType)Random.Range((int)MoveType.WALK, (int)MoveType.RUN + 1);
+            currentMoveType = MoveType.WALK;
             turnFlg = false;
         }
         else
         {
             currentMoveType = (MoveType)Random.Range((int)MoveType.IDLE, (int)MoveType.TURN + 1);
         }
-        
+
+        if (bearArea.fishFlg)
+        {
+            if (moveType == MoveType.WALK)
+            {
+                currentMoveType = MoveType.TURN;
+            }
+            else if (moveType == MoveType.TURN)
+            {
+                currentMoveType = MoveType.WALK;
+            }
+        }
+
         if (currentMoveType == MoveType.WALK)
         {
             anim.SetBool("WalkFlg", true);
@@ -232,29 +298,49 @@ public class BearMove : MonoBehaviour
         }
         if (currentMoveType == MoveType.TURN)
         {
+            if (!bearArea.fishFlg)
+            {
+                //終了地点がなるべくかぶらないようにするため違う場所になるまで回す。
+                if (currentMoveIndex < BoothAnimalManager.Instance.bearData.rangeButtom)
+                {
+                    while (currentMoveIndex == moveIndex)
+                        currentMoveIndex = Random.Range(0, BoothAnimalManager.Instance.bearData.rangeButtom + 1);
+                }
+                else if (currentMoveIndex == BoothAnimalManager.Instance.bearData.rangeButtom)
+                {
+                    while (currentMoveIndex == moveIndex)
+                        currentMoveIndex = Random.Range(0, BoothAnimalManager.Instance.bearData.rangeButtom + 2);
+                }
+                else if (currentMoveIndex == BoothAnimalManager.Instance.bearData.rangeButtom + 1)
+                {
+                    while (currentMoveIndex == moveIndex)
+                        currentMoveIndex = Random.Range(BoothAnimalManager.Instance.bearData.rangeButtom,
+                                                        BoothAnimalManager.Instance.bearData.rangeList.Count);
+                }
+                else if (currentMoveIndex > BoothAnimalManager.Instance.bearData.rangeButtom + 1)
+                {
+                    while (currentMoveIndex == moveIndex)
+                        currentMoveIndex = Random.Range(BoothAnimalManager.Instance.bearData.rangeButtom + 1,
+                                                        BoothAnimalManager.Instance.bearData.rangeList.Count);
+                }
+            }
 
-            //終了地点がなるべくかぶらないようにするため違う場所になるまで回す。
-            if (currentMoveIndex  < BoothAnimalManager.Instance.bearData.rangeButtom)
+            if(bearArea.fishFlg)
             {
-                while (currentMoveIndex == moveIndex)
-                    currentMoveIndex = Random.Range(0, BoothAnimalManager.Instance.bearData.rangeButtom + 1);
-            }
-            else if(currentMoveIndex == BoothAnimalManager.Instance.bearData.rangeButtom)
-            {
-                while (currentMoveIndex == moveIndex)
-                    currentMoveIndex = Random.Range(0, BoothAnimalManager.Instance.bearData.rangeButtom + 2);
-            }
-            else if(currentMoveIndex == BoothAnimalManager.Instance.bearData.rangeButtom + 1)
-            {
-                while (currentMoveIndex == moveIndex)
-                    currentMoveIndex = Random.Range(BoothAnimalManager.Instance.bearData.rangeButtom,
-                                                    BoothAnimalManager.Instance.bearData.rangeList.Count);
-            }
-            else if(currentMoveIndex > BoothAnimalManager.Instance.bearData.rangeButtom + 1)
-            {
-                while (currentMoveIndex == moveIndex)
-                    currentMoveIndex = Random.Range(BoothAnimalManager.Instance.bearData.rangeButtom + 1, 
-                                                    BoothAnimalManager.Instance.bearData.rangeList.Count);
+                if (currentMoveIndex <= BoothAnimalManager.Instance.bearData.rangeButtom)
+                {
+                    fishTyep = FISHTYPE.FISH_TURN;
+                    currentMoveType = MoveType.GIMMICK;
+                    return;
+                }
+                else if (currentMoveIndex == BoothAnimalManager.Instance.bearData.rangeButtom + 1)
+                {
+                        currentMoveIndex = BoothAnimalManager.Instance.bearData.rangeButtom;
+                }
+                else if (currentMoveIndex > BoothAnimalManager.Instance.bearData.rangeButtom + 1)
+                {
+                        currentMoveIndex = BoothAnimalManager.Instance.bearData.rangeButtom + 1;
+                }
             }
 
             //終了地点が決まったらランダムで若干ずらす。
