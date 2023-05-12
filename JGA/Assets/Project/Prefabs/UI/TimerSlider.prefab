@@ -166,7 +166,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8668340148001794301
 RectTransform:
   m_ObjectHideFlags: 0
@@ -320,7 +320,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -800, y: 0}
+  m_AnchoredPosition: {x: -720, y: 0}
   m_SizeDelta: {x: 200, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8668340148197106898
@@ -548,7 +548,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 800, y: 0}
+  m_AnchoredPosition: {x: 720, y: 0}
   m_SizeDelta: {x: 200, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8668340149447766417
@@ -745,10 +745,7 @@ MonoBehaviour:
   timerPointPrefab: {fileID: 5692244777433427804, guid: cf49dcc5d4f580942b4188e4a44f3379,
     type: 3}
   timerPointsPearent: {fileID: 8668340147716366810}
-  timerPoins: []
-  timerPoinWhite: {fileID: 21300000, guid: 1844e459bd167f84b936819bef12c962, type: 3}
   timerPointYellow: {fileID: 21300000, guid: 0fcf3d95818514c4f9347658d582ac38, type: 3}
-  text: {fileID: 8668340148001794298}
 --- !u!82 &8668340149842014130
 AudioSource:
   m_ObjectHideFlags: 0

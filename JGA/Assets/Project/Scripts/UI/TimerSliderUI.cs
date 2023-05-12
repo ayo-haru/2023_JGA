@@ -50,7 +50,7 @@ public class TimerSliderUI : MonoBehaviour
     private int nCurrentPoint = 0;
 
     //残り秒数表示用のテキスト
-    [SerializeField] private TextMeshProUGUI text;
+    //[SerializeField] private TextMeshProUGUI text;
 #if false
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -65,7 +65,7 @@ public class TimerSliderUI : MonoBehaviour
 	/// </summary>
 	void Start()
 	{
-		text.text = text.text = string.Format("{0:0}", (int)(playMinutes * 60.0f));
+		//text.text = text.text = string.Format("{0:0}", (int)(playMinutes * 60.0f));
         nCurrentPoint = 0;
 
         float width = gameObject.GetComponent<RectTransform>().rect.width;
@@ -120,7 +120,7 @@ public class TimerSliderUI : MonoBehaviour
         }
 
         //残り秒数の表示更新
-        text.text = string.Format("{0:0}", (int)(playMinutes * 60.0f - fTimer));
+        //text.text = string.Format("{0:0}", (int)(playMinutes * 60.0f - fTimer));
 
         if (!bSound) return;
         if (fTimer < (playMinutes * 60.0f - soundSeconds)) return;
