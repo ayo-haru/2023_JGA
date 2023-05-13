@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 19791147619530529}
   - component: {fileID: 8821510187220032237}
   - component: {fileID: 3326822232702194514}
+  - component: {fileID: 3504176028026413893}
   m_Layer: 0
   m_Name: VendingMachine
   m_TagString: Untagged
@@ -64,7 +65,22 @@ MonoBehaviour:
   shakepower: 0.1
   shakevibrato: 100
   shakerandom: 100
-  fadeout: 0
+--- !u!208 &3504176028026413893
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 796467931855678875}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 3, y: 4, z: 2}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &8128080821114388899
 GameObject:
   m_ObjectHideFlags: 0
