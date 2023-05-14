@@ -718,7 +718,9 @@ public class Player : MonoBehaviour
 
 	public void AnimHold()
 	{
-		// TODO
+		if (InteractCollision == null)
+			return;
+
 		if (InteractCollision.tag == "Interact")
 		{
 			// BaseObjとBaseObject二つあるため、それぞれ出来るように書きました(吉原 04/04 4:25)
