@@ -16,6 +16,10 @@ using UnityEngine.AI;
 
 public class StateGimmickAnimal : AIState
 {
+    //お客さん用のデータ
+    private GuestData.Data data;
+    //ペンギン用スクリプト
+    private Player player;
     //animator
     private Animator animator;
     //感情ui
@@ -64,28 +68,38 @@ public class StateGimmickAnimal : AIState
         //コンポーネント取得
         if (!agent) agent = GetComponent<NavMeshAgent>();
         if(!animator) animator = gameObject.transform.GetChild(0).GetComponent<Animator>();
-        //ケージポス取得
+        if (!player) player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        if (data == null) data = GetComponent<AIManager>().GetGuestData();
+
+        //ケージポス（agentの目的地）取得
         GetCagePos();
         //動物のトランスフォーム取得
         if (!GetAnimal()) Debug.LogWarning("動物が取得できませんでした");
 
         if (!ErrorCheck()) return;
 
+        //感情UIの設定
         ui.SetEmotion(EEmotion.HIGH_TENSION);
+        //アニメーションの設定
         animator.SetBool("isWalk", true);
-
-
+        //ナビメッシュエージェントの設定
+        agent.speed = (player) ? player.MaxAppealSpeed * data.followSpeed * data.inBoothSpeed : data.speed;
+        agent.stoppingDistance = Random.Range(1, data.cageDistance);
     }
 
     public override void UpdateState()
     {
         if (!ErrorCheck()) return;
-        if (agent.velocity.normalized.magnitude > 0.0f) return;
-        //動物の方を見る
-        Quaternion rot = Quaternion.LookRotation((animalTransform) ? animalTransform.position : agent.destination);
-        transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime);
+        if (agent.pathPending) return;//経路計算中
 
-        animator.SetBool("isWalk", false);
+        //速度に応じてアニメーションを切り替え
+        animator.SetBool("isWalk", agent.velocity.magnitude > 0.0f);
+
+        if (agent.remainingDistance > agent.stoppingDistance) return;   //目的地にまだついてない
+
+        //動物の方を見る
+        Quaternion rot = Quaternion.LookRotation(((!animalTransform) ? agent.destination : animalTransform.position) - transform.position);
+        transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime);
     }
 
     public override void FinState()
@@ -98,7 +112,10 @@ public class StateGimmickAnimal : AIState
         if (!ui) Debug.LogError("感情UIが設定されていません");
         if (!agent) Debug.LogError("ナビメッシュエージェントが取得されていません");
         if (!animator) Debug.LogError("アニメーターが取得されていません");
-        return ui && agent && animator;
+        if (data == null) Debug.LogError("お客さん用のデータが取得されていません");
+        if (!player) Debug.LogError("プレイヤー用スクリプトが取得されていません");
+
+        return ui && agent && animator && (data != null) && player;
     }
 
     private bool GetAnimal()
@@ -122,8 +139,11 @@ public class StateGimmickAnimal : AIState
         //ばらけさせる
         pos.x += Random.Range(-10.0f, 10.0f);
         pos.z += Random.Range(-10.0f, 10.0f);
-       //ケージポスを目的地に設定
-       agent.SetDestination(pos);
+
+        if (!NavMesh.SamplePosition(pos, out NavMeshHit hit, 10.0f, NavMesh.AllAreas)) return false;
+
+        //ケージポスを目的地に設定
+        agent.SetDestination(hit.position);
 
         return true;
     }
