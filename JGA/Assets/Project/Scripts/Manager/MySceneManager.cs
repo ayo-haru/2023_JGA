@@ -46,6 +46,11 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 		public static EffectData effectDatas;
 	}
 
+	public static class Volume
+	{
+		public static GameVolume GameVolumeDatas;
+	}
+
 	// このクラスを持つオブジェクトは消えない
 	protected override bool dontDestroyOnLoad { get { return true; } }
 
@@ -106,6 +111,8 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 		Sound.SEDatas = AddressableLoader<SoundData>.Load("SEData");
 		//---エフェクト
 		Effect.effectDatas = AddressableLoader<EffectData>.Load("EffectData");
+		//---音量
+		Volume.GameVolumeDatas = AddressableLoader<GameVolume>.Load("EffectData");
 		//---データ
 		GameData.zooKeeperData = AddressableLoader<ZooKeeperData>.Load("ZooKeeperData");
 		GameData.guestData = AddressableLoader<GuestData>.Load("GuestData");

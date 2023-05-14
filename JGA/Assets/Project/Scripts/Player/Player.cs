@@ -51,7 +51,8 @@ public class Player : MonoBehaviour
 	private bool bRunButton;                    // [PC]シフトキー入力状態
 	[SerializeField] private bool bGamePad;     // ゲームパッド接続確認フラグ
 
-	[SerializeField] private bool _IsHit;       // インタラクトフラグ
+	[SerializeField] private bool _IsHit;       // はたきフラグ
+	[SerializeField] private bool _IsHitMotion; // はたき開始フラグ
 	[SerializeField] private bool _IsHold;      // つかみフラグ
 	[SerializeField] private bool _IsDrag;      // 引きずりフラグ
 	[SerializeField] private bool _IsMove;      // 移動フラグ
@@ -61,6 +62,7 @@ public class Player : MonoBehaviour
 	[SerializeField] private bool _IsMegaphone; // メガホン用フラグ
 
 	public bool IsHit		{ get { return _IsHit; } set { _IsHit = value; } }
+	public bool IsHitMotion	{ get { return _IsHitMotion; } }
 	public bool IsHold		{ get { return _IsHold; } }
 	public bool IsDrag		{ get { return _IsDrag; } }
 	public bool IsMove		{ get { return _IsMove; } }
@@ -72,6 +74,7 @@ public class Player : MonoBehaviour
 	private bool bHitMotion;                    // はたくモーション中は他のモーションさせないフラグ
 
 	private bool DelayHit;
+	private bool DelayHitMotion;
 	private bool DelayMegaphone;
 	//----------------------------------------------------------------------------------------
 
@@ -173,7 +176,11 @@ public class Player : MonoBehaviour
 
 		if (InteractJoint != null && InteractPoint != null)
 		{
-			InteractJoint.anchor = new Vector3(0, InteractPoint.localPosition.y / InteractBoundsSizeY, 0);
+			if (_IsHold)
+				InteractJoint.anchor = new Vector3(0, InteractPoint.localPosition.y / InteractBoundsSizeY, 0);
+
+			//if (_IsDrag)
+			//	InteractJoint.anchor = InteractJoint.transform.InverseTransformPoint(transform.TransformPoint(holdPos.transform.localPosition));//HoldPosを設定
 		}
 	}
 
@@ -209,6 +216,22 @@ public class Player : MonoBehaviour
 			{
 				DelayHit = false;
 				_IsHit = false;
+			}
+		}
+
+		// インタラクトして１フレーム経過後
+		if (_IsHitMotion)
+		{
+			// インタラクトして１フレーム経過後
+			if (!DelayHitMotion)
+			{
+				DelayHitMotion = true;
+			}
+			// インタラクトして２フレーム経過後
+			else
+			{
+				DelayHitMotion = false;
+				_IsHitMotion = false;
 			}
 		}
 
@@ -337,12 +360,6 @@ public class Player : MonoBehaviour
 					}
 				}
 			}
-		}
-
-		if (_IsHold)
-		{
-			//InteractCollision.transform.position = holdPos.transform.position;
-			//InteractCollision.transform.rotation = holdPos.transform.rotation;
 		}
 	}
 
@@ -505,6 +522,7 @@ public class Player : MonoBehaviour
 			return;
 
 		bHitMotion = true;
+		_IsHitMotion = true;
 		anim.SetBool("Hit", bHitMotion);
 		//Debug.Log($"Hit");
 	}
@@ -700,6 +718,9 @@ public class Player : MonoBehaviour
 
 	public void AnimHold()
 	{
+		if (InteractCollision == null)
+			return;
+
 		if (InteractCollision.tag == "Interact")
 		{
 			// BaseObjとBaseObject二つあるため、それぞれ出来るように書きました(吉原 04/04 4:25)
