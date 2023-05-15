@@ -12,3 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb8e17e74d27fa14aa9faf90ffe53c67, type: 3}
   m_Name: GameVolume
   m_EditorClassIdentifier: 
+  volume:
+    fBGM: 1
+    fSE: 1
