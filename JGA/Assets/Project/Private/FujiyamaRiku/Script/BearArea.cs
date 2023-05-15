@@ -17,10 +17,14 @@ public class BearArea : MonoBehaviour
 {
 	public bool fishFlg;
     public GameObject fishObj;
+    public GameObject feedArea;
+    public GameObject roomPos;
 
     protected virtual void Start()
     {
         fishObj = GameObject.Find("Fish");
+        feedArea = GameObject.Find("FeedPos");
+        roomPos = GameObject.Find("BearRoomPos");
     }
 
     private void OnTriggerStay(Collider other)
@@ -28,7 +32,6 @@ public class BearArea : MonoBehaviour
         if(other.name == "Fish")
 		{
 			fishFlg = true;
-
         }
     }
     private void OnTriggerExit(Collider other)
