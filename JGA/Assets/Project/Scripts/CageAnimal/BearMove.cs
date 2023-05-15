@@ -253,7 +253,7 @@ public class BearMove : MonoBehaviour
         {
             if (!fishHaveFlg)
             {
-                var fishPos = bearArea.feedArea.transform.position;
+                var fishPos = bearArea.fishObj.transform.position;
                 float dis = Vector3.Distance(this.transform.position, fishPos);
                 if (dis >= 2.0f)
                 {
@@ -333,9 +333,13 @@ public class BearMove : MonoBehaviour
         {
             var turnRand = Random.Range(0, 2);
             if (turnRand == 0)
+            {
                 anim.SetBool("IdleFlg1", true);
+            }
             if (turnRand == 1)
+            {
                 anim.SetBool("IdleFlg2", true);
+            }
         }
         if (currentMoveType == MoveType.TURN)
         {
