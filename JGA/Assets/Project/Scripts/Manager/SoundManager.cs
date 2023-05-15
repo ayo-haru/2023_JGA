@@ -138,7 +138,6 @@ public class SoundManager : MonoBehaviour
 			if (_SEs[i].clip == clip)
 			{
 				SEs.Add(_SEs[i].clip);
-				Debug.Log($"Volume.fSE:{Volume.fSE}");
 				audioSource.volume = _SEs[i].volume * Volume.fSE;
 				audioSource.PlayOneShot(_SEs[i].clip);
 				return;
@@ -153,7 +152,6 @@ public class SoundManager : MonoBehaviour
 			{
 				BGM = BGMs[i].clip;
 				audioSource.clip = BGMs[i].clip;
-				Debug.Log($"Volume.fBGM:{Volume.fBGM}");
 				audioSource.volume = BGMs[i].volume * Volume.fBGM;
 				audioSource.Play();
 				return;
@@ -184,7 +182,6 @@ public class SoundManager : MonoBehaviour
 		SoundData.Sound _BGM = MySceneManager.Sound.BGMDatas.list[((int)eBGM)];
 		BGM = _BGM.clip;
 		audioSource.clip = _BGM.clip;
-		Debug.Log($"Volume.fBGM:{Volume.fBGM}");
 		audioSource.volume = _BGM.volume * Volume.fBGM;
 		audioSource.Play();
 	}
@@ -210,7 +207,6 @@ public class SoundManager : MonoBehaviour
 
 		SoundData.Sound _SE = MySceneManager.Sound.SEDatas.list[((int)eSE)];
 		SEs.Add(_SE.clip);
-		Debug.Log($"Volume.fSE:{Volume.fSE}");
 		audioSource.volume = _SE.volume * Volume.fSE;
 		audioSource.PlayOneShot(_SE.clip);
 	}
@@ -233,7 +229,6 @@ public class SoundManager : MonoBehaviour
 			if (_SEs[i].clip.name == name)
 			{
 				SEs.Add(_SEs[i].clip);
-				Debug.Log($"Volume.fSE:{Volume.fSE}");
 				audioSource.volume = _SEs[i].volume * Volume.fSE;
 				audioSource.PlayOneShot(_SEs[i].clip);
 				return;
@@ -248,7 +243,6 @@ public class SoundManager : MonoBehaviour
 			{
 				BGM = BGMs[i].clip;
 				audioSource.clip = BGMs[i].clip;
-				Debug.Log($"Volume.fBGM:{Volume.fBGM}");
 				audioSource.volume = BGMs[i].volume * Volume.fBGM;
 				audioSource.Play();
 				return;

@@ -376,6 +376,7 @@ public class Player : MonoBehaviour
 		anim.speed = 0.0f;
 
 		_IsAppeal = false;
+		anim.SetBool("Appeal", _IsAppeal);
 
 		// 持ったままポーズに入ると挙動おかしくなるので救済措置「捨てる」
 		_IsHold = _IsDrag = false;

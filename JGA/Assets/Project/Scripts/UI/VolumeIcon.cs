@@ -33,15 +33,12 @@ public class VolumeIcon : MonoBehaviour
 		{
 			//BGMの音量を取得
 			currentVol = (int)(SoundVolumeManager.GetBGM() * maxVol);
-			Debug.Log($"{SoundVolumeManager.GetBGM()} * {maxVol}");
 		}
 		else
 		{
 			//SEの音量を取得
 			currentVol = (int)(SoundVolumeManager.GetSE() * maxVol);
-			Debug.Log($"{SoundVolumeManager.GetSE()} * {maxVol}");
 		}
-		Debug.Log($"currentVol:{currentVol}");
 
 		for (int i = 0; i < currentVol; i++)
 		{
@@ -88,12 +85,10 @@ public class VolumeIcon : MonoBehaviour
 		if (bBGM)
 		{
 			SoundVolumeManager.SetBGM((float)currentVol / maxVol);
-			Debug.Log($"Vol.BGM:{SoundVolumeManager.GetBGM()}");
 		}
 		else
 		{
 			SoundVolumeManager.SetSE((float)currentVol / maxVol);
-			Debug.Log($"Vol.SE:{SoundVolumeManager.GetSE()}");
 		}
 
 		return true;
@@ -112,12 +107,10 @@ public class VolumeIcon : MonoBehaviour
 		if (bBGM)
 		{
 			SoundVolumeManager.SetBGM((float)currentVol / maxVol);
-			Debug.Log($"Vol.BGM:{SoundVolumeManager.GetBGM()}");
 		}
 		else
 		{
 			SoundVolumeManager.SetSE((float)currentVol / maxVol);
-			Debug.Log($"Vol.SE:{SoundVolumeManager.GetSE()}");
 		}
 
 		return true;
