@@ -44,14 +44,14 @@ public class PauseManager : SingletonMonoBehaviour<PauseManager>
 		gameInputs.Enable();
 	}
 
-    private void OnDisable() {
+	private void OnDisable() {
 		// Input Actionを無効化
-        gameInputs.Disable();
-    }
+		gameInputs.Disable();
+	}
 
-    private void Pause(InputAction.CallbackContext context)
+	private void Pause(InputAction.CallbackContext context)
 	{
-        if (FadeManager.fadeMode != FadeManager.eFade.Default)
+		if (FadeManager.fadeMode != FadeManager.eFade.Default)
 		{       // フェード中はポーズの開始の入力を受け付けない
 			return;
 		}

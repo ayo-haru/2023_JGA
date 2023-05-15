@@ -210,7 +210,7 @@ AudioSource:
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -304,8 +304,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08532bacc10545743b055d5ed8adc1e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objState: 0
-  radioAudioSource: {fileID: 8318689055714639811}
+  objType: 0
+  objDistanceType: 0
 --- !u!114 &6519306174338238487
 MonoBehaviour:
   m_ObjectHideFlags: 0

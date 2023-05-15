@@ -57,7 +57,7 @@ public class CanObject : BaseObj , IObjectSound
 
 		if (collison.gameObject.tag == "Player"  && !fallFlg)
 		{
-			SoundManager.Play(audioSource, SoundManager.ESE.CAN_ROLL);
+			SoundManager.Play(audioSourcesList[0], SoundManager.ESE.CAN_ROLL);
 		}
 		
 		if (collison.gameObject.tag == "Ground")
@@ -70,7 +70,7 @@ public class CanObject : BaseObj , IObjectSound
 			}
 			if(flyFlg)
 			{
-				SoundManager.Play(audioSource, SoundManager.ESE.CAN_ROLL);
+				SoundManager.Play(audioSourcesList[0], SoundManager.ESE.CAN_ROLL);
 				flyFlg = false;
 			}
 		}
@@ -80,7 +80,7 @@ public class CanObject : BaseObj , IObjectSound
 	{
 		if (player.IsHit && other.tag == "Player")
 		{
-			SoundManager.Play(audioSource, SoundManager.ESE.OBJECT_HIT);
+			SoundManager.Play(audioSourcesList[0], SoundManager.ESE.OBJECT_HIT);
 			flyFlg = true;
 		}
 
@@ -98,7 +98,7 @@ public class CanObject : BaseObj , IObjectSound
 
 	public void PlayPickUp()
 	{
-		SoundManager.Play(audioSource, SoundManager.ESE.CAN_CATCH);
+		SoundManager.Play(audioSourcesList[0], SoundManager.ESE.CAN_CATCH);
 	}
 
 	public void PlayHold()
@@ -108,7 +108,7 @@ public class CanObject : BaseObj , IObjectSound
 
 	public void PlayRelease()
 	{
-		SoundManager.Play(audioSource, SoundManager.ESE.CAN_RELEASE);
+		SoundManager.Play(audioSourcesList[0], SoundManager.ESE.CAN_RELEASE);
 	}
 
 

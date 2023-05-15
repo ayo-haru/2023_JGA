@@ -51,6 +51,7 @@ public class MegaPhone : BaseObj
         if(player.IsMegaphone && fallFlg)
         {
             //メガホンでの鳴き声を鳴らす
+            SoundManager.Play(audioSourcesList[0], SoundManager.ESE.PENGUIN_MEGAVOICE);
         }
 
     }

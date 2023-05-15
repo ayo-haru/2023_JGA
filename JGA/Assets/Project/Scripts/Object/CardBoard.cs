@@ -55,12 +55,11 @@ public class CardBoard : BaseObj
 
 	protected override void OnCollisionEnter(Collision collision)
 	{
-		CalculateDistance(player.gameObject);
 		// 段ボールが地面に当たった時の音を変更
 		if(collision.gameObject.tag == "Ground"){
 			if(!isPlaySound && isPlay)
 			{
-				PlayDrop(audioSource, SoundManager.ESE.CARDBOARDBOX_002);
+				PlayDrop(audioSourcesList[0], SoundManager.ESE.CARDBOARDBOX_002);
 				Debug.Log("音なった");
 			}
 
@@ -104,7 +103,7 @@ public class CardBoard : BaseObj
 					collision3.SetActive(true);
 
 					// 潰れたときの音を鳴らす
-					PlayDrop(audioSource, SoundManager.ESE.CARDBOARDBOX_002);
+					PlayDrop(audioSourcesList[0], SoundManager.ESE.CARDBOARDBOX_002);
 
 					break;
 				}

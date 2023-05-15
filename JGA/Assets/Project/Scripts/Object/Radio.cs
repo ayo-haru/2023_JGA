@@ -14,8 +14,7 @@ using UnityEngine;
 
 public class Radio : BaseObj
 {
-
-	[SerializeField] private AudioSource radioAudioSource;      // ラジオ音を再生するため追加で用意
+	//------ 追加(このオブジェクトのみで使用)変数 ------
 	private bool isSwitch;                                      // スイッチフラグ(true → ON / false → OFF)
 	private bool isOncePlaySound;                               // 複数回音を鳴らすのを回避するためのフラグ
 	private bool isRadioSound;
@@ -31,7 +30,6 @@ public class Radio : BaseObj
 		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
 		//rayDistance = 0.8f;
 
-
 		isSwitch = false;
 		isOncePlaySound = false;
 		isRadioSound = false;
@@ -43,9 +41,10 @@ public class Radio : BaseObj
 	/// </summary>
 	void Update()
 	{
-		if (PauseManager.isPaused) return;				// ポーズ中処理
+		if (PauseManager.isPaused) return;              // ポーズ中処理
 
 		//CheckisGround();								// 地面との接触判定
+		PlaySoundChecker();
 	}
 	
 
@@ -68,7 +67,7 @@ public class Radio : BaseObj
 		// ペンギンが掴んだ時の処理
 		if(other.gameObject.tag == "Player" && player.IsHold){
 			if (!isOncePlaySound) {
-				SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_CATCH);
+				SoundManager.Play(audioSourcesList[0], SoundManager.ESE.PENGUIN_CATCH);
 				isOncePlaySound = true;
 			}
 		}
@@ -87,8 +86,8 @@ public class Radio : BaseObj
 		isSwitch = !isSwitch;
 
 		// スイッチの切り替えと同時にそれぞれ音を鳴らす。
-		if (isSwitch) { SoundManager.Play(radioAudioSource, SoundManager.ESE.RADIO_ON); }
-		else { SoundManager.Play(radioAudioSource, SoundManager.ESE.RADIO_OFF); }
+		if (isSwitch) { SoundManager.Play(audioSourcesList[1], SoundManager.ESE.RADIO_ON); }
+		else { SoundManager.Play(audioSourcesList[1], SoundManager.ESE.RADIO_OFF); }
 
 	}
 
@@ -96,12 +95,12 @@ public class Radio : BaseObj
 	/// スイッチのオンオフに応じての処理
 	/// </summary>
 	/// <param name="checkSwitch"></param>
-	private void PlayRadioSound(bool checkSwitch)
+	public void PlayRadioSound(bool checkSwitch)
 	{
 		if (checkSwitch) {
 			StartCoroutine("PlayRadio");
 		}
-		else{radioAudioSource.Stop();}
+		else{audioSourcesList[1].Stop();}
 	}
 
 	/// <summary>
@@ -111,13 +110,13 @@ public class Radio : BaseObj
 	private IEnumerator PlayRadio()
 	{
 		yield return new WaitForSeconds(1.0f);
-		radioAudioSource.Play();
+		audioSourcesList[1].Play();
 
 	}
 
 	public bool GetPlayRadio()
 	{
-		if (radioAudioSource.isPlaying)
+		if (audioSourcesList[1].isPlaying)
 		{
 			isRadioSound = true;
 		}

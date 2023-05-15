@@ -125,7 +125,7 @@ public class SoundManager : MonoBehaviour
 	/// </summary>
 	/// <param name="audioSource">音の再生元</param>
 	/// <param name="clip">音</param>
-	public static void Play(AudioSource audioSource, AudioClip clip)
+	public static void Play( AudioSource audioSource, AudioClip clip)
 	{
 		if (audioSource == null || clip == null)
 			Debug.LogError($"<color=red>指定されたオブジェクトがNULLです</color>\n");
@@ -165,7 +165,7 @@ public class SoundManager : MonoBehaviour
 	/// </summary>
 	/// <param name="audioSource">音の再生元</param>
 	/// <param name="id">ID</param>
-	public static void Play(AudioSource audioSource, EBGM eBGM)
+	public static void Play( AudioSource audioSource, EBGM eBGM)
 	{
 		if (audioSource == null)
 			Debug.LogError($"<color=red>指定されたオブジェクトがNULLです</color>\n");
@@ -191,7 +191,7 @@ public class SoundManager : MonoBehaviour
 	/// </summary>
 	/// <param name="audioSource">音の再生元</param>
 	/// <param name="id">ID</param>
-	public static void Play(AudioSource audioSource, ESE eSE)
+	public static void Play( AudioSource audioSource, ESE eSE)
 	{
 		if (audioSource == null)
 			Debug.LogError($"<color=red>指定されたオブジェクトがNULLです</color>\n");
@@ -216,7 +216,7 @@ public class SoundManager : MonoBehaviour
 	/// </summary>
 	/// <param name="audioSource">音の再生元</param>
 	/// <param name="name">音源ファイル名</param>
-	public static void Play(AudioSource audioSource, string name)
+	public static void Play( AudioSource audioSource, string name)
 	{
 		if (audioSource == null || string.IsNullOrEmpty(name))
 			Debug.LogError($"<color=red>指定されたオブジェクトがNULLです</color>\n");
