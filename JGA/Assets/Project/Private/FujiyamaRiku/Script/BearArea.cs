@@ -17,13 +17,11 @@ public class BearArea : MonoBehaviour
 {
 	public bool fishFlg;
     public GameObject fishObj;
-    public GameObject feedArea;
     public GameObject roomPos;
 
     protected virtual void Start()
     {
         fishObj = GameObject.Find("Fish");
-        feedArea = GameObject.Find("FeedPos");
         roomPos = GameObject.Find("BearRoomPos");
     }
 

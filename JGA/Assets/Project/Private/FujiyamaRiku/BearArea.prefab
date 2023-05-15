@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 7328972194066109942}
   - component: {fileID: 7328972194066109961}
   - component: {fileID: 7328972194066109960}
-  - component: {fileID: 7328972194066109963}
   - component: {fileID: 7328972194066109943}
+  - component: {fileID: 5449660437974293666}
   m_Layer: 0
   m_Name: BearArea
   m_TagString: Untagged
@@ -85,19 +85,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &7328972194066109963
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7328972194066109962}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 45.242924
-  m_Center: {x: 8.620876, y: 0, z: 10.335575}
 --- !u!114 &7328972194066109943
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112,3 +99,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fishFlg: 0
   fishObj: {fileID: 0}
+  feedArea: {fileID: 0}
+  roomPos: {fileID: 0}
+--- !u!135 &5449660437974293666
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7328972194066109962}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.6809235
+  m_Center: {x: -0.0055236816, y: 0, z: 0}
