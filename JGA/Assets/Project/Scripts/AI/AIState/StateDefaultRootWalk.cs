@@ -33,7 +33,8 @@ public class StateDefaultRootWalk : AIState
     //お客さん用のデータ
     private GuestData.Data data;
     //アニメーター
-    private Animator animator;
+    //private Animator animator;
+    private GuestAnimation guestAnimation;
     //ペンギン用スクリプト
     private Player player;
 
@@ -76,7 +77,8 @@ public class StateDefaultRootWalk : AIState
         //データ、コンポーネント取得
         if (!agent) agent = GetComponent<NavMeshAgent>();
         if (data==null) data = GetComponent<AIManager>().GetGuestData();
-        if (!animator) animator = gameObject.transform.GetChild(0).GetComponent<Animator>();
+        //if (!animator) animator = gameObject.transform.GetChild(0).GetComponent<Animator>();
+        if (!guestAnimation) guestAnimation = GetComponent<GuestAnimation>();
         if (!player) player = GameObject.FindWithTag("Player").GetComponent<Player>();
         GetAnimalsTransrom();
 
@@ -86,7 +88,6 @@ public class StateDefaultRootWalk : AIState
         //ナビメッシュエージェントの設定
         agent.SetDestination(data.rootTransforms[targetNum].position);
         agent.speed = (player) ? player.MaxAppealSpeed * data.followSpeed * data.inBoothSpeed : data.speed;
-
         agent.stoppingDistance = Random.Range(1,data.cageDistance);
 
         //この時点で目的地の近くにいる場合はばらけさせる
@@ -100,7 +101,9 @@ public class StateDefaultRootWalk : AIState
         fTimer = 0.0f;
 
         //アニメーション初期化
-        animator.SetBool("isWalk", true);
+        //animator.SetBool("isWalk", true);
+        guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.WALK);
+        guestAnimation.SetLookAt(null);
     }
 
     public override void UpdateState()
@@ -109,7 +112,8 @@ public class StateDefaultRootWalk : AIState
         if (!ErrorCheck()) return;
 
         //驚きモーション中は移動させない
-        agent.isStopped = animator.GetCurrentAnimatorStateInfo(0).IsName("Surprised");
+        //agent.isStopped = animator.GetCurrentAnimatorStateInfo(0).IsName("Surprised");
+        agent.isStopped = (guestAnimation.GetAnimationState() == GuestAnimation.EGuestAnimState.SURPRISED);
 
         if (agent.pathPending) return;
 
@@ -121,7 +125,8 @@ public class StateDefaultRootWalk : AIState
         //待機時間
         if (agent.remainingDistance <= agent.stoppingDistance)
         {
-            animator.SetBool("isWalk", false);
+            //animator.SetBool("isWalk", false);
+            guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.IDLE);
 
             //ランダム生成用エントランスに到着したら
             if ((agent.destination.x-agent.stoppingDistance < data.entranceTF.position.x && agent.destination.x + agent.stoppingDistance > data.entranceTF.position.x)&&
@@ -142,7 +147,6 @@ public class StateDefaultRootWalk : AIState
             //動物の方を向く
             Quaternion rot = Quaternion.LookRotation(((!animals[targetNum]) ? data.rootTransforms[targetNum].position : animals[targetNum].position) - transform.position);
             transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime);
-
         }
     }
 
@@ -156,10 +160,12 @@ public class StateDefaultRootWalk : AIState
         if((data.rootTransforms == null) ? true : data.rootTransforms.Count <= 0)Debug.LogError("目的地のリストがありません");
         if (!agent)Debug.LogError("ナビメッシュエージェントが取得されていません");
         if (data==null)Debug.LogError("ゲスト用データが取得されていません");
-        if (!animator)Debug.LogError("アニメータが取得されていません");
+        //if (!animator)Debug.LogError("アニメータが取得されていません");
+        if (!guestAnimation) Debug.LogError("アニメーション制御用スクリプトが取得されていません");
         if (!player) Debug.LogWarning("プレイヤー用スクリプトが取得されていません");
 
-        return ((data.rootTransforms == null) ? false : data.rootTransforms.Count > 0) && agent && (data!=null) && animator;
+        //return ((data.rootTransforms == null) ? false : data.rootTransforms.Count > 0) && agent && (data!=null) && animator;
+        return ((data.rootTransforms == null) ? false : data.rootTransforms.Count > 0) && agent && (data!=null) && guestAnimation;
     }
 
     /// <summary>
@@ -179,7 +185,8 @@ public class StateDefaultRootWalk : AIState
             agent.SetDestination(data.rootTransforms[targetNum].position);
         }
         fTimer = 0.0f;
-        animator.SetBool("isWalk", true);
+        guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.WALK);
+       // animator.SetBool("isWalk", true);
     }
     /// <summary>
     /// 動物の位置を取得
