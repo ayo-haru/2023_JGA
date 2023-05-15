@@ -12,12 +12,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Radio : BaseObject
+public class Radio : BaseObj
 {
 
 	[SerializeField] private AudioSource radioAudioSource;      // ラジオ音を再生するため追加で用意
 	private bool isSwitch;                                      // スイッチフラグ(true → ON / false → OFF)
-	private bool isOncePlaySound;								// 複数回音を鳴らすのを回避するためのフラグ
+	private bool isOncePlaySound;                               // 複数回音を鳴らすのを回避するためのフラグ
+	private bool isRadioSound;
 
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
@@ -26,12 +27,14 @@ public class Radio : BaseObject
 	{
 		Init();
 
-		objState = OBJState.HITANDHOLD;
-		playerRef = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-		rayDistance = 0.8f;
+		objType = ObjType.HIT_HOLD;
+		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+		//rayDistance = 0.8f;
+
 
 		isSwitch = false;
 		isOncePlaySound = false;
+		isRadioSound = false;
 
 	}
 
@@ -40,39 +43,37 @@ public class Radio : BaseObject
 	/// </summary>
 	void Update()
 	{
-		if (PauseManager.isPaused) return;      // ポーズ中処理
-		Debug.Log(radioAudioSource);
+		if (PauseManager.isPaused) return;				// ポーズ中処理
 
-		CheckisGround();                        // 地面との接触判定
-		CheckIsPlaySound(radioAudioSource.isPlaying);     // 再生中判定
+		//CheckisGround();								// 地面との接触判定
 	}
 	
 
 	//　当たり判定処理===============================================
 	protected override void OnCollisionEnter(Collision collision)
 	{
-		if (collision.gameObject.tag == "Ground"　&& isGround == true) { PlayDrop(); }		// 地面と当たった時
+		if (collision.gameObject.tag == "Ground") { PlayDrop(); }		// 地面と当たった時
 
 	}
 
 	protected override void OnTriggerStay(Collider other)
 	{
 		// ペンギンをはたいたときの処理
-		if(other.gameObject.tag == "Player" && playerRef.IsHit){
+		if(other.gameObject.tag == "Player" && player.IsHit){
 
 			ToggleSwitch();				// スイッチの切り替え
 			PlayRadioSound(isSwitch);	// スイッチの状態事の処理
 		}
 
 		// ペンギンが掴んだ時の処理
-		if(other.gameObject.tag == "Player" && playerRef.IsHold){
-			if (!isOncePlaySound) { 
-				SoundManager.Play(_audioSource, SoundManager.ESE.PENGUIN_CATCH);
+		if(other.gameObject.tag == "Player" && player.IsHold){
+			if (!isOncePlaySound) {
+				SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_CATCH);
 				isOncePlaySound = true;
 			}
 		}
 
-		if (!playerRef.IsHold){
+		if (!player.IsHold){
 			isOncePlaySound = false;
 		}
 	}
@@ -86,8 +87,8 @@ public class Radio : BaseObject
 		isSwitch = !isSwitch;
 
 		// スイッチの切り替えと同時にそれぞれ音を鳴らす。
-		if (isSwitch) { SoundManager.Play(_audioSource, SoundManager.ESE.RADIO_ON); }
-		else { SoundManager.Play(_audioSource, SoundManager.ESE.RADIO_OFF); }
+		if (isSwitch) { SoundManager.Play(radioAudioSource, SoundManager.ESE.RADIO_ON); }
+		else { SoundManager.Play(radioAudioSource, SoundManager.ESE.RADIO_OFF); }
 
 	}
 
@@ -99,7 +100,6 @@ public class Radio : BaseObject
 	{
 		if (checkSwitch) {
 			StartCoroutine("PlayRadio");
-
 		}
 		else{radioAudioSource.Stop();}
 	}
@@ -110,9 +110,22 @@ public class Radio : BaseObject
 	/// <returns></returns>
 	private IEnumerator PlayRadio()
 	{
-		yield return new WaitForSeconds(1.5f);
+		yield return new WaitForSeconds(1.0f);
 		radioAudioSource.Play();
 
+	}
+
+	public bool GetPlayRadio()
+	{
+		if (radioAudioSource.isPlaying)
+		{
+			isRadioSound = true;
+		}
+		else{
+			isRadioSound = false;
+		}
+
+		return isRadioSound;
 	}
 
 }

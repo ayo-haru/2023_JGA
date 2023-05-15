@@ -20,7 +20,7 @@ using UniRx;
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(AudioSource))]
 [RequireComponent(typeof(Outline))]
-public abstract class BaseObject : MonoBehaviour,IPlayObjectSound
+public class BaseObject : MonoBehaviour,IPlayObjectSound
 {
 
 	//----- オブジェクトステート -----

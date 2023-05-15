@@ -33,6 +33,10 @@ public class CanObject : BaseObj , IObjectSound
 		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
 	}
 
+	private void OnWillRenderObject()
+	{
+		Debug.Log("映った");
+	}
 	/// <summary>
 	/// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
 	/// </summary>
@@ -47,10 +51,10 @@ public class CanObject : BaseObj , IObjectSound
 	void Update()
 	{
 		PlaySoundChecker();
-
 	}
 	protected override void OnCollisionEnter(Collision collison)
 	{
+
 		if (collison.gameObject.tag == "Player"  && !fallFlg)
 		{
 			SoundManager.Play(audioSource, SoundManager.ESE.CAN_ROLL);

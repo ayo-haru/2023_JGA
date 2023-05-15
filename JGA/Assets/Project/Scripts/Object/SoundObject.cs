@@ -22,20 +22,20 @@ public class SoundObject : BaseObj
 	void Awake()
 	{
 		Init();
-        objType = ObjType.None;
+		objType = ObjType.NONE;
 
-    }
+	}
 
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
 	/// </summary>
 	void Start()
 	{
-        if (player == null)
-        {
-            player = GameObject.FindWithTag("Player").GetComponent<Player>();
-        }
-    }
+		if (player == null)
+		{
+			player = GameObject.FindWithTag("Player").GetComponent<Player>();
+		}
+	}
 
 	/// <summary>
 	/// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
@@ -50,22 +50,22 @@ public class SoundObject : BaseObj
 	/// </summary>
 	void Update()
 	{
-        if (audioSource.isPlaying)
-        {
-            isPlaySound = true;
-        }
-        else
-        {
-            isPlaySound = false;
-        }
-    }
+		if (audioSource.isPlaying)
+		{
+			isPlaySound = true;
+		}
+		else
+		{
+			isPlaySound = false;
+		}
+	}
 
-    private void OnCollisionEnter(Collision collison)
-    {
-        //if (collison.gameObject.tag == "Player" && !player.IsHold)
-        //{
-        //    SoundManager.Play(audioSource, SoundManager.ESE.OBJECT_HIT);
-        //}
-       
-    }
+	private void OnCollisionEnter(Collision collison)
+	{
+		//if (collison.gameObject.tag == "Player" && !player.IsHold)
+		//{
+		//    SoundManager.Play(audioSource, SoundManager.ESE.OBJECT_HIT);
+		//}
+	   
+	}
 }

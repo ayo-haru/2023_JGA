@@ -15,11 +15,9 @@ using UnityEngine;
 public interface IPlayObjectSound
 {
     void PlayHit();
-
     void PlayHit(AudioSource audioSource, SoundManager.ESE soundNumber);
 
     void PlayDrop();
-
     void PlayDrop(AudioSource audioSource, SoundManager.ESE soundNumber);
 
 }
