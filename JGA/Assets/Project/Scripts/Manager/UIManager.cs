@@ -15,15 +15,20 @@ using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
+    //---キャンバス
 	GameObject canvas;
-	GameObject fadePanel;
 
+    //---クリア
     GameObject clearUI;
     GameObject clearUIInstance;
 
+    //---ゲームオーバー
     GameObject failedUI;
     GameObject failedUIInstance;
 
+    //---操作方法
+    GameObject operationUI;
+    GameObject operationUIInstance;
 
     //---時間UI
     private GameObject timerUI;
@@ -46,16 +51,23 @@ public class UIManager : MonoBehaviour
 
         //fadePanel.transform.parent =  canvas.transform;
         if (SceneManager.GetActiveScene().name != MySceneManager.sceneName[(int)MySceneManager.SceneState.SCENE_TITLE]) {
+            RectTransform _canvasRT = canvas.GetComponent<RectTransform>();
+
 
             //----- クリアのUI読み込みと出現 ------
             clearUI = PrefabContainerFinder.Find(MySceneManager.GameData.UIDatas, "ClearUI.prefab");
-            clearUIInstance = Instantiate(clearUI, canvas.GetComponent<RectTransform>());
+            clearUIInstance = Instantiate(clearUI, _canvasRT);
             clearUIInstance.name = clearUI.name;
 
             //----- ゲームオーバーのUI読み込みと出現 -----
             failedUI = PrefabContainerFinder.Find(MySceneManager.GameData.UIDatas, "FailedUI.prefab");
-            failedUIInstance = Instantiate(failedUI, canvas.GetComponent<RectTransform>());
+            failedUIInstance = Instantiate(failedUI, _canvasRT);
             failedUIInstance.name = failedUI.name;
+
+            //----- 操作方法のUIの読み込みと出現 -----
+            operationUI = PrefabContainerFinder.Find(MySceneManager.GameData.UIDatas, "OperationUI.prefab");
+            operationUIInstance = Instantiate(operationUI, _canvasRT);
+            operationUIInstance.name = operationUI.name;
 
             //----- タイマーUIの取得 -----
             timerUI = GameObject.Find("TimerSlider");
