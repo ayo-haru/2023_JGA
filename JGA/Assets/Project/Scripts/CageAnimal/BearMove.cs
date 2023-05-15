@@ -61,6 +61,8 @@ public class BearMove : MonoBehaviour
 
     private FISHTYPE fishTyep;              //魚の状態
 
+    private bool fishHaveFlg;
+
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
     /// </summary>
@@ -214,42 +216,81 @@ public class BearMove : MonoBehaviour
     {
         if(fishTyep == FISHTYPE.FISH_TURN)
         {
-            var fishPos = bearArea.fishObj.transform.position;
-            fishPos.y = this.transform.position.y;
-            endPos = fishPos;
-
-            var endRot = Quaternion.LookRotation(endPos - this.transform.position);
-            var befRot = this.transform.rotation;
-            this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, endRot, BoothAnimalManager.Instance.bearData.dataList[movedata].rotateAngle);
-
-            rb.velocity = Vector3.zero;
-            if (befRot == this.transform.rotation)
+            if (!fishHaveFlg)
             {
-                fishTyep = FISHTYPE.FISH_WALK;
+                var fishPos = bearArea.fishObj.transform.position;
+                fishPos.y = this.transform.position.y;
+                endPos = fishPos;
+
+                var endRot = Quaternion.LookRotation(endPos - this.transform.position);
+                var befRot = this.transform.rotation;
+                this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, endRot, BoothAnimalManager.Instance.bearData.dataList[movedata].rotateAngle);
+
+                rb.velocity = Vector3.zero;
+                if (befRot == this.transform.rotation)
+                {
+                    fishTyep = FISHTYPE.FISH_WALK;
+                }
+            }
+            else
+            {
+                var roomPos = bearArea.roomPos.transform.position;
+                roomPos.y = this.transform.position.y;
+                endPos = roomPos;
+
+                var endRot = Quaternion.LookRotation(endPos - this.transform.position);
+                var befRot = this.transform.rotation;
+                this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, endRot, BoothAnimalManager.Instance.bearData.dataList[movedata].rotateAngle);
+
+                rb.velocity = Vector3.zero;
+                if (befRot == this.transform.rotation)
+                {
+                    fishTyep = FISHTYPE.FISH_WALK;
+                }
             }
         }
         if(fishTyep == FISHTYPE.FISH_WALK)
         {
-
-                var fishPos = bearArea.fishObj.transform.position;
+            if (!fishHaveFlg)
+            {
+                var fishPos = bearArea.feedArea.transform.position;
                 float dis = Vector3.Distance(this.transform.position, fishPos);
-            Debug.Log(dis);
-            if (dis >= 2.0f)
-            {
-                endPos = fishPos;
+                if (dis >= 2.0f)
+                {
+                    endPos = fishPos;
 
-                //速度を決定してその速度で終了地点まで動く
-                this.transform.position = Vector3.MoveTowards(this.transform.position,
-                                                                endPos,
-                                                                BoothAnimalManager.Instance.bearData.dataList[movedata].walkSpeed * Time.deltaTime);
+                    //速度を決定してその速度で終了地点まで動く
+                    this.transform.position = Vector3.MoveTowards(this.transform.position,
+                                                                    endPos,
+                                                                    BoothAnimalManager.Instance.bearData.dataList[movedata].walkSpeed * Time.deltaTime);
+                }
+                else
+                {
+                    fishTyep = FISHTYPE.FISH_HAVE;
+                }
             }
-            else
+            if (fishHaveFlg)
             {
-                fishTyep = FISHTYPE.FISH_HAVE;
+                endPos = bearArea.roomPos.transform.position;
+                
+                    //速度を決定してその速度で終了地点まで動く
+                    this.transform.position = Vector3.MoveTowards(this.transform.position,
+                                                                    endPos,
+                                                                    BoothAnimalManager.Instance.bearData.dataList[movedata].walkSpeed * Time.deltaTime);
+                if(PositionAreaJudge(this.transform.position,endPos,1))
+                {
+                    Destroy(this);
+                }
+                
             }
-                rb.velocity = Vector3.zero;
+            rb.velocity = Vector3.zero;
             
-            
+        }
+        if(fishTyep == FISHTYPE.FISH_HAVE)
+        {
+            fishTyep = FISHTYPE.FISH_TURN;
+            fishHaveFlg = true;
+            return;
         }
     }
 
