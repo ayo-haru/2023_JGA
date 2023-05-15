@@ -103,6 +103,7 @@ public class SoundManager : MonoBehaviour
 	private static HashSet<AudioSource> Source = new HashSet<AudioSource>();
 	private static AudioClip BGM;
 	private static List<AudioClip> SEs = new List<AudioClip>();
+	private static GameVolume.Volume Volume;
 
 	private void Awake()
 	{
@@ -111,6 +112,11 @@ public class SoundManager : MonoBehaviour
 		PauseManager.OnResumed.Subscribe(x => { Resumed(); }).AddTo(this.gameObject);
 
 		SceneManager.activeSceneChanged += ActiveSceneChanged;
+	}
+
+	private void Start()
+	{
+		Volume = SoundVolumeManager.GetVolume();
 	}
 
 
@@ -132,7 +138,8 @@ public class SoundManager : MonoBehaviour
 			if (_SEs[i].clip == clip)
 			{
 				SEs.Add(_SEs[i].clip);
-				audioSource.volume = _SEs[i].volume;
+				Debug.Log($"Volume.fSE:{Volume.fSE}");
+				audioSource.volume = _SEs[i].volume * Volume.fSE;
 				audioSource.PlayOneShot(_SEs[i].clip);
 				return;
 			}
@@ -146,7 +153,8 @@ public class SoundManager : MonoBehaviour
 			{
 				BGM = BGMs[i].clip;
 				audioSource.clip = BGMs[i].clip;
-				audioSource.volume = BGMs[i].volume;
+				Debug.Log($"Volume.fBGM:{Volume.fBGM}");
+				audioSource.volume = BGMs[i].volume * Volume.fBGM;
 				audioSource.Play();
 				return;
 			}
@@ -176,7 +184,8 @@ public class SoundManager : MonoBehaviour
 		SoundData.Sound _BGM = MySceneManager.Sound.BGMDatas.list[((int)eBGM)];
 		BGM = _BGM.clip;
 		audioSource.clip = _BGM.clip;
-		audioSource.volume = _BGM.volume;
+		Debug.Log($"Volume.fBGM:{Volume.fBGM}");
+		audioSource.volume = _BGM.volume * Volume.fBGM;
 		audioSource.Play();
 	}
 
@@ -201,7 +210,8 @@ public class SoundManager : MonoBehaviour
 
 		SoundData.Sound _SE = MySceneManager.Sound.SEDatas.list[((int)eSE)];
 		SEs.Add(_SE.clip);
-		audioSource.volume = _SE.volume;
+		Debug.Log($"Volume.fSE:{Volume.fSE}");
+		audioSource.volume = _SE.volume * Volume.fSE;
 		audioSource.PlayOneShot(_SE.clip);
 	}
 
@@ -223,7 +233,8 @@ public class SoundManager : MonoBehaviour
 			if (_SEs[i].clip.name == name)
 			{
 				SEs.Add(_SEs[i].clip);
-				audioSource.volume = _SEs[i].volume;
+				Debug.Log($"Volume.fSE:{Volume.fSE}");
+				audioSource.volume = _SEs[i].volume * Volume.fSE;
 				audioSource.PlayOneShot(_SEs[i].clip);
 				return;
 			}
@@ -237,7 +248,8 @@ public class SoundManager : MonoBehaviour
 			{
 				BGM = BGMs[i].clip;
 				audioSource.clip = BGMs[i].clip;
-				audioSource.volume = BGMs[i].volume;
+				Debug.Log($"Volume.fBGM:{Volume.fBGM}");
+				audioSource.volume = BGMs[i].volume * Volume.fBGM;
 				audioSource.Play();
 				return;
 			}
