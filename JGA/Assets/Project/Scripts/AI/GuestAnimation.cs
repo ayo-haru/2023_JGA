@@ -10,6 +10,7 @@
 // 2023/03/22	ポーズの処理追加
 // 2023/03/30	足音削除
 // 2023/04/28	歩くときのアニメーションスピードをNavMeshAgentの速度基準に変更
+// 2023/05/15	アニメーションの処理をステートからこっちに移動、首の向き変えれるようにした
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -19,14 +20,21 @@ using UnityEngine.AI;
 
 public class GuestAnimation : MonoBehaviour
 {
-    [SerializeField] private Animator animator;
-    [SerializeField,Range(0.0f,1.0f)] private float minAnimSpeed = 0.5f;
-    [SerializeField,Range(0.0f,1.0f)] private float maxAnimSpeed = 1.0f;
-    [SerializeField] private float maxAgentSpeed = 5.0f;
+    [SerializeField,Header("アニメーター")] private Animator animator;
+    [SerializeField,Range(0.0f,1.0f),Header("最小アニメーション速度")] private float minAnimSpeed = 0.5f;
+    [SerializeField,Range(0.0f,1.0f),Header("最大アニメーション速度")] private float maxAnimSpeed = 1.0f;
+    [SerializeField,Header("ナビメッシュエージェントの最大速度")] private float maxAgentSpeed = 5.0f;
+    [SerializeField, Header("首のTransform")] private Transform neckTransform;
+    //歩行フラグ
     private bool bWalk = false;
+    //アニメーションスピード
     private float animSpeed = 1.0f;
+    //ナビメッシュエージェント
     private NavMeshAgent agent;
-
+    //アニメーションステート
+    public enum EGuestAnimState { IDLE,WALK,SURPRISED,MAX_GUEST_ANIM_STATE,};
+    private Transform lookAtTarget = null;
+    private float fAnimTimer;
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -58,8 +66,9 @@ public class GuestAnimation : MonoBehaviour
         if (PauseManager.isPaused) return;
         if (!animator || !agent) return;
 
+
         //Walkから他のアニメーション又は他のアニメーションからWalkに切り替わったか？
-        bool nowWalk = animator.GetCurrentAnimatorStateInfo(0).IsName("Walk");
+        bool nowWalk = GetAnimationState() == EGuestAnimState.WALK;
         if (bWalk == nowWalk) return;
 
         //切り替わっていた場合
@@ -70,6 +79,20 @@ public class GuestAnimation : MonoBehaviour
             float fWork = agent.speed / maxAgentSpeed;
             animator.speed = animSpeed = (fWork < minAnimSpeed) ? minAnimSpeed : (fWork >= maxAnimSpeed) ? maxAnimSpeed : fWork;
         }
+    }
+
+    private void LateUpdate()
+    {
+        if (PauseManager.isPaused) return;
+        if (!neckTransform || !lookAtTarget) return;
+
+        //首をターゲットの方向に向ける
+        if(fAnimTimer < 1.0f)fAnimTimer += Time.deltaTime;
+        Quaternion rot = Quaternion.LookRotation(lookAtTarget.position - neckTransform.position);
+        neckTransform.rotation = Quaternion.Slerp(neckTransform.rotation, rot, fAnimTimer);
+        //体をターゲットの方向に向ける
+        rot = Quaternion.LookRotation(lookAtTarget.position - transform.position);
+        transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * (Mathf.Abs(neckTransform.rotation.y) * 10.0f + 1.0f));
     }
 #if false
     /// <summary>
@@ -88,5 +111,37 @@ public class GuestAnimation : MonoBehaviour
     private void Resumed()
     {
         if(animator)animator.speed = animSpeed;
+    }
+
+    public void SetAnimation(EGuestAnimState _state)
+    {
+        switch (_state)
+        {
+            case EGuestAnimState.IDLE:
+                animator.SetBool("isWalk", false);
+                break;
+            case EGuestAnimState.WALK:
+                animator.SetBool("isWalk", true);
+                break;
+            case EGuestAnimState.SURPRISED:
+                animator.SetTrigger("surprised");
+                break;
+        }
+    }
+    public void SetLookAt(Transform _target)
+    {
+        if (lookAtTarget == _target) return;
+
+        fAnimTimer = 0.0f;
+        lookAtTarget = _target;
+    }
+
+    public EGuestAnimState GetAnimationState()
+    {
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Walk")) return EGuestAnimState.WALK;
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Idle")) return EGuestAnimState.IDLE;
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Surprised")) return EGuestAnimState.SURPRISED;
+
+        return EGuestAnimState.MAX_GUEST_ANIM_STATE;
     }
 }

@@ -34,7 +34,8 @@ public class StateStayArea : AIState
     //目的地に着いたか
     private bool isStay = false;
     //アニメーター
-    private Animator animator;
+    //private Animator animator;
+    private GuestAnimation guestAnimation;
     //感情ui
     [SerializeField] private EmosionUI ui;
 
@@ -75,7 +76,8 @@ public class StateStayArea : AIState
         //コンポーネント、データ取得
         if (!agent) agent = GetComponent<NavMeshAgent>();
         if (data==null) data = GetComponent<AIManager>().GetGuestData();
-        if (!animator) animator = gameObject.transform.GetChild(0).GetComponent<Animator>();
+        //if (!animator) animator = gameObject.transform.GetChild(0).GetComponent<Animator>();
+        if (!guestAnimation) guestAnimation = GetComponent<GuestAnimation>();
         GetAnimalTransrom();
         //エラーチェック
         if (!ErrorCheck()) return;
@@ -96,7 +98,9 @@ public class StateStayArea : AIState
         isStay = false;
 
         //アニメーション初期化
-        animator.SetBool("isWalk", true);
+        guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.WALK);
+        guestAnimation.SetLookAt(null);
+        //animator.SetBool("isWalk", true);
 
         //ui設定
         ui.SetEmotion(EEmotion.NONE);
@@ -120,7 +124,9 @@ public class StateStayArea : AIState
         if (!ErrorCheck()) return;
 
         //驚きモーション中は移動させない
-        agent.isStopped = animator.GetCurrentAnimatorStateInfo(0).IsName("Surprised");
+        //agent.isStopped = animator.GetCurrentAnimatorStateInfo(0).IsName("Surprised");
+        agent.isStopped = (guestAnimation.GetAnimationState() == GuestAnimation.EGuestAnimState.SURPRISED);
+
         if (agent.isStopped) return;
 
         if (isStay)
@@ -136,7 +142,8 @@ public class StateStayArea : AIState
         if (agent.remainingDistance <= agent.stoppingDistance)
         {
             //待機アニメーションの再生
-            animator.SetBool("isWalk", false);
+            //animator.SetBool("isWalk", false);
+            guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.IDLE);
             //ui設定
             ui.SetEmotion(EEmotion.HIGH_TENSION);
             isStay = true;
@@ -154,10 +161,13 @@ public class StateStayArea : AIState
         if (!agent)Debug.LogError("ナビメッシュエージェントが取得されていません");
         if ((data.penguinTF == null) ? true : data.penguinTF.Count <= 0) Debug.LogError("待機位置が設定されていません");
         if (data==null)Debug.LogError("ゲスト用データが取得されていません");
-        if (!animator)Debug.LogError("アニメーターが取得されていません");
+        //if (!animator)Debug.LogError("アニメーターが取得されていません");
+        if (!guestAnimation) Debug.LogError("アニメーション制御用スクリプトが取得されていません");
         if (!ui) Debug.LogError("感情UIが設定されていません");
 
-        return agent && ((data.penguinTF == null) ? false : data.penguinTF.Count > 0) && (data!=null) && animator && ui;
+        //return agent && ((data.penguinTF == null) ? false : data.penguinTF.Count > 0) && (data!=null) && animator && ui;
+        return agent && ((data.penguinTF == null) ? false : data.penguinTF.Count > 0) && (data!=null) && guestAnimation && ui;
+        
     }
     public void GetAnimalTransrom()
     {
