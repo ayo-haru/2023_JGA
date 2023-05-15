@@ -214,11 +214,17 @@ public class BearMove : MonoBehaviour
 
     private void Gimmick()
     {
+        var fishNum = bearArea.fishNum;
+        if(fishNum == -1)
+        {
+            moveFlg = false;
+            return;
+        }
         if(fishTyep == FISHTYPE.FISH_TURN)
         {
             if (!fishHaveFlg)
             {
-                var fishPos = bearArea.fishObj.transform.position;
+                var fishPos = bearArea.fishObj[fishNum].transform.position;
                 fishPos.y = this.transform.position.y;
                 endPos = fishPos;
 
@@ -253,7 +259,7 @@ public class BearMove : MonoBehaviour
         {
             if (!fishHaveFlg)
             {
-                var fishPos = bearArea.fishObj.transform.position;
+                var fishPos = bearArea.fishObj[fishNum].transform.position;
                 float dis = Vector3.Distance(this.transform.position, fishPos);
                 if (dis >= 2.0f)
                 {
@@ -279,7 +285,7 @@ public class BearMove : MonoBehaviour
                                                                     BoothAnimalManager.Instance.bearData.dataList[movedata].walkSpeed * Time.deltaTime);
                 if(PositionAreaJudge(this.transform.position,endPos,1))
                 {
-                    Destroy(this);
+                    Destroy(this.gameObject);
                 }
                 
             }
