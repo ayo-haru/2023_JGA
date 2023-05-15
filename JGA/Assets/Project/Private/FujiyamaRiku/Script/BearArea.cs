@@ -15,27 +15,44 @@ using UnityEngine;
 
 public class BearArea : MonoBehaviour
 {
-	public bool fishFlg;
-    public GameObject fishObj;
+    public int fishNum;
+    public bool fishFlg;
+    public GameObject[] fishObj;
     public GameObject roomPos;
 
     protected virtual void Start()
     {
-        fishObj = GameObject.Find("Fish");
+        fishNum = -1;
+        var fish = GameObject.Find("Fish");
+        fishObj = new GameObject[fish.transform.childCount];
+        //FishBasket
+        for (int i = 0; i < fish.transform.childCount; i++)
+        {
+            fishObj[i] = GameObject.Find("Fish").transform.GetChild(i).gameObject;
+        }
+        
         roomPos = GameObject.Find("BearRoomPos");
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if(other.name == "Fish")
+        if(other.name.Contains("Fish") && !fishFlg)
 		{
+            for(int i = 0;i < fishObj.Length;i++)
+            {
+                if (other.gameObject == fishObj[i])
+                {
+                    fishNum = i;
+                }
+            }
 			fishFlg = true;
         }
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.name == "Fish")
+        if (other.name.Contains("Fish"))
         {
+            fishNum = -1;
             fishFlg = false;
         }
     }
