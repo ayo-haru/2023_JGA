@@ -828,6 +828,7 @@ MonoBehaviour:
   joyRunZone: 0.8
   bGamePad: 0
   _IsHit: 0
+  _IsHitMotion: 0
   _IsHold: 0
   _IsDrag: 0
   _IsMove: 0
@@ -1003,7 +1004,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d139cb19690648b4a83a5926f718af53, type: 2}
+  - {fileID: 2100000, guid: 71925e7dd70aef94f9712cdc7b1fb193, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

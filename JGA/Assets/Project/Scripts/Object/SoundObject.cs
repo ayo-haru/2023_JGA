@@ -50,7 +50,7 @@ public class SoundObject : BaseObj
 	/// </summary>
 	void Update()
 	{
-		if (audioSource.isPlaying)
+		if (audioSourcesList[0].isPlaying)
 		{
 			isPlaySound = true;
 		}

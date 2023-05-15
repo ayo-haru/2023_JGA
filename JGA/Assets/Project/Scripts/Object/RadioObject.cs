@@ -80,7 +80,7 @@ public class RadioObject : BaseObj, IObjectSound
 		//プレイヤーと当たっていてプレイヤーが持っていなかったら
 		if (collison.gameObject.tag == "Player" && !fallFlg)
 		{
-			SoundManager.Play(audioSource, SoundManager.ESE.OBJECT_HIT);
+			SoundManager.Play(audioSourcesList[0], SoundManager.ESE.OBJECT_HIT);
 		}
 
 		//地面に当たったときにプレイヤーが持っている状態から落としたら
@@ -102,14 +102,14 @@ public class RadioObject : BaseObj, IObjectSound
 
 				playAudio[RadioAudio].Stop();
 
-				SoundManager.Play(audioSource, SoundManager.ESE.RADIO_OFF);
+				SoundManager.Play(audioSourcesList[0], SoundManager.ESE.RADIO_OFF);
 
 			}
 			else if (!onOffFlg)
 			{
 				onOffFlg = true;
 
-				SoundManager.Play(audioSource, SoundManager.ESE.RADIO_ON);
+				SoundManager.Play(audioSourcesList[0], SoundManager.ESE.RADIO_ON);
 
 			}
 		}
@@ -129,7 +129,7 @@ public class RadioObject : BaseObj, IObjectSound
 
 	public void PlayPickUp()
 	{
-		SoundManager.Play(audioSource, SoundManager.ESE.OBJECT_HIT);
+		SoundManager.Play(audioSourcesList[0], SoundManager.ESE.OBJECT_HIT);
 	}
 
 	public void PlayHold()
@@ -139,7 +139,7 @@ public class RadioObject : BaseObj, IObjectSound
 
 	public void PlayRelease()
 	{
-		SoundManager.Play(audioSource, SoundManager.ESE.OBJECT_DROP);
+		SoundManager.Play(audioSourcesList[0], SoundManager.ESE.OBJECT_DROP);
 	}
 
 	/// <summary>
@@ -154,7 +154,9 @@ public class RadioObject : BaseObj, IObjectSound
 	protected override void Pause()
 	{
 		// 物理挙動停止
-		audioSource.Pause();
+		for(int i = 0; i < audioSourcesList.Count; i++){
+			audioSourcesList[i].Pause();
+		}
 		playAudio[RadioAudio].Pause();
 		rb.velocity = pauseVelocity;
 		rb.angularVelocity = pauseAngleVelocity;
@@ -164,7 +166,7 @@ public class RadioObject : BaseObj, IObjectSound
 
 	protected override void Resumed()
 	{
-		audioSource.Play();
+		//audioSource.Play();
 		playAudio[RadioAudio].Play();
 		// 物理挙動開始
 		rb.velocity = pauseVelocity;

@@ -44,11 +44,14 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 
 
 	//---共通変数宣言---
-	protected Rigidbody rb;						// リジッドボディ使用
-	protected AudioSource audioSource;		// オーディオソース
-	protected Player player;					// プレイヤー取得
+	protected Rigidbody rb;                     // リジッドボディ使用
 
-	public ObjType objType;						// オブジェクトのタイプ
+	//protected AudioSource audioSource;		// オーディオソース
+	// オーディオソースをリストで格納
+	protected List<AudioSource> audioSourcesList = new List<AudioSource>();
+
+	protected Player player;					// プレイヤー取得
+	[SerializeField] public ObjType objType;						// オブジェクトのタイプ
 	public ObjDistanceType　objDistanceType;		// 距離のタイプ
 	protected bool isPlaySound;					// 音が鳴っているか
 	protected float distance;					// オブジェクトとの距離		
@@ -87,35 +90,38 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 	protected void Init()
 	{
 		rb  = GetComponent<Rigidbody>();
-		audioSource = GetComponent<AudioSource>();
-
+		GetComponents<AudioSource>(audioSourcesList);
 		objType = ObjType.NONE;
 		isPlaySound = false;
 		distance = -1;
 
 	}
 
+	/// <summary>
+	/// 引数無しの場合はリストの一番最初にあるオーディオソースを判定
+	/// </summary>
 	protected void PlaySoundChecker()
 	{
-		if (audioSource.isPlaying)
-		{
-			isPlaySound = true;
-		}
-		else
-		{
-			isPlaySound = false; 
-		}
+		if (audioSourcesList[0].isPlaying) isPlaySound = true;
+		else isPlaySound = false; 
 	}
+
+	/// <summary>
+	/// 特定のオーディオソースを検索したいとき、リストの要素数を指定
+	/// </summary>
+	/// <param name="num"></param>
+	protected void PlaySoundChecker(int num)
+	{
+		if (audioSourcesList[num].isPlaying)　isPlaySound = true;
+		else　isPlaySound = false;
+	}
+
 
 	/// <summary>
 	/// 音が鳴ってるかフラグの取得
 	/// </summary>
 	/// <returns></returns>
-	public bool GetisPlaySound()
-	{
-		return isPlaySound;
-	}
-
+	public bool GetisPlaySound() { return isPlaySound; }
 
 
 	/// <summary>
@@ -156,12 +162,16 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 	/// </summary>
 	protected virtual void Pause()
 	{
-		audioSource.Pause();
-
+		/*
+		  全てのオーディオソースを止める
+		 */
+		for(int i = 0; i < audioSourcesList.Count; i++){
+			audioSourcesList[i].Pause();
+		}
 
 		pauseVelocity = rb.velocity;
 		pauseAngleVelocity = rb.angularVelocity;
-		rb.isKinematic = true;
+		//rb.isKinematic = true;
 	}
 
 	/// <summary>
@@ -169,19 +179,24 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 	/// </summary>
 	protected virtual void Resumed()
 	{
-		//audioSource.Play();		←これのせいでポーズ解除後音が一回なるのでは？？
-		//							 コメントアウト(2023.05.12吉原)
+		/*
+		  全てのオーディオソースを対象
+		 */
+		for (int i = 0; i < audioSourcesList.Count; i++){
+			audioSourcesList[i].UnPause();
+		}
+
 		// 物理挙動開始
 		rb.velocity = pauseVelocity;
 		rb.angularVelocity = pauseAngleVelocity;
-		rb.isKinematic = false;
+		//rb.isKinematic = false;
 	}
 
 
 	// ===================== インターフェースメソッド =========================
 	public void PlayHit()
 	{
-		SoundManager.Play(audioSource, SoundManager.ESE.OBJECT_HIT);
+		SoundManager.Play(audioSourcesList[0], SoundManager.ESE.OBJECT_HIT);
 	}
 
 	public void PlayHit(AudioSource audioSource, SoundManager.ESE soundNumber)
@@ -191,7 +206,7 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 
 	public void PlayDrop()
 	{
-		SoundManager.Play(audioSource, SoundManager.ESE.OBJECT_DROP);
+		SoundManager.Play(audioSourcesList[0], SoundManager.ESE.OBJECT_DROP);
 	}
 
 	public void PlayDrop(AudioSource audioSource, SoundManager.ESE soundNumber)

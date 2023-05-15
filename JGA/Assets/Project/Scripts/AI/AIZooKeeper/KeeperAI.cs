@@ -50,7 +50,7 @@ public class KeeperAI : MonoBehaviour
     private bool soundObjFlg = false;   // 音がなったオブジェクトがあるか
     private bool bResetPos = false;
 
-    private BaseObj soundObj;
+    private Radio soundObj;
     private Vector3 soundStartPos;
     private Quaternion soundStartDir;
     private bool radioResetFlg = true;
@@ -96,7 +96,7 @@ public class KeeperAI : MonoBehaviour
         if (audioSource == null) audioSource = this.GetComponent<AudioSource>();
         if (rb == null) rb = this.GetComponent<Rigidbody>();
         if (player == null) player = GameObject.FindWithTag("Player").GetComponent<Player>();
-        if (soundObj == null) soundObj = GameObject.Find("Radio_002").GetComponent<BaseObj>();
+        if (soundObj == null) soundObj = GameObject.Find("Radio_002").GetComponent<Radio>();
         if (parentObj == null) parentObj = soundObj.gameObject.transform.root.gameObject; // 親オブジェクト取得
         if (cube == null) Debug.LogWarning("cubeにNavmeshStopを入れてください。");
 
@@ -122,7 +122,7 @@ public class KeeperAI : MonoBehaviour
             return;
         }
 
-        Debug.Log("sound : " + soundObj.GetisPlaySound());
+        Debug.Log("sound : " + soundObj.GetPlayRadio());
         //Debug.Log("navMesh : " + navMesh.isStopped);
 
         if (moveFlg)
@@ -177,7 +177,7 @@ public class KeeperAI : MonoBehaviour
 
         #region ラジオ
         // 音がなってるか
-        if (other.gameObject == soundObj.gameObject && soundObj.GetisPlaySound())
+        if (other.gameObject == soundObj.gameObject && soundObj.GetPlayRadio())
         {
             RadioPos(); // ラジオが元の場所にあるか
             if (radioResetFlg) return;
@@ -538,7 +538,7 @@ public class KeeperAI : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
 
         // ラジオを戻す
-        soundObj.GetComponent<RadioObject>().StopRadio();
+        soundObj.GetComponent<Radio>().PlayRadioSound(false);
         soundObjFlg = false;
         gimmickFlg = true;
     }
