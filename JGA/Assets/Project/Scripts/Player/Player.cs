@@ -86,7 +86,7 @@ public class Player : MonoBehaviour
 	[SerializeField] private Outline	InteractOutline;		// 掴んでいるオブジェクト：アウトライン
 	[SerializeField] private HingeJoint	InteractJoint;			// 掴んでいるオブジェクト：HingeJoint
 	[SerializeField] private Transform	InteractPoint;			// 掴んでいるオブジェクト：HoldPoint
-	[SerializeField] private float		InteractBoundsSizeY;     // 掴んでいるオブジェクト：BoundsSize.y
+	[SerializeField] private float		InteractBoundsSizeY;	// 掴んでいるオブジェクト：BoundsSize.y
 
 	[SerializeField] private HashSet<Collider> WithinRange = new HashSet<Collider>();  // インタラクト範囲内にあるオブジェクトリスト
 
@@ -805,8 +805,7 @@ public class Player : MonoBehaviour
 				//InteractCollision.transform.localPosition = pos;
 				InteractCollision.transform.parent = holdPos.transform;
 				InteractCollision.transform.localPosition = Vector3.zero;
-				//InteractCollision.transform.rotation = transform.rotation;
-				InteractCollision.transform.rotation = Quaternion.identity;
+				InteractCollision.transform.rotation = transform.rotation;
 
 				if (InteractCollision.GetComponent<HingeJoint>() == null)
 				{
