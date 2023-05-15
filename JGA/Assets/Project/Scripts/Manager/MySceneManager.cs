@@ -112,7 +112,7 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 		//---エフェクト
 		Effect.effectDatas = AddressableLoader<EffectData>.Load("EffectData");
 		//---音量
-		Volume.GameVolumeDatas = AddressableLoader<GameVolume>.Load("EffectData");
+		Volume.GameVolumeDatas = AddressableLoader<GameVolume>.Load("GameVolume");
 		//---データ
 		GameData.zooKeeperData = AddressableLoader<ZooKeeperData>.Load("ZooKeeperData");
 		GameData.guestData = AddressableLoader<GuestData>.Load("GuestData");

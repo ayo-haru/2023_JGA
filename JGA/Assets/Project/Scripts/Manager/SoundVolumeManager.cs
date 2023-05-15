@@ -17,13 +17,35 @@ using UnityEngine.SceneManagement;
 
 public class SoundVolumeManager : MonoBehaviour
 {
-	private void Awake()
+	public static GameVolume.Volume GetVolume()
 	{
-		//SceneManager.activeSceneChanged += ActiveSceneChanged;
+		return MySceneManager.Volume.GameVolumeDatas.volume;
 	}
 
-	public void GetVolume()
+	public static float GetBGM()
 	{
-		//MySceneManager.Volume.GameVolumeDatas;
+		return MySceneManager.Volume.GameVolumeDatas.volume.fBGM;
 	}
+
+	public static float GetSE()
+	{
+		return MySceneManager.Volume.GameVolumeDatas.volume.fSE;
+	}
+
+
+	public static void SetVolume(GameVolume.Volume vol)
+	{
+		MySceneManager.Volume.GameVolumeDatas.volume = vol;
+	}
+
+	public static void SetBGM(float vol)
+	{
+		MySceneManager.Volume.GameVolumeDatas.volume.fBGM = vol;
+	}
+
+	public static void SetSE(float vol)
+	{
+		MySceneManager.Volume.GameVolumeDatas.volume.fSE = vol;
+	}
+
 }
