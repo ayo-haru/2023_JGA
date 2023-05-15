@@ -17,12 +17,13 @@ public class FreezeObject : MonoBehaviour
 {
     private Player player;
     [SerializeField] private float shaketime = 0.3f;    // 揺れる時間
-    [SerializeField] private float shakepower = 0.1f;   // 揺れの強さ
+    [SerializeField] private float shakepower = 0.2f;   // 揺れの強さ
     [SerializeField] private int   shakevibrato = 100;  // 揺れの数
     [SerializeField] private float shakerandom = 100;   // 揺れのランダム度合い
     private Tweener shakeTweener;
     private Vector3 InitPosition;
     private bool IsShake;
+    private float delaytime;
 
     /// <summary>
     /// 最初のフレーム更新の前に呼び出される
@@ -31,6 +32,7 @@ public class FreezeObject : MonoBehaviour
 	{
 		player = GameObject.FindWithTag("Player").GetComponent<Player>();
         InitPosition = transform.position;
+        delaytime = 0.2f;
     }
 
     /// <summary>
@@ -50,9 +52,9 @@ public class FreezeObject : MonoBehaviour
         if(other.gameObject.tag == "Player")
         {
             // はたかれたら揺らす
-            if (Input.GetKeyDown(KeyCode.Mouse0))
+            if (player.IsHitMotion)
             {
-                StartShake();
+                Invoke(nameof(StartShake), delaytime);
             }
         }
     }

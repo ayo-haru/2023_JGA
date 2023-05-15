@@ -242,7 +242,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shaketime: 0.3
-  shakepower: 0.1
+  shakepower: 0.2
   shakevibrato: 100
   shakerandom: 100
 --- !u!208 &4430605567365581079
