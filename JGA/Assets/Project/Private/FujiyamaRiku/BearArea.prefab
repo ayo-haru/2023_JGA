@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7328972194066109962}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 158.03706, y: 10.6, z: 136.55542}
+  m_LocalPosition: {x: 162.33, y: 2.42, z: 118.87}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -99,7 +99,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fishFlg: 0
   fishObj: {fileID: 0}
-  feedArea: {fileID: 0}
   roomPos: {fileID: 0}
 --- !u!135 &5449660437974293666
 SphereCollider:
@@ -112,5 +111,5 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.6809235
-  m_Center: {x: -0.0055236816, y: 0, z: 0}
+  m_Radius: 6.546028
+  m_Center: {x: -0.7747879, y: 2.610794, z: -1.1515656}
