@@ -21,14 +21,13 @@ public class StateAttention : AIState
 {
     //プレイヤー位置
     private Transform target;
-    //回転速度
-    [SerializeField,Min(1)] private float rotSpeed = 2.0f;
     //感情UI
     [SerializeField] private EmosionUI ui;
     //ナビメッシュエージェント
     private NavMeshAgent agent;
     //アニメーター
-    private Animator animator;
+    //private Animator animator;
+    private GuestAnimation guestAnimation;
 #if false
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -67,26 +66,26 @@ public class StateAttention : AIState
         //コンポーネント取得
         if(!agent)agent = GetComponent<NavMeshAgent>();
         if (!target) target = GameObject.FindWithTag("Player").GetComponent<Transform>();
-        if(!animator) animator = gameObject.transform.GetChild(0).GetComponent<Animator>();
+        //if(!animator) animator = gameObject.transform.GetChild(0).GetComponent<Animator>();
+        if (!guestAnimation) guestAnimation = GetComponent<GuestAnimation>();
 
         //エラーチェック
         if (!ErrorCheck()) return;
 
         agent.speed = 0.0f;
         ui.SetEmotion(EEmotion.QUESTION);
-        animator.SetBool("isWalk", false);
-        animator.SetTrigger("surprised");
+        guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.IDLE);
+        guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.SURPRISED);
+        guestAnimation.SetLookAt(target);
+        //animator.SetBool("isWalk", false);
+       // animator.SetTrigger("surprised");
     }
 
     public override void UpdateState()
     {
+        //特になし
         //エラーチェック
-        if (!ErrorCheck()) return;
-
-        //プレイヤーの方向を向く
-        Quaternion rot = Quaternion.LookRotation(target.position - transform.position);
-        transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * rotSpeed);
-
+        //if (!ErrorCheck()) return;
     }
 
     public override void FinState()
@@ -99,8 +98,9 @@ public class StateAttention : AIState
         if (!target)Debug.LogError("プレイヤーのトランスフォームが取得されていません");
         if (!ui)Debug.LogError("感情UIが設定されていません");
         if (!agent)Debug.LogError("ナビメッシュエージェントが取得されていません");
-        if (!animator)Debug.LogError("アニメータが取得されていません");
-
-        return target && ui && agent && animator;
+        //if (!animator)Debug.LogError("アニメータが取得されていません");
+        if (!guestAnimation) Debug.LogError("アニメーション制御用のスクリプトが取得されていません");
+        // return target && ui && agent && animator;
+        return target && ui && agent && guestAnimation;
     }
 }

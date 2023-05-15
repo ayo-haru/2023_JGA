@@ -840,6 +840,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 2485077286735717274}
+  minAnimSpeed: 0.5
+  maxAnimSpeed: 1
+  maxAgentSpeed: 5
+  neckTransform: {fileID: 4039627293379506043}
 --- !u!1 &2785671255237599744
 GameObject:
   m_ObjectHideFlags: 0

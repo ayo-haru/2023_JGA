@@ -21,7 +21,8 @@ public class StateGimmickAnimal : AIState
     //ペンギン用スクリプト
     private Player player;
     //animator
-    private Animator animator;
+    //private Animator animator;
+    private GuestAnimation guestAnimation;
     //感情ui
     [SerializeField] private EmosionUI ui;
     //ナビメッシュエージェント
@@ -67,7 +68,8 @@ public class StateGimmickAnimal : AIState
     {
         //コンポーネント取得
         if (!agent) agent = GetComponent<NavMeshAgent>();
-        if(!animator) animator = gameObject.transform.GetChild(0).GetComponent<Animator>();
+        //if(!animator) animator = gameObject.transform.GetChild(0).GetComponent<Animator>();
+        if (!guestAnimation) guestAnimation = GetComponent<GuestAnimation>();
         if (!player) player = GameObject.FindWithTag("Player").GetComponent<Player>();
         if (data == null) data = GetComponent<AIManager>().GetGuestData();
 
@@ -81,7 +83,9 @@ public class StateGimmickAnimal : AIState
         //感情UIの設定
         ui.SetEmotion(EEmotion.HIGH_TENSION);
         //アニメーションの設定
-        animator.SetBool("isWalk", true);
+        //animator.SetBool("isWalk", true);
+        guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.WALK);
+        guestAnimation.SetLookAt(null);
         //ナビメッシュエージェントの設定
         agent.speed = (player) ? player.MaxAppealSpeed * data.followSpeed * data.inBoothSpeed : data.speed;
         agent.stoppingDistance = Random.Range(1, data.cageDistance);
@@ -93,7 +97,8 @@ public class StateGimmickAnimal : AIState
         if (agent.pathPending) return;//経路計算中
 
         //速度に応じてアニメーションを切り替え
-        animator.SetBool("isWalk", agent.velocity.magnitude > 0.0f);
+        //animator.SetBool("isWalk", agent.velocity.magnitude > 0.0f);
+        guestAnimation.SetAnimation((agent.velocity.magnitude > 0.0f) ? GuestAnimation.EGuestAnimState.WALK : GuestAnimation.EGuestAnimState.IDLE);
 
         if (agent.remainingDistance > agent.stoppingDistance) return;   //目的地にまだついてない
 
@@ -111,11 +116,13 @@ public class StateGimmickAnimal : AIState
     {
         if (!ui) Debug.LogError("感情UIが設定されていません");
         if (!agent) Debug.LogError("ナビメッシュエージェントが取得されていません");
-        if (!animator) Debug.LogError("アニメーターが取得されていません");
+        //if (!animator) Debug.LogError("アニメーターが取得されていません");
+        if (!guestAnimation) Debug.LogError("アニメーション制御用のスクリプトが取得されていません");
         if (data == null) Debug.LogError("お客さん用のデータが取得されていません");
         if (!player) Debug.LogError("プレイヤー用スクリプトが取得されていません");
 
-        return ui && agent && animator && (data != null) && player;
+        //return ui && agent && animator && (data != null) && player;
+        return ui && agent && guestAnimation && (data != null) && player;
     }
 
     private bool GetAnimal()
