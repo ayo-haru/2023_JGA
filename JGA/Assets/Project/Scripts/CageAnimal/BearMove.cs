@@ -215,11 +215,7 @@ public class BearMove : MonoBehaviour
     private void Gimmick()
     {
         var fishNum = bearArea.fishNum;
-        if(fishNum == -1)
-        {
-            moveFlg = false;
-            return;
-        }
+
         if(fishTyep == FISHTYPE.FISH_TURN)
         {
             if (!fishHaveFlg)
@@ -303,7 +299,6 @@ public class BearMove : MonoBehaviour
     private void MoveEnter()
     {
         moveFlg = true;
-
         
         if (turnFlg == true)
         {
@@ -315,7 +310,7 @@ public class BearMove : MonoBehaviour
             currentMoveType = (MoveType)Random.Range((int)MoveType.IDLE, (int)MoveType.TURN + 1);
         }
 
-        if (bearArea.fishFlg)
+        if (bearArea.dropFlg)
         {
             if (moveType == MoveType.WALK)
             {
@@ -349,7 +344,7 @@ public class BearMove : MonoBehaviour
         }
         if (currentMoveType == MoveType.TURN)
         {
-            if (!bearArea.fishFlg)
+            if (!bearArea.dropFlg)
             {
                 //終了地点がなるべくかぶらないようにするため違う場所になるまで回す。
                 if (currentMoveIndex < BoothAnimalManager.Instance.bearData.rangeButtom)
@@ -376,7 +371,7 @@ public class BearMove : MonoBehaviour
                 }
             }
 
-            if(bearArea.fishFlg)
+            if(bearArea.dropFlg)
             {
                 if (currentMoveIndex <= BoothAnimalManager.Instance.bearData.rangeButtom)
                 {

@@ -16,12 +16,16 @@ using UnityEngine;
 public class BearArea : MonoBehaviour
 {
     public int fishNum;
-    public bool fishFlg;
+    private bool fishFlg;
+    public bool dropFlg;
+    private int count;
     public GameObject[] fishObj;
     public GameObject roomPos;
+    private Player player;
 
     protected virtual void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         fishNum = -1;
         var fish = GameObject.Find("Fish");
         fishObj = new GameObject[fish.transform.childCount];
@@ -34,26 +38,43 @@ public class BearArea : MonoBehaviour
         roomPos = GameObject.Find("BearRoomPos");
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.name.Contains("Fish"))
+        {
+            fishFlg = true;
+            count++;
+        }
+    }
+
     private void OnTriggerStay(Collider other)
     {
-        if(other.name.Contains("Fish") && !fishFlg)
+        if(other.name.Contains("Fish") && fishFlg)
 		{
-            for(int i = 0;i < fishObj.Length;i++)
+            if(!player.IsHold)
             {
-                if (other.gameObject == fishObj[i])
+                for(int i = 0; i < fishObj.Length;i++)
                 {
-                    fishNum = i;
+                    if(other.name == fishObj[i].name)
+                    {
+                        Destroy(fishObj[i].GetComponent<FishObject>());
+                        dropFlg = true;
+                        fishNum = i;
+                    }
                 }
             }
-			fishFlg = true;
         }
     }
     private void OnTriggerExit(Collider other)
     {
         if (other.name.Contains("Fish"))
         {
-            fishNum = -1;
-            fishFlg = false;
+            count--;
+            if(count <= 0)
+            {
+                fishFlg = false;
+            }
+
         }
     }
 }
