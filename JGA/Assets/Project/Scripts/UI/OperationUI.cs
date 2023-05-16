@@ -111,7 +111,8 @@ public class OperationUI : MonoBehaviour {
     /// <returns></returns>
     IEnumerator DelayStartFadeIn() {
         yield return new WaitForSeconds(fadeInTime);
-
-        state = FadeState.FADE_IN;
+        if (NowPlayerMove == false) {   // コルーチンで待機中の間に移動した場合は表示させない
+            state = FadeState.FADE_IN;
+        }
     }
 }
