@@ -15,35 +15,24 @@ using UnityEngine;
 public class GimmickObj : MonoBehaviour
 {
     public List<GameObject> gimmickList;    // ギミックオブジェクトリスト
-    public List<Transform> resetPos;        // ギミックオブジェクト初期位置
+    public List<Vector3> resetPos;        // ギミックオブジェクト初期位置
     public List<bool> bReset;               // 元の位置にあるかフラグ
     private int x1;
     private int z1;
     private int x2;
     private int z2;
+    private Vector3 pos;
 
-    /// <summary>
-    /// 最初のフレーム更新の前に呼び出される
-    /// </summary>
-    void Start()
-	{
+    void Awake()
+    {
         if (gimmickList.Count >= 1)
         {
-            // 元の位置にあるかフラグ
+            // 初期位置取得
             for (int i = 0; i < gimmickList.Count; i++)
             {
-                x1 = Mathf.FloorToInt(gimmickList[i].transform.position.x);
-                z1 = Mathf.FloorToInt(gimmickList[i].transform.position.z);
-                x2 = Mathf.FloorToInt(resetPos[i].transform.position.x);
-                z2 = Mathf.FloorToInt(resetPos[i].transform.position.z);
-                if (x1 != x2 || z1 != z2)
-                {
-                    bReset.Add(false);  // 元の位置にない
-                }
-                else
-                {
-                    bReset.Add(true);   // 元の位置にある
-                }
+                pos = gimmickList[i].transform.position;
+                resetPos.Add(pos);
+                bReset.Add(true);
             }
         }
         else
@@ -52,11 +41,18 @@ public class GimmickObj : MonoBehaviour
         }
     }
 
-	/// <summary>
-	/// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
-	/// </summary>
-	void FixedUpdate()
-	{
+    /// <summary>
+    /// 最初のフレーム更新の前に呼び出される
+    /// </summary>
+    void Start()
+    {
+    }
+
+    /// <summary>
+    /// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
+    /// </summary>
+    void FixedUpdate()
+    {
         if (gimmickList.Count >= 1)
         {
             // オブジェクトが元の位置にあるか
@@ -64,8 +60,8 @@ public class GimmickObj : MonoBehaviour
             {
                 x1 = Mathf.FloorToInt(gimmickList[i].transform.position.x);
                 z1 = Mathf.FloorToInt(gimmickList[i].transform.position.z);
-                x2 = Mathf.FloorToInt(resetPos[i].transform.position.x);
-                z2 = Mathf.FloorToInt(resetPos[i].transform.position.z);
+                x2 = Mathf.FloorToInt(resetPos[i].x);
+                z2 = Mathf.FloorToInt(resetPos[i].z);
                 if (x1 != x2 || z1 != z2)
                 {
                     bReset[i] = false;
