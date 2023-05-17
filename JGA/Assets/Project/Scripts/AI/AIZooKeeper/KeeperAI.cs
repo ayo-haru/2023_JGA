@@ -129,8 +129,8 @@ public class KeeperAI : MonoBehaviour
         if (moveFlg)
         {
             Move();
-            if (navMesh.hasPath) Move2();   // Pathがあったら処理をする
-            //Dir();
+            //if (navMesh.hasPath) Move2();   // Pathがあったら処理をする
+            Dir();
             AnimPlay();
         }
         if (!chaseNow) Distance();
@@ -302,8 +302,8 @@ public class KeeperAI : MonoBehaviour
     {
         if (chaseNow)
         {
-            navMesh.SetDestination(player.transform.position);
-            //transform.position += transform.forward * navMesh.speed * Time.deltaTime;
+            //navMesh.SetDestination(player.transform.position);
+            transform.position += transform.forward * navMesh.speed * Time.deltaTime;
         }
         else
         {
