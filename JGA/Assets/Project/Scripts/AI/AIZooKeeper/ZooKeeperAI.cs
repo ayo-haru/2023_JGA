@@ -226,7 +226,7 @@ public class ZooKeeperAI : MonoBehaviour
             else
             {
                 // 範囲外か隠れたか
-                if (!chaseNow || RayHit(pos) == 3)
+                if (chaseNow && RayHit(pos) == 3)
                 {
                     // コルーチン開始
                     StartCoroutine("HidePenguin");
@@ -571,8 +571,8 @@ public class ZooKeeperAI : MonoBehaviour
         yield return new WaitForSeconds(2.0f);
 
         animator.SetBool("isWalk", true);
-        destinationPos = gimmickObj.resetPos[gimmickNum].transform.position;
-        navMesh.SetDestination(gimmickObj.resetPos[gimmickNum].transform.position);
+        destinationPos = gimmickObj.resetPos[gimmickNum];
+        navMesh.SetDestination(gimmickObj.resetPos[gimmickNum]);
         // 動く
         NavMeshMove();
         // エフェクト削除
@@ -661,7 +661,7 @@ public class ZooKeeperAI : MonoBehaviour
             gimmickObj.gimmickList[gimmickNum].transform.parent = parentObj.transform;
             if (!chaseNow)
             {
-                gimmickObj.gimmickList[gimmickNum].transform.position = gimmickObj.resetPos[gimmickNum].transform.position;
+                gimmickObj.gimmickList[gimmickNum].transform.position = gimmickObj.resetPos[gimmickNum];
             }
         }
     }

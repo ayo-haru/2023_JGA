@@ -108,6 +108,7 @@ public class KeeperAI : MonoBehaviour
 
         // 位置更新を手動で行う
         navMesh.updatePosition = false;
+        navMesh.updateRotation = false;
         // NavMeshストップ
         NavMeshStop();
     }
@@ -122,8 +123,7 @@ public class KeeperAI : MonoBehaviour
             return;
         }
 
-        Debug.Log("sound : " + soundObj.GetPlayRadio());
-        //Debug.Log("navMesh : " + navMesh.isStopped);
+        //Debug.Log("sound : " + soundObj.GetPlayRadio());
 
         if (moveFlg)
         {
@@ -369,11 +369,8 @@ public class KeeperAI : MonoBehaviour
             {
                 if (dirFlg) dirFlg = false;
             }
-            //if(angle < 50.0f)
-            {
-                if (!navMesh.isStopped) Move();
-            }
             if (navMesh.isStopped) return;
+            Move();
             if (chaseNow)
                 navMesh.SetDestination(player.transform.position);
             else
@@ -434,7 +431,7 @@ public class KeeperAI : MonoBehaviour
             chaseNow = true;
         }
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1.5f);
 
         // エフェクト削除
         if (exclamationEffect) Destroy(exclamationEffect);
