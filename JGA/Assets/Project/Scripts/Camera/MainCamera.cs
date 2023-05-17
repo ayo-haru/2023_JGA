@@ -22,6 +22,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UniRx;
+using System.Linq;
 
 public class MainCamera : MonoBehaviour
 {
@@ -32,6 +33,7 @@ public class MainCamera : MonoBehaviour
         IN,
         OUT,
         GUESTOUT,
+        KEEPEROUT,
     }
     //ズームの状況
     ZOOM zoom = ZOOM.DEFAULT;
@@ -56,13 +58,17 @@ public class MainCamera : MonoBehaviour
 
     //客の情報取得用
     GameObject[] guestObj;
-    
+    GameObject[] zooKeeperObj;
 
     //カメラの範囲取得用
     //映っているものの範囲
     Bounds[] boundGuest;
+    Bounds[] boundKeeper;
     //カメラの範囲
     Plane[] planes;
+
+    private Vector3 keeperMiddle;
+    private bool keeperFlg;
 
     //イージング実行中の現在の割合
     private float easingRate;
@@ -132,18 +138,12 @@ public class MainCamera : MonoBehaviour
         cameraObj = GameObject.Find("CameraParent").GetComponent<CameraManager>();
         //初期化としてカメラの情報を格納
         maincamera = cameraObj.GetTransformObject();
+
 		cameraParent = cameraObj.GetTransformObject(true);
 		cameraChild = cameraObj.GetTransformObject(false);
 
-        //客の情報を格納する
-        guestObj = GameObject.FindGameObjectsWithTag("Guest");
 
-        //客の範囲取得
-        boundGuest = new Bounds[guestObj.Length];
-        for(int i = 0;i < guestObj.Length; i++) 
-        {
-            Debug.Log(boundGuest[i].size);
-        }
+
         //カメラの範囲取得
         planes = GeometryUtility.CalculateFrustumPlanes(maincamera);
 
@@ -163,6 +163,14 @@ public class MainCamera : MonoBehaviour
 	/// 最初のフレーム更新の前に呼び出される
 	/// </summary>
 	void Start() {
+
+        //客の情報を格納する
+        guestObj = GameObject.FindGameObjectsWithTag("Guest");
+        //客の範囲取得
+        boundGuest = new Bounds[guestObj.Length];
+
+        zooKeeperObj = GameObject.FindGameObjectsWithTag("ZooKeeper");
+        boundKeeper = new Bounds[zooKeeperObj.Length];
 
         // 注視点座標をプレイヤーの座標に
         //playerobj = GameObject.Find("LookPos");
@@ -197,15 +205,23 @@ public class MainCamera : MonoBehaviour
         
         if (scriptStop >= 1.0f)
         {
+            if (guestObj.Length < guestObj.Length + MySceneManager.GameData.randomGuestCnt)
+            {
+                //客の情報を格納する
+                guestObj = GameObject.FindGameObjectsWithTag("Guest");
+                //客の範囲取得
+                boundGuest = new Bounds[guestObj.Length];
+            }
             GuestCount();
             if (currentGuestValue >= guestValue)
             {
                 currentZoom = ZOOM.GUESTOUT;
                 zoomFlg = true;
             }
+            
             scriptStop = 0.0f;
         }
-
+        KeeperCount();
         CameraMove();
         if (zoomFlg)
         {
@@ -219,6 +235,8 @@ public class MainCamera : MonoBehaviour
 	/// </summary>
 	void Update()
 	{
+        
+
         if (pauseFlg && !MySceneManager.GameData.isCatchPenguin)
         {
             return;
@@ -238,11 +256,20 @@ public class MainCamera : MonoBehaviour
          {
              return;
          }
-
+        if (keeperFlg)
+        {
+            cameraParent.position = Vector3.Lerp(
+            a: cameraParent.position,
+            b: keeperMiddle,
+            t: Time.deltaTime * smoothMove);
+        }
+        else
+        {
             cameraParent.position = Vector3.Lerp(
             a: cameraParent.position,
             b: targetObject.transform.localPosition,
             t: Time.deltaTime * smoothMove);
+        }
 
     }
     //ズームインのボタンが押されたときに実行する関数
@@ -337,6 +364,7 @@ public class MainCamera : MonoBehaviour
                 zoom = ZOOM.GUESTOUT;
                 break;
 
+                    break;
             case ZOOM.DEFAULT:
                 if (zoom == ZOOM.IN)
                 {
@@ -407,10 +435,58 @@ public class MainCamera : MonoBehaviour
                 nowGuestCount++;
             }
         }
-        Debug.Log(nowGuestCount);
         currentGuestValue = nowGuestCount;
     }
    
+    private void KeeperCount()
+    {
+        keeperFlg = false;
+        
+        //移動先の座標取得
+        for (int i = 0; i < zooKeeperObj.Length; i++)
+        {
+            boundKeeper[i].center = zooKeeperObj[i].transform.position;
+            boundKeeper[i].size *= 0.2f;
+        }
+        planes = GeometryUtility.CalculateFrustumPlanes(maincamera);
+
+        var distance = new float[zooKeeperObj.Length];
+        //一つ一つ判定数を計算する
+        for (int i = 0; i < zooKeeperObj.Length; i++)
+        {
+            distance[i] = 9999.0f;
+            bool isRendered = GeometryUtility.TestPlanesAABB(planes, boundKeeper[i]);
+            if (isRendered)
+            {
+                distance[i] = (Vector3.Distance(targetObject.transform.position, zooKeeperObj[i].transform.position));
+                keeperFlg = true;
+            }
+        }
+        var min = Mathf.Min(distance);
+        if (min >= 25)
+        {
+            keeperFlg = false;
+        }
+        if (keeperFlg == true)
+        {
+            for (int i = 0; i < distance.Length; i++)
+            {
+                
+                Debug.Log(min);
+                
+                if (min == distance[i])
+                {
+                    keeperMiddle = Vector3.Lerp(targetObject.transform.localPosition, zooKeeperObj[i].transform.localPosition, 0.5f);
+                }
+            }
+        }
+        else
+        {
+            keeperMiddle = new Vector3();
+        }
+    }
+
+
     private void Pause()
     {
         pauseFlg = true;
