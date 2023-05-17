@@ -1,0 +1,207 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Fx_Dust
+  m_Shader: {fileID: -6465566751694194690, guid: 777112d5e6b9af343a04c57a58e10911,
+    type: 3}
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - BackTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - DiddolveMaskTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - DissolveTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - DistortionTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - FresnelNoiseTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Main_Texture:
+        m_Texture: {fileID: 2800000, guid: 15fb25ea2f91b2c4a980af642f045027, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - MaskTetxture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - SubMaskTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BaseMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SpecGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - BackGlow: 1
+    - Boolean_47265ba418994d3d92df5950c041a4a9: 0
+    - Boolean_e18679bc61bd4c0fa29e3cf35ef88f11: 0
+    - Boolean_eecc2a88aa50473885a64c91cb6816db: 0
+    - Boolean_fe9b21f5dab047ab8d14adf2acbae893: 0
+    - Dissolve: 0
+    - DissolveMask: 0
+    - DissolvePosition: 0
+    - DissolveRange: 1
+    - DissolveScroll: 0
+    - DissolveSpread: 0
+    - DissolveSpreadSpace: 0.05
+    - Distortion: 0
+    - DistortionScroll: 1
+    - DoubleSidedTexture: 0
+    - Fresnel: 0
+    - FresnelGlow: 1
+    - FresnelNoise: 0
+    - FresnelNoiseGlow: 1
+    - FresnelNoiseUVscroll: 0
+    - FresnelStrength: 1
+    - Glow: 2
+    - LinkBackAlpha: 0
+    - MainTextuerUseColor: 0
+    - Mask: 0
+    - MaskScroll: 0
+    - SingleBackColor: 0
+    - SubMask: 0
+    - UVscroll: 0
+    - Vector1_df104a5d30e74007b127a91183a08b64: 0
+    - Vector1_e6c55f22a15046b5a8ac395ce2e6a81b: 0
+    - _AlphaClip: 0
+    - _Blend: 0
+    - _BumpScale: 1
+    - _ClearCoatMask: 0
+    - _ClearCoatSmoothness: 0
+    - _Cull: 2
+    - _Cutoff: 0.5
+    - _DetailAlbedoMapScale: 1
+    - _DetailNormalMapScale: 1
+    - _DstBlend: 0
+    - _EnvironmentReflections: 1
+    - _GlossMapScale: 0
+    - _Glossiness: 0
+    - _GlossyReflections: 0
+    - _Metallic: 0
+    - _OcclusionStrength: 1
+    - _Parallax: 0.005
+    - _QueueControl: 0
+    - _QueueOffset: 0
+    - _ReceiveShadows: 1
+    - _Smoothness: 0.5
+    - _SmoothnessTextureChannel: 0
+    - _SpecularHighlights: 1
+    - _SrcBlend: 1
+    - _Surface: 0
+    - _WorkflowMode: 1
+    - _ZWrite: 1
+    m_Colors:
+    - BackColor: {r: 1, g: 1, b: 1, a: 1}
+    - DissolveScrollSpeed: {r: 0, g: 0, b: 0, a: 0}
+    - DissolveSpreadColor: {r: 0.6117647, g: 1.160784, b: 3.105882, a: 0}
+    - DistortionPower: {r: 0.5, g: 0.5, b: 0, a: 0}
+    - DistortionScrollSpeed: {r: 0, g: 0, b: 0, a: 0}
+    - FresnelColor: {r: 1, g: 1, b: 1, a: 1}
+    - FresnelNoiseUVscrollSpeed: {r: 0, g: 0, b: 0, a: 0}
+    - MainTextuerUVscrollSpeed: {r: 0, g: 0, b: 0, a: 0}
+    - MaskScrollSpeed: {r: 0, g: 0, b: 0, a: 0}
+    - TilingXYOffsetZW_Back: {r: 1, g: 1, b: 0, a: 0}
+    - TilingXYOffsetZW_Disortion: {r: 1, g: 1, b: 0, a: 0}
+    - TilingXYOffsetZW_DissolveMask: {r: 1, g: 1, b: 0, a: 0}
+    - TilingXYOffsetZW_Fresnel: {r: 1, g: 1, b: 0, a: 0}
+    - TilingXYOffsetZW_Mask: {r: 1, g: 1, b: 0, a: 0}
+    - TilingXYOffsetZW_SubMask: {r: 1, g: 1, b: 0, a: 0}
+    - TilingXYOffset_ZW_Dissolve: {r: 1, g: 1, b: 0, a: 0}
+    - TilingXYOffsrtZW_Main: {r: 1, g: 1, b: 0, a: 0}
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+  m_BuildTextureStacks: []
+--- !u!114 &8359232787126302774
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5

@@ -12,6 +12,7 @@ TagManager:
   - ZooKeeper
   - Target
   - HideObj
+  - CollectPoint
   layers:
   - Default
   - TransparentFX
