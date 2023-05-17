@@ -22,6 +22,7 @@ public enum EAIState
     GUEST_STAY_PENGUIN_AREA,        //客　ペンギンブースに着いた
     GUEST_STOP_FOLLOW,              //客　追従やめる
     GUEST_STAY_ANIMAL_GIMICK,       //客　動物用ギミック
+    GUEST_SIT_DOWN,                 //客　座ってる
     MAX_AI_STATE,
 }
 /// <summary>
