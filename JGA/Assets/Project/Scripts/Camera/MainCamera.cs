@@ -91,16 +91,6 @@ public class MainCamera : MonoBehaviour
     [Header("遅延の数値(0に近いほど遅延がデカい。基本は1)")]
     [SerializeField] private float smoothMove = 1.0f;
 
-    //画面端の座標格納用
-    [Header("フィールド左端")]
-    [SerializeField] private Transform fieldLeftEdge = null;
-    [Header("フィールド右端")]
-    [SerializeField] private Transform fieldRightEdge = null;
-    [Header("フィールド上端")]
-    [SerializeField] private Transform fieldUpEdge = null;
-    [Header("フィールド下端")]
-    [SerializeField] private Transform fieldBottomEdge = null;
-
     //画面端から何メートルでカメラを止まるようにするか
     [Header("画面端何メートルでカメラを停止させるか")]
     [SerializeField] private float edgeDistance = 5.0f;
@@ -150,6 +140,10 @@ public class MainCamera : MonoBehaviour
 
         //客の範囲取得
         boundGuest = new Bounds[guestObj.Length];
+        for(int i = 0;i < guestObj.Length; i++) 
+        {
+            Debug.Log(boundGuest[i].size);
+        }
         //カメラの範囲取得
         planes = GeometryUtility.CalculateFrustumPlanes(maincamera);
 
@@ -240,59 +234,15 @@ public class MainCamera : MonoBehaviour
     /// </summary>
     private void CameraMove()
 	{
-        //if(fieldLeftEdge == null || fieldRightEdge == null || fieldUpEdge == null || fieldBottomEdge == null)
-        //{
-        //    return;
-        //}
         if(pauseFlg && !MySceneManager.GameData.isCatchPenguin)
          {
              return;
          }
-        //==============================================================
-        //端＋指定した距離にプレイヤーが入っていたらカメラを止める
-        //if (fieldLeftEdge.position.x + edgeDistance >= playerobj.transform.position.x ||
-        //    fieldRightEdge.position.x - edgeDistance <= playerobj.transform.position.x)
-        //{
-        //    if (fieldUpEdge.position.z - edgeDistance <= playerobj.transform.position.z ||
-        //    fieldBottomEdge.position.z + edgeDistance >= playerobj.transform.position.z)
-        //    {
-        //        return;
-        //    }
-        //        var z = Mathf.Lerp(
-        //            a: cameraParent.position.z,
-        //            b: playerobj.transform.position.z,
-        //            t: Time.deltaTime * smoothMove);
 
-        //    cameraParent.position = new Vector3(cameraParent.position.x, cameraParent.position.y, z);
-
-        //}
-        //if(fieldUpEdge.position.z - edgeDistance <= playerobj.transform.position.z ||
-        //     fieldBottomEdge.position.z + edgeDistance >= playerobj.transform.position.z)
-        //{
-        //    if (fieldLeftEdge.position.x + edgeDistance >= playerobj.transform.position.x ||
-        //    fieldRightEdge.position.x - edgeDistance <= playerobj.transform.position.x)
-        //    {
-        //        return;
-        //    }
-        //        var x = Mathf.Lerp(
-        //            a: cameraParent.position.x,
-        //            b: playerobj.transform.position.x,
-        //            t: Time.deltaTime * smoothMove);
-
-        //    cameraParent.position = new Vector3(x, cameraParent.position.y, cameraParent.position.z);
-        //}
-
-        //if(fieldLeftEdge.position.x + edgeDistance <= playerobj.transform.position.x &&
-        //    fieldRightEdge.position.x - edgeDistance >= playerobj.transform.position.x &&
-        //    fieldUpEdge.position.z - edgeDistance >= playerobj.transform.position.z &&
-        //    fieldBottomEdge.position.z + edgeDistance <= playerobj.transform.position.z)
-        //{
             cameraParent.position = Vector3.Lerp(
             a: cameraParent.position,
             b: targetObject.transform.localPosition,
             t: Time.deltaTime * smoothMove);
-        //}
-        //==============================================================
 
     }
     //ズームインのボタンが押されたときに実行する関数
@@ -439,7 +389,7 @@ public class MainCamera : MonoBehaviour
     public void GuestCount()
     {
         var nowGuestCount = 0;
-
+       
         //移動先の座標取得
         for (int i = 0; i < guestObj.Length; i++)
         {
@@ -457,6 +407,7 @@ public class MainCamera : MonoBehaviour
                 nowGuestCount++;
             }
         }
+        Debug.Log(nowGuestCount);
         currentGuestValue = nowGuestCount;
     }
    
