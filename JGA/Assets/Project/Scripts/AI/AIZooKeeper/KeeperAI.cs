@@ -39,6 +39,7 @@ public class KeeperAI : MonoBehaviour
     private GameObject questionEffect;      // ？エフェクト
     private Vector3 startPos;       // 初期位置
     private Quaternion startDir;    // 初期回転
+    private float rotateSpeed = 120;
 
     [SerializeField] private bool chaseNow = false;    // ペンギンを追いかけているフラグ
     private Player player;
@@ -127,6 +128,8 @@ public class KeeperAI : MonoBehaviour
 
         if (moveFlg)
         {
+            Move();
+            //if (navMesh.hasPath) Move2();   // Pathがあったら処理をする
             Dir();
             AnimPlay();
         }
@@ -299,6 +302,7 @@ public class KeeperAI : MonoBehaviour
     {
         if (chaseNow)
         {
+            //navMesh.SetDestination(player.transform.position);
             transform.position += transform.forward * navMesh.speed * Time.deltaTime;
         }
         else
@@ -308,6 +312,40 @@ public class KeeperAI : MonoBehaviour
         }
     }
     #endregion
+
+    private void Move2()
+    {
+        Vector3 nextPos;
+        if(navMesh.path.corners.Length > 2)
+        {
+            nextPos = navMesh.path.corners[1];
+        }
+        else
+        {
+            if (chaseNow) nextPos = player.transform.position;
+            else nextPos = destinationPos;
+        }
+        navMesh.transform.position = nextPos;
+        var diff = Diff(navMesh.path.corners[1], this.transform.position);
+        var dist = diff.magnitude;
+        var axisVec = Vector3.Cross(this.transform.forward, diff);
+        var axis = Mathf.Sign(axisVec.y);
+        var angle = Vector3.Angle(this.transform.forward, diff);
+        if (angle > rotateSpeed * Time.deltaTime)
+        {
+            this.transform.Rotate(Vector3.up * navMesh.speed * rotateSpeed * Time.deltaTime);
+        }
+        else
+        {
+            this.transform.Translate(Vector3.forward * navMesh.speed * Time.deltaTime);
+        }
+    }
+
+    Vector3 Diff(Vector3 a, Vector3 b)
+    {
+        Vector3 diff = new Vector3(a.x - b.x, 0, a.z - b.z);
+        return diff;
+    }
 
     #region アニメーション
     /// <summary>
@@ -641,6 +679,18 @@ public class KeeperAI : MonoBehaviour
             Quaternion.Euler(0f,
             -data.searchAngle, 0f) * transform.forward,
             data.searchAngle * 2.0f, data.searchDistance);
+
+        // NavMeshの経路描画
+        if (chaseNow)
+        {
+            Gizmos.color = Color.red;
+            Vector3 prepos = transform.position;
+            foreach (Vector3 pos in navMesh.path.corners)
+            {
+                Gizmos.DrawLine(prepos, pos);
+                prepos = pos;
+            }
+        }
     }
 #endif
 
