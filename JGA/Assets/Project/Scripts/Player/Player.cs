@@ -368,6 +368,9 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void Pause()
 	{
+		// inout actionを無効化
+		gameInputs.Disable();
+
 		// 物理
 		pauseVelocity = rb.velocity;
 		pauseAngularVelocity = rb.angularVelocity;
@@ -385,6 +388,9 @@ public class Player : MonoBehaviour
 
 	private void Resumed()
 	{
+		// Input Actionを有効化
+		gameInputs.Enable();
+
 		// 物理
 		rb.velocity = pauseVelocity;
 		rb.angularVelocity = pauseAngularVelocity;
