@@ -31,7 +31,7 @@ public class RebindUI : MonoBehaviour
 	// 現在のBindingのパスを表示するテキスト
 	[SerializeField] private Button _pathText;
 
-	private Button _resetButton;
+	[SerializeField] private Button _resetButton;
 
 	// リバインド中のマスク用オブジェクト
 	[SerializeField] private GameObject _mask;
