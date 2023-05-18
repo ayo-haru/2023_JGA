@@ -60,7 +60,6 @@ public class CardBoard : BaseObj
 			if(!isPlaySound && isPlay)
 			{
 				PlayDrop(audioSourcesList[0], SoundManager.ESE.CARDBOARDBOX_002);
-				Debug.Log("音なった");
 			}
 
 			// 段ボールの角度が正常か
