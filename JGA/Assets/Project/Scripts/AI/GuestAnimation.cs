@@ -25,17 +25,15 @@ public class GuestAnimation : MonoBehaviour
     [SerializeField,Range(0.0f,1.0f),Header("最大アニメーション速度")] private float maxAnimSpeed = 1.0f;
     [SerializeField,Header("ナビメッシュエージェントの最大速度")] private float maxAgentSpeed = 5.0f;
     [SerializeField, Header("首のTransform")] private Transform neckTransform;
-    //歩行フラグ
-    private bool bWalk = false;
     //アニメーションスピード
     private float animSpeed = 1.0f;
     //ナビメッシュエージェント
     private NavMeshAgent agent;
     //アニメーションステート
-    public enum EGuestAnimState { IDLE,WALK,SURPRISED,MAX_GUEST_ANIM_STATE,};
+    public enum EGuestAnimState { IDLE,WALK,SURPRISED,SIT_IDLE,STAND_UP,MAX_GUEST_ANIM_STATE,};
+    private EGuestAnimState state;
     private Transform lookAtTarget = null;
     private float fAnimTimer;
-
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
 	/// </summary>
@@ -46,7 +44,7 @@ public class GuestAnimation : MonoBehaviour
         PauseManager.OnResumed.Subscribe(x => { Resumed(); }).AddTo(gameObject);
 
         agent = GetComponent<NavMeshAgent>();
-        bWalk = animator.GetCurrentAnimatorStateInfo(0).IsName("Walk");
+        state = EGuestAnimState.IDLE;
     }
 #if false
     /// <summary>
@@ -66,25 +64,46 @@ public class GuestAnimation : MonoBehaviour
         if (PauseManager.isPaused) return;
         if (!animator || !agent) return;
 
+        //立ち上がった時に位置がNavmeshとモデルの位置がずれるため、補正する
+        if (!animator.applyRootMotion && animator.transform.localPosition != Vector3.zero)
+        {
+            animator.transform.localPosition = Vector3.MoveTowards(animator.transform.localPosition,Vector3.zero,0.01f);
+        }
 
+        //アニメーションが切り替わっているか
+        EGuestAnimState nowState = GetAnimationState();
+        if (nowState == state) return;
         //Walkから他のアニメーション又は他のアニメーションからWalkに切り替わったか？
-        bool nowWalk = GetAnimationState() == EGuestAnimState.WALK;
-        if (bWalk == nowWalk) return;
-
-        //切り替わっていた場合
-        bWalk = nowWalk;
-        if (!bWalk){
-            animator.speed = animSpeed = 1.0f;
-        }else{
+        if (nowState == EGuestAnimState.WALK)
+        {
             float fWork = agent.speed / maxAgentSpeed;
             animator.speed = animSpeed = (fWork < minAnimSpeed) ? minAnimSpeed : (fWork >= maxAnimSpeed) ? maxAnimSpeed : fWork;
+        }else if (state == EGuestAnimState.WALK)
+        {
+            animator.speed = animSpeed = 1.0f;
         }
+
+        //座った状態になったか？
+        if (nowState == EGuestAnimState.SIT_IDLE)
+        {
+            animator.applyRootMotion = true;
+        }
+        //立ち上がった状態になったか
+        if (nowState == EGuestAnimState.SURPRISED && state == EGuestAnimState.STAND_UP)
+        {
+            animator.applyRootMotion = false;
+        }
+
+        state = nowState;
     }
 
     private void LateUpdate()
     {
         if (PauseManager.isPaused) return;
         if (!neckTransform || !lookAtTarget) return;
+        //座っている又は立っている最中は回転しない
+        EGuestAnimState state = GetAnimationState();
+        if (state == EGuestAnimState.SIT_IDLE || state == EGuestAnimState.STAND_UP) return;
 
         //首をターゲットの方向に向ける
         if(fAnimTimer < 1.0f)fAnimTimer += Time.deltaTime;
@@ -124,7 +143,11 @@ public class GuestAnimation : MonoBehaviour
                 animator.SetBool("isWalk", true);
                 break;
             case EGuestAnimState.SURPRISED:
+            case EGuestAnimState.STAND_UP:          //立ち上がった後にびっくりするアニメーションを再生するため
                 animator.SetTrigger("surprised");
+                break;
+            case EGuestAnimState.SIT_IDLE:
+                animator.SetTrigger("sit");
                 break;
         }
     }
@@ -141,6 +164,8 @@ public class GuestAnimation : MonoBehaviour
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Walk")) return EGuestAnimState.WALK;
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Idle")) return EGuestAnimState.IDLE;
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Surprised")) return EGuestAnimState.SURPRISED;
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Sit")) return EGuestAnimState.SIT_IDLE;
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("StandUp")) return EGuestAnimState.STAND_UP;
 
         return EGuestAnimState.MAX_GUEST_ANIM_STATE;
     }
