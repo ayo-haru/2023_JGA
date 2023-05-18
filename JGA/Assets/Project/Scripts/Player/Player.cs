@@ -85,6 +85,7 @@ public class Player : MonoBehaviour
 	[SerializeField] private Collider	InteractCollision;		// 掴んでいるオブジェクト：コリジョン
 	[SerializeField] private Outline	InteractOutline;		// 掴んでいるオブジェクト：アウトライン
 	[SerializeField] private HingeJoint	InteractJoint;			// 掴んでいるオブジェクト：HingeJoint
+	[SerializeField] private Vector3	InteractJointAnchor;    // 掴んでいるオブジェクト：InteractJoint.anchor
 	[SerializeField] private Transform	InteractPoint;			// 掴んでいるオブジェクト：HoldPoint
 	[SerializeField] private float		InteractBoundsSizeY;	// 掴んでいるオブジェクト：BoundsSize.y
 
@@ -184,11 +185,8 @@ public class Player : MonoBehaviour
 
 		if (InteractJoint != null && InteractPoint != null)
 		{
-			if (_IsHold)
-				InteractJoint.anchor = new Vector3(0, InteractPoint.localPosition.y / InteractBoundsSizeY, 0);
-
-			//if (_IsDrag)
-			//	InteractJoint.anchor = InteractJoint.transform.InverseTransformPoint(transform.TransformPoint(holdPos.transform.localPosition));//HoldPosを設定
+			if (_IsHold /*| _IsDrag*/)
+				InteractJoint.anchor = InteractJointAnchor;
 		}
 	}
 
@@ -827,7 +825,7 @@ public class Player : MonoBehaviour
 					InteractJoint = rigidbody.AddComponent<HingeJoint>();
 					InteractJoint.connectedBody = rb;
 					InteractJoint.useLimits = true;
-					InteractJoint.anchor = new Vector3(0, InteractPoint.localPosition.y / InteractBoundsSizeY, 0);
+					InteractJoint.anchor = InteractJointAnchor = new Vector3(0, InteractPoint.localPosition.y / InteractBoundsSizeY, 0);
 					//InteractJoint.anchor = new Vector3(0, 1, 0);
 					JointLimits jointLimits = InteractJoint.limits;
 					jointLimits.min = -90.0f;
@@ -852,6 +850,7 @@ public class Player : MonoBehaviour
 				InteractCollision.transform.parent = null;
 
 			InteractCollision = null;
+			InteractJointAnchor = Vector3.zero;
 		}
 	}
 
@@ -866,13 +865,15 @@ public class Player : MonoBehaviour
 		anim.SetBool("Drag", !_IsHold);
 		if (bDrag)
 		{
+			InteractCollision.transform.parent = transform;
+
 			//引きずり開始
 			if (!InteractCollision.TryGetComponent(out Rigidbody rigidbody)) return;
 			//HingeJointの設定
 			InteractJoint = InteractCollision.GetComponent<HingeJoint>();
 			if (!InteractJoint) InteractJoint = rigidbody.AddComponent<HingeJoint>();
 			InteractJoint.connectedBody = rb;
-			InteractJoint.anchor = InteractJoint.transform.InverseTransformPoint(transform.TransformPoint(holdPos.transform.localPosition));//HoldPosを設定
+			InteractJoint.anchor = InteractJointAnchor = InteractJoint.transform.InverseTransformPoint(transform.TransformPoint(holdPos.transform.localPosition));//HoldPosを設定
 			InteractJoint.axis = Vector3.up;
 			InteractJoint.useLimits = true;
 			JointLimits jointLimits = InteractJoint.limits;
@@ -883,10 +884,16 @@ public class Player : MonoBehaviour
 		}
 		else
 		{
+			if (InteractObjectParent != null)
+				InteractCollision.transform.parent = InteractObjectParent.transform;
+			else
+				InteractCollision.transform.parent = null;
+
 			//離す処理
 			anim.SetFloat("AnimSpeed", 1.0f);
 			Destroy(InteractCollision.GetComponent<HingeJoint>());
 			InteractCollision = null;
+			InteractJointAnchor = Vector3.zero;
 		}
 	}
 
