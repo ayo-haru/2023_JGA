@@ -32,6 +32,7 @@ public class KeyConfigPanel : MonoBehaviour
 
 	void Awake()
 	{
+		ChangePanel(settingMode);
 	}
 
 	private void Update()
@@ -39,11 +40,22 @@ public class KeyConfigPanel : MonoBehaviour
 		// ゲームパッドを検出
 		if (settingMode == SettingMode.KEYBOARD && Gamepad.current != null)
 		{
+			//// ゲームパッド設定画面確認
+			// switchingPanel.SetActive(true);
+
+			settingMode = SettingMode.GAMEPAD;
+			ChangePanel(settingMode);
 		}
 
 	}
 
-	private void FixedUpdate()
+	void ChangePanel(SettingMode mode)
 	{
+		LayoutKeyboard.SetActive(mode == SettingMode.KEYBOARD);
+		LayoutGamePad.SetActive(mode == SettingMode.GAMEPAD);
 	}
+
+	//private void FixedUpdate()
+	//{
+	//}
 }

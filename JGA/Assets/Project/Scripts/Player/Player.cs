@@ -90,7 +90,8 @@ public class Player : MonoBehaviour
 
 	[SerializeField] private HashSet<Collider> WithinRange = new HashSet<Collider>();  // インタラクト範囲内にあるオブジェクトリスト
 
-	private MyContorller	gameInputs;						// 方向キー入力取得
+	private MyContorller	gameInputs;                     // 方向キー入力取得
+	private KeyConfigPanel	keyConfigPanel;					// キーコンフィグ変更検知用
 	private Vector2			moveInputValue;					// 移動方向
 	private Vector3			pauseVelocity;					// ポーズ時の加速度保存
 	private Vector3			pauseAngularVelocity;			// ポーズ時の加速度保存
@@ -151,6 +152,13 @@ public class Player : MonoBehaviour
 
 		// Input Actionを有効化
 		gameInputs.Enable();
+
+		if (keyConfigPanel == null)
+		{
+			var obj = GameObject.Find("KeyConfigPanel");
+			if (obj)
+				keyConfigPanel = obj.GetComponent<KeyConfigPanel>();
+		}
 
 		// アピール速度設定
 		runForce = moveForce * runMagnification;
@@ -368,7 +376,7 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void Pause()
 	{
-		// inout actionを無効化
+		// Input Actionを無効化
 		gameInputs.Disable();
 
 		// 物理
