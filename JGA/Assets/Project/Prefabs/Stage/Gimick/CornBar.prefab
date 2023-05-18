@@ -272,8 +272,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 9.283135, y: 0.38294828, z: 0.4372828}
-  m_Center: {x: -0.010458469, y: -0.0052292347, z: -0.0040389374}
+  m_Size: {x: 9.086944, y: 0.31069517, z: 0.4372828}
+  m_Center: {x: 0.0034680367, y: 0.03089714, z: -0.00403893}
 --- !u!135 &8836816160763578920
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -297,7 +297,7 @@ NavMeshObstacle:
   m_Enabled: 1
   serializedVersion: 3
   m_Shape: 1
-  m_Extents: {x: 5, y: 2.5, z: 0.5}
+  m_Extents: {x: 5, y: 2.38, z: 0.5}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 1
@@ -324,7 +324,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 938.6216
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
