@@ -23,6 +23,7 @@ public enum EAIState
     GUEST_STOP_FOLLOW,              //客　追従やめる
     GUEST_STAY_ANIMAL_GIMICK,       //客　動物用ギミック
     GUEST_SIT_DOWN,                 //客　座ってる
+    GUEST_WAIT,                     //客　待ってる
     MAX_AI_STATE,
 }
 /// <summary>
