@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using Unity.VisualScripting;
+using UniRx.Triggers;
 
 public class BearMove : MonoBehaviour
 {
@@ -62,6 +63,7 @@ public class BearMove : MonoBehaviour
     private FISHTYPE fishTyep;              //魚の状態
 
     private bool fishHaveFlg;
+
 
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -170,6 +172,17 @@ public class BearMove : MonoBehaviour
             currentMoveType = MoveType.IDLE;
             moveType = MoveType.WALK;
             anim.SetBool("WalkFlg", false);
+
+
+            var turnRand = Random.Range(0, 2);
+            if (turnRand == 0)
+            {
+                anim.SetBool("IdleFlg1", true);
+            }
+            if (turnRand == 1)
+            {
+                anim.SetBool("IdleFlg2", true);
+            }
         }
 
     }
@@ -232,6 +245,8 @@ public class BearMove : MonoBehaviour
                 if (befRot == this.transform.rotation)
                 {
                     fishTyep = FISHTYPE.FISH_WALK;
+                    anim.SetBool("WalkFlg", true);
+                    anim.SetBool("TurnFlg", false);
                 }
             }
             else
@@ -248,6 +263,8 @@ public class BearMove : MonoBehaviour
                 if (befRot == this.transform.rotation)
                 {
                     fishTyep = FISHTYPE.FISH_WALK;
+                    anim.SetBool("WalkFlg", true);
+                    anim.SetBool("TurnFlg", false);
                 }
             }
         }
@@ -257,7 +274,7 @@ public class BearMove : MonoBehaviour
             {
                 var fishPos = bearArea.fishObj[fishNum].transform.position;
                 float dis = Vector3.Distance(this.transform.position, fishPos);
-                if (dis >= 2.0f)
+                if (dis >= 3.0f)
                 {
                     endPos = fishPos;
 
@@ -269,6 +286,7 @@ public class BearMove : MonoBehaviour
                 else
                 {
                     fishTyep = FISHTYPE.FISH_HAVE;
+                    anim.SetBool("WalkFlg", false);
                 }
             }
             if (fishHaveFlg)
@@ -290,9 +308,7 @@ public class BearMove : MonoBehaviour
         }
         if(fishTyep == FISHTYPE.FISH_HAVE)
         {
-            fishTyep = FISHTYPE.FISH_TURN;
-            fishHaveFlg = true;
-            return;
+            anim.SetBool("EatFlg",true);
         }
     }
 
@@ -344,6 +360,7 @@ public class BearMove : MonoBehaviour
         }
         if (currentMoveType == MoveType.TURN)
         {
+            anim.SetBool("TurnFlg", true);
             if (!bearArea.dropFlg)
             {
                 //終了地点がなるべくかぶらないようにするため違う場所になるまで回す。
@@ -394,6 +411,22 @@ public class BearMove : MonoBehaviour
 
         }
     }
+
+    private void EatFlg()
+    {
+        fishTyep = FISHTYPE.FISH_TURN;
+        fishHaveFlg = true;
+        anim.SetBool("EatFlg", false);
+    }
+    private void HaveFlg()
+    {
+        var fishNum = bearArea.fishNum;
+        Destroy(bearArea.fishObj[fishNum].GetComponent<Rigidbody>());
+        bearArea.fishObj[fishNum].transform.position = transform.Find("spine01/spine02/spine03/spine04/spine05/Neck/Head/HeadFore/UnderJaw/Mouth").transform.position;
+        bearArea.fishObj[fishNum].transform.rotation = transform.Find("spine01/spine02/spine03/spine04/spine05/Neck/Head/HeadFore/UnderJaw/Mouth").transform.rotation;
+        bearArea.fishObj[fishNum].transform.parent = transform.Find("spine01/spine02/spine03/spine04/spine05/Neck/Head/HeadFore/UnderJaw/Mouth");
+    }
+
 
     //0から半径分の範囲を取るためそれを指定された座標と計算することで若干位置をずらせる。
     private Vector3 CircleRandamaiser(int index)
