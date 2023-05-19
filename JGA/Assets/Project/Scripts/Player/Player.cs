@@ -92,14 +92,15 @@ public class Player : MonoBehaviour
 	[SerializeField] private HashSet<Collider> WithinRange = new HashSet<Collider>();  // インタラクト範囲内にあるオブジェクトリスト
 
 	private MyContorller	gameInputs;                     // 方向キー入力取得
-	private KeyConfigPanel	keyConfigPanel;					// キーコンフィグ変更検知用
+	private KeyConfigPanel	keyConfigPanel;                 // キーコンフィグ変更検知用
+	private Quaternion		dragRotation;
 	private Vector2			moveInputValue;					// 移動方向
 	private Vector3			pauseVelocity;					// ポーズ時の加速度保存
 	private Vector3			pauseAngularVelocity;			// ポーズ時の加速度保存
 	private Transform		respawnZone;					// リスポーン位置プレハブ設定用
 	//----------------------------------------------------------------------------------------
 
-	[SerializeField] private GameObject holdPos;    // 持つときの位置
+	[SerializeField] private Rigidbody holdPos;    // 持つときの位置
 
 	private GameObject InteractObjectParent;        // シーン上の「InteractObject」
 
@@ -124,7 +125,18 @@ public class Player : MonoBehaviour
 
 		//--- 持つときの場所を子オブジェクトから検索
 		if (holdPos == null)
-			holdPos = transform.Find("HoldPos").gameObject;
+		{
+			var obj = transform.Find("HoldPos").gameObject;
+			if (obj != null)
+			{
+				if(obj.TryGetComponent(out Rigidbody rigidbody))
+					holdPos = rigidbody;
+				else
+					holdPos = obj.AddComponent<Rigidbody>();
+				holdPos.useGravity = false;
+				holdPos.isKinematic = false;
+			}
+		}
 
 		//--- プレイヤー初期位置
 		var respawn = GameObject.Find("PlayerSpawn");
@@ -183,11 +195,19 @@ public class Player : MonoBehaviour
 		if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
 			Move();
 
-		if (InteractJoint != null && InteractPoint != null)
+		if (_IsHold /*| _IsDrag*/)
 		{
-			if (_IsHold /*| _IsDrag*/)
+			if (InteractJoint != null)
 				InteractJoint.anchor = InteractJointAnchor;
 		}
+		//if (_IsDrag)
+		//{
+		//	if (InteractCollision != null)
+		//	{
+		//		//InteractJoint.anchor = transform.position - InteractJoint.transform.position;
+		//		//Debug.Log($"InteractCollision.localPosition:{InteractCollision.transform.localPosition}");
+		//	}
+		//}
 	}
 
 	private void Update()
@@ -257,6 +277,7 @@ public class Player : MonoBehaviour
 			}
 		}
 
+
 		// アニメーション
 		if (!bHitMotion)
 		{
@@ -313,6 +334,7 @@ public class Player : MonoBehaviour
 			}
 		}
 
+		// ランダム挙動
 		if (_IsRandom)
 		{
 			AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
@@ -786,7 +808,7 @@ public class Player : MonoBehaviour
 			if (InteractCollision.TryGetComponent(out Rigidbody rigidbody))
 			{
 				InteractCollision.transform.parent = transform;
-				
+
 				// メッシュのサイズを取得
 				Bounds maxBounds = new Bounds(Vector3.zero, Vector3.zero);
 				maxBounds.Encapsulate(InteractCollision.GetComponentInChildren<MeshFilter>().mesh.bounds);
@@ -866,14 +888,16 @@ public class Player : MonoBehaviour
 		if (bDrag)
 		{
 			InteractCollision.transform.parent = transform;
+			//dragRotation = InteractCollision.transform.localRotation;
 
 			//引きずり開始
 			if (!InteractCollision.TryGetComponent(out Rigidbody rigidbody)) return;
 			//HingeJointの設定
 			InteractJoint = InteractCollision.GetComponent<HingeJoint>();
 			if (!InteractJoint) InteractJoint = rigidbody.AddComponent<HingeJoint>();
-			InteractJoint.connectedBody = rb;
-			InteractJoint.anchor = InteractJointAnchor = InteractJoint.transform.InverseTransformPoint(transform.TransformPoint(holdPos.transform.localPosition));//HoldPosを設定
+			InteractJoint.connectedBody = holdPos;
+			//InteractJoint.anchor = InteractJoint.transform.InverseTransformPoint(transform.TransformPoint(holdPos.transform.localPosition));//HoldPosを設定
+			InteractJoint.anchor = transform.position - InteractJoint.transform.position;
 			InteractJoint.axis = Vector3.up;
 			InteractJoint.useLimits = true;
 			JointLimits jointLimits = InteractJoint.limits;
