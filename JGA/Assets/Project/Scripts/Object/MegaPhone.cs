@@ -46,12 +46,12 @@ public class MegaPhone : BaseObj
     void Update()
     {
         //SEが鳴ってるときになっているフラグを返す
-        PlaySoundChecker();
+        PlaySoundChecker(1);
 
         if(player.IsMegaphone && fallFlg)
         {
             //メガホンでの鳴き声を鳴らす
-            SoundManager.Play(audioSourcesList[0], SoundManager.ESE.PENGUIN_MEGAVOICE);
+            SoundManager.Play(audioSourcesList[1], SoundManager.ESE.PENGUIN_MEGAVOICE);
         }
 
     }

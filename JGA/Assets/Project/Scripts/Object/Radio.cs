@@ -87,7 +87,7 @@ public class Radio : BaseObj
 
 		// スイッチの切り替えと同時にそれぞれ音を鳴らす。
 		if (isSwitch) { SoundManager.Play(audioSourcesList[1], SoundManager.ESE.RADIO_ON); }
-		else { SoundManager.Play(audioSourcesList[1], SoundManager.ESE.RADIO_OFF); }
+		else { SoundManager.Play(audioSourcesList[1], audioSourcesList[1].clip); }
 
 	}
 
