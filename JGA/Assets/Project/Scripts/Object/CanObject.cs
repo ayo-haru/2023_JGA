@@ -50,14 +50,14 @@ public class CanObject : BaseObj , IObjectSound
 	/// </summary>
 	void Update()
 	{
-		PlaySoundChecker();
+		PlaySoundChecker(1);
 	}
 	protected override void OnCollisionEnter(Collision collison)
 	{
 
 		if (collison.gameObject.tag == "Player"  && !fallFlg)
 		{
-			SoundManager.Play(audioSourcesList[0], SoundManager.ESE.CAN_ROLL);
+			SoundManager.Play(audioSourcesList[1], SoundManager.ESE.CAN_ROLL);
 		}
 		
 		if (collison.gameObject.tag == "Ground")
@@ -70,7 +70,7 @@ public class CanObject : BaseObj , IObjectSound
 			}
 			if(flyFlg)
 			{
-				SoundManager.Play(audioSourcesList[0], SoundManager.ESE.CAN_ROLL);
+				SoundManager.Play(audioSourcesList[1], SoundManager.ESE.CAN_ROLL);
 				flyFlg = false;
 			}
 		}
