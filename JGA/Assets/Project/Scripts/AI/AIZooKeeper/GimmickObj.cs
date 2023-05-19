@@ -42,13 +42,6 @@ public class GimmickObj : MonoBehaviour
     }
 
     /// <summary>
-    /// 最初のフレーム更新の前に呼び出される
-    /// </summary>
-    void Start()
-    {
-    }
-
-    /// <summary>
     /// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
     /// </summary>
     void FixedUpdate()
@@ -65,6 +58,10 @@ public class GimmickObj : MonoBehaviour
                 if (x1 != x2 || z1 != z2)
                 {
                     bReset[i] = false;
+                }
+                else
+                {
+                    bReset[i] = true;
                 }
             }
         }
