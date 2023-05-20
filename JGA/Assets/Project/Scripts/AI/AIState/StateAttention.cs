@@ -11,6 +11,7 @@
 // 2023/03/05	(小楠)UIの表示を変更
 // 2023/03/08	(小楠)アニメーションの処理を追加
 // 2023/03/23	(小楠)驚いたアニメーション追加
+// 2023/05/20	(小楠)要らないコメント消したりした
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -26,7 +27,6 @@ public class StateAttention : AIState
     //ナビメッシュエージェント
     private NavMeshAgent agent;
     //アニメーター
-    //private Animator animator;
     private GuestAnimation guestAnimation;
 #if false
     /// <summary>
@@ -65,27 +65,25 @@ public class StateAttention : AIState
     {
         //コンポーネント取得
         if(!agent)agent = GetComponent<NavMeshAgent>();
-        if (!target) target = GameObject.FindWithTag("Player").GetComponent<Transform>();
-        //if(!animator) animator = gameObject.transform.GetChild(0).GetComponent<Animator>();
+        if (!target) target = GameObject.FindWithTag("Player").transform;
         if (!guestAnimation) guestAnimation = GetComponent<GuestAnimation>();
 
         //エラーチェック
         if (!ErrorCheck()) return;
 
+        //ナビメッシュ停止
         agent.speed = 0.0f;
+        //感情UI設定
         ui.SetEmotion(EEmotion.QUESTION);
+        //アニメーション設定
         guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.IDLE);
         guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.SURPRISED);
         guestAnimation.SetLookAt(target);
-        //animator.SetBool("isWalk", false);
-       // animator.SetTrigger("surprised");
     }
 
     public override void UpdateState()
     {
         //特になし
-        //エラーチェック
-        //if (!ErrorCheck()) return;
     }
 
     public override void FinState()
@@ -98,9 +96,8 @@ public class StateAttention : AIState
         if (!target)Debug.LogError("プレイヤーのトランスフォームが取得されていません");
         if (!ui)Debug.LogError("感情UIが設定されていません");
         if (!agent)Debug.LogError("ナビメッシュエージェントが取得されていません");
-        //if (!animator)Debug.LogError("アニメータが取得されていません");
         if (!guestAnimation) Debug.LogError("アニメーション制御用のスクリプトが取得されていません");
-        // return target && ui && agent && animator;
+
         return target && ui && agent && guestAnimation;
     }
 }

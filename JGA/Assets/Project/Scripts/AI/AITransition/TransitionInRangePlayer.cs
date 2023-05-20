@@ -59,7 +59,7 @@ public class TransitionInRangePlayer : AITransition
     public override void InitTransition()
     {
         if (data==null) data = GetComponent<AIManager>().GetGuestData();
-        if (!target) target = GameObject.FindWithTag("Player").GetComponent<Transform>();
+        if (!target) target = GameObject.FindWithTag("Player").transform;
     }
 
     public override bool IsTransition()

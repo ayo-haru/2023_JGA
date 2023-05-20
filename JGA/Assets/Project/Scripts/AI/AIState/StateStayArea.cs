@@ -34,7 +34,6 @@ public class StateStayArea : AIState
     //目的地に着いたか
     private bool isStay = false;
     //アニメーター
-    //private Animator animator;
     private GuestAnimation guestAnimation;
     //感情ui
     [SerializeField] private EmosionUI ui;
@@ -76,7 +75,6 @@ public class StateStayArea : AIState
         //コンポーネント、データ取得
         if (!agent) agent = GetComponent<NavMeshAgent>();
         if (data==null) data = GetComponent<AIManager>().GetGuestData();
-        //if (!animator) animator = gameObject.transform.GetChild(0).GetComponent<Animator>();
         if (!guestAnimation) guestAnimation = GetComponent<GuestAnimation>();
         GetAnimalTransrom();
         //エラーチェック
@@ -95,25 +93,21 @@ public class StateStayArea : AIState
         agent.speed = data.speed;
         agent.stoppingDistance = Random.Range(1.0f,data.cageDistance);
 
+        //フラグ初期化
         isStay = false;
 
         //アニメーション初期化
         guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.WALK);
         guestAnimation.SetLookAt(null);
-        //animator.SetBool("isWalk", true);
 
         //ui設定
         ui.SetEmotion(EEmotion.NONE);
 
-
         //ペンギンブースに着いた客の人数を追加
         GuestNumUI guestNumUI = GameObject.Find("GuestNumUI").GetComponent<GuestNumUI>();
-        if (guestNumUI)
-        {
+        if (guestNumUI){
             guestNumUI.Add();
-        }
-        else
-        {
+        }else{
             Debug.LogError("客人数表示用UIが取得できませんでした");
         }
     }
@@ -124,11 +118,10 @@ public class StateStayArea : AIState
         if (!ErrorCheck()) return;
 
         //驚きモーション中は移動させない
-        //agent.isStopped = animator.GetCurrentAnimatorStateInfo(0).IsName("Surprised");
         agent.isStopped = (guestAnimation.GetAnimationState() == GuestAnimation.EGuestAnimState.SURPRISED);
-
         if (agent.isStopped) return;
 
+        //ペンギンエリアについている場合の処理
         if (isStay)
         {
             //動物の方を向く
@@ -137,12 +130,13 @@ public class StateStayArea : AIState
             return;
         }
 
+        //経路計算中
         if (agent.pathPending) return;
+
         //指定位置に着いたら
         if (agent.remainingDistance <= agent.stoppingDistance)
         {
             //待機アニメーションの再生
-            //animator.SetBool("isWalk", false);
             guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.IDLE);
             //ui設定
             ui.SetEmotion(EEmotion.HIGH_TENSION);
@@ -161,11 +155,9 @@ public class StateStayArea : AIState
         if (!agent)Debug.LogError("ナビメッシュエージェントが取得されていません");
         if ((data.penguinTF == null) ? true : data.penguinTF.Count <= 0) Debug.LogError("待機位置が設定されていません");
         if (data==null)Debug.LogError("ゲスト用データが取得されていません");
-        //if (!animator)Debug.LogError("アニメーターが取得されていません");
         if (!guestAnimation) Debug.LogError("アニメーション制御用スクリプトが取得されていません");
         if (!ui) Debug.LogError("感情UIが設定されていません");
 
-        //return agent && ((data.penguinTF == null) ? false : data.penguinTF.Count > 0) && (data!=null) && animator && ui;
         return agent && ((data.penguinTF == null) ? false : data.penguinTF.Count > 0) && (data!=null) && guestAnimation && ui;
         
     }
@@ -178,20 +170,5 @@ public class StateStayArea : AIState
         GuestSharedObject sharedObject = Object.GetComponent<GuestSharedObject>();
         if (!sharedObject) return;
         animal = sharedObject.GetAnimalTransform(MySceneManager.eRoot.PENGUIN_E);
-#if false
-        Debug.LogWarning("GuestSharedObjectなかった");
-        //TargetAnimalsを取得
-        GameObject[] objList = GameObject.FindGameObjectsWithTag("TargetAnimals");
-
-        List<Transform> animals = new List<Transform>();
-        for(int i = 0; i < objList.Length; ++i)
-        {
-            //ペンギン用のスクリプトを持っているか
-            PenguinMove script = objList[i].GetComponent<PenguinMove>();
-            if (!script) continue;
-            animals.Add(objList[i].transform);
-        }
-        if(animals.Count > 0)animal = animals[Random.Range(0, animals.Count)];
-#endif
     }
 }

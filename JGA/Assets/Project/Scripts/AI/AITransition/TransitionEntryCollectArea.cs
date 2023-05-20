@@ -64,22 +64,22 @@ public class TransitionEntryCollectArea : AITransition
     {
         return true;
     }
-#if true
+
     public void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag != "CollectPoint") return;
+        if (!other.gameObject.CompareTag("CollectPoint")) return;
         bEntry = true;
     }
     public void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.tag != "CollectPoint") return;
+        if (!other.gameObject.CompareTag("CollectPoint")) return;
         bEntry = true;
     }
 
     public void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.tag != "CollectPoint") return;
+        if (!other.gameObject.CompareTag("CollectPoint")) return;
         bEntry = false;
     }
-#endif
+
 }

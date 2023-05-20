@@ -19,6 +19,7 @@
 // 2023/03/24	(小楠）ペンギンの追従速度をプレイヤー基準に変更
 // 2023/03/25	(小楠）自動生成に対応
 // 2023/04/10	(小楠）バグ直した
+// 2023/05/20	(小楠）要らないコメント消したりした
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -42,7 +43,6 @@ public class StateFollowPenguin : AIState
     //感情の変化時間計算用
     private float fTimer = 0.0f;
     //アニメーター
-    //private Animator animator;
     private GuestAnimation guestAnimation;
     //目的地の位置調節用
     private Vector3 posOffset;
@@ -85,10 +85,10 @@ public class StateFollowPenguin : AIState
         if (!agent) agent = GetComponent<NavMeshAgent>();
         if (data==null) data = GetComponent<AIManager>().GetGuestData();
         if (!penguin) penguin = GameObject.FindWithTag("Player");
-        if (!target && penguin) target = penguin.GetComponent<Transform>();
+        if (!target && penguin) target = penguin.transform;
         if (!player && penguin) player = penguin.GetComponent<Player>();
-        //if (!animator) animator = gameObject.transform.GetChild(0).GetComponent<Animator>();
         if (!guestAnimation) guestAnimation = GetComponent<GuestAnimation>();
+
         //エラーチェック
         if (!ErrorCheck()) return;
 
@@ -106,6 +106,7 @@ public class StateFollowPenguin : AIState
         //ペンギンの方を向かせる
         guestAnimation.SetLookAt(target);
 
+        //タイマー初期化
         fTimer = 0.0f;
     }
 
@@ -137,7 +138,6 @@ public class StateFollowPenguin : AIState
         }
 
         //驚きモーション中は移動させない
-        //agent.isStopped = animator.GetCurrentAnimatorStateInfo(0).IsName("Surprised");
         agent.isStopped = (guestAnimation.GetAnimationState() == GuestAnimation.EGuestAnimState.SURPRISED);
         //ペンギンが客に押されてしまうのを防ぐため、ペンギンとの距離が近かったら移動させない
         if(!agent.isStopped)agent.isStopped = Vector3.Distance(transform.position, target.position) < data.distance;
@@ -147,15 +147,7 @@ public class StateFollowPenguin : AIState
         agent.speed = (ui.GetEmotion() >= EEmotion.ATTENSION_MIDDLE && dot >= 0) ? player.MaxAppealSpeed * data.followSpeed : 0.0f; 
         agent.SetDestination(target.position + posOffset);
 
-        ////動いていないときはプレイヤーの方を向く
-        //if(agent.velocity.magnitude <= 0.0f)
-        //{
-        //    Quaternion rot = Quaternion.LookRotation(target.position - transform.position);
-        //    transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime);
-        //}
-
         //アニメーション更新
-        //animator.SetBool("isWalk", (agent.velocity.magnitude > 0.2f) ? true : false);
         guestAnimation.SetAnimation((agent.velocity.magnitude > 0.2f) ? GuestAnimation.EGuestAnimState.WALK : GuestAnimation.EGuestAnimState.IDLE);
     }
 
@@ -173,9 +165,8 @@ public class StateFollowPenguin : AIState
         if (!agent)Debug.LogError("ナビメッシュエージェントが取得できてません");
         if (!ui)Debug.LogError("感情UIが設定されていません");
         if (data==null)Debug.LogError("ゲスト用データがが取得できてません");
-        //if (!animator)Debug.LogError("アニメータが取得できてません");
         if (!guestAnimation) Debug.LogError("アニメーション制御用スクリプトが取得できていません");
-        //return penguin && target && player && agent && ui && (data!=null) && animator;
+
         return penguin && target && player && agent && ui && (data!=null) && guestAnimation;
     }
 }
