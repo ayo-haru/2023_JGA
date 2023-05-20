@@ -44,6 +44,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: WoodFence
       objectReference: {fileID: 0}
+    - target: {fileID: 3259321292641713291, guid: d0a46ddd7dabb7444851438ad2f8cddc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 16
+      objectReference: {fileID: 0}
     - target: {fileID: 4642424399022301499, guid: d0a46ddd7dabb7444851438ad2f8cddc,
         type: 3}
       propertyPath: m_RootOrder

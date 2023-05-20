@@ -193,6 +193,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: StealFence
       objectReference: {fileID: 0}
+    - target: {fileID: 2784310932717566011, guid: 5d4c909aefd4e3d4cb37376120e11bd8,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 16
+      objectReference: {fileID: 0}
     - target: {fileID: 3307907833448473217, guid: 5d4c909aefd4e3d4cb37376120e11bd8,
         type: 3}
       propertyPath: m_RootOrder

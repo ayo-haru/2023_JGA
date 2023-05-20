@@ -100,6 +100,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: GlassFenceFrame
       objectReference: {fileID: 0}
+    - target: {fileID: 5347065414256826214, guid: 40b88653a870d5c4ba67df79b187c80b,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 16
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 40b88653a870d5c4ba67df79b187c80b, type: 3}
 --- !u!1 &855791067662702145 stripped
@@ -154,6 +159,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Glass
+      objectReference: {fileID: 0}
+    - target: {fileID: 2847331257162070783, guid: 4a34dce481e9160478ba5cc2ce7abb91,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 3372266317132394079, guid: 4a34dce481e9160478ba5cc2ce7abb91,
         type: 3}
