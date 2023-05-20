@@ -292,14 +292,7 @@ public class StageSceneManager : BaseSceneManager {
                         isOnce = true;
                     }
                 }
-#if false
-                if (!isOnce) {
-                    if (inputAction.Menu.Decision.ReadValue<float>() >= InputSystem.settings.defaultButtonPressPoint) { // 入力があったら
-                        SceneChange(MySceneManager.SceneState.SCENE_TITLE);
-                        isOnce = true;
-                    }
-                }
-#endif
+
                 if (!PauseManager.isPaused) {
                     PauseManager.isPaused = true;
                     PauseManager.NoMenu = true;
@@ -369,6 +362,12 @@ public class StageSceneManager : BaseSceneManager {
                         SceneChange(next);  // シーン遷移
                         isOnce = true;
                     }
+                }
+
+                if (!PauseManager.isPaused) {
+                    PauseManager.isPaused = true;
+                    PauseManager.NoMenu = true;
+                    PauseManager.Pause();
                 }
             }
         }

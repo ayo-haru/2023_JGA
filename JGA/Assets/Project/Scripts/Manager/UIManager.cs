@@ -18,9 +18,13 @@ public class UIManager : MonoBehaviour
     //---キャンバス
 	GameObject canvas;
 
+    //---フェード
+    GameObject fade;
+
     //---クリア
     GameObject clearUI;
     GameObject clearUIInstance;
+    ResultCamera _ResultCamera;
 
     //---ゲームオーバー
     GameObject failedUI;
@@ -45,29 +49,29 @@ public class UIManager : MonoBehaviour
 	{
         canvas = GameObject.Find("Canvas");
 
-
-        // GameObject _fadePanel = PrefabContainerFinder.Find(MySceneManager.GameData.UIDatas, "FadePanel.prefab");
-        // fadePanel = Instantiate(_fadePanel);
-
-        //fadePanel.transform.parent =  canvas.transform;
         if (SceneManager.GetActiveScene().name != MySceneManager.sceneName[(int)MySceneManager.SceneState.SCENE_TITLE]) {
             RectTransform _canvasRT = canvas.GetComponent<RectTransform>();
 
-
-            //----- クリアのUI読み込みと出現 ------
-            clearUI = PrefabContainerFinder.Find(MySceneManager.GameData.UIDatas, "ClearUI.prefab");
-            clearUIInstance = Instantiate(clearUI, _canvasRT);
-            clearUIInstance.name = clearUI.name;
-
-            //----- ゲームオーバーのUI読み込みと出現 -----
-            failedUI = PrefabContainerFinder.Find(MySceneManager.GameData.UIDatas, "FailedUI.prefab");
-            failedUIInstance = Instantiate(failedUI, _canvasRT);
-            failedUIInstance.name = failedUI.name;
+            fade = GameObject.Find("FadePanel");
 
             //----- 操作方法のUIの読み込みと出現 -----
             operationUI = PrefabContainerFinder.Find(MySceneManager.GameData.UIDatas, "OperationUI.prefab");
             operationUIInstance = Instantiate(operationUI, _canvasRT);
-            operationUIInstance.name = operationUI.name;
+            operationUIInstance.name = operationUI.name;    // 名前を変更
+            operationUIInstance.transform.SetSiblingIndex(fade.transform.GetSiblingIndex()); // フェードの裏側に来るようにする
+
+            //----- クリアのUI読み込みと出現 ------
+            clearUI = PrefabContainerFinder.Find(MySceneManager.GameData.UIDatas, "ClearUI.prefab");
+            clearUIInstance = Instantiate(clearUI, _canvasRT);
+            clearUIInstance.name = clearUI.name;    // 名前を変更
+            clearUIInstance.transform.SetSiblingIndex(fade.transform.GetSiblingIndex());    // フェードの裏側に来るようにする
+
+            //----- ゲームオーバーのUI読み込みと出現 -----
+            failedUI = PrefabContainerFinder.Find(MySceneManager.GameData.UIDatas, "FailedUI.prefab");
+            failedUIInstance = Instantiate(failedUI, _canvasRT);
+            failedUIInstance.name = failedUI.name; // 名前を変更
+            failedUIInstance.transform.SetSiblingIndex(fade.transform.GetSiblingIndex()); // フェードの裏側に来るようにする
+
 
             //----- タイマーUIの取得 -----
             timerUI = GameObject.Find("TimerSlider");
@@ -86,6 +90,15 @@ public class UIManager : MonoBehaviour
             } else {
                 Debug.LogWarning("GuestNumUIがシーン上にありません");
             }
+
+            //----- リザルトカメラの取得 -----
+            GameObject _cameraManagerObj;
+            _cameraManagerObj = GameObject.Find("CameraManager");
+            if (_cameraManagerObj) {
+                _ResultCamera = _cameraManagerObj.GetComponent<ResultCamera>();
+            } else {
+                Debug.LogWarning("CameraManagerがシーン上にありません");
+            }
         }
     }
 
@@ -96,9 +109,9 @@ public class UIManager : MonoBehaviour
         //----- ゲームクリア -----
         if (guestNumUI) {
             if (_GuestNumUI.isClear()) {
-                //if (かめらがまわりきったら) {
+                if (_ResultCamera.rotateFlg) {
                     clearUIInstance.SetActive(true);
-                //}
+                }
             } else {
                 clearUIInstance.SetActive(false);
             }
