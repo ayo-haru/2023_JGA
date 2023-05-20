@@ -25,11 +25,23 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(AudioSource))]
 public class Player : MonoBehaviour
 {
-	[SerializeField] private Rigidbody		rb;
-	[SerializeField] private AudioSource	audioSource;
-	[SerializeField] private AudioClip		seCall;			// ＳＥ：鳴き声
-	[SerializeField] private AudioClip		seWalk;			// ＳＥ：歩く
-	[SerializeField] private Animator		anim;			// Animatorへの参照
+	new private Transform transform;
+	[SerializeField] private Rigidbody rb;
+	[SerializeField] private AudioSource audioSource;
+	[SerializeField] private AudioClip seCall;          // ＳＥ：鳴き声
+	[SerializeField] private AudioClip seWalk;          // ＳＥ：歩く
+	[SerializeField] private Animator anim;           // Animatorへの参照
+
+	// Animatorパラメータ
+	int HashMove;
+	int HashRun;
+	int HashAppeal;
+	int HashHit;
+	int HashCarry;
+	int HashDrag;
+	int HashRandom;
+	int HashAnimSpeed;
+
 
 	[Header("ステータス")] //-----------------------------------------------------------------
 	[SerializeField] private float moveForce = 7;           // 歩行時速度
@@ -40,11 +52,12 @@ public class Player : MonoBehaviour
 	private float appealForce;                              // アピール時速度
 	private float _maxAppealSpeed;                          // アピール時最高速度
 
-	public float MaxMoveSpeed	{ get { return _maxMoveSpeed; } }
-	public float MaxRunSpeed	{ get { return _maxRunSpeed; } }
+	public float MaxMoveSpeed { get { return _maxMoveSpeed; } }
+	public float MaxRunSpeed { get { return _maxRunSpeed; } }
 	public float MaxAppealSpeed { get { return _maxAppealSpeed; } }
 
 	[SerializeField] private float joyRunZone = 0.8f;   // ジョイスティックで走り始めるゾーン
+
 	//----------------------------------------------------------------------------------------
 
 	// フラグ --------------------------------------------------------------------------------
@@ -61,15 +74,15 @@ public class Player : MonoBehaviour
 	[SerializeField] private bool _IsRandom;    // 待機中のランダムな挙動
 	[SerializeField] private bool _IsMegaphone; // メガホン用フラグ
 
-	public bool IsHit		{ get { return _IsHit; } set { _IsHit = value; } }
-	public bool IsHitMotion	{ get { return _IsHitMotion; } }
-	public bool IsHold		{ get { return _IsHold; } }
-	public bool IsDrag		{ get { return _IsDrag; } }
-	public bool IsMove		{ get { return _IsMove; } }
-	public bool IsRun		{ get { return _IsRun; } }
-	public bool IsAppeal	{ get { return _IsAppeal; } }
-	public bool IsRandom	{ get { return _IsRandom; } }
-	public bool IsMegaphone	{ get { return _IsMegaphone; } }
+	public bool IsHit { get { return _IsHit; } set { _IsHit = value; } }
+	public bool IsHitMotion { get { return _IsHitMotion; } }
+	public bool IsHold { get { return _IsHold; } }
+	public bool IsDrag { get { return _IsDrag; } }
+	public bool IsMove { get { return _IsMove; } }
+	public bool IsRun { get { return _IsRun; } }
+	public bool IsAppeal { get { return _IsAppeal; } }
+	public bool IsRandom { get { return _IsRandom; } }
+	public bool IsMegaphone { get { return _IsMegaphone; } }
 
 	private bool bHitMotion;                    // はたくモーション中は他のモーションさせないフラグ
 
@@ -82,23 +95,23 @@ public class Player : MonoBehaviour
 	[SerializeField] private Vector3 _vForce;               // 移動方向
 	public Vector3 vForce { get { return _vForce; } }
 
-	[SerializeField] private Collider	InteractCollision;		// 掴んでいるオブジェクト：コリジョン
-	[SerializeField] private Outline	InteractOutline;		// 掴んでいるオブジェクト：アウトライン
-	[SerializeField] private HingeJoint	InteractJoint;			// 掴んでいるオブジェクト：HingeJoint
-	[SerializeField] private Vector3	InteractJointAnchor;    // 掴んでいるオブジェクト：InteractJoint.anchor
-	[SerializeField] private Transform	InteractPoint;			// 掴んでいるオブジェクト：HoldPoint
-	[SerializeField] private float		InteractBoundsSizeY;	// 掴んでいるオブジェクト：BoundsSize.y
+	[SerializeField] private Collider InteractCollision;        // 掴んでいるオブジェクト：コリジョン
+	[SerializeField] private Outline InteractOutline;       // 掴んでいるオブジェクト：アウトライン
+	[SerializeField] private HingeJoint InteractJoint;          // 掴んでいるオブジェクト：HingeJoint
+	[SerializeField] private Vector3 InteractJointAnchor;    // 掴んでいるオブジェクト：InteractJoint.anchor
+	[SerializeField] private Transform InteractPoint;           // 掴んでいるオブジェクト：HoldPoint
+	[SerializeField] private float InteractBoundsSizeY; // 掴んでいるオブジェクト：BoundsSize.y
 
 	[SerializeField] private HashSet<Collider> WithinRange = new HashSet<Collider>();  // インタラクト範囲内にあるオブジェクトリスト
 
-	private MyContorller	gameInputs;                     // 方向キー入力取得
-	private KeyConfigPanel	keyConfigPanel;                 // キーコンフィグ変更検知用
-	private Quaternion		dragRotation;
-	private Vector2			moveInputValue;					// 移動方向
-	private Vector3			pauseVelocity;					// ポーズ時の加速度保存
-	private Vector3			pauseAngularVelocity;			// ポーズ時の加速度保存
-	private Transform		respawnZone;					// リスポーン位置プレハブ設定用
-	//----------------------------------------------------------------------------------------
+	private MyContorller gameInputs;                     // 方向キー入力取得
+	private KeyConfigPanel keyConfigPanel;                 // キーコンフィグ変更検知用
+	private Quaternion dragRotation;
+	private Vector2 moveInputValue;                 // 移動方向
+	private Vector3 pauseVelocity;                  // ポーズ時の加速度保存
+	private Vector3 pauseAngularVelocity;           // ポーズ時の加速度保存
+	[SerializeField] private Transform respawnZone;                 // リスポーン位置プレハブ設定用
+																	//----------------------------------------------------------------------------------------
 
 	[SerializeField] private Rigidbody holdPos;    // 持つときの位置
 
@@ -116,9 +129,19 @@ public class Player : MonoBehaviour
 		PauseManager.OnResumed.Subscribe(x => { Resumed(); }).AddTo(this.gameObject);
 
 		//--- NULLリファレンス回避
+		if (transform == null) transform = this.gameObject.transform;
 		if (rb == null) rb = GetComponent<Rigidbody>();
 		if (audioSource == null) audioSource = GetComponent<AudioSource>();
 		if (anim == null) anim = GetComponent<Animator>();
+
+		HashMove = Animator.StringToHash("move");
+		HashRun = Animator.StringToHash("run");
+		HashAppeal = Animator.StringToHash("Appeal");
+		HashHit = Animator.StringToHash("Hit");
+		HashCarry = Animator.StringToHash("Carry");
+		HashDrag = Animator.StringToHash("Drag");
+		HashRandom = Animator.StringToHash("Random");
+		HashAnimSpeed = Animator.StringToHash("AnimSpeed");
 
 		//--- 回転固定
 		rb.constraints = RigidbodyConstraints.FreezeRotation;
@@ -129,7 +152,7 @@ public class Player : MonoBehaviour
 			var obj = transform.Find("HoldPos").gameObject;
 			if (obj != null)
 			{
-				if(obj.TryGetComponent(out Rigidbody rigidbody))
+				if (obj.TryGetComponent(out Rigidbody rigidbody))
 					holdPos = rigidbody;
 				else
 					holdPos = obj.AddComponent<Rigidbody>();
@@ -139,11 +162,14 @@ public class Player : MonoBehaviour
 		}
 
 		//--- プレイヤー初期位置
-		var respawn = GameObject.Find("PlayerSpawn");
-		if (respawn == null)
-			Debug.LogError("<color=red>プレイヤーのリスポーン位置が見つかりません[Player.cs]</color>");
-		else
-			respawnZone = respawn.transform;
+		if (respawnZone == null)
+		{
+			var respawn = GameObject.Find("PlayerSpawn");
+			if (respawn == null)
+				Debug.LogError("<color=red>プレイヤーのリスポーン位置が見つかりません[Player.cs]</color>");
+			else
+				respawnZone = respawn.transform;
+		}
 
 		//--- 物を離した際に元の階層に戻すためのやつ
 		InteractObjectParent = GameObject.Find("InteractObject");
@@ -281,8 +307,8 @@ public class Player : MonoBehaviour
 		// アニメーション
 		if (!bHitMotion)
 		{
-			anim.SetBool("move", _IsMove);
-			anim.SetBool("run", _IsRun);
+			anim.SetBool(HashMove, _IsMove);
+			anim.SetBool(HashRun, _IsRun);
 		}
 		// はたくモーション中は他のモーションさせない
 		else
@@ -298,7 +324,7 @@ public class Player : MonoBehaviour
 				else
 				{
 					bHitMotion = false;
-					anim.SetBool("Hit", bHitMotion);
+					anim.SetBool(HashHit, bHitMotion);
 				}
 
 			}
@@ -330,7 +356,7 @@ public class Player : MonoBehaviour
 			{
 				IdolTime = 0.0f;
 				_IsRandom = true;
-				anim.SetBool("Random", true);
+				anim.SetBool(HashRandom, true);
 			}
 		}
 
@@ -342,7 +368,7 @@ public class Player : MonoBehaviour
 			if (stateInfo.normalizedTime >= 1.0f)
 			{
 				_IsRandom = false;
-				anim.SetBool("Random", false);
+				anim.SetBool(HashRandom, false);
 			}
 		}
 
@@ -407,7 +433,7 @@ public class Player : MonoBehaviour
 		anim.speed = 0.0f;
 
 		_IsAppeal = false;
-		anim.SetBool("Appeal", _IsAppeal);
+		anim.SetBool(HashAppeal, _IsAppeal);
 
 		// 持ったままポーズに入ると挙動おかしくなるので救済措置「捨てる」
 		_IsHold = _IsDrag = false;
@@ -537,8 +563,8 @@ public class Player : MonoBehaviour
 		if (moveInputValue != context.ReadValue<Vector2>())
 		{
 			moveInputValue = context.ReadValue<Vector2>();
-			rb.velocity = rb.velocity/2;
-			rb.angularVelocity = rb.angularVelocity/2;
+			rb.velocity = rb.velocity / 2;
+			rb.angularVelocity = rb.angularVelocity / 2;
 		}
 		if (context.phase == InputActionPhase.Canceled)
 		{
@@ -558,7 +584,7 @@ public class Player : MonoBehaviour
 
 		bHitMotion = true;
 		_IsHitMotion = true;
-		anim.SetBool("Hit", bHitMotion);
+		anim.SetBool(HashHit, bHitMotion);
 		//Debug.Log($"Hit");
 	}
 
@@ -687,11 +713,11 @@ public class Player : MonoBehaviour
 				{
 					case BaseObj.ObjType.HOLD:
 					case BaseObj.ObjType.HIT_HOLD:
-						anim.SetBool("Carry", !_IsHold);
+						anim.SetBool(HashCarry, !_IsHold);
 						break;
 					case BaseObj.ObjType.DRAG:
 					case BaseObj.ObjType.HIT_DRAG:
-						anim.SetBool("Drag", !_IsHold);
+						anim.SetBool(HashDrag, !_IsHold);
 						break;
 				}
 			}
@@ -701,7 +727,7 @@ public class Player : MonoBehaviour
 				if (baseObject.objState == BaseObject.OBJState.HOLD ||
 					baseObject.objState == BaseObject.OBJState.HITANDHOLD)
 				{
-					anim.SetBool("Carry", !_IsHold);
+					anim.SetBool(HashCarry, !_IsHold);
 				}
 			}
 		}
@@ -756,7 +782,7 @@ public class Player : MonoBehaviour
 		if (InteractCollision == null)
 			return;
 
-		if (InteractCollision.tag == "Interact")
+		if (InteractCollision.CompareTag("Interact"))
 		{
 			// BaseObjとBaseObject二つあるため、それぞれ出来るように書きました(吉原 04/04 4:25)
 			if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj))
@@ -816,7 +842,7 @@ public class Player : MonoBehaviour
 
 				//--- 掴む座標を取得
 				InteractPoint = null;
-				float distance = 10.0f;	// とりあえず10.0f
+				float distance = 10.0f; // とりあえず10.0f
 
 				for (int i = 0; i < InteractCollision.transform.childCount; i++)
 				{
@@ -860,11 +886,11 @@ public class Player : MonoBehaviour
 		// 離す処理
 		else
 		{
-			anim.SetFloat("AnimSpeed", 1.0f);
+			anim.SetFloat(HashAnimSpeed, 1.0f);
 
 			InteractPoint = null;
+			Destroy(InteractJoint);
 			InteractJoint = null;
-			Destroy(InteractCollision.GetComponent<HingeJoint>());
 
 			if (InteractObjectParent != null)
 				InteractCollision.transform.parent = InteractObjectParent.transform;
@@ -884,7 +910,7 @@ public class Player : MonoBehaviour
 	{
 		//引きずり開始
 
-		anim.SetBool("Drag", !_IsHold);
+		anim.SetBool(HashDrag, !_IsHold);
 		if (bDrag)
 		{
 			InteractCollision.transform.parent = transform;
@@ -914,8 +940,9 @@ public class Player : MonoBehaviour
 				InteractCollision.transform.parent = null;
 
 			//離す処理
-			anim.SetFloat("AnimSpeed", 1.0f);
-			Destroy(InteractCollision.GetComponent<HingeJoint>());
+			anim.SetFloat(HashAnimSpeed, 1.0f);
+			Destroy(InteractJoint);
+			InteractJoint = null;
 			InteractCollision = null;
 			InteractJointAnchor = Vector3.zero;
 		}
@@ -941,7 +968,7 @@ public class Player : MonoBehaviour
 				_IsAppeal = false;
 				break;
 		}
-		anim.SetBool("Appeal", _IsAppeal);
+		anim.SetBool(HashAppeal, _IsAppeal);
 	}
 
 	/// <summary>
@@ -966,12 +993,12 @@ public class Player : MonoBehaviour
 
 	public void AnimStop()
 	{
-		anim.SetFloat("AnimSpeed", 0.0f);
+		anim.SetFloat(HashAnimSpeed, 0.0f);
 	}
 
 	public void AnimCarryStop()
 	{
-		anim.SetBool("Carry", false);
+		anim.SetBool(HashCarry, false);
 	}
 
 	#region 衝突判定
@@ -988,10 +1015,10 @@ public class Player : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-		if (other.tag != "Interact")
+		if (other.CompareTag("Interact"))
 			return;
 
-			WithinRange.Add(other);
+		WithinRange.Add(other);
 
 		if (WithinRange.Count == 1 && other.TryGetComponent(out Outline outline))
 			outline.enabled = true;
@@ -1000,7 +1027,7 @@ public class Player : MonoBehaviour
 	private void OnTriggerExit(Collider other)
 	{
 		//if (_IsHold)
-			WithinRange.Remove(other);
+		WithinRange.Remove(other);
 
 		if (other.TryGetComponent(out Outline outline))
 			outline.enabled = false;
