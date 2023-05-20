@@ -96,7 +96,9 @@ public class UIManager : MonoBehaviour
         //----- ゲームクリア -----
         if (guestNumUI) {
             if (_GuestNumUI.isClear()) {
-                clearUIInstance.SetActive(true);
+                //if (かめらがまわりきったら) {
+                    clearUIInstance.SetActive(true);
+                //}
             } else {
                 clearUIInstance.SetActive(false);
             }
