@@ -256,7 +256,7 @@ public class MainCamera : MonoBehaviour
          {
              return;
          }
-        if (keeperFlg)
+        if (keeperFlg && currentZoom != ZOOM.GUESTOUT)
         {
             cameraParent.position = Vector3.Lerp(
             a: cameraParent.position,
@@ -364,7 +364,6 @@ public class MainCamera : MonoBehaviour
                 zoom = ZOOM.GUESTOUT;
                 break;
 
-                    break;
             case ZOOM.DEFAULT:
                 if (zoom == ZOOM.IN)
                 {

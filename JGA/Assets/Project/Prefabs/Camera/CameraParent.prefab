@@ -129,7 +129,6 @@ GameObject:
   - component: {fileID: 3636370307376643986}
   - component: {fileID: 3636370307376643987}
   - component: {fileID: 3636370307376643984}
-  - component: {fileID: 1784101899541272165}
   m_Layer: 0
   m_Name: CameraParent
   m_TagString: Untagged
@@ -190,10 +189,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetObject: {fileID: 0}
   smoothMove: 1
-  fieldLeftEdge: {fileID: 0}
-  fieldRightEdge: {fileID: 0}
-  fieldUpEdge: {fileID: 0}
-  fieldBottomEdge: {fileID: 0}
   edgeDistance: 5
   zoomIn: 0.75
   zoomOut: 1.25
@@ -209,19 +204,6 @@ MonoBehaviour:
   guestRetTime: 1
   guestValue: 5
   zoomObjChange: 0
---- !u!114 &1784101899541272165
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3636370307376643989}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2db03344cc3e90c49811f9ef1962e56a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rotateTime: 5
 --- !u!1 &3636370307418565548
 GameObject:
   m_ObjectHideFlags: 0

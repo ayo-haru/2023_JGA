@@ -26,6 +26,8 @@ public class ResultCamera : MonoBehaviour
 
 	private bool clear;                             //クリア時一回のみの処理をするときに使う
 
+    public bool rotateFlg;
+
     [Header("回転しきるまでの時間")]
 	[SerializeField] private float rotateTime;      //回転している時間を指定
     private float rotateFlame;                      //回転時間を計算するため用
@@ -125,7 +127,8 @@ public class ResultCamera : MonoBehaviour
         //フレーム数(時間を計算して一周したかどうかをたしかめる)
         if (rotateFlame >= rotateTime)
         {
-            //clear = false;
+            
+            rotateFlg = true;
             return;
         }
         rotateFlame += Time.deltaTime;
