@@ -22,6 +22,7 @@ public class FishObject : BaseObj
 	/// </summary>
 	void Start()
 	{
+		Init();
         objType = ObjType.HIT_HOLD;
     }
 
