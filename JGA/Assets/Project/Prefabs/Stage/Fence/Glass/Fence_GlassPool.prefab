@@ -44,6 +44,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: GlassFencePool
       objectReference: {fileID: 0}
+    - target: {fileID: 434808632986546055, guid: 22e8f15d69a96f046a47323b9b1266e3,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 16
+      objectReference: {fileID: 0}
     - target: {fileID: 5163030443680687710, guid: 22e8f15d69a96f046a47323b9b1266e3,
         type: 3}
       propertyPath: m_RootOrder
