@@ -58,7 +58,7 @@ public class TransitionInteract : AITransition
     public override void InitTransition()
     {
         //コンポーネント、オブジェクトの取得
-        if (!playerTransform) playerTransform = GameObject.FindWithTag("Player").GetComponent<Transform>();
+        if (!playerTransform) playerTransform = GameObject.FindWithTag("Player").transform;
         if (data==null) data = GetComponent<AIManager>().GetGuestData();
         if (interactObjecs != null) return;
 

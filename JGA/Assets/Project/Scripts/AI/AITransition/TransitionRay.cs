@@ -58,7 +58,7 @@ public class TransitionRay : AITransition
     public override void InitTransition()
     {
         if(data==null)data = GetComponent<AIManager>().GetGuestData();
-        if (!playerTransform) playerTransform = GameObject.FindWithTag("Player").GetComponent<Transform>();
+        if (!playerTransform) playerTransform = GameObject.FindWithTag("Player").transform;
     }
 
     public override bool IsTransition()
@@ -74,10 +74,10 @@ public class TransitionRay : AITransition
 
         //視界に入っていた場合プレイヤーに向かってRayを飛ばして、当たったら障害物に隠れていないので、trueを返す
         RaycastHit hit;
-        //客からプレイヤーに向けて例を飛ばす
+        //客からプレイヤーに向けてレイを飛ばす
         Physics.Raycast(eyesPos.position, targetDir, out hit, data.rayLength);
         //プレイヤーと当たったか判定
-        return (hit.collider.gameObject.tag == "Player") != inv;
+        return (hit.collider.gameObject.CompareTag("Player")) != inv;
     }
 
     public override bool ErrorCheck()

@@ -8,6 +8,7 @@
 // [Date]
 // 2023/04/05	スクリプト作成
 // 2023/05/10	動物の方向を取得
+// 2023/05/20	要らないコメント消したりした
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -21,7 +22,6 @@ public class StateGimmickAnimal : AIState
     //ペンギン用スクリプト
     private Player player;
     //animator
-    //private Animator animator;
     private GuestAnimation guestAnimation;
     //感情ui
     [SerializeField] private EmosionUI ui;
@@ -68,22 +68,19 @@ public class StateGimmickAnimal : AIState
     {
         //コンポーネント取得
         if (!agent) agent = GetComponent<NavMeshAgent>();
-        //if(!animator) animator = gameObject.transform.GetChild(0).GetComponent<Animator>();
         if (!guestAnimation) guestAnimation = GetComponent<GuestAnimation>();
         if (!player) player = GameObject.FindWithTag("Player").GetComponent<Player>();
         if (data == null) data = GetComponent<AIManager>().GetGuestData();
-
         //ケージポス（agentの目的地）取得
         GetCagePos();
         //動物のトランスフォーム取得
-        if (!GetAnimal()) Debug.LogWarning("動物が取得できませんでした");
+        GetAnimal();
 
         if (!ErrorCheck()) return;
 
         //感情UIの設定
         ui.SetEmotion(EEmotion.HIGH_TENSION);
         //アニメーションの設定
-        //animator.SetBool("isWalk", true);
         guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.WALK);
         guestAnimation.SetLookAt(null);
         //ナビメッシュエージェントの設定
@@ -97,10 +94,10 @@ public class StateGimmickAnimal : AIState
         if (agent.pathPending) return;//経路計算中
 
         //速度に応じてアニメーションを切り替え
-        //animator.SetBool("isWalk", agent.velocity.magnitude > 0.0f);
         guestAnimation.SetAnimation((agent.velocity.magnitude > 0.0f) ? GuestAnimation.EGuestAnimState.WALK : GuestAnimation.EGuestAnimState.IDLE);
 
-        if (agent.remainingDistance > agent.stoppingDistance) return;   //目的地にまだついてない
+        //目的地に移動中
+        if (agent.remainingDistance > agent.stoppingDistance) return;
 
         //動物の方を見る
         Quaternion rot = Quaternion.LookRotation(((!animalTransform) ? agent.destination : animalTransform.position) - transform.position);
@@ -116,12 +113,11 @@ public class StateGimmickAnimal : AIState
     {
         if (!ui) Debug.LogError("感情UIが設定されていません");
         if (!agent) Debug.LogError("ナビメッシュエージェントが取得されていません");
-        //if (!animator) Debug.LogError("アニメーターが取得されていません");
         if (!guestAnimation) Debug.LogError("アニメーション制御用のスクリプトが取得されていません");
         if (data == null) Debug.LogError("お客さん用のデータが取得されていません");
         if (!player) Debug.LogError("プレイヤー用スクリプトが取得されていません");
+        if (!animalTransform) Debug.LogWarning("動物が取得されていません");
 
-        //return ui && agent && animator && (data != null) && player;
         return ui && agent && guestAnimation && (data != null) && player;
     }
 

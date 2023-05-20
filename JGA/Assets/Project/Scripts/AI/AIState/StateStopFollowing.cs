@@ -9,6 +9,7 @@
 // 2023/03/18	スクリプト作成
 // 2023/03/24	お客さんの移動速度０にした
 // 2023/05/15	アニメーション制御方法を変更
+// 2023/05/20	要らないコメント消した
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -18,7 +19,6 @@ using UnityEngine.AI;
 public class StateStopFollowing : AIState
 {
     //アニメーター
-    //private Animator animator;
     private GuestAnimation guestAnimation;
     //感情UI
     [SerializeField] private EmosionUI ui;
@@ -60,14 +60,12 @@ public class StateStopFollowing : AIState
     public override void InitState()
     {
         //コンポーネント取得
-        //if (!animator) animator = gameObject.transform.GetChild(0).GetComponent<Animator>();
         if (!guestAnimation) guestAnimation = GetComponent<GuestAnimation>();
         if (!agent) agent = GetComponent<NavMeshAgent>();
 
         if (!ErrorCheck()) return;
 
         //アニメーション初期化
-        //animator.SetBool("isWalk", false);
         guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.IDLE);
         guestAnimation.SetLookAt(null);
 
@@ -91,11 +89,10 @@ public class StateStopFollowing : AIState
 
     public override bool ErrorCheck()
     {
-        //if (!animator)Debug.LogError("アニメーターが取得されていません");
         if (!guestAnimation) Debug.LogError("アニメーション制御用スクリプトが取得されていません");
         if (!ui)Debug.LogError("感情UIが設定されていません");
         if (!agent) Debug.LogError("ナビメッシュエージェントが取得されていません");
-        //return animator && ui && agent;
+
         return guestAnimation && ui && agent;
     }
 }
