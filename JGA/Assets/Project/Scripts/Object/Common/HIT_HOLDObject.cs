@@ -16,6 +16,7 @@ public class HIT_HOLDObject : BaseObj
 {
 	private void Start()
 	{
+		Init();
 		objType = ObjType.HIT_HOLD;
 	}
 }

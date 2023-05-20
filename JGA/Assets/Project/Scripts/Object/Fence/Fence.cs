@@ -45,11 +45,17 @@ public class Fence : BaseObject
 		CheckIsPlaySound();
 	}
 
+    protected override void Pause() {
+        base.Pause();
+		_audioSource.Pause();
+    }
+
     protected override void Resumed() {
 		/*
 		 * フェンスはフェンス同士で当たり判定させないため常にisKinematicがtrue
 		 * そのためほかのオブジェクトと違い、別でポーズ解除を用意
 		 */
 		rb.isKinematic = true;
+        _audioSource.UnPause();
     }
 }

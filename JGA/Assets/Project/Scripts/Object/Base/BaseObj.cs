@@ -169,6 +169,7 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 			audioSourcesList[i].Pause();
 		}
 
+		Debug.Log(gameObject.name+"のrb:"+rb);
 		pauseVelocity = rb.velocity;
 		pauseAngleVelocity = rb.angularVelocity;
 		//rb.isKinematic = true;
