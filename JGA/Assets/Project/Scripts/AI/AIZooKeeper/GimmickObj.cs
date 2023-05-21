@@ -17,6 +17,7 @@ public class GimmickObj : MonoBehaviour
     public List<GameObject> gimmickList;    // ギミックオブジェクトリスト
     public List<Vector3> resetPos;        // ギミックオブジェクト初期位置
     public List<bool> bReset;               // 元の位置にあるかフラグ
+    public List<bool> bBring;           // オブジェクトを運んでいるか
     private int x1;
     private int z1;
     private int x2;
@@ -33,6 +34,7 @@ public class GimmickObj : MonoBehaviour
                 pos = gimmickList[i].transform.position;
                 resetPos.Add(pos);
                 bReset.Add(true);
+                bBring.Add(false);
             }
         }
         else
