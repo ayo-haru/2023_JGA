@@ -104,7 +104,7 @@ public class PenguinMove : MonoBehaviour
 	/// </summary>
 	void FixedUpdate()
 	{
-        if (pauseFlg)
+        if (pauseFlg && !_GuestNumUI.isClear())
         {
             return;
         }
@@ -338,12 +338,14 @@ public class PenguinMove : MonoBehaviour
     private void Pause()
     {
         pauseFlg = true;
-        anim.speed = 0.0f;
+        if(!_GuestNumUI.isClear())
+            anim.speed = 0.0f;
     }
 
     private void ReGame()
     {
         pauseFlg = false;
-        anim.speed = 1.0f;
+        if (!_GuestNumUI.isClear())
+            anim.speed = 1.0f;
     }
 }
