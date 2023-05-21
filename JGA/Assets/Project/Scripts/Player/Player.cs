@@ -111,7 +111,8 @@ public class Player : MonoBehaviour
 	private Vector3 pauseVelocity;                  // ポーズ時の加速度保存
 	private Vector3 pauseAngularVelocity;           // ポーズ時の加速度保存
 	[SerializeField] private Transform respawnZone;                 // リスポーン位置プレハブ設定用
-																	//----------------------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------------------
 
 	[SerializeField] private Rigidbody holdPos;    // 持つときの位置
 
@@ -1015,7 +1016,7 @@ public class Player : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-		if (other.CompareTag("Interact"))
+		if (!other.CompareTag("Interact"))
 			return;
 
 		WithinRange.Add(other);
