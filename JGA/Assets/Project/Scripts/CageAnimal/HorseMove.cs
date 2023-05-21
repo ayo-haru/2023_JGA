@@ -15,7 +15,7 @@ using UniRx;
 
 public class HorseMove : MonoBehaviour
 {
-    //[SerializeField] private Animator animator;
+    [SerializeField] private Animator animator;
     //private AudioSource audioSource;
     private Rigidbody rb;
     public float horseSpeed;    // スピード
@@ -40,7 +40,7 @@ public class HorseMove : MonoBehaviour
 	/// </summary>
 	void Start()
 	{
-        //if (animator == null) animator = GetComponent<Animator>();
+        if (animator == null) animator = GetComponent<Animator>();
         //if (audioSource == null) audioSource = this.GetComponent<AudioSource>();
         if (rb == null) rb = this.GetComponent<Rigidbody>();
         RandPos();
@@ -99,9 +99,14 @@ public class HorseMove : MonoBehaviour
     /// </summary>
     private void RandPos()
     {
-        target.x = Random.Range(183, 200);
+        float minX = 176;
+        float maxX = 190;
+        float minZ = -165;
+        float maxZ = -183;
+
+        target.x = Random.Range(minX, maxX);
         target.y = transform.localPosition.y;
-        target.z = Random.Range(-175, -158);
+        target.z = Random.Range(minZ, maxZ);
     }
 
     /// <summary>
@@ -116,14 +121,16 @@ public class HorseMove : MonoBehaviour
         {
             // 目的地に移動
             transform.localPosition = Vector3.Lerp(transform.localPosition, target, nowPos);
+            AnimPlay();
         }
         // 到着したら
-        if(nowPos >= 1)
+        if (nowPos >= 1)
         {
             // 動きストップ
             bMove = false;
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
+            AnimPlay();
             // 目的地変更
             Timer();
         }
@@ -154,6 +161,23 @@ public class HorseMove : MonoBehaviour
     }
 
     /// <summary>
+    /// アニメーション処理
+    /// </summary>
+    private void AnimPlay()
+    {
+        if (bMove)
+        {
+            if (!animator.GetBool("isWalk"))
+                animator.SetBool("isWalk", true);
+        }
+        else
+        {
+            if (animator.GetBool("isWalk"))
+                animator.SetBool("isWalk", false);
+        }
+    }
+
+    /// <summary>
     /// 時間処理
     /// </summary>
     private void Timer()
@@ -176,7 +200,7 @@ public class HorseMove : MonoBehaviour
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         // アニメーション
-        //animator.speed = 0.0f;
+        animator.speed = 0.0f;
         // 足音ストップ
         //audioSource.Stop();
     }
@@ -187,6 +211,6 @@ public class HorseMove : MonoBehaviour
     private void Resumed()
     {
         // アニメーション
-        //animator.speed = 1.0f;
+        animator.speed = 1.0f;
     }
 }
