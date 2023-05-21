@@ -19,8 +19,9 @@ public class SoundObject : BaseObj
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
 	/// </summary>
-	void Awake()
+	protected override void Awake()
 	{
+		base.Awake();
 		Init();
 		objType = ObjType.NONE;
 
@@ -60,12 +61,4 @@ public class SoundObject : BaseObj
 		}
 	}
 
-	private void OnCollisionEnter(Collision collison)
-	{
-		//if (collison.gameObject.tag == "Player" && !player.IsHold)
-		//{
-		//    SoundManager.Play(audioSource, SoundManager.ESE.OBJECT_HIT);
-		//}
-	   
-	}
 }
