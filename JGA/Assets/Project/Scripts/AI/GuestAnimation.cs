@@ -117,7 +117,7 @@ public class GuestAnimation : MonoBehaviour
             rot = Quaternion.LookRotation(lookAtTarget.position - transform.position);
             transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * (Mathf.Abs(neckTransform.rotation.y) * 10.0f + 1.0f));
         }
-        else
+        else if(beforeLookAtTarget)
         {
             //首を元の位置に戻す
             if (fAnimTimer > 0.0f) fAnimTimer -= Time.deltaTime;
