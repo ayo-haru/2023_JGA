@@ -1894,6 +1894,36 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 6059633014066229635, guid: c1e67d0513e35e647b21c89ab29787e4,
+        type: 3}
+      propertyPath: actionHit
+      value: 
+      objectReference: {fileID: 8279476593345122056, guid: e7885aee0a6118d40af8785b5a7003f6,
+        type: 3}
+    - target: {fileID: 6059633014066229635, guid: c1e67d0513e35e647b21c89ab29787e4,
+        type: 3}
+      propertyPath: actionRun
+      value: 
+      objectReference: {fileID: -4637313489470884700, guid: e7885aee0a6118d40af8785b5a7003f6,
+        type: 3}
+    - target: {fileID: 6059633014066229635, guid: c1e67d0513e35e647b21c89ab29787e4,
+        type: 3}
+      propertyPath: actionHold
+      value: 
+      objectReference: {fileID: 765001330705067974, guid: e7885aee0a6118d40af8785b5a7003f6,
+        type: 3}
+    - target: {fileID: 6059633014066229635, guid: c1e67d0513e35e647b21c89ab29787e4,
+        type: 3}
+      propertyPath: actionMove
+      value: 
+      objectReference: {fileID: -3561246758459141259, guid: e7885aee0a6118d40af8785b5a7003f6,
+        type: 3}
+    - target: {fileID: 6059633014066229635, guid: c1e67d0513e35e647b21c89ab29787e4,
+        type: 3}
+      propertyPath: actionAppeal
+      value: 
+      objectReference: {fileID: -7643113778988684927, guid: e7885aee0a6118d40af8785b5a7003f6,
+        type: 3}
     - target: {fileID: 6059633014066229641, guid: c1e67d0513e35e647b21c89ab29787e4,
         type: 3}
       propertyPath: m_RootOrder

@@ -817,11 +817,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bb286e7b0488f545863e9c7530574fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 0}
-  audioSource: {fileID: 0}
-  seCall: {fileID: 8300000, guid: fb8d8f05280cdd945b7f2fc17e933289, type: 3}
-  seWalk: {fileID: 8300000, guid: 54f3c2dd230ba0c47b16525eb0e7259f, type: 3}
-  anim: {fileID: 0}
   moveForce: 25
   _maxMoveSpeed: 5
   runMagnification: 1.5
@@ -841,8 +836,16 @@ MonoBehaviour:
   InteractOutline: {fileID: 0}
   InteractJoint: {fileID: 0}
   InteractJointAnchor: {x: 0, y: 0, z: 0}
-  InteractPoint: {fileID: 0}
-  InteractBoundsSizeY: 0
+  actionMove: {fileID: -3561246758459141259, guid: e7885aee0a6118d40af8785b5a7003f6,
+    type: 3}
+  actionAppeal: {fileID: -7643113778988684927, guid: e7885aee0a6118d40af8785b5a7003f6,
+    type: 3}
+  actionHit: {fileID: 8279476593345122056, guid: e7885aee0a6118d40af8785b5a7003f6,
+    type: 3}
+  actionHold: {fileID: 765001330705067974, guid: e7885aee0a6118d40af8785b5a7003f6,
+    type: 3}
+  actionRun: {fileID: -4637313489470884700, guid: e7885aee0a6118d40af8785b5a7003f6,
+    type: 3}
   respawnZone: {fileID: 0}
   holdPos: {fileID: 2875734806798820304}
 --- !u!114 &3789616992787296143
