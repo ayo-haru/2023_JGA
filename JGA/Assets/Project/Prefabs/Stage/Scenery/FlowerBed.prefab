@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7664406308088465519}
   - component: {fileID: 5246929520849845846}
   - component: {fileID: 747729023887251182}
+  - component: {fileID: 7514518897508037593}
   m_Layer: 0
   m_Name: flowerbed
   m_TagString: Untagged
@@ -98,6 +99,22 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 9177846115510963116, guid: 03985c4c7fe38a14a95080e47b770b77, type: 3}
+--- !u!208 &7514518897508037593
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2895190265903301604}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 6, y: 1, z: 6}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &3376497319962841006
 GameObject:
   m_ObjectHideFlags: 0

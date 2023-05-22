@@ -311,4 +311,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objType: 4
-  objDistanceType: 2
+  objDistanceType: 0
