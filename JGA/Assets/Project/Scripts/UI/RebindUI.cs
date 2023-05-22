@@ -110,16 +110,24 @@ public class RebindUI : MonoBehaviour
 	{
 		if (_action == null || _pathText == null) return;
 
-		//InputBinding binding = InputBinding.MaskByGroup(_scheme);
+		InputBinding binding = InputBinding.MaskByGroup(_scheme);
+		Debug.Log($"InputBinding.MaskByGroup(_scheme):{binding}");
 
-		//string name = _action.GetBindingDisplayString(binding);
+		string name = "";
+		//int bindingIndex = _action.GetBindingIndex("Keyboard");
+		name = _action.GetBindingDisplayString(_action.GetBindingIndex(), out var deviceLayoutName, out var controlPath);
+		Debug.Log($"name:{name}");
+		Debug.Log($"deviceLayoutName:{deviceLayoutName}");
+		Debug.Log($"controlPath:{controlPath}");
 
-		//_pathText.GetComponentInChildren<TMP_Text>().text = name;
+		//name = _action.GetBindingDisplayString(bindingIndex, out string _, out string controlPath);
+		//name = _action.GetBindingDisplayString(binding);
 
-		//Debug.Log($"InputBinding.MaskByGroup(_scheme):{binding}");
-		//Debug.Log($"GetBindingDisplayString:{name}");
+		//name = _action.GetBindingDisplayString(_action.GetBindingIndex(InputBinding.MaskByGroup("Keyboard")));
 
-		_pathText.GetComponentInChildren<TMP_Text>().text = _action.GetBindingDisplayString();
+		_pathText.GetComponentInChildren<TMP_Text>().text = name;
+
+		//_pathText.GetComponentInChildren<TMP_Text>().text = _action.GetBindingDisplayString();
 	}
 
 	private void OnStartRebinding(int bindingIndex)
