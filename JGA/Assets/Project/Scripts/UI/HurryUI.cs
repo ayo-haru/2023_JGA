@@ -22,8 +22,6 @@ public class HurryUI : MonoBehaviour
     [SerializeField] private GameObject hurry;
     private RectTransform rtHurry;
 
-    //スクロール速度
-    //[SerializeField,Range(0.0f,10.0f)] private float scrollSpeed = 1.0f;
     //文字移動速度
     [SerializeField, Range(1.0f, 100.0f)] private float moveSpeed = 1.0f;
     //文字中央待機時間
