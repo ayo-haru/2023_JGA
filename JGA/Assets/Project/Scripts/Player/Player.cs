@@ -223,19 +223,11 @@ public class Player : MonoBehaviour
 		if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
 			Move();
 
-		if (_IsHold /*| _IsDrag*/)
+		if (_IsHold && _IsDrag)
 		{
 			if (InteractJoint != null)
 				InteractJoint.anchor = InteractJointAnchor;
 		}
-		//if (_IsDrag)
-		//{
-		//	if (InteractCollision != null)
-		//	{
-		//		InteractJoint.anchor = transform.position - InteractJoint.transform.position;
-		//		//Debug.Log($"InteractCollision.localPosition:{InteractCollision.transform.localPosition}");
-		//	}
-		//}
 	}
 
 	private void Update()
@@ -857,10 +849,9 @@ public class Player : MonoBehaviour
 							(InteractPoint != null && distance > Vector3.Distance(transform.position, children.transform.position)))
 						{
 							InteractPoint = children.transform;
-							distance = Vector3.Distance(transform.position, InteractPoint.position);
+							distance = Vector3.Distance(holdPos.transform.localPosition, InteractPoint.position);
 						}
 					}
-
 				}
 
 				// オブジェクトをくちばし辺りに移動
@@ -875,13 +866,14 @@ public class Player : MonoBehaviour
 				{
 					// HingeJonitの角度制限を有効化
 					InteractJoint = rigidbody.AddComponent<HingeJoint>();
+					InteractJoint.autoConfigureConnectedAnchor = false;
 					InteractJoint.connectedBody = holdPos;
 					InteractJoint.useLimits = true;
 					InteractJoint.anchor = InteractJointAnchor = new Vector3(0, InteractPoint.localPosition.y / InteractBoundsSizeY, 0);
 					//InteractJoint.anchor = new Vector3(0, 1, 0);
 					JointLimits jointLimits = InteractJoint.limits;
 					jointLimits.min = -90.0f;
-					jointLimits.max = 20.0f;
+					jointLimits.max = 45.0f;
 					jointLimits.bounciness = 0;
 					InteractJoint.limits = jointLimits;
 				}
