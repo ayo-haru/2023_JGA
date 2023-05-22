@@ -33,6 +33,7 @@ public class GuestAnimation : MonoBehaviour
     public enum EGuestAnimState { IDLE,WALK,SURPRISED,SIT_IDLE,STAND_UP,WAIT,MAX_GUEST_ANIM_STATE,};
     private EGuestAnimState state;
     private Transform lookAtTarget = null;
+    private Transform beforeLookAtTarget = null;
     private float fAnimTimer;
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -100,18 +101,29 @@ public class GuestAnimation : MonoBehaviour
     private void LateUpdate()
     {
         if (PauseManager.isPaused) return;
-        if (!neckTransform || !lookAtTarget) return;
+        if (!neckTransform) return;
         //座っている又は立っている最中は回転しない
         EGuestAnimState state = GetAnimationState();
         if (state == EGuestAnimState.SIT_IDLE || state == EGuestAnimState.STAND_UP) return;
 
-        //首をターゲットの方向に向ける
-        if(fAnimTimer < 1.0f)fAnimTimer += Time.deltaTime;
-        Quaternion rot = Quaternion.LookRotation(lookAtTarget.position - neckTransform.position);
-        neckTransform.rotation = Quaternion.Slerp(neckTransform.rotation, rot, fAnimTimer);
-        //体をターゲットの方向に向ける
-        rot = Quaternion.LookRotation(lookAtTarget.position - transform.position);
-        transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * (Mathf.Abs(neckTransform.rotation.y) * 10.0f + 1.0f));
+
+        if (lookAtTarget)
+        {
+            //首をターゲットの方向に向ける
+            if (fAnimTimer < 1.0f) fAnimTimer += Time.deltaTime;
+            Quaternion rot = Quaternion.LookRotation(lookAtTarget.position - neckTransform.position);
+            neckTransform.rotation = Quaternion.Slerp(neckTransform.rotation, rot, fAnimTimer);
+            //体をターゲットの方向に向ける
+            rot = Quaternion.LookRotation(lookAtTarget.position - transform.position);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * (Mathf.Abs(neckTransform.rotation.y) * 10.0f + 1.0f));
+        }
+        else
+        {
+            //首を元の位置に戻す
+            if (fAnimTimer > 0.0f) fAnimTimer -= Time.deltaTime;
+            Quaternion rot = Quaternion.LookRotation(beforeLookAtTarget.position - neckTransform.position);
+            neckTransform.rotation = Quaternion.Slerp(neckTransform.rotation, rot, fAnimTimer);
+        }
     }
 #if false
     /// <summary>
@@ -159,6 +171,8 @@ public class GuestAnimation : MonoBehaviour
         if (lookAtTarget == _target) return;
 
         fAnimTimer = 0.0f;
+        fAnimTimer = (_target) ? 0.0f : 1.0f;
+        beforeLookAtTarget = lookAtTarget;
         lookAtTarget = _target;
     }
 
