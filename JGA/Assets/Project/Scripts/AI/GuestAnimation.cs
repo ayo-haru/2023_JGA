@@ -30,7 +30,7 @@ public class GuestAnimation : MonoBehaviour
     //ナビメッシュエージェント
     private NavMeshAgent agent;
     //アニメーションステート
-    public enum EGuestAnimState { IDLE,WALK,SURPRISED,SIT_IDLE,STAND_UP,WAIT,MAX_GUEST_ANIM_STATE,};
+    public enum EGuestAnimState { IDLE,WALK,SURPRISED,SIT_IDLE,STAND_UP,WAIT,HAPPY,MAX_GUEST_ANIM_STATE,};
     private EGuestAnimState state;
     private Transform lookAtTarget = null;
     private Transform beforeLookAtTarget = null;
@@ -164,6 +164,9 @@ public class GuestAnimation : MonoBehaviour
             case EGuestAnimState.WAIT:
                 animator.SetTrigger("wait");
                 break;
+            case EGuestAnimState.HAPPY:
+                animator.SetTrigger("happy");
+                break;
         }
     }
     public void SetLookAt(Transform _target)
@@ -184,6 +187,7 @@ public class GuestAnimation : MonoBehaviour
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Sit")) return EGuestAnimState.SIT_IDLE;
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("StandUp")) return EGuestAnimState.STAND_UP;
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Wait")) return EGuestAnimState.WAIT;
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Happy")) return EGuestAnimState.HAPPY;
 
         return EGuestAnimState.MAX_GUEST_ANIM_STATE;
     }
