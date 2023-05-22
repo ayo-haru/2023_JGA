@@ -144,8 +144,6 @@ public class MainCamera : MonoBehaviour
 		cameraParent = cameraObj.GetTransformObject(true);
 		cameraChild = cameraObj.GetTransformObject(false);
 
-
-
         //カメラの範囲取得
         planes = GeometryUtility.CalculateFrustumPlanes(maincamera);
 

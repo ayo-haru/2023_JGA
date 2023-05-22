@@ -22754,6 +22754,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3636370307376643984, guid: 3da6e633e2278a94fa8fb9e0b5e92536,
         type: 3}
+      propertyPath: cameraZoomIn
+      value: 
+      objectReference: {fileID: 3792627966185094663, guid: e7885aee0a6118d40af8785b5a7003f6,
+        type: 3}
+    - target: {fileID: 3636370307376643984, guid: 3da6e633e2278a94fa8fb9e0b5e92536,
+        type: 3}
       propertyPath: edgeDistance
       value: 15
       objectReference: {fileID: 0}
@@ -22762,6 +22768,12 @@ PrefabInstance:
       propertyPath: guestZoomOut
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 3636370307376643984, guid: 3da6e633e2278a94fa8fb9e0b5e92536,
+        type: 3}
+      propertyPath: cameraZoomOut
+      value: 
+      objectReference: {fileID: 7851456756548833618, guid: e7885aee0a6118d40af8785b5a7003f6,
+        type: 3}
     - target: {fileID: 3636370307376643984, guid: 3da6e633e2278a94fa8fb9e0b5e92536,
         type: 3}
       propertyPath: fieldLeftEdge
@@ -32438,6 +32450,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1643011672}
     m_Modifications:
+    - target: {fileID: 785836917866247662, guid: 0f479ec2beb47e042883397074781f5d,
+        type: 3}
+      propertyPath: bearCount
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 785836917866247662, guid: 0f479ec2beb47e042883397074781f5d,
         type: 3}
       propertyPath: penguinCount
