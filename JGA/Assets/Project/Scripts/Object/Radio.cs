@@ -51,14 +51,20 @@ public class Radio : BaseObj
 	//　当たり判定処理===============================================
 	protected override void OnCollisionEnter(Collision collision)
 	{
+		// ポーズ処理
+		if (PauseManager.isPaused) { return; }
+
 		if (collision.gameObject.tag == "Ground") { PlayDrop(); }		// 地面と当たった時
 
 	}
 
 	protected override void OnTriggerStay(Collider other)
 	{
+		// ポーズ処理
+		if (PauseManager.isPaused) { return; }
+
 		// ペンギンをはたいたときの処理
-		if(other.gameObject.tag == "Player" && player.IsHit){
+		if (other.gameObject.tag == "Player" && player.IsHit){
 
 			ToggleSwitch();				// スイッチの切り替え
 			PlayRadioSound(isSwitch);	// スイッチの状態事の処理
@@ -110,8 +116,11 @@ public class Radio : BaseObj
 	private IEnumerator PlayRadio()
 	{
 		yield return new WaitForSeconds(1.0f);
-		audioSourcesList[1].Play();
 
+		// ポーズ処理
+		if (!PauseManager.isPaused) {
+			audioSourcesList[1].Play();
+		}
 	}
 
 	public bool GetPlayRadio()

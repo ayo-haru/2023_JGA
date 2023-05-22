@@ -45,6 +45,9 @@ public class MegaPhone : BaseObj
     /// </summary>
     void Update()
     {
+        // ポーズ処理
+        if (PauseManager.isPaused) { return; }
+
         //SEが鳴ってるときになっているフラグを返す
         PlaySoundChecker(1);
 
@@ -57,13 +60,14 @@ public class MegaPhone : BaseObj
     }
     protected override void OnCollisionEnter(Collision collison)
     {
+        // ポーズ処理
+        if (PauseManager.isPaused) { return; }
+
         //プレイヤーと当たっていてプレイヤーが持っていなかったら
         if (collison.gameObject.tag == "Player" && !fallFlg)
         {
             PlayHit();
         }
-
-        
 
         //地面に当たったときにプレイヤーが持っている状態から落としたら
         if (collison.gameObject.tag == "Ground" )
@@ -83,6 +87,9 @@ public class MegaPhone : BaseObj
 
     protected override void OnTriggerStay(Collider other)
     {
+        // ポーズ処理
+        if (PauseManager.isPaused) { return; }
+
         if (player.IsHit && other.tag == "Player")
         {
             PlayHit();

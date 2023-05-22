@@ -55,6 +55,9 @@ public class CanObject : BaseObj , IObjectSound
 	protected override void OnCollisionEnter(Collision collison)
 	{
 
+		// ポーズ処理
+		if (PauseManager.isPaused) { return; }
+
 		if (collison.gameObject.tag == "Player"  && !fallFlg)
 		{
 			SoundManager.Play(audioSourcesList[1], SoundManager.ESE.CAN_ROLL);
@@ -78,6 +81,9 @@ public class CanObject : BaseObj , IObjectSound
 
 	protected override void OnTriggerStay(Collider other)
 	{
+		// ポーズ処理
+		if (PauseManager.isPaused) { return; }
+
 		if (player.IsHit && other.tag == "Player")
 		{
 			SoundManager.Play(audioSourcesList[0], SoundManager.ESE.OBJECT_HIT);

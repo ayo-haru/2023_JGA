@@ -41,6 +41,9 @@ public class CornBarObject : BaseObj
 
     protected override void OnCollisionEnter(Collision collision)
     {
+        // ポーズ処理
+        if (PauseManager.isPaused) { return; }
+
         // 地面に当たった時の音を変更
         if (collision.gameObject.tag == "Ground")
         {
@@ -58,6 +61,9 @@ public class CornBarObject : BaseObj
     }
     protected override void OnTriggerStay(Collider other)
     {
+        // ポーズ処理
+        if (PauseManager.isPaused) { return; }
+
         if (other.gameObject.tag == "Player")
         {
             // 掴まれたら音を出す

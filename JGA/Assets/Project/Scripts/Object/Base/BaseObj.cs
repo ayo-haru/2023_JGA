@@ -169,7 +169,6 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 			audioSourcesList[i].Pause();
 		}
 
-		Debug.Log(gameObject.name+"のrb:"+rb);
 		pauseVelocity = rb.velocity;
 		pauseAngleVelocity = rb.angularVelocity;
 		//rb.isKinematic = true;
@@ -197,22 +196,42 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 	// ===================== インターフェースメソッド =========================
 	public void PlayHit()
 	{
+		// ポーズ処理
+		if (PauseManager.isPaused) { return; }
+
 		SoundManager.Play(audioSourcesList[0], SoundManager.ESE.OBJECT_HIT);
+		Debug.Log(audioSourcesList[0].name + "<color=blue>の音</color>");
+
 	}
 
 	public void PlayHit(AudioSource audioSource, SoundManager.ESE soundNumber)
 	{
+		// ポーズ処理
+		if (PauseManager.isPaused) { return; }
+
 		SoundManager.Play(audioSource, (SoundManager.ESE)soundNumber);
+		Debug.Log(soundNumber + "<color=blue>の音</color>");
+
 	}
 
 	public void PlayDrop()
 	{
+		// ポーズ処理
+		if (PauseManager.isPaused) { return; }
+
 		SoundManager.Play(audioSourcesList[0], SoundManager.ESE.OBJECT_DROP);
+		Debug.Log(audioSourcesList[0].name + "<color=blue>の音</color>");
+
 	}
 
 	public void PlayDrop(AudioSource audioSource, SoundManager.ESE soundNumber)
 	{
+		// ポーズ処理
+		if (PauseManager.isPaused) { return; }
+
 		SoundManager.Play(audioSource, (SoundManager.ESE)soundNumber);
+		Debug.Log(soundNumber + "<color=blue>の音</color>");
+
 	}
 	//=====================================================================
 

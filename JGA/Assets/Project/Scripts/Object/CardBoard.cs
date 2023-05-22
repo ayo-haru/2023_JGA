@@ -55,8 +55,11 @@ public class CardBoard : BaseObj
 
 	protected override void OnCollisionEnter(Collision collision)
 	{
+		// ポーズ処理
+		if (PauseManager.isPaused) { return; }
+
 		// 段ボールが地面に当たった時の音を変更
-		if(collision.gameObject.tag == "Ground"){
+		if (collision.gameObject.tag == "Ground"){
 			if(!isPlaySound && isPlay)
 			{
 				PlayDrop(audioSourcesList[0], SoundManager.ESE.CARDBOARDBOX_002);
@@ -116,7 +119,10 @@ public class CardBoard : BaseObj
 
 	protected override void OnTriggerStay(Collider other)
 	{
-		if(other.gameObject.tag == "Player")
+		// ポーズ処理
+		if (PauseManager.isPaused) { return; }
+
+		if (other.gameObject.tag == "Player")
 		{
 			// 殴られたら音を出す
 			if (player.IsHit)

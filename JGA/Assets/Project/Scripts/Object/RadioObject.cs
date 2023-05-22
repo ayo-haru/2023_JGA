@@ -57,6 +57,9 @@ public class RadioObject : BaseObj, IObjectSound
 	/// </summary>
 	void Update()
 	{
+		// ポーズ処理
+		if (PauseManager.isPaused) { return; }
+
 		//SEが鳴ってるときになっているフラグを返す
 		PlaySoundChecker();
 		//ラジオが鳴っているときの処理
@@ -77,6 +80,9 @@ public class RadioObject : BaseObj, IObjectSound
 
 	protected override void OnCollisionEnter(Collision collison)
 	{
+		// ポーズ処理
+		if (PauseManager.isPaused) { return; }
+
 		//プレイヤーと当たっていてプレイヤーが持っていなかったら
 		if (collison.gameObject.tag == "Player" && !fallFlg)
 		{
@@ -93,6 +99,9 @@ public class RadioObject : BaseObj, IObjectSound
 
 	protected override void OnTriggerStay(Collider other)
 	{
+		// ポーズ処理
+		if (PauseManager.isPaused) { return; }
+
 		//プレイヤーがはたいたときにOnOffする
 		if (player.IsHit && other.tag == "Player")
 		{
@@ -167,7 +176,7 @@ public class RadioObject : BaseObj, IObjectSound
 	protected override void Resumed()
 	{
 		//audioSource.Play();
-		playAudio[RadioAudio].Play();
+		playAudio[RadioAudio].UnPause();
 		// 物理挙動開始
 		rb.velocity = pauseVelocity;
 		rb.angularVelocity = pauseAngleVelocity;

@@ -31,6 +31,9 @@ public class Fence : BaseObject
 
 	protected override void OnCollisionEnter(Collision collision)
 	{
+		// ポーズ処理
+		if (PauseManager.isPaused) { return; }
+
 		if (collision.gameObject){
 			PlayHit(_audioSource,SoundManager.ESE.STEALFENCE);
 		}
