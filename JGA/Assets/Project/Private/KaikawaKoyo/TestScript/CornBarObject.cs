@@ -11,12 +11,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class CornBarObject : BaseObj
 {
 
     private bool isPlay = false;
+    private bool isOnce = false;
 
+    private NavMeshObstacle obstacle;
     /// <summary>
     /// 最初のフレーム更新の前に呼び出される
     /// </summary>
@@ -25,6 +28,7 @@ public class CornBarObject : BaseObj
         Init();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         objType = ObjType.HIT_HOLD;
+        obstacle = gameObject.GetComponent<NavMeshObstacle>();
     }
     
     /// <summary>
@@ -49,7 +53,7 @@ public class CornBarObject : BaseObj
         {
             if (!isPlaySound && isPlay)
             {
-                PlayDrop(audioSourcesList[0], SoundManager.ESE.CARDBOARDBOX_002);
+                PlayDrop(audioSourcesList[0], SoundManager.ESE.PLASTIC_FALL);
             }
             if (!isPlay)
                 isPlay = true;
@@ -60,13 +64,29 @@ public class CornBarObject : BaseObj
         // ポーズ処理
         if (PauseManager.isPaused) { return; }
 
-        if (other.gameObject.tag == "Player")
-        {
-            // 掴まれたら音を出す
-            if (player.IsHold)
-            {
-                PlayDrop(audioSourcesList[0], SoundManager.ESE.CAN_CATCH);
+        // ペンギン叩いたときの処理
+        if(other.gameObject.tag == "Player" && player.IsHit){
+
+            if (!isOnce){
+                PlayHit();
+                obstacle.enabled = false;
+                isOnce = true;
             }
         }
+
+        // ペンギン掴んだ時の処理
+        if(other.gameObject.tag == "Player" && player.IsHold){
+
+            if (!isOnce){
+                PlayHit(audioSourcesList[0], SoundManager.ESE.PENGUIN_CATCH);
+                obstacle.enabled = false;
+                isOnce = true;
+            }
+        }
+
+        if (!player.IsHit && !player.IsHold){
+            isOnce = false;
+        }
+
     }
 }

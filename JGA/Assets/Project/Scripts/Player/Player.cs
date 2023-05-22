@@ -626,8 +626,8 @@ public class Player : MonoBehaviour
 
 		// 長押し終了
 		//else if (context.phase == InputActionPhase.Canceled)
-			if (_IsHold)
-			{
+		if (_IsHold)
+		{
 			if (InteractCollision == null)
 				return;
 
