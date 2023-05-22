@@ -72,12 +72,12 @@ public class StateAttention : AIState
         if (!ErrorCheck()) return;
 
         //ナビメッシュ停止
-        agent.speed = 0.0f;
+        agent.isStopped = true;
         //感情UI設定
         ui.SetEmotion(EEmotion.QUESTION);
         //アニメーション設定
-        guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.IDLE);
         guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.SURPRISED);
+        guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.IDLE);
         guestAnimation.SetLookAt(target);
     }
 
@@ -89,6 +89,7 @@ public class StateAttention : AIState
     public override void FinState()
     {
         if(ui)ui.SetEmotion(EEmotion.NONE);
+        if (agent) agent.isStopped = false;
     }
 
     public override bool ErrorCheck()

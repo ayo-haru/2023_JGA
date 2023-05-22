@@ -138,14 +138,16 @@ public class StateFollowPenguin : AIState
         }
 
         //驚きモーション中は移動させない
-        agent.isStopped = (guestAnimation.GetAnimationState() == GuestAnimation.EGuestAnimState.SURPRISED);
+        GuestAnimation.EGuestAnimState animState = guestAnimation.GetAnimationState();
+        agent.isStopped = (animState == GuestAnimation.EGuestAnimState.SURPRISED || animState == GuestAnimation.EGuestAnimState.STAND_UP || animState == GuestAnimation.EGuestAnimState.SIT_IDLE);
         //ペンギンが客に押されてしまうのを防ぐため、ペンギンとの距離が近かったら移動させない
         if(!agent.isStopped)agent.isStopped = Vector3.Distance(transform.position, target.position) < data.distance;
 
         //!!!,!!の時は追従する プレイヤーが客に向かって歩いてるときは追従しない
         float dot = Vector3.Dot(agent.velocity.normalized,player.vForce.normalized);
-        agent.speed = (ui.GetEmotion() >= EEmotion.ATTENSION_MIDDLE && dot >= 0) ? player.MaxAppealSpeed * data.followSpeed : 0.0f; 
-        agent.SetDestination(target.position + posOffset);
+        agent.speed = (ui.GetEmotion() >= EEmotion.ATTENSION_MIDDLE && dot >= 0) ? player.MaxAppealSpeed * data.followSpeed : 0.0f;
+
+        if (NavMesh.SamplePosition(target.position + posOffset, out NavMeshHit hit, 1.0f, NavMesh.AllAreas)) agent.SetDestination(hit.position);
 
         //アニメーション更新
         guestAnimation.SetAnimation((agent.velocity.magnitude > 0.2f) ? GuestAnimation.EGuestAnimState.WALK : GuestAnimation.EGuestAnimState.IDLE);
