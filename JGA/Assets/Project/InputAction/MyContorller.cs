@@ -75,17 +75,6 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
             ],
             ""bindings"": [
                 {
-                    ""name"": """",
-                    ""id"": ""ba710e39-33f6-44ed-854d-c3702eb2f452"",
-                    ""path"": ""<Gamepad>/leftStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
                     ""name"": ""2D Vector"",
                     ""id"": ""2f1ec988-dbf9-4f5f-b9da-ea921bf18b40"",
                     ""path"": ""2DVector"",
@@ -142,12 +131,12 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""b86b9dd1-fd84-466c-b1ee-67955fa0e0c7"",
-                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""id"": ""ba710e39-33f6-44ed-854d-c3702eb2f452"",
+                    ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""Appeal"",
+                    ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -175,22 +164,33 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""b81c6db9-8b26-448a-a4ce-dfc37950a0a6"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""id"": ""74171726-f7a2-477e-82f7-59f31f2b8a5f"",
+                    ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""Keyboard"",
                     ""action"": ""Hit"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""74171726-f7a2-477e-82f7-59f31f2b8a5f"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
+                    ""id"": ""ef1cb05f-e57a-48a4-816a-0e4f29bacc10"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": ""Hold(duration=0.01,pressPoint=0.02)"",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
+                    ""action"": ""Hold"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b81c6db9-8b26-448a-a4ce-dfc37950a0a6"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Hit"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -208,12 +208,12 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""ef1cb05f-e57a-48a4-816a-0e4f29bacc10"",
-                    ""path"": ""<Mouse>/rightButton"",
-                    ""interactions"": ""Hold(duration=0.01,pressPoint=0.02)"",
+                    ""id"": ""b86b9dd1-fd84-466c-b1ee-67955fa0e0c7"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Hold"",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Appeal"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }

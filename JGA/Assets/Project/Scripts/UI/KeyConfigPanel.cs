@@ -18,15 +18,15 @@ using UnityEngine.UI;
 
 public class KeyConfigPanel : MonoBehaviour
 {
-	enum SettingMode
+	public enum SettingMode
 	{
 		KEYBOARD,
 		GAMEPAD,
 	};
 
-	[SerializeField] GameObject			LayoutKeyboard;
-	[SerializeField] GameObject			LayoutGamePad;
-	[SerializeField] GameObject			WaitPanel;
+	[SerializeField] GameObject	LayoutKeyboard;
+	[SerializeField] GameObject	LayoutGamePad;
+	[SerializeField] GameObject	WaitPanel;
 
 	SettingMode settingMode = SettingMode.KEYBOARD;
 
@@ -49,8 +49,27 @@ public class KeyConfigPanel : MonoBehaviour
 
 	}
 
-	void ChangePanel(SettingMode mode)
+	public void ChangePanel(GameObject obj)
 	{
+		if (obj == LayoutKeyboard)
+		{
+			settingMode = SettingMode.KEYBOARD;
+			ChangePanel(settingMode);
+		}
+		else if (obj == LayoutGamePad)
+		{
+			settingMode = SettingMode.GAMEPAD;
+			ChangePanel(settingMode);
+		}
+		else
+		{
+			Debug.LogError($"オブジェクト指定が間違っています");
+		}
+	}
+
+	public void ChangePanel(SettingMode mode)
+	{
+		settingMode = mode;
 		LayoutKeyboard.SetActive(mode == SettingMode.KEYBOARD);
 		LayoutGamePad.SetActive(mode == SettingMode.GAMEPAD);
 	}
