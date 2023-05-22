@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: 8cc00e92446cf954dbfea3b183392f21
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - penguinsData: {fileID: 11400000, guid: 3d81b8c286d701f4b8fadcef04fe4c77, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
