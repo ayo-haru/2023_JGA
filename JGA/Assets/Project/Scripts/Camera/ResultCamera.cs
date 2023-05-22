@@ -13,8 +13,8 @@
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
-
 public class ResultCamera : MonoBehaviour
 {
 	private GameObject mainCamera;                  //メインカメラ格納用
@@ -38,7 +38,9 @@ public class ResultCamera : MonoBehaviour
     /// </summary>
     void Awake()
 	{
-		mainCamera = GameObject.Find("CameraParent");
+        
+
+        mainCamera = GameObject.Find("CameraParent");
         if (!mainCamera)
         {
             Debug.LogWarning("mainCameraがシーン上にありません");
@@ -85,7 +87,7 @@ public class ResultCamera : MonoBehaviour
 		if(Input.GetKeyDown(KeyCode.K)) 
 		{
             clear = true;
-            ChangeCamera();
+           // ChangeCamera();
         }
 		
 
@@ -97,7 +99,7 @@ public class ResultCamera : MonoBehaviour
 				if (!clear)
 				{
                     clear = true;
-					ChangeCamera();
+					//ChangeCamera();
 				}
             }
 
@@ -127,17 +129,16 @@ public class ResultCamera : MonoBehaviour
         //フレーム数(時間を計算して一周したかどうかをたしかめる)
         if (rotateFlame >= rotateTime)
         {
-            
             rotateFlg = true;
             return;
         }
         rotateFlame += Time.deltaTime;
 
         //カメラを中心に向けて360から〇秒で回転を終わらせる処理
-        resultCamera.transform.RotateAround(Vector3.zero,
+        mainCamera.transform.RotateAround(Vector3.zero,
                                             Vector3.up,
                                             360 / rotateTime * Time.deltaTime);
-        
+
     }
 
 }

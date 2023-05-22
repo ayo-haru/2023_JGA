@@ -41,7 +41,9 @@ public class MainCamera : MonoBehaviour
 
 
     //インプットアクション
-    private MyContorller gameInput;
+    [SerializeField] private InputActionReference cameraZoomIn;
+    [SerializeField] private InputActionReference cameraZoomOut;
+
     //プレイヤー追従用のプレイヤー取得
     [SerializeField]private GameObject targetObject;
     //プレイヤーの座標変更取得
@@ -147,16 +149,16 @@ public class MainCamera : MonoBehaviour
         //カメラの範囲取得
         planes = GeometryUtility.CalculateFrustumPlanes(maincamera);
 
-        gameInput = new MyContorller();
-        //インプットアクション設定
-        gameInput.Camera.ZoomIn.started += OnZoomIn;
-        gameInput.Camera.ZoomIn.performed+= OnZoomIn;
-        gameInput.Camera.ZoomIn.canceled += OnZoomIn;
-        gameInput.Camera.ZoomOut.started += OnZoomOut;
-        gameInput.Camera.ZoomOut.performed += OnZoomOut;
-        gameInput.Camera.ZoomOut.canceled += OnZoomOut;
+        ////インプットアクション設定
+        cameraZoomIn.action.started += OnZoomIn;
+        cameraZoomIn.action.performed += OnZoomIn;
+        cameraZoomIn.action.canceled += OnZoomIn;
+        cameraZoomOut.action.started += OnZoomOut;
+        cameraZoomOut.action.performed += OnZoomOut;
+        cameraZoomOut.action.canceled += OnZoomOut;
 
-        gameInput.Enable();
+        cameraZoomIn.ToInputAction().Enable();
+        cameraZoomOut.ToInputAction().Enable();
     }
 
 	/// <summary>
