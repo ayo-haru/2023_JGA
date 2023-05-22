@@ -176,7 +176,8 @@ public class Player : MonoBehaviour
 		InteractObjectParent = GameObject.Find("InteractObject");
 
 
-		// Input Actionインスタンス生成
+		//--- Input Actionイベント登録
+		// インスタンス生成
 		gameInputs = new MyContorller();
 
 		// Actionイベント登録
@@ -200,7 +201,7 @@ public class Player : MonoBehaviour
 				keyConfigPanel = obj.GetComponent<KeyConfigPanel>();
 		}
 
-		// アピール速度設定
+		//--- 速度設定
 		runForce = moveForce * runMagnification;
 		_maxRunSpeed = _maxMoveSpeed * runMagnification;
 		appealForce = (moveForce + runForce) / 2;
@@ -231,7 +232,7 @@ public class Player : MonoBehaviour
 		//{
 		//	if (InteractCollision != null)
 		//	{
-		//		//InteractJoint.anchor = transform.position - InteractJoint.transform.position;
+		//		InteractJoint.anchor = transform.position - InteractJoint.transform.position;
 		//		//Debug.Log($"InteractCollision.localPosition:{InteractCollision.transform.localPosition}");
 		//	}
 		//}
@@ -419,7 +420,7 @@ public class Player : MonoBehaviour
 	}
 
 	/// <summary>
-	/// ポーズ開始時の
+	/// ポーズ開始時処理
 	/// </summary>
 	private void Pause()
 	{
@@ -441,6 +442,9 @@ public class Player : MonoBehaviour
 		InteractCollision = null;
 	}
 
+	/// <summary>
+	/// ポーズ終了時処理
+	/// </summary>
 	private void Resumed()
 	{
 		// Input Actionを有効化
@@ -834,8 +838,6 @@ public class Player : MonoBehaviour
 		{
 			if (InteractCollision.TryGetComponent(out Rigidbody rigidbody))
 			{
-				InteractCollision.transform.parent = transform;
-
 				// メッシュのサイズを取得
 				Bounds maxBounds = new Bounds(Vector3.zero, Vector3.zero);
 				maxBounds.Encapsulate(InteractCollision.GetComponentInChildren<MeshFilter>().mesh.bounds);
@@ -864,6 +866,7 @@ public class Player : MonoBehaviour
 				// オブジェクトをくちばし辺りに移動
 				//var pos = holdPos.transform.localPosition - point.localPosition;
 				//InteractCollision.transform.localPosition = pos;
+				//InteractCollision.transform.parent = transform;
 				InteractCollision.transform.parent = holdPos.transform;
 				InteractCollision.transform.localPosition = Vector3.zero;
 				InteractCollision.transform.rotation = transform.rotation;
@@ -872,7 +875,7 @@ public class Player : MonoBehaviour
 				{
 					// HingeJonitの角度制限を有効化
 					InteractJoint = rigidbody.AddComponent<HingeJoint>();
-					InteractJoint.connectedBody = rb;
+					InteractJoint.connectedBody = holdPos;
 					InteractJoint.useLimits = true;
 					InteractJoint.anchor = InteractJointAnchor = new Vector3(0, InteractPoint.localPosition.y / InteractBoundsSizeY, 0);
 					//InteractJoint.anchor = new Vector3(0, 1, 0);
@@ -915,6 +918,7 @@ public class Player : MonoBehaviour
 		if (bDrag)
 		{
 			InteractCollision.transform.parent = transform;
+			//InteractCollision.transform.parent = holdPos.transform;
 			//dragRotation = InteractCollision.transform.localRotation;
 
 			//引きずり開始
@@ -922,7 +926,7 @@ public class Player : MonoBehaviour
 			//HingeJointの設定
 			InteractJoint = InteractCollision.GetComponent<HingeJoint>();
 			if (!InteractJoint) InteractJoint = rigidbody.AddComponent<HingeJoint>();
-			InteractJoint.connectedBody = holdPos;
+			InteractJoint.connectedBody = rb;
 			//InteractJoint.anchor = InteractJoint.transform.InverseTransformPoint(transform.TransformPoint(holdPos.transform.localPosition));//HoldPosを設定
 			InteractJoint.anchor = transform.position - InteractJoint.transform.position;
 			InteractJoint.axis = Vector3.up;
