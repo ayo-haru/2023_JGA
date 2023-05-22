@@ -461,7 +461,6 @@ public class KeeperAI : MonoBehaviour
         {
             moveFlg = false;
             // 置くアニメーション開始
-            animator.SetBool("isWalk", false);
             animator.SetFloat("speed", -1f);
             animator.Play("Pick", 0, 1f);
         }
@@ -489,7 +488,7 @@ public class KeeperAI : MonoBehaviour
     }
 
     /// <summary>
-    /// 一時停止するコルーチン
+    /// 一時停止する
     /// </summary>
     private IEnumerator MoveStop()
     {
@@ -591,9 +590,11 @@ public class KeeperAI : MonoBehaviour
         navMesh.speed = 0.0f;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
-        // 待機モーションにする
-        animator.SetBool("isWalk", false);
-        animator.SetBool("isChase", false);
+
+        // アニメーション更新
+        if (animator.GetBool("isWalk")) animator.SetBool("isWalk", false);
+        if (!chaseNow)
+            if (animator.GetBool("isChase")) animator.SetBool("isChase", false);
     }
 
     /// <summary>
