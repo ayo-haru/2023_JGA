@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8606787176929645852}
   - component: {fileID: 5436372565661073130}
   - component: {fileID: 3522259252630110900}
+  - component: {fileID: 2772253922843136055}
   m_Layer: 0
   m_Name: parasol
   m_TagString: Untagged
@@ -26,8 +27,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4446147001435098146}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.00000024631044, y: 3.6978745, z: -0.00000024631044}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -138,6 +139,22 @@ MonoBehaviour:
       isCreate: 1
       viewAdvanced: 0
     modifyNameEnabled: 1
+--- !u!208 &2772253922843136055
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4446147001435098146}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 2.3, y: 2.5, z: 2.3}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: -4.8, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &6781589889059720419
 GameObject:
   m_ObjectHideFlags: 0
