@@ -82,8 +82,6 @@ public class StageSceneManager : BaseSceneManager {
     //---変数
     private bool isOnce; // 一度だけ処理をするときに使う
 
-    MyContorller inputAction;
-
     // デバッグ用チェック
     [Space(100)]
     [Header("---デバッグ用！スポーンさせるかどうか---\n"
@@ -136,12 +134,19 @@ public class StageSceneManager : BaseSceneManager {
     /// </summary>
     void Awake() {
         Init();
-        Application.targetFrameRate = 60;       // FPSを60に固定
+
+#if UNITY_EDITOR
+        //セーブデータ読み込み
+        MySceneManager.GameData.isContinueGame = SaveSystem.load();
+#endif
 
         isOnce = false;
 
-        inputAction = new MyContorller();
-        inputAction.Enable();
+        if (MySceneManager.GameData.isContinueGame) {
+
+        } else {
+            BeginGame();
+        }
 
         //----- イベントを静的クラスに保存 -----
         MySceneManager.GameData.events = new EventParam[this.events.Length];
@@ -229,13 +234,12 @@ public class StageSceneManager : BaseSceneManager {
 
         //----- プレイヤーの生成 -----
         if (isPlayerSpawn) {
-            playerRespawn = GameObject.Find("PlayerSpawn");
             if (playerMode == PlayerMode.Penguin) {
                 playerObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Player.prefab");
             } else {
                 playerObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Player(old).prefab");
             }
-            playerInstance = Instantiate(playerObj, playerRespawn.transform.position, Quaternion.Euler(0.0f, 5.0f, 0.0f));
+            playerInstance = Instantiate(playerObj, MySceneManager.GameData.playerPos, Quaternion.Euler(0.0f, 5.0f, 0.0f));
             playerInstance.name = "Player";
         }
 
@@ -274,6 +278,9 @@ public class StageSceneManager : BaseSceneManager {
     }
 
     void Update() {
+        //----- プレイヤーの座標保存 -----
+        MySceneManager.GameData.playerPos = playerInstance.transform.position;
+
         //----- 時間系の処理 -----
         if (timerUI) {
             //----- 制限時間のゲームオーバー -----
@@ -539,5 +546,12 @@ public class StageSceneManager : BaseSceneManager {
                 zooKeeperInstace.GetComponent<ZooKeeperAI>().SetData(_zooKeeperList[i]);
             }
         }
+    }
+
+    private void BeginGame() {
+        MySceneManager.GameData.guestCnt = 0;
+        MySceneManager.GameData.timer = 0.0f;
+        playerRespawn = GameObject.Find("PlayerSpawn");
+        MySceneManager.GameData.playerPos = playerRespawn.transform.position;
     }
 }

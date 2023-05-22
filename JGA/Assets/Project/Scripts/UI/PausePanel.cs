@@ -205,6 +205,8 @@ public class PausePanel : MonoBehaviour
 
 	private void ChangeTitle()
 	{
+		SaveManager.SaveAll();	// タイトル戻る前にセーブ
+
 		MySceneManager.SceneChange(MySceneManager.SceneState.SCENE_TITLE);
 	}
 
