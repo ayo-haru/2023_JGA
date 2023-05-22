@@ -2001,6 +2001,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 4413733639145991966}
   chaseNow: 0
+  hand: {fileID: 1091430935957669445}
   isDebug: 0
   data:
     name: Zookeeper
