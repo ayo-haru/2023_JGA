@@ -193,9 +193,6 @@ public class AIManager : MonoBehaviour
     private void OnDrawGizmos()
     {
 #if UNITY_EDITOR
-        //ペンギン到着エリア
-        Handles.color = new Color(1, 0, 0, 0.1f);
-        Handles.DrawSolidArc(transform.position, Vector3.up,transform.forward, 360.0f, data.arrivalPenguinArea);
         //アピール反応エリア
         Handles.color = new Color(0, 1, 0, 0.3f);
         Handles.DrawSolidArc(transform.position,Vector3.up,transform.forward,360.0f,data.reactionArea);
