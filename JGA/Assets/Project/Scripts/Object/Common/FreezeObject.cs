@@ -2,11 +2,12 @@
 // @File	: [FreezeObject.cs]
 // @Brief	: 
 // @Author	: KAIKAWA KOYO
-// @Editer	: 
+// @Editer	: YOSHIHARA ASUKA
 // @Detail	: 
 // 
 // [Date]
 // 2023/05/08	スクリプト作成
+// 2023/05/22	音再生
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ public class FreezeObject : MonoBehaviour
     [SerializeField] private float shakepower = 0.2f;   // 揺れの強さ
     [SerializeField] private int   shakevibrato = 100;  // 揺れの数
     [SerializeField] private float shakerandom = 100;   // 揺れのランダム度合い
+    private AudioSource _audioSource;
     private Tweener shakeTweener;
     private Vector3 InitPosition;
     private bool IsShake;
@@ -33,6 +35,7 @@ public class FreezeObject : MonoBehaviour
 		player = GameObject.FindWithTag("Player").GetComponent<Player>();
         InitPosition = transform.position;
         delaytime = 0.2f;
+        _audioSource = GetComponent<AudioSource>();
     }
 
     /// <summary>
@@ -55,6 +58,7 @@ public class FreezeObject : MonoBehaviour
             if (player.IsHitMotion)
             {
                 Invoke(nameof(StartShake), delaytime);
+                SoundManager.Play(_audioSource,SoundManager.ESE.TRASHBOX_GASAGASA);
             }
         }
     }
