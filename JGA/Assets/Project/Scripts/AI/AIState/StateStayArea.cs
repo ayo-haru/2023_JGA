@@ -138,6 +138,7 @@ public class StateStayArea : AIState
         {
             //待機アニメーションの再生
             guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.IDLE);
+            //guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.HAPPY);
             //ui設定
             ui.SetEmotion(EEmotion.HIGH_TENSION);
             isStay = true;
