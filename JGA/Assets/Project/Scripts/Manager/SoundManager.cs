@@ -81,6 +81,9 @@ public class SoundManager : MonoBehaviour
 		// プラスチックが落ちる音
 		PLASTIC_FALL,
 
+		// ゴミ箱音
+		TRASHBOX_GASAGASA,
+
 		//----------------
 
 		// 人関連----------
