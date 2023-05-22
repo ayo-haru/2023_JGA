@@ -42,15 +42,12 @@ public class TimerSliderUI : MonoBehaviour
     [SerializeField] private Transform timerPointsPearent;      //親オブジェクト
     public struct TimerPointObject
     {
-        //public GameObject timerPoint;
         public float percent;
     }
     private TimerPointObject[] timerPoints;
     [SerializeField] private Sprite timerPointYellow;
     private int nCurrentPoint = 0;
 
-    //残り秒数表示用のテキスト
-    //[SerializeField] private TextMeshProUGUI text;
 #if false
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -65,7 +62,6 @@ public class TimerSliderUI : MonoBehaviour
 	/// </summary>
 	void Start()
 	{
-		//text.text = text.text = string.Format("{0:0}", (int)(playMinutes * 60.0f));
         nCurrentPoint = 0;
 
         float width = gameObject.GetComponent<RectTransform>().rect.width;
@@ -75,10 +71,7 @@ public class TimerSliderUI : MonoBehaviour
         //イベントの数＋最初と最後の丸を生成
         for (int i = 0; i < nEvent; ++i)
         {
-            //timerPoints[i].timerPoint = Instantiate(timerPointPrefab);
             timerPoints[i].percent = MySceneManager.GameData.events[i].percent / 100.0f;
-            //timerPoints[i].timerPoint.transform.SetParent(timerPointsPearent);
-           // timerPoints[i].timerPoint.transform.localPosition = new Vector3(timerPoints[i].percent * width + -width / 2, 0.0f, 0.0f);
         }
     }
 	/// <summary>
@@ -114,13 +107,8 @@ public class TimerSliderUI : MonoBehaviour
         for(int i = nCurrentPoint; i < timerPoints.Length; ++i)
         {
             if (timerSlider.value < timerPoints[i].percent) continue;
-            //if (timerPoints[i].timerPoint.TryGetComponent(out Image image)) image.sprite = timerPointYellow;
-            //if(i > 0 && i < timerPoints.Length - 1)SoundManager.Play(audioSource, SoundManager.ESE.DECISION_001);
             nCurrentPoint = i + 1;
         }
-
-        //残り秒数の表示更新
-        //text.text = string.Format("{0:0}", (int)(playMinutes * 60.0f - fTimer));
 
         if (!bSound) return;
         if (fTimer < (playMinutes * 60.0f - soundSeconds)) return;
