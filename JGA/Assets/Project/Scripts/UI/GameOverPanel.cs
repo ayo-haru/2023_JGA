@@ -16,7 +16,7 @@ using UnityEngine.EventSystems;
 public class GameOverPanel : MonoBehaviour
 {
     private AudioSource audioSource;
-
+    [SerializeField, Header("GAMEOVER")] private Image gameOver;
     //ボタンの色
     [SerializeField, Header("ボタンの色")] private Color buttonColor;
 
@@ -46,10 +46,13 @@ public class GameOverPanel : MonoBehaviour
         nextScene = -1;
         bMouse = true;
         mousePos = Vector3.zero;
+        gameOver.fillAmount = 0.0f;
     }
 
     private void Update()
     {
+
+        gameOver.fillAmount += Time.deltaTime;
         //マウス、コントローラの値取得
         Gamepad gamepad = Gamepad.current;
         Vector3 oldMousePos = mousePos;
