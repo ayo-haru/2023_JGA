@@ -2,12 +2,13 @@
 // @File	: [FadeManager.cs]
 // @Brief	: 
 // @Author	: Ichida Mai
-// @Editer	: Sakai Ryotaro
+// @Editer	: Sakai Ryotaro Ogusu Yuuko
 // @Detail	: 
 // 
 // [Date]
 // 2023/03/08	スクリプト作成
 // 2023/04/04	フェード時にポーズ画面を表示させない処理を追加
+// 2023/05/22   フェード中の時だけraycastTargetをtrueにした
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -91,6 +92,8 @@ public class FadeManager : MonoBehaviour
 			}
 			image.color = new Color(0.0f, 0.0f, 0.0f, alpha);
 		}
+
+        image.raycastTarget = (fadeMode != eFade.Default);
 	}
 
 	/// <summary>
