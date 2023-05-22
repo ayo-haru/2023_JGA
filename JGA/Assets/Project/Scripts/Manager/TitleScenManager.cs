@@ -54,8 +54,8 @@ public class TitleScenManager : BaseSceneManager
 
         //もしセーブデータがなかったら次に遷移するシーンはゲーム001
         if (MySceneManager.GameData.isContinueGame) {
-            SaveManager.LoadAll();
-            nextScene = MySceneManager.GameData.nowScene;
+            SaveManager.LoadAll();  // セーブデータロード
+            nextScene = MySceneManager.GameData.nowScene;   // 次のシーンを更新
         } else {
             MySceneManager.GameData.nowScene = (int)MySceneManager.SceneState.SCENE_TITLE;
             nextScene = (int)MySceneManager.SceneState.SCENE_GAME_001;
@@ -111,6 +111,7 @@ public class TitleScenManager : BaseSceneManager
     public void StartButton()
     {
         SoundSEDecision();
+        MySceneManager.GameData.oldScene = (int)MySceneManager.SceneState.SCENE_TITLE;  // 今のシーンをひとつ前のシーンとして保存
         SceneChange(nextScene);
         //コントローラ入力の場合マウスカーソルが非表示のままになってしまうので表示する
         if (!bMouse)Cursor.visible = true;

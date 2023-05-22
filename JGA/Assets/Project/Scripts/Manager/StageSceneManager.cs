@@ -121,14 +121,6 @@ public class StageSceneManager : BaseSceneManager {
     private GameObject guestObj_old;    // 生成する客のプレハブ
 
 
-
-
-    //-0510デバッグ用---------------------------
-    int stateCnt = 0;
-    //----------------------------
-
-
-
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
     /// </summary>
@@ -138,12 +130,23 @@ public class StageSceneManager : BaseSceneManager {
 #if UNITY_EDITOR
         //セーブデータ読み込み
         MySceneManager.GameData.isContinueGame = SaveSystem.load();
+
+        if(MySceneManager.GameData.nowScene == 0) { // 本来ならnowSceneneには現在のシーン番号が入るがエディタ上で実行した場合は0が入っているので初期化
+            for (int i = 0; i < System.Enum.GetNames(typeof(MySceneManager.SceneState)).Length; i++) {
+                if (SceneManager.GetActiveScene().name == MySceneManager.sceneName[i]) {
+                    MySceneManager.GameData.nowScene = i;
+                }
+            }
+            MySceneManager.GameData.oldScene = MySceneManager.GameData.nowScene;
+        }
 #endif
 
         isOnce = false;
 
-        if (MySceneManager.GameData.isContinueGame) {
-
+        if (MySceneManager.GameData.isContinueGame && MySceneManager.GameData.oldScene == (int)MySceneManager.SceneState.SCENE_TITLE) {
+            /*
+             * セーブデータが存在または初期化済みでタイトルシーンを通ってきた場合つづきから
+             */
         } else {
             BeginGame();
         }
@@ -159,19 +162,6 @@ public class StageSceneManager : BaseSceneManager {
             MySceneManager.GameData.events[i].eventState = this.events[i].eventState;
             MySceneManager.GameData.events[i].percent = this.events[i].percent;
         }
-
-        //---デバッグ用------------------------------------------------------------------------------
-        /*
-         * デバッグ用ちゃんとシーンが出来たらこれは消す
-         * クリア作るのに次のシーンへいくのやりたかた
-         * 現在のシーン名からシーン番号を取得する
-         */
-        for (int i = 0; i < System.Enum.GetNames(typeof(MySceneManager.SceneState)).Length; i++) {
-            if (SceneManager.GetActiveScene().name == MySceneManager.sceneName[i]) {
-                MySceneManager.GameData.nowScene = i;
-            }
-        }
-        //-------------------------------------------------------------------------------------------
     }
 
     /// <summary>
@@ -294,6 +284,7 @@ public class StageSceneManager : BaseSceneManager {
                     if (_GameOverPanel) next = _GameOverPanel.GetNextScene();
                     if (next != -1)
                     {
+                        MySceneManager.GameData.oldScene = MySceneManager.GameData.nowScene;  // 今のシーンをひとつ前のシーンとして保存
                         MySceneManager.GameData.nowScene = next;
                         SceneChange(next);  // シーン遷移
                         isOnce = true;
@@ -365,6 +356,7 @@ public class StageSceneManager : BaseSceneManager {
                     int next = -1;
                     if (_ClearPanel) next = _ClearPanel.GetNextScene();
                     if (next != -1) {
+                        MySceneManager.GameData.oldScene = MySceneManager.GameData.nowScene;  // 今のシーンをひとつ前のシーンとして保存
                         MySceneManager.GameData.nowScene = next;
                         SceneChange(next);  // シーン遷移
                         isOnce = true;
@@ -378,14 +370,6 @@ public class StageSceneManager : BaseSceneManager {
                 }
             }
         }
-
-#if UNITY_EDITOR
-        // デバッグ用イベントのカウント上がります
-        if (Input.GetKeyDown(KeyCode.F2)) {
-            stateCnt++;
-        }
-#endif
-
     }
 
     private void LateUpdate() {

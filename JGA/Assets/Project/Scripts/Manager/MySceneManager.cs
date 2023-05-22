@@ -31,6 +31,7 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 
 		//---データ
 		public static int randomGuestCnt;   // ランダム生成させる客の今の数
+		public static int oldScene;			// ひとつ前のシーン番号
 		public static int nowScene;         // 現在のシーン番号
 		public static EventParam[] events;  // 各シーンのイベント
 		public static int guestCnt;         // 客のカウント
