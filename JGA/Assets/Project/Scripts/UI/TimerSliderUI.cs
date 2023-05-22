@@ -29,7 +29,7 @@ public class TimerSliderUI : MonoBehaviour
     private bool bSound = true;
     [SerializeField,Range(1,60)] private int soundSeconds = 10;
     //時間計測用
-    private float fTimer = 0.0f;
+    //private float fTimer = 0.0f;
 
     [SerializeField] private AudioSource audioSource;
 
@@ -73,15 +73,18 @@ public class TimerSliderUI : MonoBehaviour
         {
             timerPoints[i].percent = MySceneManager.GameData.events[i].percent / 100.0f;
         }
+
+        //スライダー更新
+        timerSlider.value = MySceneManager.GameData.timer / (playMinutes * 60.0f);
     }
-	/// <summary>
-	/// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
-	/// </summary>
-	void FixedUpdate()
+    /// <summary>
+    /// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
+    /// </summary>
+    void FixedUpdate()
 	{
         if (!bStart || IsFinish() || PauseManager.isPaused) return;
 
-        fTimer += Time.deltaTime;
+        MySceneManager.GameData.timer += Time.deltaTime;
         CountDown();
 	}
 #if false
@@ -95,13 +98,13 @@ public class TimerSliderUI : MonoBehaviour
 #endif
     public void LossTime()
     {
-        fTimer += (playMinutes * 60.0f * (lossSecondsParcent / 100.0f));
+        MySceneManager.GameData.timer += (playMinutes * 60.0f * (lossSecondsParcent / 100.0f));
         CountDown();
     }
     private void CountDown()
     {
         //スライダー更新
-        timerSlider.value = fTimer / (playMinutes * 60.0f);
+        timerSlider.value = MySceneManager.GameData.timer / (playMinutes * 60.0f);
 
         //TimerPointの位置を経過していたら画像を変更
         for(int i = nCurrentPoint; i < timerPoints.Length; ++i)
@@ -111,7 +114,7 @@ public class TimerSliderUI : MonoBehaviour
         }
 
         if (!bSound) return;
-        if (fTimer < (playMinutes * 60.0f - soundSeconds)) return;
+        if (MySceneManager.GameData.timer < (playMinutes * 60.0f - soundSeconds)) return;
         
         //制限時間間近の場合は音鳴らす
         SoundManager.Play(audioSource, SoundManager.ESE.COUNTDOWN_001);
@@ -124,7 +127,7 @@ public class TimerSliderUI : MonoBehaviour
     }
     public bool IsFinish()
     {
-        return fTimer >= playMinutes * 60.0f;
+        return MySceneManager.GameData.timer >= playMinutes * 60.0f;
     }
     public void CountStart()
     {

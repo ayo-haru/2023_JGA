@@ -18,10 +18,10 @@ using System.IO;
 
 [Serializable]  // これをつけないとシリアライズできない
 public struct SaveData {
-    public List<string> deck;
-    public int lastStageNumber;
+    public int lastStageNum;
     public Vector3 lastPlayerPos;
     public int guestCnt;
+    public float timer;
     public float bgmVolume;
     public float seVolume;
 }
@@ -39,8 +39,23 @@ public static class SaveSystem {
     public static bool canSave = false;
     const string SAVE_FILE_PATH = "save.json";  // セーブデータの名前
 
-    public static void SaveDeck(List<string> _deck) {
-        sd.deck = _deck;
+    public static void SaveLastStageNum(int _lastStageNum) {
+        sd.lastStageNum = _lastStageNum;
+        save();
+    }
+
+    public static void SaveLastPlayerPos(Vector3 _lastPlayerPos) {
+        sd.lastPlayerPos = _lastPlayerPos;
+        save();
+    }
+
+    public static void SaveGuestCnt(int _guestCnt) {
+        sd.guestCnt = _guestCnt;
+        save();
+    }
+
+    public static void SaveTimer(float _timer) {
+        sd.timer = _timer;
         save();
     }
 
@@ -69,7 +84,7 @@ public static class SaveSystem {
         writer.Close();         // 書き込みの終了（fclose()みたいなやつ）
     }
 
-    public static void load() {
+    public static bool load() {
         try
         {
 #if UNITY_EDITOR
@@ -84,10 +99,14 @@ public static class SaveSystem {
             //StreamReader reader = new StreamReader(info.OpenRead());    // info.OpenRead()でファイルパスがとれるっぽい
             string json = reader.ReadToEnd();                           // ReadToEndは一括読込らしいReadLineで一行ずつ読込
             sd = JsonUtility.FromJson<SaveData>(json);                  // FromJson...Jsonを読み取りインスタンスのデータを上書きする
+
+            return true;    // セーブデータ有り
         }
         catch (Exception e)  //  例外処理
         {
             sd = new SaveData();
+
+            return false;   // セーブデータなし
             //bgmとseの初期値設定
             //sd.bgmVolume = SoundManager.bgmVolume;
             //sd.seVolume = SoundManager.seVolume;

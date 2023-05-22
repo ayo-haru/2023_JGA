@@ -35,6 +35,9 @@ public class TitleScenManager : BaseSceneManager
     //タイトル画面のボタン
     private enum ETitleSelect {TITLESELECT_START,TITLESELECT_OPTION,TITLESELECT_EXIT,MAX_TITLESELECT};
 
+    //次のシーン
+    private int nextScene;
+
     private AudioSource audioSource;
     private bool bFlag = false;
 
@@ -45,6 +48,18 @@ public class TitleScenManager : BaseSceneManager
          * ・UIManager
          */
         Init();
+
+        //セーブデータ読み込み
+        MySceneManager.GameData.isContinueGame = SaveSystem.load();
+
+        //もしセーブデータがなかったら次に遷移するシーンはゲーム001
+        if (MySceneManager.GameData.isContinueGame) {
+            SaveManager.LoadAll();
+            nextScene = MySceneManager.GameData.nowScene;
+        } else {
+            MySceneManager.GameData.nowScene = (int)MySceneManager.SceneState.SCENE_TITLE;
+            nextScene = (int)MySceneManager.SceneState.SCENE_GAME_001;
+        }
 
         // BGM再生用にオーディオソース取得
         audioSource = GetComponent<AudioSource>();
@@ -96,7 +111,7 @@ public class TitleScenManager : BaseSceneManager
     public void StartButton()
     {
         SoundSEDecision();
-        SceneChange(MySceneManager.SceneState.SCENE_GAME_001);
+        SceneChange(nextScene);
         //コントローラ入力の場合マウスカーソルが非表示のままになってしまうので表示する
         if (!bMouse)Cursor.visible = true;
     }

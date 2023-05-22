@@ -32,7 +32,11 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 		//---データ
 		public static int randomGuestCnt;   // ランダム生成させる客の今の数
 		public static int nowScene;         // 現在のシーン番号
-		public static EventParam[] events;		// 各シーンのイベント
+		public static EventParam[] events;  // 各シーンのイベント
+		public static int guestCnt;         // 客のカウント
+		public static float timer;			// ゲームのタイマー 
+		public static Vector3 playerPos;    // プレイヤーの座標
+		public static bool isContinueGame;	// ゲーム続きからやってる？セーブデータがあるならture
 	}
 
 	public static class Sound
