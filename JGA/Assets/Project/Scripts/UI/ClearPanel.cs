@@ -18,6 +18,8 @@ public class ClearPanel : MonoBehaviour
 {
     private AudioSource audioSource;
 
+    [SerializeField, Header("Clear")] private Image Clear;
+
     //ボタンの色
     [SerializeField, Header("ボタンの色")] private Color buttonColor;
 
@@ -47,10 +49,12 @@ public class ClearPanel : MonoBehaviour
         nextScene = -1;
         bMouse = true;
         mousePos = Vector3.zero;
+        Clear.fillAmount = 0.0f;
     }
 
     private void Update()
     {
+        Clear.fillAmount += Time.deltaTime;
         //マウス、コントローラの値取得
         Gamepad gamepad = Gamepad.current;
         Vector3 oldMousePos = mousePos;
