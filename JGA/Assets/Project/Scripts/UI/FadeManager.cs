@@ -35,12 +35,16 @@ public class FadeManager : MonoBehaviour
 	[System.NonSerialized]
 	public static eFade fadeMode;
 
+	private AudioSource audioSource;
+
 	private void Awake()
 	{
 		fadeMode = eFade.Default;
 		alpha = 0.0f;
 		image = GetComponent<Image>();
 		image.color = new Color(0.0f, 0.0f, 0.0f, alpha);
+
+		audioSource = gameObject.AddComponent<AudioSource>();	// オーディオソースの追加と保存
 	}
 
 	/// <summary>

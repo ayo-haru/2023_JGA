@@ -15,6 +15,7 @@
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UniRx;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -31,14 +32,14 @@ public class Player : MonoBehaviour
 	private Animator anim;           // Animatorへの参照
 
 	// Animatorパラメータ
-	int HashMove;
-	int HashRun;
-	int HashAppeal;
-	int HashHit;
-	int HashCarry;
-	int HashDrag;
-	int HashRandom;
-	int HashAnimSpeed;
+	private int HashMove;
+	private int HashRun;
+	private int HashAppeal;
+	private int HashHit;
+	private int HashCarry;
+	private int HashDrag;
+	private int HashRandom;
+	private int HashAnimSpeed;
 
 	[Header("ステータス")] //-----------------------------------------------------------------
 	[SerializeField] private float moveForce = 7;           // 歩行時速度
@@ -202,7 +203,7 @@ public class Player : MonoBehaviour
 		actionAppeal.action.canceled += OnAppeal;
 		actionHit.action.performed += OnHit;
 		actionHold.action.performed += OnHold;
-		actionHold.action.canceled += OnHold;
+		//actionHold.action.canceled += OnHold;
 		actionRun.action.performed += OnRun;
 		actionRun.action.canceled += OnRun;
 
@@ -566,7 +567,8 @@ public class Player : MonoBehaviour
 			return;
 
 		//--- 長押し開始
-		if (context.phase == InputActionPhase.Performed)
+		//if (context.phase == InputActionPhase.Performed)
+		if (!_IsHold)
 		{
 			// 範囲内のオブジェクトが無い場合は実行しない
 			if (WithinRange.Count == 0)
@@ -623,8 +625,9 @@ public class Player : MonoBehaviour
 		}
 
 		// 長押し終了
-		else if (context.phase == InputActionPhase.Canceled)
-		{
+		//else if (context.phase == InputActionPhase.Canceled)
+			if (_IsHold)
+			{
 			if (InteractCollision == null)
 				return;
 
@@ -803,6 +806,20 @@ public class Player : MonoBehaviour
 				InteractCollision.transform.localPosition = Vector3.zero;
 				InteractCollision.transform.rotation = transform.rotation;
 
+				bool bChainsawMan = false;
+				bool bChangeAngle = false;
+				if (InteractCollision.TryGetComponent(out FishObject fish))
+				{
+					bChainsawMan = true;
+
+					InteractCollision.transform.rotation = Quaternion.AngleAxis(90, Vector3.up) * InteractCollision.transform.rotation;
+				}
+				else if (InteractCollision.TryGetComponent(out MegaPhone mega))
+				{
+					InteractCollision.transform.rotation = Quaternion.AngleAxis(-90, Vector3.up) * transform.rotation;
+					InteractCollision.transform.rotation = Quaternion.AngleAxis(-45, Vector3.forward) * InteractCollision.transform.rotation;
+				}
+
 				if (InteractCollision.GetComponent<HingeJoint>() == null)
 				{
 					// HingeJonitの角度制限を有効化
@@ -811,7 +828,8 @@ public class Player : MonoBehaviour
 					InteractJoint.connectedBody = holdPos;
 					InteractJoint.useLimits = true;
 					InteractJoint.anchor = InteractJointAnchor = new Vector3(0, InteractPoint.localPosition.y / InteractBoundsSizeY, 0);
-					//InteractJoint.anchor = new Vector3(0, 1, 0);
+					if (bChainsawMan)
+						InteractJoint.axis = new Vector3(0, 0, 1);
 					JointLimits jointLimits = InteractJoint.limits;
 					jointLimits.min = -90.0f;
 					jointLimits.max = 45.0f;

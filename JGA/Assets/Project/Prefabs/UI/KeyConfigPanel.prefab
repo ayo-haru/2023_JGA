@@ -212,6 +212,7 @@ MonoBehaviour:
     type: 3}
   mode: 0
   _pathText: {fileID: 5523277416611194974}
+  _resetButton: {fileID: 0}
   _mask: {fileID: 9112572106082007434}
 --- !u!1 &153807804149535999
 GameObject:
@@ -1079,6 +1080,7 @@ MonoBehaviour:
     type: 3}
   mode: 0
   _pathText: {fileID: 2453089590897869089}
+  _resetButton: {fileID: 0}
   _mask: {fileID: 9112572106082007434}
 --- !u!1 &707860537061646757
 GameObject:
@@ -2845,6 +2847,7 @@ MonoBehaviour:
     type: 3}
   mode: 0
   _pathText: {fileID: 2180987245299805258}
+  _resetButton: {fileID: 0}
   _mask: {fileID: 9112572106082007434}
 --- !u!1 &1477891531748001706
 GameObject:
@@ -5615,6 +5618,7 @@ MonoBehaviour:
     type: 3}
   mode: 0
   _pathText: {fileID: 7961880422804274479}
+  _resetButton: {fileID: 0}
   _mask: {fileID: 9112572106082007434}
 --- !u!1 &3846416622897742333
 GameObject:
@@ -5859,7 +5863,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4078572248661141481}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: PausePanel, Assembly-CSharp
+        m_MethodName: ChangePanel
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: OptionPanel, Assembly-CSharp
+        m_MethodName: Open
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4247846735620592385
 GameObject:
   m_ObjectHideFlags: 0
@@ -10135,6 +10163,7 @@ MonoBehaviour:
     type: 3}
   mode: 0
   _pathText: {fileID: 8000093273861884066}
+  _resetButton: {fileID: 0}
   _mask: {fileID: 9112572106082007434}
 --- !u!1 &7812941294983913558
 GameObject:
@@ -11163,6 +11192,7 @@ MonoBehaviour:
     type: 3}
   mode: 0
   _pathText: {fileID: 2956487711745287021}
+  _resetButton: {fileID: 0}
   _mask: {fileID: 9112572106082007434}
 --- !u!1 &8505146130625991565
 GameObject:
@@ -11523,6 +11553,7 @@ MonoBehaviour:
     type: 3}
   mode: 0
   _pathText: {fileID: 8930345579245256640}
+  _resetButton: {fileID: 0}
   _mask: {fileID: 9112572106082007434}
 --- !u!1 &8728890422753428115
 GameObject:
