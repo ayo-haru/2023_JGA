@@ -219,6 +219,8 @@ GameObject:
   - component: {fileID: 8836816160763578920}
   - component: {fileID: -6410277501788366344}
   - component: {fileID: -7573220155301159609}
+  - component: {fileID: 6183358624860791075}
+  - component: {fileID: 4012700239644708881}
   m_Layer: 0
   m_Name: CornBar
   m_TagString: Interact
@@ -399,6 +401,40 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &6183358624860791075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4653253689664273861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+  outlineMaskMaterial: {fileID: 2100000, guid: 106f3ff43a17d4967a2b64c7a92e49ec, type: 2}
+  outlineFillMaterial: {fileID: 2100000, guid: 311313efa011949e98b6761d652ad13c, type: 2}
+--- !u!114 &4012700239644708881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4653253689664273861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1605e718aab817341b7ee711307cfd3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objType: 0
+  objDistanceType: 0
 --- !u!1 &5167167703491191151
 GameObject:
   m_ObjectHideFlags: 0
