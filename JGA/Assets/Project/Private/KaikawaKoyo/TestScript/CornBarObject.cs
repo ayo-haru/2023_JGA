@@ -54,10 +54,6 @@ public class CornBarObject : BaseObj
             if (!isPlay)
                 isPlay = true;
         }
-        else
-        {
-            PlayHit();
-        }
     }
     protected override void OnTriggerStay(Collider other)
     {

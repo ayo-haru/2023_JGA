@@ -82,9 +82,6 @@ public class CardBoard : BaseObj
 			if(!isPlay)
 				isPlay = true;
 		}
-		else{
-			PlayHit();
-		}
 
 		// 上に物が乗ったら潰れる
 		if (collision.gameObject.tag == "Interact")
