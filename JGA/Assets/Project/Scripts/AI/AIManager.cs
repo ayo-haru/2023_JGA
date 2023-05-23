@@ -136,7 +136,7 @@ public class AIManager : MonoBehaviour
     private void ChangeState(EAIState nextState)
     {
         //ステートの終了処理
-        nodeList[currentState].state.FinState();
+        if (nodeList[currentState].state) nodeList[currentState].state.FinState();
         //ノード切り替え
         int next = GetNodeToState(nextState);
         if (next >= 0) currentState = next;

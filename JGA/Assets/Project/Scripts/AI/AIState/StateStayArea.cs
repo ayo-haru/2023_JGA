@@ -17,6 +17,7 @@
 // 2023/03/30	(小楠）複数個所のペンギンエリアに対応
 // 2023/04/10	(小楠）ナビメッシュが動かなくなってしまうバグを直した
 // 2023/04/17	(小楠）ペンギンのTransform取得した
+// 2023/05/23	(小楠）到着した時のアニメーションを増やした
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -137,8 +138,13 @@ public class StateStayArea : AIState
         if (agent.remainingDistance <= agent.stoppingDistance)
         {
             //待機アニメーションの再生
-            guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.IDLE);
-            //guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.HAPPY);
+            switch (Random.Range(0, 3))
+            {
+                case 0: guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.IDLE);break;
+                case 1: guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.WATCH1);break;
+                case 2: guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.WATCH2);break;
+            }
+
             //ui設定
             ui.SetEmotion(EEmotion.HIGH_TENSION);
             isStay = true;
