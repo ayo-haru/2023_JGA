@@ -168,6 +168,7 @@ public class MainCamera : MonoBehaviour
 	/// </summary>
 	void Start() {
 
+        crearGuest = MySceneManager.GameData.guestCnt;
         //客の情報を格納する
         guestObj = GameObject.FindGameObjectsWithTag("Guest");
 
@@ -209,7 +210,13 @@ public class MainCamera : MonoBehaviour
         
         if (scriptStop >= 1.0f)
         {
-            guestObj = GameObject.FindGameObjectsWithTag("Guest");
+            
+            if(crearGuest != MySceneManager.GameData.guestCnt)
+            {
+                guestObj = GameObject.FindGameObjectsWithTag("Guest");
+                crearGuest = MySceneManager.GameData.guestCnt;
+            }
+            
             if (guestObj.Length < guestObj.Length + MySceneManager.GameData.randomGuestCnt)
             {
                 //客の情報を格納する
