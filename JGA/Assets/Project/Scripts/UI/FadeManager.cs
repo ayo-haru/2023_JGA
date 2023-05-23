@@ -34,8 +34,6 @@ public class FadeManager : MonoBehaviour {
     public static eFade fadeMode;
     private static eFade oldFadeMode;
 
-    private bool isOnce;    // 一度だけ処理
-
     private static AudioSource audioSource;
 
     private void Awake() {
@@ -46,8 +44,6 @@ public class FadeManager : MonoBehaviour {
         image.color = new Color(0.0f, 0.0f, 0.0f, alpha);
 
         audioSource = gameObject.AddComponent<AudioSource>();   // オーディオソースの追加と保存
-
-        isOnce = false;
     }
 
     /// <summary>
@@ -66,14 +62,12 @@ public class FadeManager : MonoBehaviour {
             StartFadeIn();
         }
 
-       // 何かしらのフェードが始まったら音が鳴り終わるまで待つ処理を入れる
-        //if (oldFadeMode == eFade.Default && fadeMode != eFade.Default) {
-        //    if (fadeMode == eFade.FadeIn) {
-        //        StartCoroutine(WaitChangeFadeMode(eFade.FadeIn));
-        //    } else if(fadeMode == eFade.FadeOut){
-        //        StartCoroutine(WaitChangeFadeMode(eFade.FadeOut));
-        //    }
-        //}
+        // 何かしらのフェードが始まったら音が鳴り終わるまで待つ処理を入れる
+        if (oldFadeMode == eFade.Default && fadeMode != eFade.Default) {
+            if (fadeMode == eFade.FadeIn) {
+                StartCoroutine(WaitChangeFadeMode(eFade.FadeIn));
+            }
+        }
 
         if (fadeMode != eFade.Default) {
             if (fadeMode == eFade.FadeOut) {
@@ -96,8 +90,8 @@ public class FadeManager : MonoBehaviour {
                     PauseManager.Resume();
                 }
             }
-            image.color = new Color(0.0f, 0.0f, 0.0f, alpha);
         }
+        image.color = new Color(0.0f, 0.0f, 0.0f, alpha);
 
         image.raycastTarget = (fadeMode != eFade.Default);
     }
@@ -168,7 +162,7 @@ public class FadeManager : MonoBehaviour {
 
         Debug.Log("<color= bulue>"+_FadeMode + "に切り替え</color>");
 
-        fadeMode = _FadeMode;
+        oldFadeMode = fadeMode = _FadeMode;
     }
 
     public IEnumerator WaitSound(SoundManager.ESE _se) {

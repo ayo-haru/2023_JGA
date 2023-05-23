@@ -368,6 +368,8 @@ public class StageSceneManager : BaseSceneManager {
                     PauseManager.NoMenu = true;
                     PauseManager.Pause();
                 }
+
+                SaveManager.SaveAll();
             }
         }
     }
