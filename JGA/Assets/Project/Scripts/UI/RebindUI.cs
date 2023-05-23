@@ -116,9 +116,9 @@ public class RebindUI : MonoBehaviour
 		string name = "";
 		//int bindingIndex = _action.GetBindingIndex("Keyboard");
 		name = _action.GetBindingDisplayString(_action.GetBindingIndex(), out var deviceLayoutName, out var controlPath);
-		Debug.Log($"name:{name}");
-		Debug.Log($"deviceLayoutName:{deviceLayoutName}");
-		Debug.Log($"controlPath:{controlPath}");
+		//Debug.Log($"name:{name}");
+		//Debug.Log($"deviceLayoutName:{deviceLayoutName}");
+		//Debug.Log($"controlPath:{controlPath}");
 
 		//name = _action.GetBindingDisplayString(bindingIndex, out string _, out string controlPath);
 		//name = _action.GetBindingDisplayString(binding);
