@@ -255,6 +255,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9050079215903323772}
+  - {fileID: 1680643158783600773}
   m_Father: {fileID: 4421947090516162134}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1562,6 +1563,37 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.000002227258, y: 0.00787466, z: -0.00042460486}
     m_Extent: {x: 0.0054233414, y: 0.0035729506, z: 0.003999479}
   m_DirtyAABB: 0
+--- !u!1 &6046946902178254670
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1680643158783600773}
+  m_Layer: 11
+  m_Name: Hand
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1680643158783600773
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6046946902178254670}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4409793049991272679}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6120361030264344280
 GameObject:
   m_ObjectHideFlags: 0
@@ -2001,7 +2033,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 4413733639145991966}
   chaseNow: 0
-  hand: {fileID: 1091430935957669445}
+  hand: {fileID: 6046946902178254670}
   isDebug: 0
   data:
     name: Zookeeper

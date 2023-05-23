@@ -28,7 +28,7 @@ public class KeeperAI : MonoBehaviour
     [SerializeField] private Animator animator;
     private bool surpriseFlg = true;
     private bool questionFlg = true;
-    [SerializeField] private bool moveFlg = false;
+    private bool moveFlg = false;
     private AudioSource audioSource;
     private SphereCollider sphereCollider;
     private Rigidbody rb;
@@ -44,8 +44,8 @@ public class KeeperAI : MonoBehaviour
     [SerializeField] private bool chaseNow = false;    // ペンギンを追いかけているフラグ
     private Player player;
 
-    private Vector3 destinationPos;
     private GameObject parentObj;       // 親オブジェクト取得
+    [SerializeField] private GameObject hand;   // オブジェクトを持つ場所
     private bool gimmickFlg = false;    // ギミックオブジェクトを見つけたか
     private bool catchFlg = false;      // ギミックオブジェクトを掴んだか
     private bool soundObjFlg = false;   // 音がなったオブジェクトがあるか
@@ -57,7 +57,7 @@ public class KeeperAI : MonoBehaviour
     private bool radioResetFlg = true;
     private bool dirFlg = false;
 
-    public GameObject cube;
+    [SerializeField] private GameObject cube;
 
     [SerializeField]
     private ZooKeeperData.Data data;    // 飼育員用の外部で設定できるパラメーターたち
@@ -180,7 +180,6 @@ public class KeeperAI : MonoBehaviour
             RadioPos();
             if (radioResetFlg) return;  // ラジオが元の場所にあったら処理しない
 
-            destinationPos = other.gameObject.transform.position;
             navMesh.SetDestination(other.gameObject.transform.position);
 
             if (dirFlg) dirFlg = false;
@@ -350,8 +349,6 @@ public class KeeperAI : MonoBehaviour
             Move();
             if (chaseNow)
                 navMesh.SetDestination(player.transform.position);
-            else
-                navMesh.SetDestination(destinationPos);
             navMesh.nextPosition = transform.position;
         }
     }
@@ -439,7 +436,6 @@ public class KeeperAI : MonoBehaviour
 
         yield return new WaitForSeconds(1.5f);
 
-        destinationPos = soundStartPos;
         navMesh.SetDestination(soundStartPos);
         // 動く
         NavMeshMove();
@@ -478,7 +474,6 @@ public class KeeperAI : MonoBehaviour
             animator.SetFloat("speed", 1f);
             animator.SetBool("isWalk", true);
             animator.Play("Walk");
-            destinationPos = startPos;
             navMesh.SetDestination(startPos); // 目的地の再設定
             moveFlg = true;
             bResetPos = true;
@@ -530,12 +525,16 @@ public class KeeperAI : MonoBehaviour
     /// </summary>
     private void Bring()
     {
+        // ラジオの子オブジェクトを取得
+        GameObject childObj = soundObj.gameObject.transform.GetChild(1).gameObject;
         if (!catchFlg)
         {
             // 掴む
             soundObj.GetComponent<Rigidbody>().isKinematic = true;   // 物理演算の影響を受けないようにする
             soundObj.GetComponent<Rigidbody>().useGravity = false;
             soundObj.gameObject.transform.parent = this.transform;
+            //soundObj.gameObject.transform.localPosition = Vector3.zero;
+            //soundObj.gameObject.transform.rotation = transform.rotation;
             soundObj.gameObject.transform.localPosition = new Vector3(0.0f, 5.0f, 2.0f);
             soundObj.gameObject.transform.rotation = new Quaternion(0, 0, 0, 0);
         }
