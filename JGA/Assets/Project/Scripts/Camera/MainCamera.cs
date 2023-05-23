@@ -62,6 +62,8 @@ public class MainCamera : MonoBehaviour
     GameObject[] guestObj;
     GameObject[] zooKeeperObj;
 
+    private int crearGuest;
+
     //カメラの範囲取得用
     //映っているものの範囲
     Bounds[] boundGuest;
@@ -105,7 +107,7 @@ public class MainCamera : MonoBehaviour
 
 
     [Header("ズームイン倍率")]
-    [SerializeField] private float zoomIn = 0.1f;
+    [SerializeField] private float zoomIn = 0.1f; 
     [Header("ズームアウト倍率")]
     [SerializeField] private float zoomOut = 0.1f;
     [Header("キー入力のズームイン、アウトの時間")]
@@ -135,6 +137,8 @@ public class MainCamera : MonoBehaviour
         //ポーズ用
         PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(gameObject);
         PauseManager.OnResumed.Subscribe(x => { ReGame(); }).AddTo(gameObject);
+
+        crearGuest = 0;
 
         //カメラの情報の受け取り
         cameraObj = GameObject.Find("CameraParent").GetComponent<CameraManager>();
@@ -166,6 +170,7 @@ public class MainCamera : MonoBehaviour
 
         //客の情報を格納する
         guestObj = GameObject.FindGameObjectsWithTag("Guest");
+
         //客の範囲取得
         boundGuest = new Bounds[guestObj.Length];
 
@@ -173,7 +178,6 @@ public class MainCamera : MonoBehaviour
         boundKeeper = new Bounds[zooKeeperObj.Length];
 
         // 注視点座標をプレイヤーの座標に
-        //playerobj = GameObject.Find("LookPos");
         targetObject = GameObject.FindGameObjectWithTag("Player");
         firstCamPos = targetObject.transform.position;
         //プレイヤーの初期位置とカメラの座標を固定
@@ -205,6 +209,7 @@ public class MainCamera : MonoBehaviour
         
         if (scriptStop >= 1.0f)
         {
+            guestObj = GameObject.FindGameObjectsWithTag("Guest");
             if (guestObj.Length < guestObj.Length + MySceneManager.GameData.randomGuestCnt)
             {
                 //客の情報を格納する
@@ -434,6 +439,7 @@ public class MainCamera : MonoBehaviour
                 nowGuestCount++;
             }
         }
+        Debug.Log(nowGuestCount);
         currentGuestValue = nowGuestCount;
     }
    
