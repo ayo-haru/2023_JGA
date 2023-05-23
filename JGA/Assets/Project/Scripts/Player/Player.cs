@@ -203,7 +203,7 @@ public class Player : MonoBehaviour
 		actionAppeal.action.canceled += OnAppeal;
 		actionHit.action.performed += OnHit;
 		actionHold.action.performed += OnHold;
-		//actionHold.action.canceled += OnHold;
+		actionHold.action.canceled += OnHold;
 		actionRun.action.performed += OnRun;
 		actionRun.action.canceled += OnRun;
 
@@ -531,8 +531,9 @@ public class Player : MonoBehaviour
 			rb.velocity = rb.velocity / 2;
 			rb.angularVelocity = rb.angularVelocity / 2;
 		}
-		if (context.phase == InputActionPhase.Canceled)
+		if (!bGamePad && context.phase == InputActionPhase.Canceled)
 		{
+			moveInputValue = Vector2.zero;
 			rb.velocity = Vector3.zero;
 			rb.angularVelocity = Vector3.zero;
 		}
@@ -567,8 +568,7 @@ public class Player : MonoBehaviour
 			return;
 
 		//--- 長押し開始
-		//if (context.phase == InputActionPhase.Performed)
-		if (!_IsHold)
+		if (context.phase == InputActionPhase.Performed)
 		{
 			// 範囲内のオブジェクトが無い場合は実行しない
 			if (WithinRange.Count == 0)
@@ -625,8 +625,7 @@ public class Player : MonoBehaviour
 		}
 
 		// 長押し終了
-		//else if (context.phase == InputActionPhase.Canceled)
-		if (_IsHold)
+		else if (context.phase == InputActionPhase.Canceled)
 		{
 			if (InteractCollision == null)
 				return;
