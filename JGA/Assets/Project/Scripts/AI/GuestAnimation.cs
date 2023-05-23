@@ -30,7 +30,7 @@ public class GuestAnimation : MonoBehaviour
     //ナビメッシュエージェント
     private NavMeshAgent agent;
     //アニメーションステート
-    public enum EGuestAnimState { IDLE,WALK,SURPRISED,SIT_IDLE,STAND_UP,WAIT,HAPPY,MAX_GUEST_ANIM_STATE,};
+    public enum EGuestAnimState { IDLE,WALK,SURPRISED,SIT_IDLE,STAND_UP,WAIT,WATCH1,WATCH2,MAX_GUEST_ANIM_STATE,};
     private EGuestAnimState state;
     private Transform lookAtTarget = null;
     private Transform beforeLookAtTarget = null;
@@ -164,8 +164,11 @@ public class GuestAnimation : MonoBehaviour
             case EGuestAnimState.WAIT:
                 animator.SetTrigger("wait");
                 break;
-            case EGuestAnimState.HAPPY:
-                animator.SetTrigger("happy");
+            case EGuestAnimState.WATCH1:
+                animator.SetTrigger("watch1");
+                break;
+            case EGuestAnimState.WATCH2:
+                animator.SetTrigger("watch2");
                 break;
         }
     }
@@ -187,7 +190,8 @@ public class GuestAnimation : MonoBehaviour
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Sit")) return EGuestAnimState.SIT_IDLE;
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("StandUp")) return EGuestAnimState.STAND_UP;
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Wait")) return EGuestAnimState.WAIT;
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Happy")) return EGuestAnimState.HAPPY;
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Watch1")) return EGuestAnimState.WATCH1;
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Watch2")) return EGuestAnimState.WATCH2;
 
         return EGuestAnimState.MAX_GUEST_ANIM_STATE;
     }
