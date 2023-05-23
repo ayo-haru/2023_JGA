@@ -20,6 +20,8 @@ public class ResultCamera : MonoBehaviour
 	private GameObject mainCamera;                  //メインカメラ格納用
 	private GameObject resultCamera;                //リザルトカメラ格納用
 
+    private GameObject targetObject;
+
     //クリア判定取得用変数
     private GameObject guestNumUI;                 
     private GuestNumUI _GuestNumUI;
@@ -38,8 +40,8 @@ public class ResultCamera : MonoBehaviour
     /// </summary>
     void Awake()
 	{
-        
 
+        
         mainCamera = GameObject.Find("CameraParent");
         if (!mainCamera)
         {
@@ -67,6 +69,8 @@ public class ResultCamera : MonoBehaviour
         mainCamera.SetActive(true);
         resultCamera.SetActive(false);
 
+        targetObject = GameObject.FindGameObjectWithTag("Player");
+
         //----- 客人数カウントUIの取得 -----
         guestNumUI = GameObject.Find("GuestNumUI");
         if (guestNumUI)
@@ -87,7 +91,7 @@ public class ResultCamera : MonoBehaviour
 		if(Input.GetKeyDown(KeyCode.K)) 
 		{
             clear = true;
-           // ChangeCamera();
+            ChangeCamera();
         }
 		
 
@@ -99,7 +103,7 @@ public class ResultCamera : MonoBehaviour
 				if (!clear)
 				{
                     clear = true;
-					//ChangeCamera();
+					ChangeCamera();
 				}
             }
 
@@ -120,10 +124,17 @@ public class ResultCamera : MonoBehaviour
 
 	private void ChangeCamera()
 	{
-		mainCamera.SetActive(!mainCamera.activeSelf);
-        resultCamera.SetActive(!resultCamera.activeSelf);
+        mainCamera.SetActive(false);
+        resultCamera.SetActive(true);
 
-	}
+        resultCamera.transform.position = targetObject.transform.position;
+        resultCamera.transform.rotation = mainCamera.transform.rotation;
+
+        var rot = resultCamera.transform.rotation;
+        rot.x = 15.0f;
+        resultCamera.transform.rotation = Quaternion.Euler(rot.x, rot.y, rot.z);
+
+    }
 	private void CameraRotate()
 	{
         //フレーム数(時間を計算して一周したかどうかをたしかめる)
@@ -135,7 +146,7 @@ public class ResultCamera : MonoBehaviour
         rotateFlame += Time.deltaTime;
 
         //カメラを中心に向けて360から〇秒で回転を終わらせる処理
-        mainCamera.transform.RotateAround(Vector3.zero,
+        resultCamera.transform.RotateAround(Vector3.zero,
                                             Vector3.up,
                                             360 / rotateTime * Time.deltaTime);
 
