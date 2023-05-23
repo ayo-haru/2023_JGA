@@ -217,10 +217,10 @@ namespace UImGui
 
 					ImGui.EndMenu();
 				}
-				if (ImGui.BeginMenu(IconFonts.FontAwesome6.Fish))
-				{
-					ImGui.EndMenu();
-				}
+				//if (ImGui.BeginMenu(IconFonts.FontAwesome6.Fish))
+				//{
+				//	ImGui.EndMenu();
+				//}
 
 				ImGui.EndMainMenuBar();
 			}
