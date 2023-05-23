@@ -13,13 +13,10 @@
 // 2023/04/28   引きずる処理追加しました(小楠)
 // 2023/05/04   引きずり終了する時の処理を少し変更しました(小楠)
 //=============================================================================
-using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using UniRx;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -268,7 +265,7 @@ public class Player : MonoBehaviour
 		// ゲームパッドが接続されているか
 		bGamePad = Gamepad.current != null;
 
-		// リスタート
+		// リスタート処理
 		if (MySceneManager.GameData.isCatchPenguin)
 		{
 			ReStart();
@@ -336,12 +333,8 @@ public class Player : MonoBehaviour
 			AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
 			if (stateInfo.IsName("Hit"))
 			{
-				// 再生中か？
-				if (stateInfo.normalizedTime < 1.0f)
-				{
-					//Debug.Log($"Hit再生中");
-				}
-				else
+				// 再生終了時に他モーション再生を許可
+				if (stateInfo.normalizedTime >= 1.0f)
 				{
 					bHitMotion = false;
 					anim.SetBool(HashHit, bHitMotion);
@@ -350,7 +343,7 @@ public class Player : MonoBehaviour
 			}
 		}
 
-		// 走っているか判定
+		//--- 走っているか判定
 		_IsRun = bRunButton && moveInputValue.normalized != Vector2.zero;
 
 		float length;       // プレイヤーと一番近いオブジェクトの距離
@@ -454,17 +447,17 @@ public class Player : MonoBehaviour
 		actionRun.ToInputAction().Disable();
 #endif
 
-		// 物理
+		// 物理停止し値を保存しておく
 		pauseVelocity = rb.velocity;
 		pauseAngularVelocity = rb.angularVelocity;
 		rb.isKinematic = true;
-		// アニメーション
+
+		// アニメーションは停止
 		anim.speed = 0.0f;
 
 		_IsAppeal = false;
 		anim.SetBool(HashAppeal, _IsAppeal);
 
-		// 持ったままポーズに入ると挙動おかしくなるので救済措置「捨てる」
 		_IsHold = _IsDrag = false;
 		InteractCollision = null;
 	}
@@ -485,11 +478,12 @@ public class Player : MonoBehaviour
 		actionRun.ToInputAction().Enable();
 #endif
 
-		// 物理
+		// 物理を再開させポーズ前の値を代入
 		rb.velocity = pauseVelocity;
 		rb.angularVelocity = pauseAngularVelocity;
 		rb.isKinematic = false;
-		// アニメーション
+
+		// アニメーションを再開
 		anim.speed = 1.0f;
 	}
 	#endregion
@@ -544,14 +538,17 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void OnHit(InputAction.CallbackContext context)
 	{
-		// 既にはたいている、アピール中、ポーズ中、掴んでいる場合は実行しない
+		// 以下の場合は実行しない
+		// ・既にはたいている
+		// ・アピール中
+		// ・ポーズ中
+		// ・掴んでいる
 		if (bHitMotion || IsAppeal || PauseManager.isPaused || _IsHold)
 			return;
 
 		bHitMotion = true;
 		_IsHitMotion = true;
 		anim.SetBool(HashHit, bHitMotion);
-		//Debug.Log($"Hit");
 	}
 
 	/// <summary>
@@ -559,15 +556,11 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void OnHold(InputAction.CallbackContext context)
 	{
-		//if (context.phase == InputActionPhase.Performed)
-		//	Debug.Log($"InputActionPhase.Performed");
-		//if (context.phase == InputActionPhase.Canceled)
-		//	Debug.Log($"InputActionPhase.Canceled");
-
+		// ポーズ中は実行しない
 		if (PauseManager.isPaused)
 			return;
 
-		//--- 長押し開始
+		//--- 長押し開始（つかむ処理）
 		if (context.phase == InputActionPhase.Performed)
 		{
 			// 範囲内のオブジェクトが無い場合は実行しない
@@ -583,9 +576,6 @@ public class Player : MonoBehaviour
 			{
 				float length = 10.0f;
 
-				if (WithinRange.Count == 0)
-					Debug.LogError($"WithinRange.Countが0です");
-
 				// プレイヤーに一番近いオブジェクトをインタラクト対象とする
 				foreach (Collider obj in WithinRange)
 				{
@@ -599,6 +589,7 @@ public class Player : MonoBehaviour
 				}
 			}
 
+			// オブジェクトの種類によって持つアニメーションを変える
 			if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj))
 			{
 				switch (baseObj.objType)
@@ -624,13 +615,12 @@ public class Player : MonoBehaviour
 			}
 		}
 
-		// 長押し終了
+		//--- 長押し終了（離す処理）
 		else if (context.phase == InputActionPhase.Canceled)
 		{
 			if (InteractCollision == null)
 				return;
 
-			// BaseObjとBaseObject二つあるため、それぞれ出来るように書きました(吉原 04/04 4:25)
 			if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj))
 			{
 				switch (baseObj.objType)
@@ -671,12 +661,13 @@ public class Player : MonoBehaviour
 
 		switch (context.phase)
 		{
+			// アピール開始
 			case InputActionPhase.Performed:
-				//Debug.Log("アピール");
 				_IsAppeal = true;
 				break;
+
+			// アピール終了
 			case InputActionPhase.Canceled:
-				//Debug.Log("アピール終了");
 				_IsAppeal = false;
 				break;
 		}
@@ -689,6 +680,7 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void Move()
 	{
+		// ゲームパッド接続時、傾きがjoyRunZone以上の時「走り」の判定にする
 		if (bGamePad)
 			_IsRun = moveInputValue.magnitude >= joyRunZone;
 
@@ -712,6 +704,7 @@ public class Player : MonoBehaviour
 			force = moveForce;
 			max = _maxMoveSpeed;
 		}
+
 		// 制限速度内の場合、移動方向の力を与える
 		_vForce = new Vector3(moveInputValue.x, 0, moveInputValue.y) * force;
 
@@ -730,7 +723,7 @@ public class Player : MonoBehaviour
 		}
 
 		//引きずっていないとき
-		if (!_IsDrag)
+		else
 		{
 			//移動
 			if (rb.velocity.magnitude < max && _vForce != Vector3.zero) rb.AddForce(_vForce);
@@ -806,16 +799,18 @@ public class Player : MonoBehaviour
 				InteractCollision.transform.rotation = transform.rotation;
 
 				bool bChainsawMan = false;
-				bool bChangeAngle = false;
 				if (InteractCollision.TryGetComponent(out FishObject fish))
 				{
 					bChainsawMan = true;
 
+					// Ｙ軸を中心に回転
 					InteractCollision.transform.rotation = Quaternion.AngleAxis(90, Vector3.up) * InteractCollision.transform.rotation;
 				}
 				else if (InteractCollision.TryGetComponent(out MegaPhone mega))
 				{
+					// Ｙ軸を中心に回転
 					InteractCollision.transform.rotation = Quaternion.AngleAxis(-90, Vector3.up) * transform.rotation;
+					// Ｚ軸を中心に回転
 					InteractCollision.transform.rotation = Quaternion.AngleAxis(-45, Vector3.forward) * InteractCollision.transform.rotation;
 				}
 
@@ -924,11 +919,8 @@ public class Player : MonoBehaviour
 
 		// もしメガホンを保持している場合は、再生しない
 		if (InteractCollision != null && InteractCollision.name.Contains("Megaphone"))
-		{
 			_IsMegaphone = true;
-		}
-
-		if (!_IsMegaphone)
+		else
 			SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_VOICE);
 	}
 
@@ -977,7 +969,7 @@ public class Player : MonoBehaviour
 
 	public void AnimHit()
 	{
-		// 範囲内に何もなければ、はたくモーションのみ再生
+		// 範囲内に何もなければ、何もしない
 		if (WithinRange.Count == 0)
 			return;
 
@@ -1029,11 +1021,7 @@ public class Player : MonoBehaviour
 	{
 		// Playerと掴んでいるオブジェクトが接触していると、ぶっ飛ぶので離す
 		if (InteractCollision != null && InteractCollision == collision.collider)
-		{
 			collision.transform.localPosition += Vector3.forward / 10;
-			Debug.Log("<color=blue>離す</color>");
-		}
-
 	}
 
 	private void OnTriggerEnter(Collider other)
@@ -1049,7 +1037,6 @@ public class Player : MonoBehaviour
 
 	private void OnTriggerExit(Collider other)
 	{
-		//if (_IsHold)
 		WithinRange.Remove(other);
 
 		if (other.TryGetComponent(out Outline outline))
