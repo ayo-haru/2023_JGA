@@ -128,8 +128,8 @@ public class StageSceneManager : BaseSceneManager {
         Init();
 
 #if UNITY_EDITOR
-        //セーブデータ読み込み
-        MySceneManager.GameData.isContinueGame = SaveSystem.load();
+        ////セーブデータ読み込み
+        //MySceneManager.GameData.isContinueGame = SaveSystem.load();
 
         if(MySceneManager.GameData.nowScene == 0) { // 本来ならnowSceneneには現在のシーン番号が入るがエディタ上で実行した場合は0が入っているので初期化
             for (int i = 0; i < System.Enum.GetNames(typeof(MySceneManager.SceneState)).Length; i++) {
