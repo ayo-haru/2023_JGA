@@ -430,7 +430,7 @@ public class SoundManager : MonoBehaviour
 
 		foreach (var item in Source)
 		{
-			item.Play();
+			item.UnPause();
 		}
 	}
 
