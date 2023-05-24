@@ -13,7 +13,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Fence : BaseObject
+public class Fence : BaseObj
 {
 
 
@@ -35,7 +35,7 @@ public class Fence : BaseObject
 		if (PauseManager.isPaused) { return; }
 
 		if (collision.gameObject){
-			PlayHit(_audioSource,SoundManager.ESE.STEALFENCE);
+			PlayHit(audioSourcesList[0],SoundManager.ESE.STEALFENCE);
 		}
 	}
 
@@ -45,20 +45,20 @@ public class Fence : BaseObject
 	/// </summary>
 	void Update()
 	{
-		CheckIsPlaySound();
+		PlaySoundChecker();
 	}
 
-    protected override void Pause() {
-        base.Pause();
-		_audioSource.Pause();
-    }
+	protected override void Pause() {
+		base.Pause();
+		audioSourcesList[0].Pause();
+	}
 
-    protected override void Resumed() {
+	protected override void Resumed() {
 		/*
 		 * フェンスはフェンス同士で当たり判定させないため常にisKinematicがtrue
 		 * そのためほかのオブジェクトと違い、別でポーズ解除を用意
 		 */
 		rb.isKinematic = true;
-        _audioSource.UnPause();
-    }
+		audioSourcesList[0].UnPause();
+	}
 }

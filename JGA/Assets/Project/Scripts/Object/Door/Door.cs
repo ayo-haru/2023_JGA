@@ -12,7 +12,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Door : BaseObject
+public class Door : BaseObj
 {
 	[SerializeField] private Animator _animator;
 

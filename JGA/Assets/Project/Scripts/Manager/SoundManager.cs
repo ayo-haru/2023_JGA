@@ -66,6 +66,9 @@ public class SoundManager : MonoBehaviour
 		// 水しぶき
 		INTO_WATER,
 
+		// 噴水
+		FOUNTAIN,
+
 		// 空き缶
 		CAN_CATCH,              // つかむとき
 		CAN_RELEASE,            // 叩いた時＆離して地面についた時

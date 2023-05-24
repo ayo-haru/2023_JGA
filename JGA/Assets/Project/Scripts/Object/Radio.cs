@@ -15,9 +15,12 @@ using UnityEngine;
 public class Radio : BaseObj
 {
 	//------ 追加(このオブジェクトのみで使用)変数 ------
-	private bool isSwitch;                                      // スイッチフラグ(true → ON / false → OFF)
-	private bool isOncePlaySound;                               // 複数回音を鳴らすのを回避するためのフラグ
-	private bool isRadioSound;
+	private bool isSwitch = false;                          // スイッチフラグ(true → ON / false → OFF)
+	private bool isOncePlaySound = false;                   // 複数回音を鳴らすのを回避するためのフラグ
+	private bool isRadioSound = false;
+
+	private GameObject effect = null;						// ガヤガヤエフェクト
+	private Vector3 effectPoint = Vector3.zero;				// エフェクト再生位置
 
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
@@ -27,12 +30,11 @@ public class Radio : BaseObj
 		Init();
 
 		objType = ObjType.HIT_HOLD;
-		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-		//rayDistance = 0.8f;
 
-		isSwitch = false;
-		isOncePlaySound = false;
-		isRadioSound = false;
+		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+
+		// 子にあるエフェクト再生オブジェクトを検索
+		effectPoint = transform.Find("EffectPoint").position;
 
 	}
 
@@ -119,6 +121,7 @@ public class Radio : BaseObj
 
 		// ポーズ処理
 		if (!PauseManager.isPaused) {
+			SetEffect(effectPoint);
 			audioSourcesList[1].Play();
 		}
 	}
@@ -136,5 +139,11 @@ public class Radio : BaseObj
 		return isRadioSound;
 	}
 
+	private void SetEffect(Vector3 position)
+    {
+		if(effect != null) Destroy(effect);
+
+		effect = EffectManager.Create(position,6);
+    }
 }
 
