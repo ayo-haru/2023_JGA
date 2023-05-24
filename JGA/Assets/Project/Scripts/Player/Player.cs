@@ -609,15 +609,6 @@ public class Player : MonoBehaviour
 						break;
 				}
 			}
-			else if (InteractCollision.TryGetComponent<BaseObject>(out var baseObject))
-			{
-
-				if (baseObject.objState == BaseObject.OBJState.HOLD ||
-					baseObject.objState == BaseObject.OBJState.HITANDHOLD)
-				{
-					anim.SetBool(HashCarry, !_IsHold);
-				}
-			}
 		}
 
 		//--- 長押し終了（離す処理）
@@ -640,16 +631,6 @@ public class Player : MonoBehaviour
 						Drag(false);
 						_IsHold = _IsDrag = false;
 						break;
-				}
-			}
-			else if (InteractCollision.TryGetComponent<BaseObject>(out var baseObject))
-			{
-
-				if (baseObject.objState == BaseObject.OBJState.HOLD ||
-					baseObject.objState == BaseObject.OBJState.HITANDHOLD)
-				{
-					Hold(false);
-					_IsHold = false;
 				}
 			}
 		}
@@ -814,9 +795,9 @@ public class Player : MonoBehaviour
 				else if (InteractCollision.TryGetComponent(out MegaPhone mega))
 				{
 					// Ｙ軸を中心に回転
-					InteractCollision.transform.rotation = Quaternion.AngleAxis(-90, Vector3.up) * transform.rotation;
+					holdPos.transform.rotation = Quaternion.AngleAxis(90, Vector3.up) * transform.rotation;
 					// Ｚ軸を中心に回転
-					InteractCollision.transform.rotation = Quaternion.AngleAxis(-45, Vector3.forward) * InteractCollision.transform.rotation;
+					//InteractCollision.transform.rotation = Quaternion.AngleAxis(-45, Vector3.forward) * InteractCollision.transform.rotation;
 				}
 
 				if (InteractCollision.GetComponent<HingeJoint>() == null)
@@ -941,7 +922,6 @@ public class Player : MonoBehaviour
 
 		if (InteractCollision.CompareTag("Interact"))
 		{
-			// BaseObjとBaseObject二つあるため、それぞれ出来るように書きました(吉原 04/04 4:25)
 			if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj))
 			{
 				switch (baseObj.objType)
@@ -958,17 +938,6 @@ public class Player : MonoBehaviour
 						break;
 				}
 			}
-			else if (InteractCollision.TryGetComponent<BaseObject>(out var baseObject))
-			{
-
-				if (baseObject.objState == BaseObject.OBJState.HOLD ||
-					baseObject.objState == BaseObject.OBJState.HITANDHOLD)
-				{
-					Hold(true);
-					_IsHold = true;
-				}
-			}
-
 		}
 	}
 
@@ -1001,19 +970,10 @@ public class Player : MonoBehaviour
 			}
 		}
 
-		// BaseObjとBaseObject二つあるため、それぞれ出来るように書きました(吉原 04/04 4:25)
 		if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj))
 		{
 			if (baseObj.objType == BaseObj.ObjType.HIT ||
 				baseObj.objType == BaseObj.ObjType.HIT_HOLD)
-			{
-				Hit();
-			}
-		}
-		else if (InteractCollision.TryGetComponent<BaseObject>(out var baseObject))
-		{
-			if (baseObject.objState == BaseObject.OBJState.HIT ||
-				baseObject.objState == BaseObject.OBJState.HITANDHOLD)
 			{
 				Hit();
 			}

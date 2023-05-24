@@ -119,6 +119,7 @@ public class HorseMove : MonoBehaviour
     /// </summary>
     private void RandPos()
     {
+        // HourseBasKetスクリプトが無かったら
         if (!basKet.GetComponent<HourseBasKet>())
         {
             int targetPos = Random.Range(0, rootPos.Count);
@@ -142,7 +143,6 @@ public class HorseMove : MonoBehaviour
                 {
                     // バスケットに移動する
                     if (basketPos == null) return;
-                    //Debug.Log("バスケットに移動");
                     target.x = basketPos.transform.localPosition.x;
                     target.y = transform.localPosition.y;
                     target.z = basketPos.transform.localPosition.z;
@@ -160,26 +160,27 @@ public class HorseMove : MonoBehaviour
         var nowPos = _speed / distance;
         // 到着していなかったら
         if(nowPos >= 0)
-        {
+        { 
             // 目的地に移動
             transform.localPosition = Vector3.Lerp(transform.localPosition, target, nowPos);
             AnimPlay();
         }
         // 到着したら
         if (nowPos >= 1)
-        {
+        { 
             // 動きストップ
             bMove = false;
             if (basKet.GetComponent<HourseBasKet>())
-            {
+            { 
                 for (int i = 0; i < basKet.GetComponent<HourseBasKet>().carrot.Count; i++)
-                {
+                { 
                     if (basKet.GetComponent<HourseBasKet>().bBasket[i])
-                    {
+                    { 
                         if (!bEat) bEat = true;
+                        // 目的地をバスケットにする
                         if (target.x == basketPos.transform.localPosition.x &&
                             target.z == basketPos.transform.localPosition.z)
-                        {
+                        { 
                             target.x = basKet.transform.localPosition.x - (-41.0f);
                             target.z = basKet.transform.localPosition.z - 40.0f;
                             nCarrot = i;
@@ -255,6 +256,7 @@ public class HorseMove : MonoBehaviour
             if (bEat) bEat = false;
             if (basKet.GetComponent<HourseBasKet>())
             {
+                // にんじんを食べたらフラグをおろす
                 if (basKet.GetComponent<HourseBasKet>().bBasket[nCarrot])
                     basKet.GetComponent<HourseBasKet>().bBasket[nCarrot] = false;
             }
