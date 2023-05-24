@@ -20,8 +20,6 @@ public class ResultCamera : MonoBehaviour
 	private GameObject mainCamera;                  //メインカメラ格納用
 	private GameObject resultCamera;                //リザルトカメラ格納用
 
-    private GameObject targetObject;
-
     //クリア判定取得用変数
     private GameObject guestNumUI;                 
     private GuestNumUI _GuestNumUI;
@@ -40,7 +38,6 @@ public class ResultCamera : MonoBehaviour
     /// </summary>
     void Awake()
 	{
-
         
         mainCamera = GameObject.Find("CameraParent");
         if (!mainCamera)
@@ -69,7 +66,6 @@ public class ResultCamera : MonoBehaviour
         mainCamera.SetActive(true);
         resultCamera.SetActive(false);
 
-        targetObject = GameObject.FindGameObjectWithTag("Player");
 
         //----- 客人数カウントUIの取得 -----
         guestNumUI = GameObject.Find("GuestNumUI");
@@ -126,14 +122,6 @@ public class ResultCamera : MonoBehaviour
 	{
         mainCamera.SetActive(false);
         resultCamera.SetActive(true);
-
-        resultCamera.transform.position = targetObject.transform.position;
-        resultCamera.transform.rotation = mainCamera.transform.rotation;
-
-        var rot = resultCamera.transform.rotation;
-        rot.x = 15.0f;
-        resultCamera.transform.rotation = Quaternion.Euler(rot.x, rot.y, rot.z);
-
     }
 	private void CameraRotate()
 	{

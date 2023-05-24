@@ -20,6 +20,9 @@ public class SoundManager : MonoBehaviour
 	public enum EBGM
 	{
 		TITLE_001,
+		GAME001,
+		GAMECLEAR,
+		GAMEOVER,
 
 	}
 	public enum ESE

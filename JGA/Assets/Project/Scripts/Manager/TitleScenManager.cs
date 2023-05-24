@@ -71,6 +71,15 @@ public class TitleScenManager : BaseSceneManager {
        SoundManager.Play(audioSource, SoundManager.EBGM.TITLE_001);
 
         StartCoroutine(WaitFade());
+
+        //マウス、コントローラの値取得
+        Gamepad gamepad = Gamepad.current;
+        mousePos = Input.mousePosition;
+        if (gamepad != null)
+        {
+            bMouse = true;
+            ChangeInput();
+        }
     }
 
     /// <summary>
@@ -99,10 +108,11 @@ public class TitleScenManager : BaseSceneManager {
         //マウス無効でマウスが動いたらマウス入力を有効
         if (bMouse) {
             if (gamepad.leftStick.ReadValue() != Vector2.zero || gamepad.aButton.wasReleasedThisFrame) ChangeInput();
-        } else {
-            if (mousePos != oldMousePos) ChangeInput();
         }
-
+        else
+        {
+            if(Vector3.Distance(mousePos,oldMousePos) >= 1.0f)ChangeInput();
+        }
     }
 
     #region タイトル画面のボタン

@@ -32,8 +32,6 @@ public class EmosionUI : MonoBehaviour
 {
     private EEmotion currentEmotion = EEmotion.NONE;    //現在の感情
     private GameObject effect = null;
-    [SerializeField] private Transform headTransform;
-    [SerializeField,Range(0.1f,1.0f)] private float effectPosOffset = 0.5f;
 #if false
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -57,7 +55,7 @@ public class EmosionUI : MonoBehaviour
 	void FixedUpdate()
 	{
         if (!effect) return;
-        effect.transform.position = (headTransform) ? headTransform.position : transform.position + Vector3.up * effectPosOffset;
+       effect.transform.position = gameObject.transform.position;
     }
 #if false
     /// <summary>

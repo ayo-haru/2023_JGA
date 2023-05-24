@@ -1608,8 +1608,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
+  rootPos: []
   horseSpeed: 5
   stopTime: 5
+  basketPos: {fileID: 0}
 --- !u!1 &2741585411411958804
 GameObject:
   m_ObjectHideFlags: 0
