@@ -284,15 +284,7 @@ public class KeeperAI : MonoBehaviour
     /// </summary>
     private void Move()
     {
-        if (chaseNow)
-        {
-            transform.Translate(Vector3.forward * navMesh.speed * Time.deltaTime);
-        }
-        else
-        {
-            if (!dirFlg) return;
-            transform.Translate(Vector3.forward * navMesh.speed * Time.deltaTime);
-        }
+        transform.Translate(Vector3.forward * navMesh.speed * Time.deltaTime);
     }
     #endregion
 
@@ -525,22 +517,27 @@ public class KeeperAI : MonoBehaviour
     /// </summary>
     private void Bring()
     {
+        int ray1 = LayerMask.NameToLayer("ZooKeeperRB");
+        int ray2 = LayerMask.NameToLayer("RayHit");
+
         // ラジオの子オブジェクトを取得
         GameObject childObj = soundObj.gameObject.transform.GetChild(1).gameObject;
         if (!catchFlg)
         {
+            // レイの当たり判定を無くす
+            Physics.IgnoreLayerCollision(ray1, ray2);
             // 掴む
             soundObj.GetComponent<Rigidbody>().isKinematic = true;   // 物理演算の影響を受けないようにする
             soundObj.GetComponent<Rigidbody>().useGravity = false;
-            soundObj.gameObject.transform.parent = this.transform;
-            //soundObj.gameObject.transform.localPosition = Vector3.zero;
-            //soundObj.gameObject.transform.rotation = transform.rotation;
-            soundObj.gameObject.transform.localPosition = new Vector3(0.0f, 5.0f, 2.0f);
-            soundObj.gameObject.transform.rotation = new Quaternion(0, 0, 0, 0);
+            soundObj.gameObject.transform.parent = hand.transform;
+            soundObj.gameObject.transform.localPosition = Vector3.zero;
+            soundObj.gameObject.transform.rotation = Quaternion.identity;
         }
         else if (radioResetFlg)
         {
             if (questionEffect) Destroy(questionEffect);
+            // レイの当たり判定をつける
+            Physics.IgnoreLayerCollision(ray1, ray2, false);
             // はなす
             soundObj.GetComponent<Rigidbody>().isKinematic = false;   // 物理演算の影響を受けるようにする
             soundObj.GetComponent<Rigidbody>().useGravity = true;
