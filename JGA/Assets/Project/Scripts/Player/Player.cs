@@ -321,7 +321,8 @@ public class Player : MonoBehaviour
 		}
 
 		//--- 走っているか判定
-		_IsRun = !bGamePad && bRunButton && moveInputValue.normalized != Vector2.zero;
+		if (!bGamePad)
+			_IsRun = !bGamePad && bRunButton && moveInputValue.normalized != Vector2.zero;
 
 		// アニメーション
 		if (!bHitMotion)
