@@ -20,7 +20,7 @@ public class Radio : BaseObj
 	private bool isRadioSound = false;
 
 	private GameObject effect = null;						// ガヤガヤエフェクト
-	private Vector3 effectPoint = Vector3.zero;				// エフェクト再生位置
+	private GameObject effectPoint;							// エフェクト再生位置
 
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
@@ -34,7 +34,7 @@ public class Radio : BaseObj
 		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
 
 		// 子にあるエフェクト再生オブジェクトを検索
-		effectPoint = transform.Find("EffectPoint").position;
+		effectPoint = GameObject.Find("EffectPoint");
 
 	}
 
@@ -45,8 +45,8 @@ public class Radio : BaseObj
 	{
 		if (PauseManager.isPaused) return;              // ポーズ中処理
 
-		//CheckisGround();								// 地面との接触判定
 		PlaySoundChecker();
+		
 	}
 	
 
@@ -108,7 +108,10 @@ public class Radio : BaseObj
 		if (checkSwitch) {
 			StartCoroutine("PlayRadio");
 		}
-		else{audioSourcesList[1].Stop();}
+		else{
+			audioSourcesList[1].Stop();
+			Destroy(effect);
+		}
 	}
 
 	/// <summary>
@@ -121,7 +124,7 @@ public class Radio : BaseObj
 
 		// ポーズ処理
 		if (!PauseManager.isPaused) {
-			SetEffect(effectPoint);
+			SetEffect();
 			audioSourcesList[1].Play();
 		}
 	}
@@ -139,11 +142,12 @@ public class Radio : BaseObj
 		return isRadioSound;
 	}
 
-	private void SetEffect(Vector3 position)
-    {
+	private void SetEffect()
+	{
 		if(effect != null) Destroy(effect);
 
-		effect = EffectManager.Create(position,6);
-    }
+		effect = EffectManager.Create(effectPoint.transform.position,6);
+		effect.transform.parent = effectPoint.transform;
+	}
 }
 

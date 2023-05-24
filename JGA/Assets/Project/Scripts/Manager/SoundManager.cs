@@ -19,10 +19,11 @@ public class SoundManager : MonoBehaviour
 {
 	public enum EBGM
 	{
-		TITLE_001,
-		GAME001,
-		GAMECLEAR,
-		GAMEOVER,
+		TITLE_001,			// タイトル
+		GAME001,			// ゲーム中
+		GAMECLEAR,			// ゲームクリア
+		GAMEOVER,			// ゲームオーバー
+		INZOO,				// 動物園内雑音
 
 	}
 	public enum ESE
