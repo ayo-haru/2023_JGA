@@ -68,6 +68,15 @@ public class TitleScenManager : BaseSceneManager
     private void Start() {
         // BGM再生
         SoundManager.Play(audioSource, SoundManager.EBGM.TITLE_001);
+
+        //マウス、コントローラの値取得
+        Gamepad gamepad = Gamepad.current;
+        mousePos = Input.mousePosition;
+        if (gamepad != null)
+        {
+            bMouse = true;
+            ChangeInput();
+        }
     }
 
     /// <summary>
@@ -102,7 +111,7 @@ public class TitleScenManager : BaseSceneManager
         }
         else
         {
-            if (mousePos != oldMousePos) ChangeInput();
+            if(Vector3.Distance(mousePos,oldMousePos) >= 1.0f)ChangeInput();
         }
 
     }
