@@ -11,6 +11,7 @@
 // 2023/03/13	(小楠)ペンギンエアリア着いた時の感情を追加
 // 2023/03/21	(小楠)エフェクト入れた
 // 2023/03/21	(小楠)エラー直した
+// 2023/05/24	(小楠)UIを客のモーションに沿って移動するように変更
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -31,6 +32,8 @@ public class EmosionUI : MonoBehaviour
 {
     private EEmotion currentEmotion = EEmotion.NONE;    //現在の感情
     private GameObject effect = null;
+    [SerializeField] private Transform headTransform;
+    [SerializeField,Range(0.1f,1.0f)] private float effectPosOffset = 0.5f;
 #if false
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -53,7 +56,8 @@ public class EmosionUI : MonoBehaviour
 	/// </summary>
 	void FixedUpdate()
 	{
-        if (effect) effect.transform.position = gameObject.transform.position;
+        if (!effect) return;
+        effect.transform.position = (headTransform) ? headTransform.position : transform.position + Vector3.up * effectPosOffset;
     }
 #if false
     /// <summary>
