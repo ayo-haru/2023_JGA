@@ -36,6 +36,8 @@ public class StateStayArea : AIState
     private bool isStay = false;
     //アニメーター
     private GuestAnimation guestAnimation;
+    //アニメーションの秒数計測用
+    private float fAnimTimer;
     //感情ui
     [SerializeField] private EmosionUI ui;
 
@@ -100,9 +102,13 @@ public class StateStayArea : AIState
         //アニメーション初期化
         guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.WALK);
         guestAnimation.SetLookAt(null);
+        fAnimTimer = 0.0f;
 
         //ui設定
         ui.SetEmotion(EEmotion.NONE);
+
+        //客人数のカウントから外すため、タグをデフォルトに戻す
+        gameObject.tag = "Untagged";
 
         //ペンギンブースに着いた客の人数を追加
         GuestNumUI guestNumUI = GameObject.Find("GuestNumUI").GetComponent<GuestNumUI>();
@@ -125,6 +131,21 @@ public class StateStayArea : AIState
         //ペンギンエリアについている場合の処理
         if (isStay)
         {
+            //
+            if(guestAnimation.GetAnimationState() == GuestAnimation.EGuestAnimState.IDLE)
+            {
+                fAnimTimer -= Time.deltaTime;
+                if(fAnimTimer <= 0.0f)
+                {
+                    fAnimTimer = Random.Range(5.0f, 10.0f);
+                    //待機アニメーションの再生
+                    switch (Random.Range(0, 2))
+                    {
+                        case 0: guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.WATCH1); break;
+                        case 1: guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.WATCH2); break;
+                    }
+                }
+            }
             //動物の方を向く
             Quaternion rot = Quaternion.LookRotation(((!animal) ? agent.destination : animal.position) - transform.position);
             transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime);
@@ -137,6 +158,7 @@ public class StateStayArea : AIState
         //指定位置に着いたら
         if (agent.remainingDistance <= agent.stoppingDistance)
         {
+            guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.IDLE);
             //待機アニメーションの再生
             switch (Random.Range(0, 3))
             {
