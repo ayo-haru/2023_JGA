@@ -15,3 +15,9 @@ MonoBehaviour:
   list:
   - clip: {fileID: 8300000, guid: f3ef89c249ec40646a1e77915e7e1e74, type: 3}
     volume: 1
+  - clip: {fileID: 8300000, guid: c931051149204a14bbe60c1f747f3d5e, type: 3}
+    volume: 1
+  - clip: {fileID: 8300000, guid: 5ef1786c7fd8ba1459015371cecf9e62, type: 3}
+    volume: 1
+  - clip: {fileID: 8300000, guid: 273db493d37062e43b5a01229f55e1f3, type: 3}
+    volume: 1

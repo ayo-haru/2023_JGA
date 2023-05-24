@@ -47,7 +47,10 @@ public class Door : BaseObject
 
 	protected override void OnCollisionEnter(Collision collision)
 	{
-		if(collision.gameObject.tag == "Player"){
+		if (PauseManager.isPaused) return;
+
+
+		if (collision.gameObject.tag == "Player"){
 			_animator.SetTrigger("Open");
 		}
 	}
