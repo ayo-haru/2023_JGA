@@ -29,14 +29,14 @@ public class Player : MonoBehaviour
 	private Animator anim;           // Animatorへの参照
 
 	// Animatorパラメータ
-	private int HashMove;
-	private int HashRun;
-	private int HashAppeal;
-	private int HashHit;
-	private int HashCarry;
-	private int HashDrag;
-	private int HashRandom;
-	private int HashAnimSpeed;
+	private int HashMove = 0;
+	private int HashRun = 0;
+	private int HashAppeal = 0;
+	private int HashHit = 0;
+	private int HashCarry = 0;
+	private int HashDrag = 0;
+	private int HashRandom = 0;
+	private int HashAnimSpeed = 0;
 
 	[Header("ステータス")] //-----------------------------------------------------------------
 	[SerializeField] private float moveForce = 7;           // 歩行時速度
@@ -551,6 +551,8 @@ public class Player : MonoBehaviour
 
 		bHitMotion = true;
 		_IsHitMotion = true;
+		if (HashHit == 0)
+			HashHit = Animator.StringToHash("Hit");
 		anim.SetBool(HashHit, bHitMotion);
 	}
 
