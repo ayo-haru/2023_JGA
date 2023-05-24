@@ -14,7 +14,7 @@ using UnityEngine;
 
 public class HourseBasKet : MonoBehaviour
 {
-    private List<GameObject> carrot = new List<GameObject>();
+    public List<GameObject> carrot = new List<GameObject>();
     public List<bool> bBasket = new List<bool>();
 
     /// <summary>
@@ -64,24 +64,31 @@ public class HourseBasKet : MonoBehaviour
 	/// </summary>
 	void Update()
 	{
-		
 	}
+
+    /// <summary>
+    /// バスケットににんじんが入ってるか
+    /// </summary>
+    private void CarrotIn()
+    {
+
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
-        for(int i = 0; i < carrot.Count; i++)
-        {
-            if (collision.gameObject == carrot[i])
-                if (!bBasket[i]) bBasket[i] = true;
-        }
+        //for(int i = 0; i < carrot.Count; i++)
+        //{
+        //    if (collision.gameObject == carrot[i])
+        //        if (!bBasket[i]) bBasket[i] = true;
+        //}
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        for (int i = 0; i < carrot.Count; i++)
-        {
-            if (collision.gameObject == carrot[i])
-                if (bBasket[i]) bBasket[i] = false;
-        }
+        //for (int i = 0; i < carrot.Count; i++)
+        //{
+        //    if (collision.gameObject == carrot[i])
+        //        if (bBasket[i]) bBasket[i] = false;
+        //}
     }
 }

@@ -28,6 +28,7 @@ public class HorseMove : MonoBehaviour
     private bool bEat = false;
     private GameObject basKet;
     [SerializeField] private Transform basketPos;
+    private int nCarrot = -1;
 
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -58,6 +59,8 @@ public class HorseMove : MonoBehaviour
         }
         if (basketPos == null)
             Debug.LogWarning("バスケットの座標がありません。 (Hourse.cpp)");
+        if (!basKet.GetComponent<HourseBasKet>())
+            Debug.LogWarning("バスケットに HourseBasKet.cpp をつけてください。");
     }
 
 	/// <summary>
@@ -70,10 +73,13 @@ public class HorseMove : MonoBehaviour
             return;
         }
 
+        if (rootPos.Count <= 0) return;
+
+
+        Dir();
         if (bMove)
         {
             Move();
-            Dir();
         }
         else
         {
@@ -113,24 +119,34 @@ public class HorseMove : MonoBehaviour
     /// </summary>
     private void RandPos()
     {
-        for (int i = 0; i < basKet.GetComponent<HourseBasKet>().bBasket.Count; i++)
+        if (!basKet.GetComponent<HourseBasKet>())
         {
-            if (!basKet.GetComponent<HourseBasKet>().bBasket[i])
+            int targetPos = Random.Range(0, rootPos.Count);
+            target.x = rootPos[targetPos].transform.localPosition.x;
+            target.y = transform.localPosition.y;
+            target.z = rootPos[targetPos].transform.localPosition.z;
+        }
+        else
+        {
+            for (int i = 0; i < basKet.GetComponent<HourseBasKet>().carrot.Count; i++)
             {
-                // バスケットの中ににんじんがなかったらランダムに移動する
-                int targetPos = Random.Range(0, rootPos.Count);
-                target.x = rootPos[targetPos].transform.localPosition.x;
-                target.y = transform.localPosition.y;
-                target.z = rootPos[targetPos].transform.localPosition.z;
-            }
-            else
-            {
-                // バスケットに移動する
-                if (basketPos == null) return;
-                //Debug.Log("バスケットに移動");
-                target.x = basketPos.transform.localPosition.x;
-                target.y = transform.localPosition.y;
-                target.z = basketPos.transform.localPosition.z;
+                if (!basKet.GetComponent<HourseBasKet>().bBasket[i])
+                {
+                    // バスケットの中ににんじんがなかったらランダムに移動する
+                    int targetPos = Random.Range(0, rootPos.Count);
+                    target.x = rootPos[targetPos].transform.localPosition.x;
+                    target.y = transform.localPosition.y;
+                    target.z = rootPos[targetPos].transform.localPosition.z;
+                }
+                else
+                {
+                    // バスケットに移動する
+                    if (basketPos == null) return;
+                    //Debug.Log("バスケットに移動");
+                    target.x = basketPos.transform.localPosition.x;
+                    target.y = transform.localPosition.y;
+                    target.z = basketPos.transform.localPosition.z;
+                }
             }
         }
     }
@@ -154,10 +170,22 @@ public class HorseMove : MonoBehaviour
         {
             // 動きストップ
             bMove = false;
-            for (int i = 0; i < basKet.GetComponent<HourseBasKet>().bBasket.Count; i++)
+            if (basKet.GetComponent<HourseBasKet>())
             {
-                if (basKet.GetComponent<HourseBasKet>().bBasket[i])
-                    if (!bEat) bEat = true;
+                for (int i = 0; i < basKet.GetComponent<HourseBasKet>().carrot.Count; i++)
+                {
+                    if (basKet.GetComponent<HourseBasKet>().bBasket[i])
+                    {
+                        if (!bEat) bEat = true;
+                        if (target.x == basketPos.transform.localPosition.x &&
+                            target.z == basketPos.transform.localPosition.z)
+                        {
+                            target.x = basKet.transform.localPosition.x - (-41.0f);
+                            target.z = basKet.transform.localPosition.z - 40.0f;
+                            nCarrot = i;
+                        }
+                    }
+                }
             }
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
@@ -181,13 +209,8 @@ public class HorseMove : MonoBehaviour
         {
             // その方向に向けて旋回する(120度/秒)
             Quaternion targetRotation = Quaternion.LookRotation(targetDir);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 120.0f * Time.deltaTime);
-
-            // 自分の向きと次の位置の角度差が30度以上の場合、その場で旋回
-            float angle = Vector3.Angle(targetDir, transform.forward);
-            if (angle < 30.0f)
-            {
-            }
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, 
+                targetRotation, 120.0f * Time.deltaTime);
         }
     }
 
@@ -229,10 +252,11 @@ public class HorseMove : MonoBehaviour
             RandPos();
             nowTime = 0.0f;
             bMove = true;
-            for (int i = 0; i < basKet.GetComponent<HourseBasKet>().bBasket.Count; i++)
+            if (bEat) bEat = false;
+            if (basKet.GetComponent<HourseBasKet>())
             {
-                if (basKet.GetComponent<HourseBasKet>().bBasket[i])
-                    if (bEat) bEat = false;
+                if (basKet.GetComponent<HourseBasKet>().bBasket[nCarrot])
+                    basKet.GetComponent<HourseBasKet>().bBasket[nCarrot] = false;
             }
         }
     }
