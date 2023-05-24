@@ -18,12 +18,16 @@ public class HorseMove : MonoBehaviour
     [SerializeField] private Animator animator;
     //private AudioSource audioSource;
     private Rigidbody rb;
+    [SerializeField] private List<Transform> rootPos;
     public float horseSpeed;    // スピード
     public float stopTime;      // その場にとどまる時間
     private float nowTime = 0.0f;   // 経過時間
     private Vector3 target;     // 目的地
     private float speed;        // 速さ
     private bool bMove = true;
+    private bool bEat = false;
+    private GameObject basKet;
+    [SerializeField] private Transform basketPos;
 
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -43,7 +47,17 @@ public class HorseMove : MonoBehaviour
         if (animator == null) animator = GetComponent<Animator>();
         //if (audioSource == null) audioSource = this.GetComponent<AudioSource>();
         if (rb == null) rb = this.GetComponent<Rigidbody>();
-        RandPos();
+        if (basKet == null) basKet = GameObject.Find("BasKet 1_001");
+        if (rootPos.Count <= 0)
+        {
+            Debug.LogWarning("ルートがありません。(Hourse.cpp)");
+        }
+        else
+        {
+            RandPos();
+        }
+        if (basketPos == null)
+            Debug.LogWarning("バスケットの座標がありません。 (Hourse.cpp)");
     }
 
 	/// <summary>
@@ -99,14 +113,26 @@ public class HorseMove : MonoBehaviour
     /// </summary>
     private void RandPos()
     {
-        float minX = 176;
-        float maxX = 190;
-        float minZ = -165;
-        float maxZ = -183;
-
-        target.x = Random.Range(minX, maxX);
-        target.y = transform.localPosition.y;
-        target.z = Random.Range(minZ, maxZ);
+        for (int i = 0; i < basKet.GetComponent<HourseBasKet>().bBasket.Count; i++)
+        {
+            if (!basKet.GetComponent<HourseBasKet>().bBasket[i])
+            {
+                // バスケットの中ににんじんがなかったらランダムに移動する
+                int targetPos = Random.Range(0, rootPos.Count);
+                target.x = rootPos[targetPos].transform.localPosition.x;
+                target.y = transform.localPosition.y;
+                target.z = rootPos[targetPos].transform.localPosition.z;
+            }
+            else
+            {
+                // バスケットに移動する
+                if (basketPos == null) return;
+                //Debug.Log("バスケットに移動");
+                target.x = basketPos.transform.localPosition.x;
+                target.y = transform.localPosition.y;
+                target.z = basketPos.transform.localPosition.z;
+            }
+        }
     }
 
     /// <summary>
@@ -128,6 +154,11 @@ public class HorseMove : MonoBehaviour
         {
             // 動きストップ
             bMove = false;
+            for (int i = 0; i < basKet.GetComponent<HourseBasKet>().bBasket.Count; i++)
+            {
+                if (basKet.GetComponent<HourseBasKet>().bBasket[i])
+                    if (!bEat) bEat = true;
+            }
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
             AnimPlay();
@@ -175,6 +206,16 @@ public class HorseMove : MonoBehaviour
             if (animator.GetBool("isWalk"))
                 animator.SetBool("isWalk", false);
         }
+        if(bEat)
+        {
+            if (!animator.GetBool("isEat"))
+                animator.SetBool("isEat", true);
+        }
+        else
+        {
+            if (animator.GetBool("isEat"))
+                animator.SetBool("isEat", false);
+        }
     }
 
     /// <summary>
@@ -188,6 +229,11 @@ public class HorseMove : MonoBehaviour
             RandPos();
             nowTime = 0.0f;
             bMove = true;
+            for (int i = 0; i < basKet.GetComponent<HourseBasKet>().bBasket.Count; i++)
+            {
+                if (basKet.GetComponent<HourseBasKet>().bBasket[i])
+                    if (bEat) bEat = false;
+            }
         }
     }
 
