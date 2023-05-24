@@ -106,15 +106,15 @@ NavMeshSettings:
   m_BuildSettings:
     serializedVersion: 2
     agentTypeID: 0
-    agentRadius: 0.5
-    agentHeight: 2
-    agentSlope: 30
-    agentClimb: 0.4
+    agentRadius: 2
+    agentHeight: 3
+    agentSlope: 45
+    agentClimb: 1.1
     ledgeDropHeight: 0
     maxJumpAcrossDistance: 0
     minRegionArea: 2
     manualCellSize: 0
-    cellSize: 0.16666667
+    cellSize: 0.6666667
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
@@ -610,6 +610,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2db03344cc3e90c49811f9ef1962e56a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rotateFlg: 0
   rotateTime: 0
 --- !u!1 &50757268
 GameObject:
@@ -13005,6 +13006,7 @@ MonoBehaviour:
   gimmickList: []
   resetPos: []
   bReset: 
+  bBring: 
 --- !u!4 &1189638308
 Transform:
   m_ObjectHideFlags: 0
