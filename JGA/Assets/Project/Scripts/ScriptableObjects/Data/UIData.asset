@@ -31,3 +31,54 @@ MonoBehaviour:
   - displayName: OperationUI.prefab
     ID: 4
     prefab: {fileID: 905879777241582768, guid: 4e5da189123c3814dba9a4943e3bdb7c, type: 3}
+  - displayName: TutoriaITex_001.prefab
+    ID: 5
+    prefab: {fileID: 3143320549334907372, guid: ac9a8be3789d03f42b5ad8befcaed458,
+      type: 3}
+  - displayName: TutoriaITex_002.prefab
+    ID: 6
+    prefab: {fileID: 1533832608174735922, guid: ca045e8c7c4a93a4b8c7c245db460d4d,
+      type: 3}
+  - displayName: TutoriaITex_003.prefab
+    ID: 7
+    prefab: {fileID: 3051278004883427774, guid: f338427d0942f524cab15780bd70ffe0,
+      type: 3}
+  - displayName: TutoriaITex_004.prefab
+    ID: 8
+    prefab: {fileID: 2423844961487238517, guid: 81f45302399b6d74684c80e16e29c8b0,
+      type: 3}
+  - displayName: TutoriaITex_005.prefab
+    ID: 9
+    prefab: {fileID: 48135584015870076, guid: 4b0306b641e02dc4b96a9f6a3b135d2b, type: 3}
+  - displayName: TutoriaITex_006.prefab
+    ID: 10
+    prefab: {fileID: 2865876773725154828, guid: fd0b7c95ba4d59a4fbd85348149c2f77,
+      type: 3}
+  - displayName: TutoriaITex_007.prefab
+    ID: 11
+    prefab: {fileID: 5078699068044043064, guid: 92d7e68b632e5e84894c6a16315cd243,
+      type: 3}
+  - displayName: TutoriaITex_008.prefab
+    ID: 12
+    prefab: {fileID: 7462167605770614839, guid: a6ed1df039b3c1f4da37673d3bfdfd88,
+      type: 3}
+  - displayName: TutoriaITex_009.prefab
+    ID: 13
+    prefab: {fileID: 2141839505743187603, guid: 84fdc89f6791f334695637485b5f3624,
+      type: 3}
+  - displayName: TutoriaITex_010.prefab
+    ID: 14
+    prefab: {fileID: 7672461695394549247, guid: 50d28828eb7af9f4a963115dab20a378,
+      type: 3}
+  - displayName: TutoriaITex_011.prefab
+    ID: 15
+    prefab: {fileID: 7573690955689247489, guid: 1ec8fe3482ac9554ca6a7e5889c8c9c3,
+      type: 3}
+  - displayName: TutoriaITex_012.prefab
+    ID: 16
+    prefab: {fileID: 1838988311721674815, guid: 036d12ff16a5f444bbf35c9b13f259c6,
+      type: 3}
+  - displayName: TutoriaITex_013.prefab
+    ID: 17
+    prefab: {fileID: 1907348979736987421, guid: 7e90b3aef5756964e9d973efe9c24674,
+      type: 3}

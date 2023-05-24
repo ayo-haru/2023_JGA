@@ -539,5 +539,10 @@ public class StageSceneManager : BaseSceneManager {
         MySceneManager.GameData.timer = 0.0f;
         playerRespawn = GameObject.Find("PlayerSpawn");
         MySceneManager.GameData.playerPos = playerRespawn.transform.position;
+        
+        if(MySceneManager.GameData.oldScene == (int)MySceneManager.SceneState.SCENE_TITLE &&
+            MySceneManager.GameData.nowScene == (int)MySceneManager.SceneState.SCENE_GAME_001) {
+            gameObject.AddComponent<TutorialManager>(); 
+        }
     }
 }
