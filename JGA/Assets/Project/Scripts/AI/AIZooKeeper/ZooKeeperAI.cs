@@ -624,7 +624,7 @@ public class ZooKeeperAI : MonoBehaviour
             Physics.IgnoreCollision(capsuleCollider, obj.GetComponent<BoxCollider>(), true);
             // 掴む
             gimmickObj.bBring[gimmickNum] = true;
-            gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().isKinematic = true;   // 物理演算の影響を受けないようにする
+            gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().isKinematic = true;
             gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().useGravity = false;
             gimmickObj.gimmickList[gimmickNum].transform.parent = hand.transform;
             gimmickObj.gimmickList[gimmickNum].transform.localPosition = Vector3.zero;
@@ -636,7 +636,7 @@ public class ZooKeeperAI : MonoBehaviour
             Physics.IgnoreCollision(capsuleCollider, obj.GetComponent<BoxCollider>(), false);
             // はなす
             gimmickObj.bBring[gimmickNum] = false;
-            gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().isKinematic = false;   // 物理演算の影響を受けるようにする
+            gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().isKinematic = false;
             gimmickObj.gimmickList[gimmickNum].GetComponent<Rigidbody>().useGravity = true;
             gimmickObj.gimmickList[gimmickNum].transform.parent = parentObj.transform;
             if (!chaseNow)
