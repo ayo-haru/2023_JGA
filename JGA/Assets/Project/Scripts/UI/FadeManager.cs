@@ -20,7 +20,8 @@ public class FadeManager : MonoBehaviour {
     public enum eFade {
         Default,
         FadeIn,
-        FadeOut
+        FadeOut,
+        WAIT
     }
 
     [Header("α値に加算減算する値")]
@@ -120,7 +121,6 @@ public class FadeManager : MonoBehaviour {
 
         oldFadeMode = fadeMode;
         fadeMode = eFade.FadeIn;
-        //_monoBehaviour.StartCoroutine(DelayChangeFadeIn(_monoBehaviour));
 
         if (!PauseManager.isPaused) {
             PauseManager.isPaused = true;
@@ -154,25 +154,33 @@ public class FadeManager : MonoBehaviour {
         return fadeMode;
     }
 
+
+    /// <summary>
+    /// フェードのモードを変える
+    /// </summary>
+    /// <param name="_FadeMode"></param>
+    /// <returns></returns>
     public IEnumerator WaitChangeFadeMode(eFade _FadeMode) {
-        oldFadeMode = fadeMode = eFade.Default;
+        oldFadeMode = fadeMode = eFade.WAIT;
         yield return StartCoroutine(WaitSound(SoundManager.ESE.STEALDOOR_OPEN));
 
         yield return StartCoroutine(WaitSound(SoundManager.ESE.STEALDOOR_CLOSE));
 
-        Debug.Log("<color= bulue>"+_FadeMode + "に切り替え</color>");
-
         oldFadeMode = fadeMode = _FadeMode;
     }
 
+
+    /// <summary>
+    /// 音が鳴っている間処理を待つ
+    /// </summary>
+    /// <param name="_se"></param>
+    /// <returns></returns>
     public IEnumerator WaitSound(SoundManager.ESE _se) {
         if (!audioSource.isPlaying) {
             SoundManager.Play(audioSource, _se);
-            Debug.Log("<color= bulue>" + _se + "ならした</color>");
         }
         while (audioSource.isPlaying) {
             yield return new WaitForEndOfFrame();
         }
-        Debug.Log("<color= bulue>" + _se + "なり終わった</color>");
     }
 }

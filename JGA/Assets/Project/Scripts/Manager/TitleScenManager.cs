@@ -19,11 +19,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
-public class TitleScenManager : BaseSceneManager
-{
-    [SerializeField,Header("ゲームを始める")] private Selectable startButton;
-    [SerializeField,Header("オプション")] private Selectable optionButton;
-    [SerializeField,Header("ゲームをやめる")] private Selectable exitButton;
+using UnityEngine.SceneManagement;
+
+public class TitleScenManager : BaseSceneManager {
+    [SerializeField, Header("ゲームを始める")] private Selectable startButton;
+    [SerializeField, Header("オプション")] private Selectable optionButton;
+    [SerializeField, Header("ゲームをやめる")] private Selectable exitButton;
 
     [SerializeField, Header("オプション")] private OptionPanel optionPanel;
 
@@ -33,7 +34,7 @@ public class TitleScenManager : BaseSceneManager
     private Vector3 mousePos;
 
     //タイトル画面のボタン
-    private enum ETitleSelect {TITLESELECT_START,TITLESELECT_OPTION,TITLESELECT_EXIT,MAX_TITLESELECT};
+    private enum ETitleSelect { TITLESELECT_START, TITLESELECT_OPTION, TITLESELECT_EXIT, MAX_TITLESELECT };
 
     //次のシーン
     private int nextScene;
@@ -67,7 +68,9 @@ public class TitleScenManager : BaseSceneManager
 
     private void Start() {
         // BGM再生
-        SoundManager.Play(audioSource, SoundManager.EBGM.TITLE_001);
+       SoundManager.Play(audioSource, SoundManager.EBGM.TITLE_001);
+
+        StartCoroutine(WaitFade());
 
         //マウス、コントローラの値取得
         Gamepad gamepad = Gamepad.current;
@@ -83,8 +86,7 @@ public class TitleScenManager : BaseSceneManager
     /// <summary>
     /// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
     /// </summary>
-    void Update()
-	{
+    void Update() {
         //マウス、コントローラの値取得
         Gamepad gamepad = Gamepad.current;
 
@@ -93,8 +95,7 @@ public class TitleScenManager : BaseSceneManager
         //オプション画面が開かれているときは処理しない
         if (bFlag) return;
         //オプション画面から戻って来た時の初期化処理
-        if (beforeFlag)
-        {
+        if (beforeFlag) {
             bMouse = (gamepad != null);
             ChangeInput();
         }
@@ -105,35 +106,30 @@ public class TitleScenManager : BaseSceneManager
 
         //マウス有効の状態でコントローラが押されたらコントローラ入力にする
         //マウス無効でマウスが動いたらマウス入力を有効
-        if (bMouse)
-        {
+        if (bMouse) {
             if (gamepad.leftStick.ReadValue() != Vector2.zero || gamepad.aButton.wasReleasedThisFrame) ChangeInput();
         }
         else
         {
             if(Vector3.Distance(mousePos,oldMousePos) >= 1.0f)ChangeInput();
         }
-
     }
 
-#region タイトル画面のボタン
-    public void StartButton()
-    {
+    #region タイトル画面のボタン
+    public void StartButton() {
         SoundSEDecision();
         MySceneManager.GameData.oldScene = (int)MySceneManager.SceneState.SCENE_TITLE;  // 今のシーンをひとつ前のシーンとして保存
         SceneChange(nextScene);
         //コントローラ入力の場合マウスカーソルが非表示のままになってしまうので表示する
-        if (!bMouse)Cursor.visible = true;
+        if (!bMouse) Cursor.visible = true;
     }
-    public void OptionButton()
-    {
+    public void OptionButton() {
         SoundSEDecision();
         ControllerNoneSelect();
         //オプション画面を開く
         optionPanel.Open();
     }
-    public void ExitButton()
-    {
+    public void ExitButton() {
         SoundSEDecision();
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
@@ -141,20 +137,17 @@ public class TitleScenManager : BaseSceneManager
         Application.Quit();
 #endif
     }
-#endregion
+    #endregion
 
 
-    private void ChangeInput()
-    {
+    private void ChangeInput() {
         //マウス→コントローラ
-        if (bMouse)
-        {
+        if (bMouse) {
             //マウスカーソル非表示
             Cursor.visible = false;
             ControllerChangeSelect(ETitleSelect.TITLESELECT_START);
-        }
-        else//コントローラ→マウス
-        {
+        } else//コントローラ→マウス
+          {
             //マウスカーソル表示
             Cursor.visible = true;
             ControllerNoneSelect();
@@ -163,11 +156,9 @@ public class TitleScenManager : BaseSceneManager
         bMouse = !bMouse;
     }
 
-    private void ControllerChangeSelect(ETitleSelect _select)
-    {
+    private void ControllerChangeSelect(ETitleSelect _select) {
         ControllerNoneSelect();
-        switch (_select)
-        {
+        switch (_select) {
             case ETitleSelect.TITLESELECT_START:
                 startButton.Select();
                 break;
@@ -181,19 +172,24 @@ public class TitleScenManager : BaseSceneManager
         SoundSESelect();
     }
 
-    private void ControllerNoneSelect()
-    {
+    private void ControllerNoneSelect() {
         EventSystem.current.SetSelectedGameObject(null);
     }
 
-    public void SoundSESelect()
-    {
+    public void SoundSESelect() {
         if (!audioSource) return;
         SoundManager.Play(audioSource, SoundManager.ESE.SELECT_001);
     }
-    public void SoundSEDecision()
-    {
+    public void SoundSEDecision() {
         if (!audioSource) return;
         SoundManager.Play(audioSource, SoundManager.ESE.DECISION_001);
     }
+
+    IEnumerator WaitFade() {
+        audioSource.Pause();
+        yield return new WaitUntil(() => FadeManager.fadeMode == FadeManager.eFade.Default);
+        //MySceneManager.SceneChange(_nextScene);
+        audioSource.UnPause();
+    }
+
 }

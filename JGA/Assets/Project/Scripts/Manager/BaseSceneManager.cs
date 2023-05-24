@@ -34,7 +34,7 @@ public class BaseSceneManager : MonoBehaviour
             canvasObj.AddComponent<GraphicRaycaster>();
         }
         // キャンバスの設定
-        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.renderMode = RenderMode.ScreenSpaceCamera;
 
         // AudioSourceをつける
         gameObject.AddComponent<AudioSource>();
