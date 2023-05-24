@@ -320,6 +320,8 @@ public class Player : MonoBehaviour
 			}
 		}
 
+		//--- 走っているか判定
+		_IsRun = !bGamePad && bRunButton && moveInputValue.normalized != Vector2.zero;
 
 		// アニメーション
 		if (!bHitMotion)
@@ -339,12 +341,9 @@ public class Player : MonoBehaviour
 					bHitMotion = false;
 					anim.SetBool(HashHit, bHitMotion);
 				}
-
 			}
 		}
 
-		//--- 走っているか判定
-		_IsRun = bRunButton && moveInputValue.normalized != Vector2.zero;
 
 		float length;       // プレイヤーと一番近いオブジェクトの距離
 		if (InteractOutline != null)
@@ -522,10 +521,13 @@ public class Player : MonoBehaviour
 		if (moveInputValue != context.ReadValue<Vector2>())
 		{
 			moveInputValue = context.ReadValue<Vector2>();
-			rb.velocity = rb.velocity / 2;
-			rb.angularVelocity = rb.angularVelocity / 2;
+			if (!bGamePad)
+			{
+				rb.velocity = rb.velocity / 2;
+				rb.angularVelocity = rb.angularVelocity / 2;
+			}
 		}
-		if (!bGamePad && context.phase == InputActionPhase.Canceled)
+		if (context.phase == InputActionPhase.Canceled)
 		{
 			moveInputValue = Vector2.zero;
 			rb.velocity = Vector3.zero;
