@@ -109,15 +109,15 @@ NavMeshSettings:
   m_BuildSettings:
     serializedVersion: 2
     agentTypeID: 0
-    agentRadius: 1
-    agentHeight: 2
-    agentSlope: 35
-    agentClimb: 0.5
+    agentRadius: 3
+    agentHeight: 5
+    agentSlope: 40
+    agentClimb: 1.55
     ledgeDropHeight: 0
     maxJumpAcrossDistance: 0
     minRegionArea: 2
     manualCellSize: 0
-    cellSize: 0.33333334
+    cellSize: 1
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
@@ -17426,6 +17426,7 @@ MonoBehaviour:
   - {fileID: 1320279476}
   resetPos:
   - {x: 0, y: 0, z: 0}
+  resetRot: []
   bReset: 
   bBring: 
 --- !u!4 &1301820577
