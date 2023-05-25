@@ -517,15 +517,15 @@ public class KeeperAI : MonoBehaviour
     /// </summary>
     private void Bring()
     {
-        int ray1 = LayerMask.NameToLayer("ZooKeeperRB");
+        int ray1 = LayerMask.NameToLayer("Ignore Raycast");
         int ray2 = LayerMask.NameToLayer("RayHit");
-
+        int ray3 = soundObj.gameObject.layer;
+        //Debug.Log(ray3);
         // ラジオの子オブジェクトを取得
         GameObject childObj = soundObj.gameObject.transform.GetChild(1).gameObject;
         if (!catchFlg)
         {
-            // レイの当たり判定を無くす
-            Physics.IgnoreLayerCollision(ray1, ray2);
+            soundObj.gameObject.layer = ray1;   // 一時的にレイヤーをIgnore Raycastにする
             // 掴む
             soundObj.GetComponent<Rigidbody>().isKinematic = true;   // 物理演算の影響を受けないようにする
             soundObj.GetComponent<Rigidbody>().useGravity = false;
@@ -536,8 +536,7 @@ public class KeeperAI : MonoBehaviour
         else if (radioResetFlg)
         {
             if (questionEffect) Destroy(questionEffect);
-            // レイの当たり判定をつける
-            Physics.IgnoreLayerCollision(ray1, ray2, false);
+            soundObj.gameObject.layer = ray2;   // 元のレイヤーに戻す
             // はなす
             soundObj.GetComponent<Rigidbody>().isKinematic = false;   // 物理演算の影響を受けるようにする
             soundObj.GetComponent<Rigidbody>().useGravity = true;
