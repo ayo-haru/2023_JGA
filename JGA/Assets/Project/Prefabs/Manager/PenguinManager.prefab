@@ -46,5 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   penguinCount: 5
   penguinsData: {fileID: 11400000, guid: 3d81b8c286d701f4b8fadcef04fe4c77, type: 2}
-  bearCount: 2
-  bearData: {fileID: 11400000, guid: 5e43a404833cc9d4c8811883186e73c0, type: 2}
+  bearCount: 1
+  bearData: {fileID: 11400000, guid: 9e2bb8ad9e2e39a468cfabc073d7ec24, type: 2}
+  polarBearCount: 1
+  polarBearData: {fileID: 11400000, guid: 5e43a404833cc9d4c8811883186e73c0, type: 2}
