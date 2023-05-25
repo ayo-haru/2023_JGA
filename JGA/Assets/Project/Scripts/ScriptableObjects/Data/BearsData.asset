@@ -12,7 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 829b5e9e3b06d3a43b6bd6c9c97b8653, type: 3}
   m_Name: BearsData
   m_EditorClassIdentifier: 
-  dataList: []
-  rangeList: []
+  dataList:
+  - walkSpeed: 4
+    runSpeed: 8
+    rotateAngle: 5
+    minIdleTime: 4
+    maxIdleTime: 5
+  rangeList:
+  - {x: 0.26, y: -17.503956, z: -224.03}
+  - {x: -7.35, y: -17.503956, z: -231.54}
+  - {x: -15.32, y: -17.503956, z: -242.1}
+  - {x: -22.09, y: -17.503956, z: -240.26}
   rangeButtom: 0
-  rangeArea: 0
+  rangeArea: 2
