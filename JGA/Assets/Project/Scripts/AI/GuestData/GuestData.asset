@@ -134,7 +134,7 @@ MonoBehaviour:
     waitTime: 0
     cageDistance: 10
   - name: OGuest006
-    roots: 0c000000
+    roots: 09000000
     rootTransforms:
     - {fileID: 0}
     penguinTF:

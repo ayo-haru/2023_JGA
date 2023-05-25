@@ -6,7 +6,7 @@ MonoImporter:
   defaultReferences:
   - BGMData: {fileID: 11400000, guid: a52931cb33383164cb1cd2fbbbfb8334, type: 2}
   - SEData: {fileID: 11400000, guid: 900efb3b06fd8204d909e8e9b03a784b, type: 2}
-  executionOrder: 0
+  executionOrder: -15
   icon: {instanceID: 0}
   userData: 
   assetBundleName: 

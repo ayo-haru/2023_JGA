@@ -68,7 +68,7 @@ public class TutorialManager : MonoBehaviour
         fade = GameObject.Find("FadePanel");
 
         player = GameObject.FindWithTag("Player");
-        //guest = GameObject.Find("Tutorial_Guest001");
+        guest = GameObject.Find("TutorialWait_Guest001");
 
         // 変数初期化
         isExecution = false;
@@ -79,6 +79,17 @@ public class TutorialManager : MonoBehaviour
         {
             new Move01Tutorial(),
             new Move02Tutorial(),
+            new Hit01Tutorial(),
+            new Hit02Tutorial(),
+            new Appeal01Tutorial(),
+            new Appeal02Tutorial(),
+            new Follow01Tutorial(),
+            new Follow02Tutorial(),
+            new Follow03Tutorial(),
+            new Hold01Tutorial(),
+            new Hold02Tutorial(),
+            new Hold03Tutorial(),
+            new Timer01Tutorial()
         };
 
         // 最初のチュートリアルを設定
