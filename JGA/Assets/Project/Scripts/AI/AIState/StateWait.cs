@@ -16,6 +16,10 @@ public class StateWait : AIState
 {
     //アニメーション
     private GuestAnimation guestAnimation;
+    
+    private enum EWaitMotion { WAIT,IDLE};
+    [SerializeField, Header("再生するアニメーション")]
+    private EWaitMotion motion = EWaitMotion.WAIT;
 
 #if false
     /// <summary>
@@ -58,7 +62,7 @@ public class StateWait : AIState
         if (!ErrorCheck()) return;
 
         //アニメーション設定
-        guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.WAIT);
+        guestAnimation.SetAnimation((motion == EWaitMotion.WAIT) ? GuestAnimation.EGuestAnimState.WAIT : GuestAnimation.EGuestAnimState.IDLE);
         guestAnimation.SetLookAt(null);
     }
 
