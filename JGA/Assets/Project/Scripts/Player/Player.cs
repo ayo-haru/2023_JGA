@@ -14,6 +14,7 @@
 // 2023/05/04   引きずり終了する時の処理を少し変更しました(小楠)
 //=============================================================================
 using System.Collections.Generic;
+using System.Linq;
 using UniRx;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -859,6 +860,11 @@ public class Player : MonoBehaviour
 			InteractCollision.transform.parent = transform;
 			//InteractCollision.transform.parent = holdPos.transform;
 
+			if (InteractCollision.name.Contains("Corn"))
+			{
+				InteractCollision.GetComponent<Rigidbody>().mass = 1.0f;
+			}
+
 			//引きずり開始
 			if (!InteractCollision.TryGetComponent(out Rigidbody rigidbody)) return;
 			//HingeJointの設定
@@ -881,6 +887,9 @@ public class Player : MonoBehaviour
 				InteractCollision.transform.parent = InteractObjectParent.transform;
 			else
 				InteractCollision.transform.parent = null;
+
+			if (InteractCollision.name.Contains("Corn"))
+				InteractCollision.GetComponent<Rigidbody>().mass = 5.0f;
 
 			//離す処理
 			anim.SetFloat(HashAnimSpeed, 1.0f);
