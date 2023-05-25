@@ -1,13 +1,14 @@
 //=============================================================================
 // @File	: [BearMove.cs]
-// @Brief	: 熊の動き
+// @Brief	: シロクマの動き
 // @Author	: Fujiyama Riku
 // @Editer	: 
 // @Detail	: 
 // 
 // [Date]
-// 2023/05/02	スクリプト作成
+// 2023/03/25	スクリプト作成
 //=============================================================================
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,22 +18,13 @@ using UniRx.Triggers;
 
 public class BearMove : MonoBehaviour
 {
-    
+
     enum MoveType
     {
         WALK,
         RUN,
         IDLE,
         TURN,
-		GIMMICK,
-        MAX_MOVE
-    }
-    enum FISHTYPE
-    {
-        FISH_WALK,
-        FISH_HAVE,
-        FISH_RETURN,
-        FISH_TURN,
         MAX_MOVE
     }
 
@@ -47,7 +39,7 @@ public class BearMove : MonoBehaviour
     private int currentMoveIndex;           //動きの数値
     private int moveIndex;                  //現在の動きの数値
 
-    
+
     private Vector3 endPos;                 //終了地点を格納しておく変数
 
     private Rigidbody rb;                   //リジッドボディ
@@ -58,18 +50,12 @@ public class BearMove : MonoBehaviour
 
     private bool turnFlg;                   //ターン用フラグ
 
-    private BearArea bearArea;              //魚が探索範囲に入っているかの処理
-
-    private FISHTYPE fishTyep;              //魚の状態
-
-    private bool fishHaveFlg;
-
 
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
     /// </summary>
     void Awake()
-	{
+    {
         //初期化
         currentMoveType = MoveType.IDLE;
         moveType = MoveType.IDLE;
@@ -82,27 +68,26 @@ public class BearMove : MonoBehaviour
 
         anim = this.GetComponent<Animator>();
 
-        bearArea = GameObject.Find("BearArea").GetComponent<BearArea>();
 
         PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(gameObject);
         PauseManager.OnResumed.Subscribe(x => { ReGame(); }).AddTo(gameObject);
     }
 
-	/// <summary>
-	/// 最初のフレーム更新の前に呼び出される
-	/// </summary>
-	void Start()
-	{
-		
-	}
+    /// <summary>
+    /// 最初のフレーム更新の前に呼び出される
+    /// </summary>
+    void Start()
+    {
 
-	/// <summary>
-	/// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
-	/// </summary>
-	void FixedUpdate()
-	{
+    }
+
+    /// <summary>
+    /// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
+    /// </summary>
+    void FixedUpdate()
+    {
         //ポーズ時に他の処理をしないようにする
-		if(pauseFlg)
+        if (pauseFlg)
         {
             return;
         }
@@ -125,18 +110,15 @@ public class BearMove : MonoBehaviour
             case MoveType.TURN:
                 Turn();
                 break;
-            case MoveType.GIMMICK:
-                Gimmick();
-                break;
         }
     }
 
-	/// <summary>
-	/// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
-	/// </summary>
-	void Update()
-	{
-        
+    /// <summary>
+    /// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
+    /// </summary>
+    void Update()
+    {
+
     }
 
     private void Idle()
@@ -225,97 +207,10 @@ public class BearMove : MonoBehaviour
         }
     }
 
-    private void Gimmick()
-    {
-        var fishNum = bearArea.fishNum;
-
-        if(fishTyep == FISHTYPE.FISH_TURN)
-        {
-            if (!fishHaveFlg)
-            {
-                var fishPos = bearArea.fishObj[fishNum].transform.position;
-                fishPos.y = this.transform.position.y;
-                endPos = fishPos;
-
-                var endRot = Quaternion.LookRotation(endPos - this.transform.position);
-                var befRot = this.transform.rotation;
-                this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, endRot, BoothAnimalManager.Instance.bearData.dataList[movedata].rotateAngle);
-
-                rb.velocity = Vector3.zero;
-                if (befRot == this.transform.rotation)
-                {
-                    fishTyep = FISHTYPE.FISH_WALK;
-                    anim.SetBool("WalkFlg", true);
-                    anim.SetBool("TurnFlg", false);
-                }
-            }
-            else
-            {
-                var roomPos = bearArea.roomPos.transform.position;
-                roomPos.y = this.transform.position.y;
-                endPos = roomPos;
-
-                var endRot = Quaternion.LookRotation(endPos - this.transform.position);
-                var befRot = this.transform.rotation;
-                this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, endRot, BoothAnimalManager.Instance.bearData.dataList[movedata].rotateAngle);
-
-                rb.velocity = Vector3.zero;
-                if (befRot == this.transform.rotation)
-                {
-                    fishTyep = FISHTYPE.FISH_WALK;
-                    anim.SetBool("WalkFlg", true);
-                    anim.SetBool("TurnFlg", false);
-                }
-            }
-        }
-        if(fishTyep == FISHTYPE.FISH_WALK)
-        {
-            if (!fishHaveFlg)
-            {
-                var fishPos = bearArea.fishObj[fishNum].transform.position;
-                float dis = Vector3.Distance(this.transform.position, fishPos);
-                if (dis >= 3.0f)
-                {
-                    endPos = fishPos;
-
-                    //速度を決定してその速度で終了地点まで動く
-                    this.transform.position = Vector3.MoveTowards(this.transform.position,
-                                                                    endPos,
-                                                                    BoothAnimalManager.Instance.bearData.dataList[movedata].walkSpeed * Time.deltaTime);
-                }
-                else
-                {
-                    fishTyep = FISHTYPE.FISH_HAVE;
-                    anim.SetBool("WalkFlg", false);
-                }
-            }
-            if (fishHaveFlg)
-            {
-                endPos = bearArea.roomPos.transform.position;
-                
-                    //速度を決定してその速度で終了地点まで動く
-                    this.transform.position = Vector3.MoveTowards(this.transform.position,
-                                                                    endPos,
-                                                                    BoothAnimalManager.Instance.bearData.dataList[movedata].walkSpeed * Time.deltaTime);
-                if(PositionAreaJudge(this.transform.position,endPos,1))
-                {
-                    Destroy(this.gameObject);
-                }
-                
-            }
-            rb.velocity = Vector3.zero;
-            
-        }
-        if(fishTyep == FISHTYPE.FISH_HAVE)
-        {
-            anim.SetBool("EatFlg",true);
-        }
-    }
-
     private void MoveEnter()
     {
         moveFlg = true;
-        
+
         if (turnFlg == true)
         {
             currentMoveType = MoveType.WALK;
@@ -324,18 +219,6 @@ public class BearMove : MonoBehaviour
         else
         {
             currentMoveType = (MoveType)Random.Range((int)MoveType.IDLE, (int)MoveType.TURN + 1);
-        }
-
-        if (bearArea.dropFlg)
-        {
-            if (moveType == MoveType.WALK)
-            {
-                currentMoveType = MoveType.TURN;
-            }
-            else if (moveType == MoveType.TURN)
-            {
-                currentMoveType = MoveType.WALK;
-            }
         }
 
         if (currentMoveType == MoveType.WALK)
@@ -361,8 +244,7 @@ public class BearMove : MonoBehaviour
         if (currentMoveType == MoveType.TURN)
         {
             anim.SetBool("TurnFlg", true);
-            if (!bearArea.dropFlg)
-            {
+            
                 //終了地点がなるべくかぶらないようにするため違う場所になるまで回す。
                 if (currentMoveIndex < BoothAnimalManager.Instance.bearData.rangeButtom)
                 {
@@ -386,47 +268,14 @@ public class BearMove : MonoBehaviour
                         currentMoveIndex = Random.Range(BoothAnimalManager.Instance.bearData.rangeButtom + 1,
                                                         BoothAnimalManager.Instance.bearData.rangeList.Count);
                 }
-            }
+            
 
-            if(bearArea.dropFlg)
-            {
-                if (currentMoveIndex <= BoothAnimalManager.Instance.bearData.rangeButtom)
-                {
-                    fishTyep = FISHTYPE.FISH_TURN;
-                    currentMoveType = MoveType.GIMMICK;
-                    return;
-                }
-                else if (currentMoveIndex == BoothAnimalManager.Instance.bearData.rangeButtom + 1)
-                {
-                        currentMoveIndex = BoothAnimalManager.Instance.bearData.rangeButtom;
-                }
-                else if (currentMoveIndex > BoothAnimalManager.Instance.bearData.rangeButtom + 1)
-                {
-                        currentMoveIndex = BoothAnimalManager.Instance.bearData.rangeButtom + 1;
-                }
-            }
 
             //終了地点が決まったらランダムで若干ずらす。
             endPos = CircleRandamaiser(currentMoveIndex);
 
         }
     }
-
-    private void EatFlg()
-    {
-        fishTyep = FISHTYPE.FISH_TURN;
-        fishHaveFlg = true;
-        anim.SetBool("EatFlg", false);
-    }
-    private void HaveFlg()
-    {
-        var fishNum = bearArea.fishNum;
-        Destroy(bearArea.fishObj[fishNum].GetComponent<Rigidbody>());
-        bearArea.fishObj[fishNum].transform.position = transform.Find("spine01/spine02/spine03/spine04/spine05/Neck/Head/HeadFore/UnderJaw/Mouth").transform.position;
-        bearArea.fishObj[fishNum].transform.rotation = transform.Find("spine01/spine02/spine03/spine04/spine05/Neck/Head/HeadFore/UnderJaw/Mouth").transform.rotation;
-        bearArea.fishObj[fishNum].transform.parent = transform.Find("spine01/spine02/spine03/spine04/spine05/Neck/Head/HeadFore/UnderJaw/Mouth");
-    }
-
 
     //0から半径分の範囲を取るためそれを指定された座標と計算することで若干位置をずらせる。
     private Vector3 CircleRandamaiser(int index)

@@ -2491,6 +2491,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7535056807155738527}
   - component: {fileID: 4499600612942806501}
+  - component: {fileID: 4817794514649424675}
+  - component: {fileID: 9184100395625408105}
+  - component: {fileID: 4024832123506928858}
   m_Layer: 0
   m_Name: Bear
   m_TagString: TargetAnimals
@@ -2536,6 +2539,48 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!114 &4817794514649424675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7195123359571016997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6cfde130f82af54aab7cc592a9b38f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!136 &9184100395625408105
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7195123359571016997}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 3.5312896
+  m_Height: 7.639078
+  m_Direction: 1
+  m_Center: {x: 0.05553198, y: 3.6168528, z: -0.013667107}
+--- !u!54 &4024832123506928858
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7195123359571016997}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 116
+  m_CollisionDetection: 0
 --- !u!1 &7418796491741655008
 GameObject:
   m_ObjectHideFlags: 0

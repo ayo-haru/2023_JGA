@@ -31,12 +31,19 @@ public class BoothAnimalManager : SingletonMonoBehaviour<BoothAnimalManager>
 	private GameObject bearObj;
 	//熊の数
 	[SerializeField] private int bearCount;
-	//ペンギンの総合データ
+	//クマの総合データ
 	[SerializeField] public BearsData bearData;
 	[NonSerialized] public int bearStartIndex;
 
-	//アニマルオブジェクトを入れる用
-	private GameObject animalObject;
+	private GameObject polarBearObj;
+
+	[SerializeField] protected int polarBearCount;
+
+	[SerializeField] public BearsData polarBearData;
+	[NonSerialized] public int polarBearStartIndex;
+
+    //アニマルオブジェクトを入れる用
+    private GameObject animalObject;
 
     /// <summary>
     /// 最初のフレーム更新の前に呼び出される
@@ -57,6 +64,11 @@ public class BoothAnimalManager : SingletonMonoBehaviour<BoothAnimalManager>
 		if (!bearData)
         {
             Debug.LogWarning("BearsDataがシーン上にありません");
+            return;
+        }
+		if(!polarBearData)
+		{
+            Debug.LogWarning("polarBearDataがシーン上にありません");
             return;
         }
 
@@ -93,9 +105,23 @@ public class BoothAnimalManager : SingletonMonoBehaviour<BoothAnimalManager>
             bearOBject.transform.parent = animalObject.transform;
         }
 
+        polarBearObj = PrefabContainerFinder.Find(MySceneManager.GameData.animalDatas, "PolarBear.prefab");
 
-		
-	}
+        for (int i = 0; i < polarBearCount; i++)
+        {
+            polarBearStartIndex = UnityEngine.Random.Range(0, polarBearData.rangeList.Count);
+            var startPoint = UnityEngine.Random.insideUnitCircle * polarBearData.rangeArea;
+
+            var setVector = new Vector3(polarBearData.rangeList[polarBearStartIndex].x + startPoint.x,
+                                        polarBearData.rangeList[polarBearStartIndex].y,
+                                        polarBearData.rangeList[polarBearStartIndex].z + startPoint.y);
+
+            var polarBearOBject = Instantiate(polarBearObj, setVector, Quaternion.identity);
+            polarBearOBject.gameObject.name = Rename("PolarBear_", i);
+            polarBearOBject.transform.parent = animalObject.transform;
+        }
+
+    }
 
 	/// <summary>
 	/// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理

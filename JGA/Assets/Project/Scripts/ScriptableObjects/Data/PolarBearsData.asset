@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 829b5e9e3b06d3a43b6bd6c9c97b8653, type: 3}
+  m_Name: PolarBearsData
+  m_EditorClassIdentifier: 
+  dataList:
+  - walkSpeed: 4
+    runSpeed: 8
+    rotateAngle: 5
+    minIdleTime: 4
+    maxIdleTime: 5
+  rangeList:
+  - {x: 142.42282, y: 1.9216876, z: 150.76714}
+  - {x: 140.9, y: 1.9216876, z: 138.3}
+  - {x: 156.3, y: 1.9216876, z: 127.7}
+  - {x: 164.2, y: 1.9216876, z: 139.8}
+  - {x: 190.09, y: 2.0999985, z: 122.82}
+  - {x: 196.51, y: 13.01, z: 158.03}
+  - {x: 177.6, y: 13.01, z: 174.3}
+  - {x: 162.5, y: 13.01, z: 173.7}
+  - {x: 170.9, y: 13.01, z: 165.2}
+  rangeButtom: 4
+  rangeArea: 2
