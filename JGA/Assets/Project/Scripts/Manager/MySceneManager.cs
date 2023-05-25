@@ -7,6 +7,7 @@
 // 
 // [Date]
 // 2023/02/02 スクリプト作成,フレームレート数を指定の処理を記載(吉原)
+// 2023/05/25 飼育員巡回ルートを列挙に追加(吉原)
 //=============================================================================
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -76,18 +77,42 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 	//----- 飼育員、客のルートに使用 -----
 	public enum eRoot
 	{
-		PENGUIN_N = 0,
-		PENGUIN_S,
-		PENGUIN_W,
-		PENGUIN_E,
-		HORSE,
-		ELEPHANT,
-		LION,
-		POLARBEAR,
-		BIRD,
+		// 客用
+		PENGUIN_N = 0,		// ペンギンブース北
+		PENGUIN_S,			// ペンギンブース南
+		PENGUIN_W,			// ペンギンブース西
+		PENGUIN_E,			// ペンギンブース東
+		RESTSPOT_01,		// 休憩スペース1
+		RESTSPOT_02,		// 休憩スペース2
+		HORSE,				// ウマ
+		ZEBRA,				// シマウマ
+		POLARBEAR,			// シロクマ
+		BEAR_01,			// クマ1
+		BEAR_02,			// クマ2
+		PANDA,				// パンダ
 
-		ENTRANCE
+
+		ENTRANCE,
+
+		// 飼育員巡回用
+		BELL_AREA,			// 鐘周辺
+		POLAR_AREA,			// シロクマ周辺
+		BEAR_AREA,			// クマ周辺
+		PANDA_AREA_01,		// パンダ周辺
+		PANDA_AREA_02,		// パンダ周辺
+		HOURSE_AREA,		// ウマ
+		ZEBRA_AREA_01,		// シマウマ周辺1
+		ZEBRA_AREA_02,		// シマウマ周辺2
+		FOUNTAIN_AREA,		// 噴水周辺
+		LAKE_AREA,			// 池周辺
+
+
+		
+		
+
+
 	}
+
 
 	//----- イベント -----
 	public enum eEvent {
@@ -139,15 +164,15 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 	{
 		SceneManager.LoadScene(sceneName[(int)_nextScene]);
 	}
-    public static void SceneChange(int _nextScene) {
-        SceneManager.LoadScene(sceneName[_nextScene]);
-    }
+	public static void SceneChange(int _nextScene) {
+		SceneManager.LoadScene(sceneName[_nextScene]);
+	}
 
 
-    /// <summary>
-    /// 呼ばれたらシーン読み込み直す
-    /// </summary>
-    public static void SceneReload()
+	/// <summary>
+	/// 呼ばれたらシーン読み込み直す
+	/// </summary>
+	public static void SceneReload()
 	{
 		/*
 		 * 一応作ってみたんだけどInitializeSceneは再読み込みされないのでちょっとどうしようかなって感じ
