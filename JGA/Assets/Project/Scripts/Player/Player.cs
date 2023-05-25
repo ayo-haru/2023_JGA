@@ -787,7 +787,11 @@ public class Player : MonoBehaviour
 				float jointLimitsMin = -90.0f;
 				float jointLimitsMax = 45.0f;
 
+
+				//--- オブジェクト別処理
 				bool bChainsawMan = false;
+
+				// 魚
 				if (InteractCollision.TryGetComponent(out FishObject fish))
 				{
 					bChainsawMan = true;
@@ -795,13 +799,19 @@ public class Player : MonoBehaviour
 					// Ｙ軸を中心に回転
 					InteractCollision.transform.rotation = Quaternion.AngleAxis(90, Vector3.up) * InteractCollision.transform.rotation;
 				}
+				// メガホン
 				else if (InteractCollision.TryGetComponent(out MegaPhone mega))
 				{
-					// Ｙ軸を中心に回転
-					holdPos.transform.rotation = Quaternion.AngleAxis(90, Vector3.up) * transform.rotation;
-					// Ｚ軸を中心に回転
-					//InteractCollision.transform.rotation = Quaternion.AngleAxis(-45, Vector3.forward) * InteractCollision.transform.rotation;
+					InteractCollision.GetComponent<Rigidbody>().isKinematic = true;
+
+					// 座標とか角度の微調整
+					InteractCollision.transform.localRotation = transform.rotation;
+					InteractCollision.transform.Rotate(0, -90, 0, Space.World);
+					var holdPoint = InteractCollision.transform.Find("HoldPoint").transform;
+					InteractCollision.transform.Translate(0, -holdPoint.localPosition.y, 0);
+					InteractCollision.transform.RotateAround(holdPoint.position, transform.right, 20);
 				}
+				// ラジオ
 				else if (InteractCollision.TryGetComponent(out Radio rad))
 				{
 					// Ｙ軸を中心に回転
@@ -841,7 +851,10 @@ public class Player : MonoBehaviour
 			else
 				InteractCollision.transform.parent = null;
 
-			InteractCollision = null;
+			if (InteractCollision.TryGetComponent(out MegaPhone mega))
+				InteractCollision.GetComponent<Rigidbody>().isKinematic = false;
+
+				InteractCollision = null;
 			InteractJointAnchor = Vector3.zero;
 		}
 	}
