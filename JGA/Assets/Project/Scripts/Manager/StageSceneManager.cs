@@ -161,6 +161,9 @@ public class StageSceneManager : BaseSceneManager {
         //----- それぞれのブースの座標の取得 -----
         rootPos = new Transform[Enum.GetNames(typeof(MySceneManager.eRoot)).Length];
         if (isGuestSpawn == true || isZKSpawn == true) {  // デバッグ用エラー出ないように囲んどく
+
+            // 客のルート取得===================================================================
+            #region 客ルート
             if (!rootPos[(int)MySceneManager.eRoot.PENGUIN_N]) {
                 rootPos[(int)MySceneManager.eRoot.PENGUIN_N] = GameObject.Find("PenguinCagePos_N").GetComponent<Transform>();
             }
@@ -173,24 +176,84 @@ public class StageSceneManager : BaseSceneManager {
             if (!rootPos[(int)MySceneManager.eRoot.PENGUIN_E]) {
                 rootPos[(int)MySceneManager.eRoot.PENGUIN_E] = GameObject.Find("PenguinCagePos_E").GetComponent<Transform>();
             }
+            if (!rootPos[(int)MySceneManager.eRoot.RESTSPOT_01]) {
+                rootPos[(int)MySceneManager.eRoot.RESTSPOT_01] = GameObject.Find("RestSpotPos01").GetComponent<Transform>();
+            }
+            if (!rootPos[(int)MySceneManager.eRoot.RESTSPOT_02]) {
+                rootPos[(int)MySceneManager.eRoot.RESTSPOT_02] = GameObject.Find("RestSpotPos02").GetComponent<Transform>();
+            }
             if (!rootPos[(int)MySceneManager.eRoot.HORSE]) {
                 rootPos[(int)MySceneManager.eRoot.HORSE] = GameObject.Find("HorseCagePos").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.ELEPHANT]) {
-                rootPos[(int)MySceneManager.eRoot.ELEPHANT] = GameObject.Find("ElephantCagePos").GetComponent<Transform>();
-            }
-            if (!rootPos[(int)MySceneManager.eRoot.LION]) {
-                rootPos[(int)MySceneManager.eRoot.LION] = GameObject.Find("LionCagePos").GetComponent<Transform>();
+            if (!rootPos[(int)MySceneManager.eRoot.ZEBRA]) {
+                rootPos[(int)MySceneManager.eRoot.ZEBRA] = GameObject.Find("ZebraCagePos").GetComponent<Transform>();
             }
             if (!rootPos[(int)MySceneManager.eRoot.POLARBEAR]) {
                 rootPos[(int)MySceneManager.eRoot.POLARBEAR] = GameObject.Find("PolarBearCagePos").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.BIRD]) {
-                rootPos[(int)MySceneManager.eRoot.BIRD] = GameObject.Find("BirdCagePos").GetComponent<Transform>();
+            if (!rootPos[(int)MySceneManager.eRoot.BEAR_01])
+            {
+                rootPos[(int)MySceneManager.eRoot.BEAR_01] = GameObject.Find("BearCagePos01").GetComponent<Transform>();
             }
+            if (!rootPos[(int)MySceneManager.eRoot.BEAR_02])
+            {
+                rootPos[(int)MySceneManager.eRoot.BEAR_02] = GameObject.Find("BearCagePos02").GetComponent<Transform>();
+            }
+            if (!rootPos[(int)MySceneManager.eRoot.PANDA])
+            {
+                rootPos[(int)MySceneManager.eRoot.PANDA] = GameObject.Find("PandaCagePos").GetComponent<Transform>();
+            }
+
             if (!rootPos[(int)MySceneManager.eRoot.ENTRANCE]) {
                 rootPos[(int)MySceneManager.eRoot.ENTRANCE] = GameObject.Find("EntrancePos").GetComponent<Transform>();
             }
+            #endregion
+            //===============================================================================
+
+            // 飼育員巡回ルート取得==============================================================
+            #region 飼育員巡回ルール
+            if (!rootPos[(int)MySceneManager.eRoot.BELL_AREA])
+            {
+                rootPos[(int)MySceneManager.eRoot.BELL_AREA] = GameObject.Find("BellArea").GetComponent<Transform>();
+            }
+            if (!rootPos[(int)MySceneManager.eRoot.POLAR_AREA])
+            {
+                rootPos[(int)MySceneManager.eRoot.POLAR_AREA] = GameObject.Find("PolarArea").GetComponent<Transform>();
+            }
+            if (!rootPos[(int)MySceneManager.eRoot.BEAR_AREA])
+            {
+                rootPos[(int)MySceneManager.eRoot.BEAR_AREA] = GameObject.Find("BearArea").GetComponent<Transform>();
+            }
+            if (!rootPos[(int)MySceneManager.eRoot.PANDA_AREA_01])
+            {
+                rootPos[(int)MySceneManager.eRoot.PANDA_AREA_01] = GameObject.Find("PandaArea01").GetComponent<Transform>();
+            }
+            if (!rootPos[(int)MySceneManager.eRoot.PANDA_AREA_02])
+            {
+                rootPos[(int)MySceneManager.eRoot.PANDA_AREA_02] = GameObject.Find("PandaArea02").GetComponent<Transform>();
+            }
+            if (!rootPos[(int)MySceneManager.eRoot.HOURSE_AREA])
+            {
+                rootPos[(int)MySceneManager.eRoot.HOURSE_AREA] = GameObject.Find("HourseArea01").GetComponent<Transform>();
+            }
+            if (!rootPos[(int)MySceneManager.eRoot.ZEBRA_AREA_01])
+            {
+                rootPos[(int)MySceneManager.eRoot.ZEBRA_AREA_01] = GameObject.Find("ZebraArea01").GetComponent<Transform>();
+            }
+            if (!rootPos[(int)MySceneManager.eRoot.ZEBRA_AREA_02])
+            {
+                rootPos[(int)MySceneManager.eRoot.ZEBRA_AREA_02] = GameObject.Find("ZebraArea02").GetComponent<Transform>();
+            }
+            if (!rootPos[(int)MySceneManager.eRoot.FOUNTAIN_AREA])
+            {
+                rootPos[(int)MySceneManager.eRoot.FOUNTAIN_AREA] = GameObject.Find("FountainArea").GetComponent<Transform>();
+            }
+            if (!rootPos[(int)MySceneManager.eRoot.LAKE_AREA])
+            {
+                rootPos[(int)MySceneManager.eRoot.LAKE_AREA] = GameObject.Find("LakeArea").GetComponent<Transform>();
+            }
+            #endregion
+            //===============================================================================
         }
 
         //----- プレイヤーの生成 -----
