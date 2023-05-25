@@ -783,6 +783,8 @@ public class Player : MonoBehaviour
 				InteractCollision.transform.parent = holdPos.transform;
 				InteractCollision.transform.localPosition = Vector3.zero;
 				InteractCollision.transform.rotation = transform.rotation;
+				float jointLimitsMin = -90.0f;
+				float jointLimitsMax = 45.0f;
 
 				bool bChainsawMan = false;
 				if (InteractCollision.TryGetComponent(out FishObject fish))
@@ -799,7 +801,14 @@ public class Player : MonoBehaviour
 					// Ｚ軸を中心に回転
 					//InteractCollision.transform.rotation = Quaternion.AngleAxis(-45, Vector3.forward) * InteractCollision.transform.rotation;
 				}
-
+				else if (InteractCollision.TryGetComponent(out Radio rad))
+				{
+					// Ｙ軸を中心に回転
+					InteractCollision.transform.rotation = Quaternion.AngleAxis(180, Vector3.up) * InteractCollision.transform.rotation;
+					jointLimitsMin = 10.0f;
+					jointLimitsMax = -90.0f;
+				}
+				
 				if (InteractCollision.GetComponent<HingeJoint>() == null)
 				{
 					// HingeJonitの角度制限を有効化
@@ -811,8 +820,8 @@ public class Player : MonoBehaviour
 					if (bChainsawMan)
 						InteractJoint.axis = new Vector3(0, 0, 1);
 					JointLimits jointLimits = InteractJoint.limits;
-					jointLimits.min = -90.0f;
-					jointLimits.max = 45.0f;
+					jointLimits.min = jointLimitsMin;
+					jointLimits.max = jointLimitsMax;
 					jointLimits.bounciness = 0;
 					InteractJoint.limits = jointLimits;
 				}
@@ -844,7 +853,7 @@ public class Player : MonoBehaviour
 	{
 		//引きずり開始
 
-		anim.SetBool(HashDrag, !_IsHold);
+		anim.SetBool(HashDrag, bDrag);
 		if (bDrag)
 		{
 			InteractCollision.transform.parent = transform;
