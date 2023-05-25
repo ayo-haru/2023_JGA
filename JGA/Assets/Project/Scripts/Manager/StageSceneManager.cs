@@ -81,6 +81,9 @@ public class StageSceneManager : BaseSceneManager {
 
     //---変数
     private bool isOnce; // 一度だけ処理をするときに使う
+    AudioSource audioSource;
+
+
 
     // デバッグ用チェック
     [Space(100)]
@@ -90,35 +93,12 @@ public class StageSceneManager : BaseSceneManager {
     [Header("プレイヤースポーン")]
     [SerializeField]
     private bool isPlayerSpawn = true;
-    private enum PlayerMode {
-        Penguin = 0,
-        UnityChan = 1
-    }
-    [Header("プレイヤーのモデルどっちにするか選んでね")]
-    [SerializeField]
-    private PlayerMode playerMode = PlayerMode.Penguin;
     [Header("飼育員スポーン")]
     [SerializeField]
     private bool isZKSpawn = true;
-    private enum ZookeeperMode {
-        OLD = 0,
-        NEW = 1
-    }
-    [Header("飼育員のモデルどっちにするか選んでね")]
-    [SerializeField]
-    private ZookeeperMode zookeeperMode = ZookeeperMode.NEW;
-
     [Header("客スポーン")]
     [SerializeField]
     private bool isGuestSpawn = true;
-    private enum GuestMode {
-        OLD = 0,
-        NEW = 1
-    }
-    [Header("客のモデルどっちにするか選んでね")]
-    [SerializeField]
-    private GuestMode guestMode = GuestMode.NEW;
-    private GameObject guestObj_old;    // 生成する客のプレハブ
 
 
     /// <summary>
@@ -128,10 +108,7 @@ public class StageSceneManager : BaseSceneManager {
         Init();
 
 #if UNITY_EDITOR
-        ////セーブデータ読み込み
-        //MySceneManager.GameData.isContinueGame = SaveSystem.load();
-
-        if(MySceneManager.GameData.nowScene == 0) { // 本来ならnowSceneneには現在のシーン番号が入るがエディタ上で実行した場合は0が入っているので初期化
+        if (MySceneManager.GameData.nowScene == 0) { // 本来ならnowSceneneには現在のシーン番号が入るがエディタ上で実行した場合は0が入っているので初期化
             for (int i = 0; i < System.Enum.GetNames(typeof(MySceneManager.SceneState)).Length; i++) {
                 if (SceneManager.GetActiveScene().name == MySceneManager.sceneName[i]) {
                     MySceneManager.GameData.nowScene = i;
@@ -173,16 +150,10 @@ public class StageSceneManager : BaseSceneManager {
         guestParent = GameObject.Find("Guests");
 
         // 生成する客のプレハブ
-        if (guestMode == GuestMode.OLD) {
-            guestObj_old = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Guest(old).prefab");
-        } else {
-            guestObj_old = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Guest(old).prefab");
-
-            guestObj = new GameObject[3];
-            guestObj[0] = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Guest001.prefab");
-            guestObj[1] = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Guest002.prefab");
-            guestObj[2] = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Guest003.prefab");
-        }
+        guestObj = new GameObject[3];
+        guestObj[0] = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Guest001.prefab");
+        guestObj[1] = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Guest002.prefab");
+        guestObj[2] = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Guest003.prefab");
 
         // 客ランダム生成の変数初期化
         guestSpawnTimer = guestSpawnTime * 60;
@@ -224,11 +195,7 @@ public class StageSceneManager : BaseSceneManager {
 
         //----- プレイヤーの生成 -----
         if (isPlayerSpawn) {
-            if (playerMode == PlayerMode.Penguin) {
-                playerObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Player.prefab");
-            } else {
-                playerObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Player(old).prefab");
-            }
+            playerObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Player.prefab");
             playerInstance = Instantiate(playerObj, MySceneManager.GameData.playerPos, Quaternion.Euler(0.0f, 5.0f, 0.0f));
             playerInstance.name = "Player";
         }
@@ -263,8 +230,14 @@ public class StageSceneManager : BaseSceneManager {
             Debug.LogWarning("GuestNumUIがシーン上にありません");
         }
 
-        //eventTextInstance = Instantiate(eventText, canvas.GetComponent<RectTransform>());
-        //eventTextChar = eventTextInstance.GetComponent<Text>();
+        //----- 音の処理 -----
+        // BGM再生用にオーディオソース取得
+        audioSource = GetComponent<AudioSource>();
+        // BGM再生
+        SoundManager.Play(audioSource, SoundManager.EBGM.INZOO);
+        SoundManager.Play(audioSource, SoundManager.EBGM.GAME001);
+        // フェード中だったら待機して音を止める
+        StartCoroutine(WaitFade());
     }
 
     void Update() {
@@ -278,12 +251,10 @@ public class StageSceneManager : BaseSceneManager {
                 if (!gameOverPanel) gameOverPanel = GameObject.Find("GameOverPanel");
                 if (gameOverPanel && !_GameOverPanel) _GameOverPanel = gameOverPanel.GetComponent<GameOverPanel>();
 
-                if (!isOnce)
-                {
+                if (!isOnce) {
                     int next = -1;
                     if (_GameOverPanel) next = _GameOverPanel.GetNextScene();
-                    if (next != -1)
-                    {
+                    if (next != -1) {
                         MySceneManager.GameData.oldScene = MySceneManager.GameData.nowScene;  // 今のシーンをひとつ前のシーンとして保存
                         MySceneManager.GameData.nowScene = next;
                         SceneChange(next);  // シーン遷移
@@ -360,16 +331,25 @@ public class StageSceneManager : BaseSceneManager {
                         MySceneManager.GameData.nowScene = next;
                         SceneChange(next);  // シーン遷移
                         isOnce = true;
+
+                        SaveManager.SaveAll();
+                    } else {
+                        if (System.Enum.GetNames(typeof(MySceneManager.SceneState)).Length > MySceneManager.GameData.nowScene) {  // 最大シーンではないとき
+                            MySceneManager.GameData.nowScene++;
+                            SaveManager.SaveAll();
+                            MySceneManager.GameData.nowScene--;
+                        } else {
+                            SaveManager.SaveAll();
+                        }
                     }
                 }
+
 
                 if (!PauseManager.isPaused) {
                     PauseManager.isPaused = true;
                     PauseManager.NoMenu = true;
                     PauseManager.Pause();
                 }
-
-                SaveManager.SaveAll();
             }
         }
     }
@@ -416,12 +396,8 @@ public class StageSceneManager : BaseSceneManager {
 
             // 生成
             GameObject guestInstace;
-            if (guestMode == GuestMode.OLD) {
-                guestInstace = Instantiate(guestObj_old, _guestList[i].rootTransforms[0].position, Quaternion.identity);
-            } else {
-                int GuestIndex = UnityEngine.Random.Range(0, 3);
-                guestInstace = Instantiate(guestObj[GuestIndex], _guestList[i].rootTransforms[0].position, Quaternion.identity);
-            }
+            int GuestIndex = UnityEngine.Random.Range(0, 3);
+            guestInstace = Instantiate(guestObj[GuestIndex], _guestList[i].rootTransforms[0].position, Quaternion.identity);
             if (guestParent) {
                 guestInstace.transform.parent = guestParent.transform;   // 親にする
             }
@@ -480,12 +456,8 @@ public class StageSceneManager : BaseSceneManager {
         MySceneManager.GameData.randomGuestCnt++;
 
         GameObject guestInstace;
-        if (guestMode == GuestMode.OLD) {
-            guestInstace = Instantiate(guestObj_old, rootPos[(int)MySceneManager.eRoot.ENTRANCE].position, Quaternion.identity);
-        } else {
-            int GuestIndex = UnityEngine.Random.Range(0, 3);
-            guestInstace = Instantiate(guestObj[GuestIndex], rootPos[(int)MySceneManager.eRoot.ENTRANCE].position, Quaternion.identity);
-        }
+        int GuestIndex = UnityEngine.Random.Range(0, 3);
+        guestInstace = Instantiate(guestObj[GuestIndex], rootPos[(int)MySceneManager.eRoot.ENTRANCE].position, Quaternion.identity);
 
         if (guestParent) {
             guestInstace.transform.parent = guestParent.transform;   // 親にする
@@ -501,11 +473,7 @@ public class StageSceneManager : BaseSceneManager {
     private void SpawnZookeeper() {
         ZooKeeperData.Data[] _zooKeeperList = MySceneManager.GameData.zooKeeperData.list;    // 設定された人数分を生成する
         GameObject zooKeeperObj;
-        if (zookeeperMode == ZookeeperMode.OLD) {
-            zooKeeperObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "ZooKeeper(old).prefab");   // 生成するオブジェクト
-        } else {
-            zooKeeperObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "ZooKeeper.prefab");   // 生成するオブジェクト
-        }
+        zooKeeperObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "ZooKeeper.prefab");   // 生成するオブジェクト
         GameObject parent = GameObject.Find("ZooKeepers");  //  生成するときの親にするオブジェクト
         for (int i = 0; i < _zooKeeperList.Length; i++) {
             GameObject spawnPos = GameObject.Find(_zooKeeperList[i].name + "Spawn"); // 生成位置を名前で取得する
@@ -534,15 +502,32 @@ public class StageSceneManager : BaseSceneManager {
         }
     }
 
+
+    /// <summary>
+    /// ステージを初めの状態からやる
+    /// </summary>
     private void BeginGame() {
         MySceneManager.GameData.guestCnt = 0;
         MySceneManager.GameData.timer = 0.0f;
         playerRespawn = GameObject.Find("PlayerSpawn");
         MySceneManager.GameData.playerPos = playerRespawn.transform.position;
-        
-        if(MySceneManager.GameData.oldScene == (int)MySceneManager.SceneState.SCENE_TITLE &&
+
+        // 一個前のシーンがタイトルかつ今のシーンがステージ１
+        if (MySceneManager.GameData.oldScene == (int)MySceneManager.SceneState.SCENE_TITLE &&
             MySceneManager.GameData.nowScene == (int)MySceneManager.SceneState.SCENE_GAME_001) {
-            gameObject.AddComponent<TutorialManager>(); 
+            TutorialManager.StartTutorial();
         }
     }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator WaitFade() {
+        audioSource.Pause();
+        yield return new WaitUntil(() => FadeManager.fadeMode == FadeManager.eFade.Default);
+        audioSource.UnPause();
+    }
+
 }

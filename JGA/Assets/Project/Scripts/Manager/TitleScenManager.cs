@@ -67,9 +67,9 @@ public class TitleScenManager : BaseSceneManager {
     }
 
     private void Start() {
-        // BGM再生
+        //BGM再生
        SoundManager.Play(audioSource, SoundManager.EBGM.TITLE_001);
-
+        //フェード中だったら待機して音を止める
         StartCoroutine(WaitFade());
 
         //マウス、コントローラの値取得
@@ -119,6 +119,7 @@ public class TitleScenManager : BaseSceneManager {
     public void StartButton() {
         SoundSEDecision();
         MySceneManager.GameData.oldScene = (int)MySceneManager.SceneState.SCENE_TITLE;  // 今のシーンをひとつ前のシーンとして保存
+        MySceneManager.GameData.nowScene = nextScene;
         SceneChange(nextScene);
         //コントローラ入力の場合マウスカーソルが非表示のままになってしまうので表示する
         if (!bMouse) Cursor.visible = true;
@@ -188,7 +189,6 @@ public class TitleScenManager : BaseSceneManager {
     IEnumerator WaitFade() {
         audioSource.Pause();
         yield return new WaitUntil(() => FadeManager.fadeMode == FadeManager.eFade.Default);
-        //MySceneManager.SceneChange(_nextScene);
         audioSource.UnPause();
     }
 

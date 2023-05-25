@@ -49,7 +49,7 @@ public class TutorialManager : MonoBehaviour
     private List<ITurorial> tutorialTask;
     private ITurorial currentTask;
 
-	private bool isExecution;   // チュートリアルをやるか
+	private static bool isExecution;   // チュートリアルをやるか
     private bool isTaskFin;     // タスクが終了しているか
 
     [SerializeField]
@@ -97,7 +97,12 @@ public class TutorialManager : MonoBehaviour
 	/// </summary>
 	void Update()
 	{
-        // チュートリアルが存在し実行されていない場合に処理
+        //----- チュートリアルを実行するか -----
+        if (!isExecution) {
+            return;
+        }
+
+        // チュートリアルが存在しタスクが実行されていない場合に処理
         if (currentTask != null && !isTaskFin) {
             // 現在のチュートリアルが実行されたか判定
             if (currentTask.CheckTask()) {
@@ -186,5 +191,19 @@ public class TutorialManager : MonoBehaviour
             case Timer01Tutorial:
                 break;
         }
+    }
+
+    /// <summary>
+    /// チュートリアル始める
+    /// </summary>
+    public static void StartTutorial() {
+        isExecution = true;
+    }
+
+    /// <summary>
+    /// チュートリアル止める
+    /// </summary>
+    public static void StopTutorial() {
+        isExecution = false;
     }
 }
