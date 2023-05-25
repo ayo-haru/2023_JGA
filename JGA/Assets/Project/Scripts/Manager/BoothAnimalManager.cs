@@ -42,6 +42,14 @@ public class BoothAnimalManager : SingletonMonoBehaviour<BoothAnimalManager>
 	[SerializeField] public BearsData polarBearData;
 	[NonSerialized] public int polarBearStartIndex;
 
+	private GameObject pandaObj;
+
+	[SerializeField] public int  pandaCount;
+
+	[SerializeField] public BearsData pandaData;
+	[NonSerialized] public int pandaStartIndex;
+
+
     //アニマルオブジェクトを入れる用
     private GameObject animalObject;
 
@@ -71,6 +79,11 @@ public class BoothAnimalManager : SingletonMonoBehaviour<BoothAnimalManager>
             Debug.LogWarning("polarBearDataがシーン上にありません");
             return;
         }
+		if(!pandaData)
+		{
+            Debug.Log("pandaDataがシーン上にありません");
+            return;
+        }
 
         penguinObj = PrefabContainerFinder.Find(MySceneManager.GameData.animalDatas, "Penguin.prefab");
        
@@ -87,6 +100,7 @@ public class BoothAnimalManager : SingletonMonoBehaviour<BoothAnimalManager>
 			var penguinObject =  Instantiate(penguinObj, setVector, Quaternion.identity);
             penguinObject.gameObject.name = Rename("Penguin_", i);
 			penguinObject.transform.parent = animalObject.transform;
+
         }
 
 		bearObj = PrefabContainerFinder.Find(MySceneManager.GameData.animalDatas, "Bear.prefab");
@@ -119,6 +133,22 @@ public class BoothAnimalManager : SingletonMonoBehaviour<BoothAnimalManager>
             var polarBearOBject = Instantiate(polarBearObj, setVector, Quaternion.identity);
             polarBearOBject.gameObject.name = Rename("PolarBear_", i);
             polarBearOBject.transform.parent = animalObject.transform;
+        }
+
+        pandaObj = PrefabContainerFinder.Find(MySceneManager.GameData.animalDatas, "Panda.prefab");
+
+        for (int i = 0; i < pandaCount; i++)
+        {
+            pandaStartIndex = UnityEngine.Random.Range(0, pandaData.rangeList.Count);
+            var startPoint = UnityEngine.Random.insideUnitCircle * pandaData.rangeArea;
+
+            var setVector = new Vector3(pandaData.rangeList[pandaStartIndex].x + startPoint.x,
+                                        pandaData.rangeList[pandaStartIndex].y,
+                                        pandaData.rangeList[pandaStartIndex].z + startPoint.y);
+
+            var pandaOBject = Instantiate(pandaObj, setVector, Quaternion.identity);
+            pandaOBject.gameObject.name = Rename("Panda_", i);
+            pandaOBject.transform.parent = animalObject.transform;
         }
 
     }

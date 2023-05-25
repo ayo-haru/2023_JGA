@@ -1,6 +1,6 @@
 //=============================================================================
 // @File	: [PolarBearMove.cs]
-// @Brief	: 熊の動き
+// @Brief	: シロクマの動き
 // @Author	: Fujiyama Riku
 // @Editer	: 
 // @Detail	: 

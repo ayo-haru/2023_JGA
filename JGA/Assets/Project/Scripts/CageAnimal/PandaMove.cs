@@ -1,5 +1,5 @@
 //=============================================================================
-// @File	: [BearMove.cs]
+// @File	: [pandaMove.cs]
 // @Brief	: クマの動き
 // @Author	: Fujiyama Riku
 // @Editer	: 
@@ -16,7 +16,7 @@ using UniRx;
 using Unity.VisualScripting;
 using UniRx.Triggers;
 
-public class BearMove : MonoBehaviour
+public class PandaMove : MonoBehaviour
 {
 
     enum MoveType
@@ -62,9 +62,9 @@ public class BearMove : MonoBehaviour
         moveFlg = false;
         turnFlg = false;
         moveTime = 0.0f;
-        movedata = Random.Range(0, BoothAnimalManager.Instance.bearData.dataList.Count);
+        movedata = Random.Range(0, BoothAnimalManager.Instance.pandaData.dataList.Count);
         rb = this.GetComponent<Rigidbody>();
-        currentMoveIndex = BoothAnimalManager.Instance.bearStartIndex;
+        currentMoveIndex = BoothAnimalManager.Instance.pandaStartIndex;
 
         anim = this.GetComponent<Animator>();
 
@@ -144,7 +144,7 @@ public class BearMove : MonoBehaviour
         //速度を決定してその速度で終了地点まで動く
         this.transform.position = Vector3.MoveTowards(this.transform.position,
                                                         endPos,
-                                                        BoothAnimalManager.Instance.bearData.dataList[movedata].walkSpeed * Time.deltaTime);
+                                                        BoothAnimalManager.Instance.pandaData.dataList[movedata].walkSpeed * Time.deltaTime);
         rb.velocity = Vector3.zero;
         //最期まで動いたら初期化し、アイドルに移る
         if (PositionAreaJudge(this.transform.position, endPos, 0.5f))
@@ -175,7 +175,7 @@ public class BearMove : MonoBehaviour
         //速度を決定してその速度で終了地点まで動く
         this.transform.position = Vector3.MoveTowards(this.transform.position,
                                                         endPos,
-                                                        BoothAnimalManager.Instance.bearData.dataList[movedata].runSpeed * Time.deltaTime);
+                                                        BoothAnimalManager.Instance.pandaData.dataList[movedata].runSpeed * Time.deltaTime);
         rb.velocity = Vector3.zero;
         //最期まで動いたら初期化し、アイドルに移る
         if (PositionAreaJudge(this.transform.position, endPos, 0.5f))
@@ -193,7 +193,7 @@ public class BearMove : MonoBehaviour
     {
         var endRot = Quaternion.LookRotation(endPos - this.transform.position);
         var befRot = this.transform.rotation;
-        this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, endRot, BoothAnimalManager.Instance.bearData.dataList[movedata].rotateAngle);
+        this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, endRot, BoothAnimalManager.Instance.pandaData.dataList[movedata].rotateAngle);
 
         rb.velocity = Vector3.zero;
 
@@ -246,27 +246,27 @@ public class BearMove : MonoBehaviour
             anim.SetBool("TurnFlg", true);
             
                 //終了地点がなるべくかぶらないようにするため違う場所になるまで回す。
-                if (currentMoveIndex < BoothAnimalManager.Instance.bearData.rangeButtom)
+                if (currentMoveIndex < BoothAnimalManager.Instance.pandaData.rangeButtom)
                 {
                     while (currentMoveIndex == moveIndex)
-                        currentMoveIndex = Random.Range(0, BoothAnimalManager.Instance.bearData.rangeButtom + 1);
+                        currentMoveIndex = Random.Range(0, BoothAnimalManager.Instance.pandaData.rangeButtom + 1);
                 }
-                else if (currentMoveIndex == BoothAnimalManager.Instance.bearData.rangeButtom)
+                else if (currentMoveIndex == BoothAnimalManager.Instance.pandaData.rangeButtom)
                 {
                     while (currentMoveIndex == moveIndex)
-                        currentMoveIndex = Random.Range(0, BoothAnimalManager.Instance.bearData.rangeButtom + 2);
+                        currentMoveIndex = Random.Range(0, BoothAnimalManager.Instance.pandaData.rangeButtom + 2);
                 }
-                else if (currentMoveIndex == BoothAnimalManager.Instance.bearData.rangeButtom + 1)
+                else if (currentMoveIndex == BoothAnimalManager.Instance.pandaData.rangeButtom + 1)
                 {
                     while (currentMoveIndex == moveIndex)
-                        currentMoveIndex = Random.Range(BoothAnimalManager.Instance.bearData.rangeButtom,
-                                                        BoothAnimalManager.Instance.bearData.rangeList.Count);
+                        currentMoveIndex = Random.Range(BoothAnimalManager.Instance.pandaData.rangeButtom,
+                                                        BoothAnimalManager.Instance.pandaData.rangeList.Count);
                 }
-                else if (currentMoveIndex > BoothAnimalManager.Instance.bearData.rangeButtom + 1)
+                else if (currentMoveIndex > BoothAnimalManager.Instance.pandaData.rangeButtom + 1)
                 {
                     while (currentMoveIndex == moveIndex)
-                        currentMoveIndex = Random.Range(BoothAnimalManager.Instance.bearData.rangeButtom + 1,
-                                                        BoothAnimalManager.Instance.bearData.rangeList.Count);
+                        currentMoveIndex = Random.Range(BoothAnimalManager.Instance.pandaData.rangeButtom + 1,
+                                                        BoothAnimalManager.Instance.pandaData.rangeList.Count);
                 }
             
 
@@ -282,14 +282,14 @@ public class BearMove : MonoBehaviour
     {
         var retVector = new Vector3();
         //範囲を決める。
-        var startPoint = Random.insideUnitCircle * BoothAnimalManager.Instance.bearData.rangeArea;
+        var startPoint = Random.insideUnitCircle * BoothAnimalManager.Instance.pandaData.rangeArea;
 
 
 
         //決めた範囲分動かした場所を決定し返す
-        retVector = new Vector3(BoothAnimalManager.Instance.bearData.rangeList[index].x + startPoint.x,
-                                BoothAnimalManager.Instance.bearData.rangeList[index].y,
-                                BoothAnimalManager.Instance.bearData.rangeList[index].z + startPoint.y);
+        retVector = new Vector3(BoothAnimalManager.Instance.pandaData.rangeList[index].x + startPoint.x,
+                                BoothAnimalManager.Instance.pandaData.rangeList[index].y,
+                                BoothAnimalManager.Instance.pandaData.rangeList[index].z + startPoint.y);
         return retVector;
     }
 
