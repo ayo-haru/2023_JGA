@@ -35,6 +35,8 @@ public class BaseSceneManager : MonoBehaviour
         }
         // キャンバスの設定
         canvas.renderMode = RenderMode.ScreenSpaceCamera;
+        canvas.worldCamera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
+        canvas.planeDistance = 1;
 
         // AudioSourceをつける
         gameObject.AddComponent<AudioSource>();

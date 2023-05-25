@@ -16,7 +16,12 @@ using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour
 {
     //---キャンバス
-	GameObject canvas;
+	GameObject canvasObj;
+    Canvas canvas;
+
+    //---カメラ
+    Camera resultCamera;
+    ResultCamera _ResultCamera;
 
     //---フェード
     GameObject fade;
@@ -24,7 +29,6 @@ public class UIManager : MonoBehaviour
     //---クリア
     GameObject clearUI;
     GameObject clearUIInstance;
-    ResultCamera _ResultCamera;
 
     //---ゲームオーバー
     GameObject failedUI;
@@ -42,15 +46,14 @@ public class UIManager : MonoBehaviour
     private GameObject guestNumUI;
     private GuestNumUI _GuestNumUI;
 
-    /// <summary>
-    /// 最初のフレーム更新の前に呼び出される
-    /// </summary>
+
     void Start()
 	{
-        canvas = GameObject.Find("Canvas");
+        canvasObj = GameObject.Find("Canvas");
+        canvas = canvasObj.GetComponent<Canvas>();
 
         if (SceneManager.GetActiveScene().name != MySceneManager.sceneName[(int)MySceneManager.SceneState.SCENE_TITLE]) {
-            RectTransform _canvasRT = canvas.GetComponent<RectTransform>();
+            RectTransform _canvasRT = canvasObj.GetComponent<RectTransform>();
 
             fade = GameObject.Find("FadePanel");
 
@@ -99,16 +102,16 @@ public class UIManager : MonoBehaviour
             } else {
                 Debug.LogWarning("CameraManagerがシーン上にありません");
             }
+            resultCamera = GameObject.Find("ResultCamera").GetComponent<Camera>();
         }
     }
 
-    /// <summary>
-    /// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
-    /// </summary>
     void Update() {
         //----- ゲームクリア -----
         if (guestNumUI) {
             if (_GuestNumUI.isClear()) {
+                Debug.Log(canvas);
+                canvas.worldCamera = resultCamera;
                 if (_ResultCamera.rotateFlg) {
                     clearUIInstance.SetActive(true);
                 }
