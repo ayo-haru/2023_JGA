@@ -234,7 +234,7 @@ public class StageSceneManager : BaseSceneManager {
             }
             if (!rootPos[(int)MySceneManager.eRoot.HOURSE_AREA])
             {
-                rootPos[(int)MySceneManager.eRoot.HOURSE_AREA] = GameObject.Find("HourseArea01").GetComponent<Transform>();
+                rootPos[(int)MySceneManager.eRoot.HOURSE_AREA] = GameObject.Find("HourseArea").GetComponent<Transform>();
             }
             if (!rootPos[(int)MySceneManager.eRoot.ZEBRA_AREA_01])
             {

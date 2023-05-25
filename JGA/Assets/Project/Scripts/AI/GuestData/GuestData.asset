@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dataList:
   - name: OGuest001
-    roots: 07000000
+    roots: 06000000
     rootTransforms:
     - {fileID: 0}
     penguinTF:
@@ -38,7 +38,7 @@ MonoBehaviour:
     waitTime: 0
     cageDistance: 10
   - name: OGuest002
-    roots: 07000000
+    roots: 09000000
     rootTransforms:
     - {fileID: 0}
     penguinTF:
@@ -62,7 +62,7 @@ MonoBehaviour:
     waitTime: 0
     cageDistance: 10
   - name: OGuest003
-    roots: 07000000
+    roots: 04000000
     rootTransforms:
     - {fileID: 0}
     penguinTF:
@@ -86,7 +86,7 @@ MonoBehaviour:
     waitTime: 0
     cageDistance: 10
   - name: OGuest004
-    roots: 07000000
+    roots: 05000000
     rootTransforms:
     - {fileID: 0}
     penguinTF:
@@ -110,7 +110,7 @@ MonoBehaviour:
     waitTime: 0
     cageDistance: 10
   - name: OGuest005
-    roots: 07000000
+    roots: 06000000
     rootTransforms:
     - {fileID: 0}
     penguinTF:
@@ -134,7 +134,7 @@ MonoBehaviour:
     waitTime: 0
     cageDistance: 10
   - name: OGuest006
-    roots: 07000000
+    roots: 0c000000
     rootTransforms:
     - {fileID: 0}
     penguinTF:
@@ -158,7 +158,7 @@ MonoBehaviour:
     waitTime: 0
     cageDistance: 10
   - name: OGuest007
-    roots: 0600000004000000
+    roots: 0b00000008000000
     rootTransforms:
     - {fileID: 0}
     - {fileID: 0}
@@ -183,7 +183,7 @@ MonoBehaviour:
     waitTime: 0
     cageDistance: 10
   - name: OGuest008
-    roots: 0400000006000000
+    roots: 0900000007000000
     rootTransforms:
     - {fileID: 0}
     - {fileID: 0}
@@ -208,7 +208,7 @@ MonoBehaviour:
     waitTime: 0
     cageDistance: 10
   - name: OGuest009
-    roots: 080000000700000004000000
+    roots: 08000000070000000d000000
     rootTransforms:
     - {fileID: 0}
     - {fileID: 0}
@@ -234,7 +234,7 @@ MonoBehaviour:
     waitTime: 0
     cageDistance: 10
   - name: OGuest010
-    roots: 0400000005000000060000000700000008000000
+    roots: 04000000050000000b0000000800000006000000
     rootTransforms:
     - {fileID: 0}
     - {fileID: 0}
