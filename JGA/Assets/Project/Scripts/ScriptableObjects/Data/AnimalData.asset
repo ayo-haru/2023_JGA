@@ -18,5 +18,9 @@ MonoBehaviour:
     prefab: {fileID: 100190145466701160, guid: efea8ce56548ddc44b07b80c8c2aee06, type: 3}
   - displayName: Bear.prefab
     ID: 1
+    prefab: {fileID: 7195123359571016997, guid: b44125ce2efb5544d996aa6eac4eab74,
+      type: 3}
+  - displayName: PolarBear.prefab
+    ID: 2
     prefab: {fileID: 7195123359571016997, guid: cdf592f461ad29646b57392b69ec3289,
       type: 3}
