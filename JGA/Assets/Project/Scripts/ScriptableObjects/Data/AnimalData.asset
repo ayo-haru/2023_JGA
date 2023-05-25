@@ -24,3 +24,6 @@ MonoBehaviour:
     ID: 2
     prefab: {fileID: 7195123359571016997, guid: cdf592f461ad29646b57392b69ec3289,
       type: 3}
+  - displayName: Panda.prefab
+    ID: 3
+    prefab: {fileID: 914635034927271187, guid: 4678b7b5fedd2a64399ab33c359eef07, type: 3}

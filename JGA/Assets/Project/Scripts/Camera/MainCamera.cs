@@ -446,7 +446,6 @@ public class MainCamera : MonoBehaviour
                 nowGuestCount++;
             }
         }
-        Debug.Log(nowGuestCount);
         currentGuestValue = nowGuestCount;
     }
    
@@ -483,9 +482,7 @@ public class MainCamera : MonoBehaviour
         {
             for (int i = 0; i < distance.Length; i++)
             {
-                
-                Debug.Log(min);
-                
+             
                 if (min == distance[i])
                 {
                     keeperMiddle = Vector3.Lerp(targetObject.transform.localPosition, zooKeeperObj[i].transform.localPosition, 0.5f);
