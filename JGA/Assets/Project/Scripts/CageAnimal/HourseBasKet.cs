@@ -14,6 +14,7 @@ using UnityEngine;
 
 public class HourseBasKet : MonoBehaviour
 {
+    [Header("--- 何も入れなくて大丈夫 ---")]
     public List<GameObject> carrot = new List<GameObject>();
     public List<bool> bBasket = new List<bool>();
 
@@ -44,27 +45,6 @@ public class HourseBasKet : MonoBehaviour
             }
         }
     }
-
-    /// <summary>
-    /// 最初のフレーム更新の前に呼び出される
-    /// </summary>
-    void Start()
-	{
-	}
-
-	/// <summary>
-	/// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
-	/// </summary>
-	void FixedUpdate()
-	{
-    }
-
-	/// <summary>
-	/// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
-	/// </summary>
-	void Update()
-	{
-	}
 
     /// <summary>
     /// バスケットににんじんが入ってるか
