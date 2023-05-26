@@ -256,7 +256,7 @@ public class StageSceneManager : BaseSceneManager {
         //----- プレイヤーの生成 -----
         if (isPlayerSpawn) {
             playerObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Player.prefab");
-            playerInstance = Instantiate(playerObj, MySceneManager.GameData.playerPos, Quaternion.Euler(0.0f, 5.0f, 0.0f));
+            playerInstance = Instantiate(playerObj, MySceneManager.GameData.playerPos, Quaternion.Euler(0.0f, 180.0f, 0.0f));
             playerInstance.name = "Player";
         }
 
@@ -296,11 +296,16 @@ public class StageSceneManager : BaseSceneManager {
         SoundManager.Play(asList[1], SoundManager.EBGM.INZOO);
         // フェード中だったら待機して音を止める
         StartCoroutine(WaitFade());
+
+        //----- セーブ -----
+        SaveManager.SaveAll();  // 一旦全セーブ
     }
 
     void Update() {
         //----- プレイヤーの座標保存 -----
         MySceneManager.GameData.playerPos = playerInstance.transform.position;
+        SaveSystem.SaveLastPlayerPos(MySceneManager.GameData.playerPos);
+
 
         //----- 時間系の処理 -----
         if (timerUI) {
@@ -597,7 +602,7 @@ public class StageSceneManager : BaseSceneManager {
         } else {
             SaveManager.SaveLastStageNum(MySceneManager.GameData.nowScene);
         }
-        SaveManager.SaveLastPlayerPos(Vector3.zero);
+        SaveManager.SaveLastPlayerPos(MySceneManager.GameData.playerPos);
     }
 
     /// <summary>

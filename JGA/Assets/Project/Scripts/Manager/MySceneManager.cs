@@ -173,12 +173,6 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 	/// </summary>
 	public static void SceneReload()
 	{
-		/*
-		 * 一応作ってみたんだけどInitializeSceneは再読み込みされないのでちょっとどうしようかなって感じ
-		 * 本格的に使うならつくろかなーなんて
-		 */
-
-
 		// 現在のSceneを取得
 		Scene loadScene = SceneManager.GetActiveScene();
 		// 現在のシーンを再読み込みする
