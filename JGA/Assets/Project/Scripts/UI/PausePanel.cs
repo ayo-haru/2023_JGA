@@ -120,29 +120,19 @@ public class PausePanel : MonoBehaviour
 
 	private void Update()
 	{
-        //マウス座標取得
-        Vector3 newMousePos = Input.mousePosition;
+        //マウスの状態を更新
+        Vector3 oldMousePos = mousePos;
+        mousePos = Input.mousePosition;
+        //ゲームパットの状態を更新
+        bGamePad = Gamepad.current != null;
 
-        //ゲームパッドが有効→無効になっていたらマウスに切り替え
-        if (bGamePad && Gamepad.current == null)
-        {
-            bGamePad = false;
-            if(!bMouseMode)ChangeInput();
-        }
-        
-        if (!bGamePad && Gamepad.current != null)
-        {
-            bGamePad = true;
-        }
+        if (bMouseMode) return;
 
-        //ゲームパットがある場合
-        //マウスが動かされたらマウス入力に切り替え
-        if (bGamePad && !bMouseMode)
+        //ゲームパッドがない又はマウスが動かされたらマウス入力に切り替え
+        if (!bGamePad || Vector3.Distance(oldMousePos, mousePos) >= 1.0f)
         {
-            if(Vector3.Distance(newMousePos,mousePos) >= 1.0f)ChangeInput();
+            ChangeInput();
         }
-
-        mousePos = newMousePos;
     }
 
 	private void OnMove(InputAction.CallbackContext context)
