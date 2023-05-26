@@ -149,10 +149,7 @@ public class Player : MonoBehaviour
 			var obj = transform.Find("HoldPos").gameObject;
 			if (obj != null)
 			{
-				if (obj.TryGetComponent(out Rigidbody rigidbody))
-					holdPos = rigidbody;
-				else
-					holdPos = obj.AddComponent<Rigidbody>();
+				holdPos = obj.TryGetComponent(out Rigidbody rigidbody) ? rigidbody : obj.AddComponent<Rigidbody>();
 				holdPos.useGravity = false;
 				holdPos.isKinematic = false;
 			}
@@ -249,11 +246,9 @@ public class Player : MonoBehaviour
 		if (anim.GetCurrentAnimatorStateInfo(0).shortNameHash != HashHit)
 			Move();
 
-		if (_IsHold && _IsDrag)
-		{
-			if (InteractJoint != null)
-				InteractJoint.anchor = InteractJointAnchor;
-		}
+		// Drag中は常に更新
+		if (_IsHold && _IsDrag && InteractJoint != null)
+			InteractJoint.anchor = InteractJointAnchor;
 	}
 
 	private void Update()
@@ -261,7 +256,7 @@ public class Player : MonoBehaviour
 		// ポーズ中は移動しない
 		if (PauseManager.isPaused)
 			moveInputValue = Vector2.zero;
-		// ポーズでない時にisKinematicをfalseにする
+		// ポーズでない時はisKinematicをfalseにする
 		else if (rb.isKinematic == true)
 			rb.isKinematic = false;
 
@@ -333,33 +328,22 @@ public class Player : MonoBehaviour
 			anim.SetBool(HashMove, _IsMove);
 			anim.SetBool(HashRun, _IsRun);
 		}
-		// はたくモーション中は他のモーションさせない
+		// はたくモーション中は他のモーションに遷移させない
 		else
 		{
 			AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
 
-			// はたくモーション中でないか
-			if (stateInfo.shortNameHash != HashHit)
+			// はたくモーションの再生終了時に他モーション再生を許可
+			if (stateInfo.shortNameHash != HashHit && stateInfo.normalizedTime >= 1.0f)
 			{
-				// 再生終了時に他モーション再生を許可
-				if (stateInfo.normalizedTime >= 1.0f)
-				{
-					bHitMotion = false;
-					anim.SetBool(HashHit, bHitMotion);
-				}
+				bHitMotion = false;
+				anim.SetBool(HashHit, bHitMotion);
 			}
 		}
 
 
-		float length;       // プレイヤーと一番近いオブジェクトの距離
-		if (InteractOutline != null)
-		{
-			length = Vector3.Distance(transform.position, InteractOutline.transform.position);
-		}
-		else
-		{
-			length = 10.0f; // とりあえず10.0f
-		}
+		// プレイヤーと一番近いオブジェクトの距離
+		float length = InteractOutline != null ? Vector3.Distance(transform.position, InteractOutline.transform.position) : 10.0f;// とりあえず10.0f
 
 		// 移動中判定
 		_IsMove = moveInputValue.normalized != Vector2.zero;
@@ -520,10 +504,12 @@ public class Player : MonoBehaviour
 		{
 			// 方向を更新
 			moveInputValue = context.ReadValue<Vector2>();
+
+			// キーボード操作時は慣性を半減させる
 			if (!bGamePad)
 			{
-				rb.velocity = rb.velocity / 2;
-				rb.angularVelocity = rb.angularVelocity / 2;
+				rb.velocity /= 2;
+				rb.angularVelocity /= 2;
 			}
 		}
 
@@ -658,6 +644,8 @@ public class Player : MonoBehaviour
 				_IsAppeal = false;
 				break;
 		}
+
+		// アピール開始／終了
 		anim.SetBool(HashAppeal, _IsAppeal);
 	}
 	#endregion
@@ -762,6 +750,7 @@ public class Player : MonoBehaviour
 				Transform InteractPoint = null;
 				float distance = 10.0f; // とりあえず10.0f
 
+				// 一番近い"HoldPoint"を検索
 				for (int i = 0; i < InteractCollision.transform.childCount; i++)
 				{
 					var children = InteractCollision.transform.GetChild(i); // GetChild()で子オブジェクトを取得
@@ -869,6 +858,7 @@ public class Player : MonoBehaviour
 		{
 			InteractCollision.transform.parent = transform;
 
+			// 三角コーンの重量を変更
 			if (InteractCollision.name.Contains("Corn"))
 				InteractCollision.GetComponent<Rigidbody>().mass = 1.0f;
 
@@ -894,6 +884,7 @@ public class Player : MonoBehaviour
 			else
 				InteractCollision.transform.parent = null;
 
+			// 変更した三角コーンの重量を元に戻す
 			if (InteractCollision.name.Contains("Corn"))
 				InteractCollision.GetComponent<Rigidbody>().mass = 5.0f;
 
@@ -941,26 +932,23 @@ public class Player : MonoBehaviour
 
 	public void AnimHold()
 	{
-		if (InteractCollision == null)
+		if (InteractCollision == null || !InteractCollision.CompareTag("Interact"))
 			return;
 
-		if (InteractCollision.CompareTag("Interact"))
+		if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj))
 		{
-			if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj))
+			switch (baseObj.objType)
 			{
-				switch (baseObj.objType)
-				{
-					case BaseObj.ObjType.HOLD:
-					case BaseObj.ObjType.HIT_HOLD:
-						Hold(true);
-						_IsHold = true;
-						break;
-					case BaseObj.ObjType.DRAG:
-					case BaseObj.ObjType.HIT_DRAG:
-						Drag(true);
-						_IsHold = _IsDrag = true;
-						break;
-				}
+				case BaseObj.ObjType.HOLD:
+				case BaseObj.ObjType.HIT_HOLD:
+					Hold(true);
+					_IsHold = true;
+					break;
+				case BaseObj.ObjType.DRAG:
+				case BaseObj.ObjType.HIT_DRAG:
+					Drag(true);
+					_IsHold = _IsDrag = true;
+					break;
 			}
 		}
 	}
@@ -1018,6 +1006,7 @@ public class Player : MonoBehaviour
 		if (!other.CompareTag("Interact"))
 			return;
 
+		// 範囲内のオブジェクトリストに追加
 		WithinRange.Add(other);
 
 		if (WithinRange.Count == 1 && other.TryGetComponent(out Outline outline))
@@ -1026,6 +1015,7 @@ public class Player : MonoBehaviour
 
 	private void OnTriggerExit(Collider other)
 	{
+		// 範囲内のオブジェクトリストから削除
 		WithinRange.Remove(other);
 
 		if (other.TryGetComponent(out Outline outline))
