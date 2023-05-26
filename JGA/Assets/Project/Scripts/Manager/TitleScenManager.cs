@@ -56,13 +56,13 @@ public class TitleScenManager : BaseSceneManager {
         MySceneManager.GameData.isContinueGame = SaveSystem.load();
 
         //もしセーブデータがなかったら次に遷移するシーンはゲーム001
-        if (MySceneManager.GameData.isContinueGame) {
-            SaveManager.LoadAll();  // セーブデータロード
-            nextScene = MySceneManager.GameData.nowScene;   // 次のシーンを更新
-        } else {
-            MySceneManager.GameData.nowScene = (int)MySceneManager.SceneState.SCENE_TITLE;
-            nextScene = (int)MySceneManager.SceneState.SCENE_GAME_001;
-        }
+        //if (MySceneManager.GameData.isContinueGame) {
+        //    SaveManager.LoadAll();  // セーブデータロード
+        //    nextScene = MySceneManager.GameData.nowScene;   // 次のシーンを更新
+        //} else {
+        //    MySceneManager.GameData.nowScene = (int)MySceneManager.SceneState.SCENE_TITLE;
+        //    nextScene = (int)MySceneManager.SceneState.SCENE_GAME_001;
+        //}
 
         // BGM再生用にオーディオソース取得
         audioSource = GetComponent<AudioSource>();
@@ -121,7 +121,11 @@ public class TitleScenManager : BaseSceneManager {
     public void StartButton() {
         SoundSEDecision();
         MySceneManager.GameData.oldScene = (int)MySceneManager.SceneState.SCENE_TITLE;  // 今のシーンをひとつ前のシーンとして保存
-        MySceneManager.GameData.nowScene = nextScene;
+        MySceneManager.GameData.nowScene = nextScene = (int)MySceneManager.SceneState.SCENE_GAME_001;   // 次のシーンを更新
+        //初めから用に初期化
+        MySceneManager.GameData.isContinueGame = false; // startでセーブデータがあったとしてもfalseにする
+        SaveManager.SaveInitDataAll();  // データをリセットして保存
+        
         SceneChange(nextScene);
         //コントローラ入力の場合マウスカーソルが非表示のままになってしまうので表示する
         if (!bMouse) Cursor.visible = true;
@@ -130,8 +134,15 @@ public class TitleScenManager : BaseSceneManager {
     public void ContinueButton()
     {
         SoundSEDecision();
+        if (MySceneManager.GameData.isContinueGame) {   // セーブデータが存在してたか
+            // セーブデータ有りなのでデータロード
+            SaveManager.LoadAll();  // セーブデータロード
+            nextScene = MySceneManager.GameData.nowScene;   // 次のシーンを更新。シーンのロードをしてnowSceneには前回のシーン番号が入っているからnextにnowを代入
+        } else {
+            // セーブデータがなかったので「はじめから」と同じように振る舞う
+            MySceneManager.GameData.nowScene = nextScene = (int)MySceneManager.SceneState.SCENE_GAME_001;
+        }
         MySceneManager.GameData.oldScene = (int)MySceneManager.SceneState.SCENE_TITLE;  // 今のシーンをひとつ前のシーンとして保存
-        MySceneManager.GameData.nowScene = nextScene;
         SceneChange(nextScene);
         //コントローラ入力の場合マウスカーソルが非表示のままになってしまうので表示する
         if (!bMouse) Cursor.visible = true;
