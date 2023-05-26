@@ -238,5 +238,6 @@ public class PausePanel : MonoBehaviour
         backButtonImage.raycastTarget = bMouseMode;
         optionButtonImage.raycastTarget = bMouseMode;
         titleButtonImage.raycastTarget = bMouseMode;
+        Cursor.visible = bMouseMode;
     }
 }

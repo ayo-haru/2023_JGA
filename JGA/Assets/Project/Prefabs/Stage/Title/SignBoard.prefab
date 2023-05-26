@@ -834,7 +834,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
-      objectReference: {fileID: 4617808285127237665}
+      objectReference: {fileID: 7147541953260126343}
     - target: {fileID: 7842228449755458315, guid: 7884c80fe28453946b244969afb60e35,
         type: 3}
       propertyPath: m_RootOrder
