@@ -169,7 +169,7 @@ public class MainCamera : MonoBehaviour
 	/// </summary>
 	void Start() {
 
-        guestCheck = MySceneManager.GameData.guestData.dataList.Length;
+        guestCheck = MySceneManager.GameData.guestData.Length;
 
         crearGuest = MySceneManager.GameData.guestCnt;
         //客の情報を格納する
@@ -221,12 +221,12 @@ public class MainCamera : MonoBehaviour
                 boundGuest = new Bounds[guestObj.Length];
                 crearGuest = MySceneManager.GameData.guestCnt;
             }
-            if (guestCheck != MySceneManager.GameData.guestData.dataList.Length + MySceneManager.GameData.randomGuestCnt)
+            if (guestCheck != MySceneManager.GameData.guestData.Length + MySceneManager.GameData.randomGuestCnt)
             {
                 guestObj = GameObject.FindGameObjectsWithTag("Guest");
                 //客の範囲取得
                 boundGuest = new Bounds[guestObj.Length];
-                guestCheck = MySceneManager.GameData.guestData.dataList.Length + MySceneManager.GameData.randomGuestCnt;
+                guestCheck = MySceneManager.GameData.guestData.Length + MySceneManager.GameData.randomGuestCnt;
             }
             GuestCount();
             if (currentGuestValue >= guestValue)
