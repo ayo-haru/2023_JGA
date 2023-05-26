@@ -131,24 +131,16 @@ public class StateStayArea : AIState
         //ペンギンエリアについている場合の処理
         if (isStay)
         {
-            //
-            if(guestAnimation.GetAnimationState() == GuestAnimation.EGuestAnimState.IDLE)
-            {
-                fAnimTimer -= Time.deltaTime;
-                if(fAnimTimer <= 0.0f)
-                {
-                    fAnimTimer = Random.Range(5.0f, 10.0f);
-                    //待機アニメーションの再生
-                    switch (Random.Range(0, 2))
-                    {
-                        case 0: guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.WATCH1); break;
-                        case 1: guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.WATCH2); break;
-                    }
-                }
-            }
             //動物の方を向く
             Quaternion rot = Quaternion.LookRotation(((!animal) ? agent.destination : animal.position) - transform.position);
             transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime);
+            //IDLEモーションの場合はタイマーを更新
+            if (guestAnimation.GetAnimationState() != GuestAnimation.EGuestAnimState.IDLE) return;
+            fAnimTimer -= Time.deltaTime;
+            if (fAnimTimer > 0.0f) return;
+            fAnimTimer = Random.Range(5.0f, 10.0f);
+            //待機アニメーションの再生
+            guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.WATCH1 + Random.Range(0, 2));
             return;
         }
 
