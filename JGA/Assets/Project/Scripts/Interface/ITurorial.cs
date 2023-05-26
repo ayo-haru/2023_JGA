@@ -18,7 +18,7 @@ public interface ITurorial
     /// タスク完了に必要となるオブジェクトを設定する
     /// </summary>
     /// <param name="gameObject"></param>
-    void SetTaskObj(GameObject gameObject);
+    void AddNeedObj(GameObject gameObject);
 
     /// <summary>
     /// チュートリアルタスクが設定されたときに実行
