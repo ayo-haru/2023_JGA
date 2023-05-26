@@ -19,12 +19,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering.VirtualTexturing;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UniRx;
 
 public class StageSceneManager : BaseSceneManager {
     //---プレイヤー
@@ -74,14 +73,16 @@ public class StageSceneManager : BaseSceneManager {
     //-----クリア画面
     private GameObject clearPanel;
     private ClearPanel _ClearPanel;
+    private ReactiveProperty<bool> isClear = new ReactiveProperty<bool>(false);
 
     //-----ゲームオーバー画面
     private GameObject gameOverPanel;
     private GameOverPanel _GameOverPanel;
+    private ReactiveProperty<bool> isGameOver = new ReactiveProperty<bool>(false);
 
     //---変数
     private bool isOnce; // 一度だけ処理をするときに使う
-    AudioSource audioSource;
+    AudioSource[] asList;
 
 
 
@@ -139,15 +140,26 @@ public class StageSceneManager : BaseSceneManager {
             MySceneManager.GameData.events[i].eventState = this.events[i].eventState;
             MySceneManager.GameData.events[i].percent = this.events[i].percent;
         }
+
+        // BGM再生用にオーディオソース取得
+        asList = GetComponents<AudioSource>();
     }
 
     /// <summary>
     /// 最初のフレーム更新の前に呼び出される
     /// </summary>
     void Start() {
+        //----- イベント登録 -----
+        //// クリア
+        //isClear.Subscribe(value =>  OnClear()).AddTo(this);
+        //// ゲームオーバー
+        //isGameOver.Subscribe(value => OnGameOver()).AddTo(this);
+
         //----- 変数初期化 -----
         // 客の生成する親オブジェクトの取得
         guestParent = GameObject.Find("Guests");
+
+
 
         // 生成する客のプレハブ
         guestObj = new GameObject[3];
@@ -191,16 +203,13 @@ public class StageSceneManager : BaseSceneManager {
             if (!rootPos[(int)MySceneManager.eRoot.POLARBEAR]) {
                 rootPos[(int)MySceneManager.eRoot.POLARBEAR] = GameObject.Find("PolarBearCagePos").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.BEAR_01])
-            {
+            if (!rootPos[(int)MySceneManager.eRoot.BEAR_01]) {
                 rootPos[(int)MySceneManager.eRoot.BEAR_01] = GameObject.Find("BearCagePos01").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.BEAR_02])
-            {
+            if (!rootPos[(int)MySceneManager.eRoot.BEAR_02]) {
                 rootPos[(int)MySceneManager.eRoot.BEAR_02] = GameObject.Find("BearCagePos02").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.PANDA])
-            {
+            if (!rootPos[(int)MySceneManager.eRoot.PANDA]) {
                 rootPos[(int)MySceneManager.eRoot.PANDA] = GameObject.Find("PandaCagePos").GetComponent<Transform>();
             }
 
@@ -212,44 +221,34 @@ public class StageSceneManager : BaseSceneManager {
 
             // 飼育員巡回ルート取得==============================================================
             #region 飼育員巡回ルール
-            if (!rootPos[(int)MySceneManager.eRoot.BELL_AREA])
-            {
+            if (!rootPos[(int)MySceneManager.eRoot.BELL_AREA]) {
                 rootPos[(int)MySceneManager.eRoot.BELL_AREA] = GameObject.Find("BellArea").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.POLAR_AREA])
-            {
+            if (!rootPos[(int)MySceneManager.eRoot.POLAR_AREA]) {
                 rootPos[(int)MySceneManager.eRoot.POLAR_AREA] = GameObject.Find("PolarArea").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.BEAR_AREA])
-            {
+            if (!rootPos[(int)MySceneManager.eRoot.BEAR_AREA]) {
                 rootPos[(int)MySceneManager.eRoot.BEAR_AREA] = GameObject.Find("BearArea").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.PANDA_AREA_01])
-            {
+            if (!rootPos[(int)MySceneManager.eRoot.PANDA_AREA_01]) {
                 rootPos[(int)MySceneManager.eRoot.PANDA_AREA_01] = GameObject.Find("PandaArea01").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.PANDA_AREA_02])
-            {
+            if (!rootPos[(int)MySceneManager.eRoot.PANDA_AREA_02]) {
                 rootPos[(int)MySceneManager.eRoot.PANDA_AREA_02] = GameObject.Find("PandaArea02").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.HOURSE_AREA])
-            {
+            if (!rootPos[(int)MySceneManager.eRoot.HOURSE_AREA]) {
                 rootPos[(int)MySceneManager.eRoot.HOURSE_AREA] = GameObject.Find("HourseArea").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.ZEBRA_AREA_01])
-            {
+            if (!rootPos[(int)MySceneManager.eRoot.ZEBRA_AREA_01]) {
                 rootPos[(int)MySceneManager.eRoot.ZEBRA_AREA_01] = GameObject.Find("ZebraArea01").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.ZEBRA_AREA_02])
-            {
+            if (!rootPos[(int)MySceneManager.eRoot.ZEBRA_AREA_02]) {
                 rootPos[(int)MySceneManager.eRoot.ZEBRA_AREA_02] = GameObject.Find("ZebraArea02").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.FOUNTAIN_AREA])
-            {
+            if (!rootPos[(int)MySceneManager.eRoot.FOUNTAIN_AREA]) {
                 rootPos[(int)MySceneManager.eRoot.FOUNTAIN_AREA] = GameObject.Find("FountainArea").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.LAKE_AREA])
-            {
+            if (!rootPos[(int)MySceneManager.eRoot.LAKE_AREA]) {
                 rootPos[(int)MySceneManager.eRoot.LAKE_AREA] = GameObject.Find("LakeArea").GetComponent<Transform>();
             }
             #endregion
@@ -294,11 +293,9 @@ public class StageSceneManager : BaseSceneManager {
         }
 
         //----- 音の処理 -----
-        // BGM再生用にオーディオソース取得
-        audioSource = GetComponent<AudioSource>();
         // BGM再生
-        SoundManager.Play(audioSource, SoundManager.EBGM.INZOO);
-        SoundManager.Play(audioSource, SoundManager.EBGM.GAME001);
+        SoundManager.Play(asList[0], SoundManager.EBGM.GAME001);
+        SoundManager.Play(asList[1], SoundManager.EBGM.INZOO);
         // フェード中だったら待機して音を止める
         StartCoroutine(WaitFade());
     }
@@ -309,29 +306,7 @@ public class StageSceneManager : BaseSceneManager {
 
         //----- 時間系の処理 -----
         if (timerUI) {
-            //----- 制限時間のゲームオーバー -----
-            if (_TimerUI.IsFinish()) {
-                if (!gameOverPanel) gameOverPanel = GameObject.Find("GameOverPanel");
-                if (gameOverPanel && !_GameOverPanel) _GameOverPanel = gameOverPanel.GetComponent<GameOverPanel>();
-
-                if (!isOnce) {
-                    int next = -1;
-                    if (_GameOverPanel) next = _GameOverPanel.GetNextScene();
-                    if (next != -1) {
-                        MySceneManager.GameData.oldScene = MySceneManager.GameData.nowScene;  // 今のシーンをひとつ前のシーンとして保存
-                        MySceneManager.GameData.nowScene = next;
-                        SceneChange(next);  // シーン遷移
-                        isOnce = true;
-                    }
-                }
-
-                if (!PauseManager.isPaused) {
-                    PauseManager.isPaused = true;
-                    PauseManager.NoMenu = true;
-                    PauseManager.Pause();
-                }
-
-            }
+            isGameOver.Value = _TimerUI.IsFinish();
 
             //----- ランダムで生成する客 -----
             if (isGuestSpawn) {
@@ -380,41 +355,39 @@ public class StageSceneManager : BaseSceneManager {
 
         //----- ゲームクリア -----
         if (guestNumUI) {
-            if (_GuestNumUI.isClear()) {
+            isClear.Value = _GuestNumUI.isClear();
+        }
 
-                //----クリア画面取得
-                if (!clearPanel) clearPanel = GameObject.Find("ClearPanel");
-                if (clearPanel && !_ClearPanel) _ClearPanel = clearPanel.GetComponent<ClearPanel>();
+        if (isClear.Value) {
+            if (!isOnce) {   // 一度だけ処理
+                int next = -1;
+                if (_ClearPanel) next = _ClearPanel.GetNextScene();
+                if (next != -1) {
+                    MySceneManager.GameData.oldScene = MySceneManager.GameData.nowScene;  // 今のシーンをひとつ前のシーンとして保存
+                    MySceneManager.GameData.nowScene = next;
+                    SceneChange(next);  // シーン遷移
+                    isOnce = true;
 
-                if (!isOnce) {   // 一度だけ処理
-                    int next = -1;
-                    if (_ClearPanel) next = _ClearPanel.GetNextScene();
-                    if (next != -1) {
-                        MySceneManager.GameData.oldScene = MySceneManager.GameData.nowScene;  // 今のシーンをひとつ前のシーンとして保存
-                        MySceneManager.GameData.nowScene = next;
-                        SceneChange(next);  // シーン遷移
-                        isOnce = true;
-
-                        SaveManager.SaveAll();
-                    } else {
-                        if (System.Enum.GetNames(typeof(MySceneManager.SceneState)).Length > MySceneManager.GameData.nowScene) {  // 最大シーンではないとき
-                            MySceneManager.GameData.nowScene++;
-                            SaveManager.SaveAll();
-                            MySceneManager.GameData.nowScene--;
-                        } else {
-                            SaveManager.SaveAll();
-                        }
-                    }
-                }
-
-
-                if (!PauseManager.isPaused) {
-                    PauseManager.isPaused = true;
-                    PauseManager.NoMenu = true;
-                    PauseManager.Pause();
+                    SaveManager.SaveAll();
                 }
             }
         }
+
+        //----- 制限時間のゲームオーバー -----
+        if (isGameOver.Value) {
+            if (!isOnce) {
+                int next = -1;
+                if (_GameOverPanel) next = _GameOverPanel.GetNextScene();
+                if (next != -1) {
+                    MySceneManager.GameData.oldScene = MySceneManager.GameData.nowScene;  // 今のシーンをひとつ前のシーンとして保存
+                    MySceneManager.GameData.nowScene = next;
+                    SceneChange(next);  // シーン遷移
+                    isOnce = true;
+                }
+            }
+        }
+
+
     }
 
     private void LateUpdate() {
@@ -588,9 +561,58 @@ public class StageSceneManager : BaseSceneManager {
     /// </summary>
     /// <returns></returns>
     IEnumerator WaitFade() {
-        audioSource.Pause();
+        asList[0].Pause();
+        asList[1].Pause();
         yield return new WaitUntil(() => FadeManager.fadeMode == FadeManager.eFade.Default);
-        audioSource.UnPause();
+        asList[0].UnPause();
+        asList[1].UnPause();
     }
 
+    /// <summary>
+    /// クリアになった瞬間にやる処理
+    /// </summary>
+    private void OnClear() {
+        // 音の再生
+        SoundManager.Play(asList[2], SoundManager.EBGM.GAMECLEAR);
+
+        //　クリア画面取得
+        if (!clearPanel) clearPanel = GameObject.Find("ClearPanel");
+        if (clearPanel && !_ClearPanel) _ClearPanel = clearPanel.GetComponent<ClearPanel>();
+
+        // ポーズ
+        if (!PauseManager.isPaused) {
+            PauseManager.isPaused = true;
+            PauseManager.NoMenu = true;
+            PauseManager.Pause();
+        }
+
+        // セーブ
+        SaveManager.SaveGuestCnt(0);
+        SaveManager.SaveTimer(0.0f);
+        if (System.Enum.GetNames(typeof(MySceneManager.SceneState)).Length > MySceneManager.GameData.nowScene) {  // 最大シーンではないとき
+            SaveManager.SaveLastStageNum(MySceneManager.GameData.nowScene+1);
+        } else {
+            SaveManager.SaveLastStageNum(MySceneManager.GameData.nowScene);
+        }
+        SaveManager.SaveLastPlayerPos(Vector3.zero);
+    }
+
+    /// <summary>
+    /// ゲームオーバーになったらやる処理
+    /// </summary>
+    private void OnGameOver() {
+        // 音の再生
+        SoundManager.Play(asList[2], SoundManager.EBGM.GAMEOVER);
+
+        // ゲームオーバー画面取得
+        if (!gameOverPanel) gameOverPanel = GameObject.Find("GameOverPanel");
+        if (gameOverPanel && !_GameOverPanel) _GameOverPanel = gameOverPanel.GetComponent<GameOverPanel>();
+
+        // ポーズ
+        if (!PauseManager.isPaused) {
+            PauseManager.isPaused = true;
+            PauseManager.NoMenu = true;
+            PauseManager.Pause();
+        }
+    }
 }
