@@ -132,6 +132,7 @@ public class Player : MonoBehaviour
 		//--- NULLリファレンス回避
 		if (transform == null) transform = this.gameObject.transform;
 		if (rb == null) rb = GetComponent<Rigidbody>();
+		Debug.Log($"rb:{rb}");
 		if (audioSource == null) audioSource = GetComponent<AudioSource>();
 		if (anim == null) anim = GetComponent<Animator>();
 
@@ -233,12 +234,31 @@ public class Player : MonoBehaviour
 #if UseMyContorller
 		gameInputs.Disable();
 #else
-		actionMove.ToInputAction().Enable();
-		actionAppeal.ToInputAction().Enable();
-		actionHit.ToInputAction().Enable();
-		actionHold.ToInputAction().Enable();
-		actionRun.ToInputAction().Enable();
+		actionMove.ToInputAction().Disable();
+		actionAppeal.ToInputAction().Disable();
+		actionHit.ToInputAction().Disable();
+		actionHold.ToInputAction().Disable();
+		actionRun.ToInputAction().Disable();
 #endif
+	}
+
+	private void OnDestroy()
+	{
+		actionMove.ToInputAction().Disable();
+		actionAppeal.ToInputAction().Disable();
+		actionHit.ToInputAction().Disable();
+		actionHold.ToInputAction().Disable();
+		actionRun.ToInputAction().Disable();
+		actionMove = null;
+		actionAppeal = null;
+		actionHit = null;
+		actionHold = null;
+		actionRun = null;
+		transform = null;
+		Debug.Log($"rb = null");
+		rb = null;
+		audioSource = null;
+		anim = null;
 	}
 
 	private void FixedUpdate()

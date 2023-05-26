@@ -111,7 +111,7 @@ public class RebindUI : MonoBehaviour
 		if (_action == null || _pathText == null) return;
 
 		InputBinding binding = InputBinding.MaskByGroup(_scheme);
-		Debug.Log($"InputBinding.MaskByGroup(_scheme):{binding}");
+		//Debug.Log($"InputBinding.MaskByGroup(_scheme):{binding}");
 
 		string name = "";
 		//int bindingIndex = _action.GetBindingIndex("Keyboard");

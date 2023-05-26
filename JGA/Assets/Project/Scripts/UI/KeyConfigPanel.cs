@@ -38,14 +38,14 @@ public class KeyConfigPanel : MonoBehaviour
 	private void Update()
 	{
 		// ゲームパッドを検出
-		if (settingMode == SettingMode.KEYBOARD && Gamepad.current != null)
-		{
-			//// ゲームパッド設定画面確認
-			// switchingPanel.SetActive(true);
+		//if (settingMode == SettingMode.KEYBOARD && Gamepad.current != null)
+		//{
+		//	//// ゲームパッド設定画面確認
+		//	// switchingPanel.SetActive(true);
 
-			settingMode = SettingMode.GAMEPAD;
-			ChangePanel(settingMode);
-		}
+		//	settingMode = SettingMode.GAMEPAD;
+		//	ChangePanel(settingMode);
+		//}
 
 	}
 
