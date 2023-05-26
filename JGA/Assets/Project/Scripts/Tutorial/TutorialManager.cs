@@ -49,18 +49,23 @@ public class TutorialManager : MonoBehaviour
     private List<ITurorial> tutorialTask;
     private ITurorial currentTask;
 
-	private static bool isExecution;   // チュートリアルをやるか
-    private bool isTaskFin;     // タスクが終了しているか
+	private static bool isExecution = false;   // チュートリアルをやるか
+    private bool isTaskFin;                     // タスクが終了しているか
 
     [SerializeField]
 	private List<GameObject> tutorialText;
     private GameObject currentTextObj;
     private Image currentText;
 
-	/// <summary>
-	/// 最初のフレーム更新の前に呼び出される
-	/// </summary>
-	void Start()
+    private void Awake() {
+        // 変数初期化
+        isTaskFin = false;
+    }
+
+    /// <summary>
+    /// 最初のフレーム更新の前に呼び出される
+    /// </summary>
+    void Start()
 	{
         canvas = GameObject.Find("Canvas");
         canvasRT = canvas.GetComponent<RectTransform>();
@@ -69,10 +74,6 @@ public class TutorialManager : MonoBehaviour
 
         player = GameObject.FindWithTag("Player");
         guest = GameObject.Find("TutorialWait_Guest001");
-
-        // 変数初期化
-        isExecution = false;
-        isTaskFin = false;
 
         // チュートリアルの一覧
         tutorialTask = new List<ITurorial>()
