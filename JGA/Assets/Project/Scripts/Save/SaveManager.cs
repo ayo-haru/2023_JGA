@@ -21,6 +21,26 @@ public class SaveManager {
         SaveSystem.SaveLastPlayerPos(MySceneManager.GameData.playerPos);
     }
 
+    public static void SaveInitDataAll() {
+        SaveSystem.SaveGuestCnt(0);
+        SaveSystem.SaveTimer(0.0f);
+        SaveSystem.SaveLastStageNum(MySceneManager.GameData.nowScene);
+        SaveSystem.SaveLastPlayerPos(Vector3.zero);
+    }
+
+    public static void SaveGuestCnt(int _guestCnt) {
+        SaveSystem.SaveGuestCnt(_guestCnt);
+    }
+    public static void SaveTimer(float _timer) {
+        SaveSystem.SaveTimer(_timer);
+    }
+    public static void SaveLastStageNum(int _nowScene) {
+        SaveSystem.SaveLastStageNum(_nowScene);
+    }
+    public static void SaveLastPlayerPos(Vector3 _playerPos) {
+        SaveSystem.SaveLastPlayerPos(_playerPos);
+    }
+
     public static void LoadAll() {
         MySceneManager.GameData.guestCnt = SaveSystem.sd.guestCnt;
         MySceneManager.GameData.timer = SaveSystem.sd.timer;
