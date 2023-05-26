@@ -518,11 +518,12 @@ public class KeeperAI : MonoBehaviour
     private void Bring()
     {
         int ray1 = LayerMask.NameToLayer("Ignore Raycast");
-        int ray2 = LayerMask.NameToLayer("RayHit");
-        int ray3 = soundObj.gameObject.layer;
-        //Debug.Log(ray3);
+        int ray2 = soundObj.gameObject.layer;
+        Vector3 localScale, parentScale;
+
         // ラジオの子オブジェクトを取得
         GameObject childObj = soundObj.gameObject.transform.GetChild(1).gameObject;
+
         if (!catchFlg)
         {
             soundObj.gameObject.layer = ray1;   // 一時的にレイヤーをIgnore Raycastにする
@@ -530,6 +531,9 @@ public class KeeperAI : MonoBehaviour
             soundObj.GetComponent<Rigidbody>().isKinematic = true;   // 物理演算の影響を受けないようにする
             soundObj.GetComponent<Rigidbody>().useGravity = false;
             soundObj.gameObject.transform.parent = hand.transform;
+            localScale = soundObj.gameObject.transform.localScale;  // ラジオのサイズ取得
+            parentScale = transform.lossyScale;
+            soundObj.gameObject.transform.localScale = SetScale(localScale, parentScale);
             soundObj.gameObject.transform.localPosition = Vector3.zero;
             soundObj.gameObject.transform.rotation = Quaternion.identity;
         }
@@ -541,11 +545,27 @@ public class KeeperAI : MonoBehaviour
             soundObj.GetComponent<Rigidbody>().isKinematic = false;   // 物理演算の影響を受けるようにする
             soundObj.GetComponent<Rigidbody>().useGravity = true;
             soundObj.gameObject.transform.parent = parentObj.transform;
+            localScale = soundObj.gameObject.transform.localScale;  // ラジオのサイズ取得
+            parentScale = soundObj.gameObject.transform.parent.lossyScale;
+            soundObj.gameObject.transform.localScale = SetScale(localScale, parentScale);
             soundObj.gameObject.transform.position = soundStartPos;
             soundObj.gameObject.transform.rotation = soundStartDir;
         }
     }
     #endregion
+
+    /// <summary>
+    /// 親の影響を無くしたオブジェクトのサイズ計算
+    /// </summary>
+    private Vector3 SetScale(Vector3 _localScale, Vector3 _lossyScale)
+    {
+        var scale = new Vector3(
+            _localScale.x / _lossyScale.x,
+            _localScale.y / _lossyScale.y,
+            _localScale.z / _lossyScale.z
+            );
+        return scale;
+    }
 
     #region エフェクト作成
     /// <summary>
