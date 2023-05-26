@@ -84,8 +84,12 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 		PENGUIN_E,			// ペンギンブース東
 		RESTSPOT_01,		// 休憩スペース1
 		RESTSPOT_02,		// 休憩スペース2
-		HORSE,				// ウマ
-		ZEBRA,				// シマウマ
+		HORSE_01,			// ウマ1
+		HORSE_02,			// ウマ2
+		HORSE_03,			// ウマ3
+		ZEBRA_01,			// シマウマ1
+		ZEBRA_02,			// シマウマ2
+		ZEBRA_03,			// シマウマ3
 		POLARBEAR,			// シロクマ
 		BEAR_01,			// クマ1
 		BEAR_02,			// クマ2
@@ -143,9 +147,9 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 		Effect.effectDatas = AddressableLoader<EffectData>.Load("EffectData");
 		//---音量
 		Volume.GameVolumeDatas = AddressableLoader<GameVolume>.Load("GameVolume");
-        //---データ
-        GameData.zooKeeperData = new ZooKeeperData[2];
-        GameData.zooKeeperData[(int)SceneState.SCENE_GAME_001-1] = AddressableLoader<ZooKeeperData>.Load("Stage01_ZooKeeperData");
+		//---データ
+		GameData.zooKeeperData = new ZooKeeperData[2];
+		GameData.zooKeeperData[(int)SceneState.SCENE_GAME_001-1] = AddressableLoader<ZooKeeperData>.Load("Stage01_ZooKeeperData");
 		GameData.zooKeeperData[(int)SceneState.SCENE_GAME_002-1] = AddressableLoader<ZooKeeperData>.Load("Stage02_ZooKeeperData");
 		GameData.guestData = new GuestData[2];
 		GameData.guestData[(int)SceneState.SCENE_GAME_001-1] = AddressableLoader<GuestData>.Load("Stage01_GuestData");

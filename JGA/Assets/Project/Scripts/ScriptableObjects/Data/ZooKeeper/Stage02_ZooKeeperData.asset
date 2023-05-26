@@ -52,3 +52,16 @@ MonoBehaviour:
     search: 15
     searchAngle: 90
     searchDistance: 20
+  - name: ZooKeeper004
+    roots: 140000001500000013000000
+    rootTransforms:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    respawnTF: {fileID: 0}
+    status: 1
+    speed: 2
+    chaseSpeed: 1.5
+    search: 15
+    searchAngle: 90
+    searchDistance: 20

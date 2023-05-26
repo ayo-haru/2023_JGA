@@ -192,12 +192,29 @@ public class StageSceneManager : BaseSceneManager {
             if (!rootPos[(int)MySceneManager.eRoot.RESTSPOT_02]) {
                 rootPos[(int)MySceneManager.eRoot.RESTSPOT_02] = GameObject.Find("RestSpotPos02").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.HORSE]) {
-                rootPos[(int)MySceneManager.eRoot.HORSE] = GameObject.Find("HorseCagePos").GetComponent<Transform>();
+            if (!rootPos[(int)MySceneManager.eRoot.HORSE_01]) {
+                rootPos[(int)MySceneManager.eRoot.HORSE_01] = GameObject.Find("HorseCagePos01").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.ZEBRA]) {
-                rootPos[(int)MySceneManager.eRoot.ZEBRA] = GameObject.Find("ZebraCagePos").GetComponent<Transform>();
+            if (!rootPos[(int)MySceneManager.eRoot.HORSE_02])
+            {
+                rootPos[(int)MySceneManager.eRoot.HORSE_02] = GameObject.Find("HorseCagePos02").GetComponent<Transform>();
             }
+            if (!rootPos[(int)MySceneManager.eRoot.HORSE_03])
+            {
+                rootPos[(int)MySceneManager.eRoot.HORSE_03] = GameObject.Find("HorseCagePos03").GetComponent<Transform>();
+            }
+            if (!rootPos[(int)MySceneManager.eRoot.ZEBRA_01]) {
+                rootPos[(int)MySceneManager.eRoot.ZEBRA_01] = GameObject.Find("ZebraCagePos01").GetComponent<Transform>();
+            }
+            if (!rootPos[(int)MySceneManager.eRoot.ZEBRA_02])
+            {
+                rootPos[(int)MySceneManager.eRoot.ZEBRA_02] = GameObject.Find("ZebraCagePos02").GetComponent<Transform>();
+            }
+            if (!rootPos[(int)MySceneManager.eRoot.ZEBRA_03])
+            {
+                rootPos[(int)MySceneManager.eRoot.ZEBRA_03] = GameObject.Find("ZebraCagePos03").GetComponent<Transform>();
+            }
+
             if (!rootPos[(int)MySceneManager.eRoot.POLARBEAR]) {
                 rootPos[(int)MySceneManager.eRoot.POLARBEAR] = GameObject.Find("PolarBearCagePos").GetComponent<Transform>();
             }

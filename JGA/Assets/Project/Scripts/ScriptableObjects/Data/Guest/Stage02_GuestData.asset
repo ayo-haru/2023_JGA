@@ -37,3 +37,473 @@ MonoBehaviour:
     secondCoolDownTime: 5
     waitTime: 0
     cageDistance: 10
+  - name: OGuest002
+    roots: 07000000
+    rootTransforms:
+    - {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    entranceTF: {fileID: 0}
+    isRandom: 0
+    speed: 3
+    followSpeed: 0.7
+    inBoothSpeed: 0.5
+    rayLength: 10
+    viewAngle: 60
+    reactionArea: 20
+    soundAreaOffset: 10
+    arrivalPenguinArea: 30
+    distance: 4
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 0
+    cageDistance: 10
+  - name: OGuest003
+    roots: 08000000
+    rootTransforms:
+    - {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    entranceTF: {fileID: 0}
+    isRandom: 0
+    speed: 3
+    followSpeed: 0.7
+    inBoothSpeed: 0.5
+    rayLength: 10
+    viewAngle: 60
+    reactionArea: 20
+    soundAreaOffset: 10
+    arrivalPenguinArea: 30
+    distance: 4
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 0
+    cageDistance: 10
+  - name: OGuest004
+    roots: 1800000006000000
+    rootTransforms:
+    - {fileID: 0}
+    - {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    entranceTF: {fileID: 0}
+    isRandom: 0
+    speed: 3
+    followSpeed: 0.7
+    inBoothSpeed: 0.5
+    rayLength: 10
+    viewAngle: 60
+    reactionArea: 20
+    soundAreaOffset: 10
+    arrivalPenguinArea: 30
+    distance: 4
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 0
+    cageDistance: 10
+  - name: OGuest005
+    roots: 0b00000008000000
+    rootTransforms:
+    - {fileID: 0}
+    - {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    entranceTF: {fileID: 0}
+    isRandom: 0
+    speed: 3
+    followSpeed: 0.7
+    inBoothSpeed: 0.5
+    rayLength: 10
+    viewAngle: 60
+    reactionArea: 20
+    soundAreaOffset: 10
+    arrivalPenguinArea: 30
+    distance: 4
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 0
+    cageDistance: 10
+  - name: OGuest006
+    roots: 09000000
+    rootTransforms:
+    - {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    entranceTF: {fileID: 0}
+    isRandom: 0
+    speed: 3
+    followSpeed: 0.7
+    inBoothSpeed: 1
+    rayLength: 10
+    viewAngle: 60
+    reactionArea: 20
+    soundAreaOffset: 10
+    arrivalPenguinArea: 30
+    distance: 4
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 0
+    cageDistance: 10
+  - name: OGuest007
+    roots: 0a000000
+    rootTransforms:
+    - {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    entranceTF: {fileID: 0}
+    isRandom: 0
+    speed: 3
+    followSpeed: 0.7
+    inBoothSpeed: 1
+    rayLength: 10
+    viewAngle: 60
+    reactionArea: 20
+    soundAreaOffset: 10
+    arrivalPenguinArea: 30
+    distance: 4
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 0
+    cageDistance: 10
+  - name: OGuest008
+    roots: 0b000000
+    rootTransforms:
+    - {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    entranceTF: {fileID: 0}
+    isRandom: 0
+    speed: 3
+    followSpeed: 0.7
+    inBoothSpeed: 1
+    rayLength: 10
+    viewAngle: 60
+    reactionArea: 20
+    soundAreaOffset: 10
+    arrivalPenguinArea: 30
+    distance: 4
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 0
+    cageDistance: 10
+  - name: OGuest009
+    roots: 090000000a000000
+    rootTransforms:
+    - {fileID: 0}
+    - {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    entranceTF: {fileID: 0}
+    isRandom: 0
+    speed: 3
+    followSpeed: 0.7
+    inBoothSpeed: 1
+    rayLength: 10
+    viewAngle: 60
+    reactionArea: 20
+    soundAreaOffset: 10
+    arrivalPenguinArea: 30
+    distance: 4
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 0
+    cageDistance: 10
+  - name: OGuest010
+    roots: 090000000b000000
+    rootTransforms:
+    - {fileID: 0}
+    - {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    entranceTF: {fileID: 0}
+    isRandom: 0
+    speed: 3
+    followSpeed: 0.7
+    inBoothSpeed: 1
+    rayLength: 10
+    viewAngle: 60
+    reactionArea: 20
+    soundAreaOffset: 10
+    arrivalPenguinArea: 30
+    distance: 4
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 20
+    cageDistance: 10
+  - name: OGuest011
+    roots: 0a00000009000000
+    rootTransforms:
+    - {fileID: 0}
+    - {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    entranceTF: {fileID: 0}
+    isRandom: 0
+    speed: 3
+    followSpeed: 0.7
+    inBoothSpeed: 1
+    rayLength: 10
+    viewAngle: 60
+    reactionArea: 20
+    soundAreaOffset: 10
+    arrivalPenguinArea: 30
+    distance: 4
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 5
+    cageDistance: 10
+  - name: OGuest012
+    roots: 0a0000000b000000
+    rootTransforms:
+    - {fileID: 0}
+    - {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    entranceTF: {fileID: 0}
+    isRandom: 0
+    speed: 3
+    followSpeed: 0.7
+    inBoothSpeed: 1
+    rayLength: 10
+    viewAngle: 60
+    reactionArea: 20
+    soundAreaOffset: 10
+    arrivalPenguinArea: 30
+    distance: 4
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 10
+    cageDistance: 10
+  - name: OGuest013
+    roots: 0d0000000e000000
+    rootTransforms:
+    - {fileID: 0}
+    - {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    entranceTF: {fileID: 0}
+    isRandom: 0
+    speed: 3
+    followSpeed: 0.7
+    inBoothSpeed: 1
+    rayLength: 10
+    viewAngle: 60
+    reactionArea: 20
+    soundAreaOffset: 10
+    arrivalPenguinArea: 30
+    distance: 4
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 45
+    cageDistance: 10
+  - name: OGuest014
+    roots: 0f000000
+    rootTransforms:
+    - {fileID: 0}
+    - {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    entranceTF: {fileID: 0}
+    isRandom: 0
+    speed: 3
+    followSpeed: 0.7
+    inBoothSpeed: 1
+    rayLength: 10
+    viewAngle: 60
+    reactionArea: 20
+    soundAreaOffset: 10
+    arrivalPenguinArea: 30
+    distance: 4
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 45
+    cageDistance: 10
+  - name: OGuest015
+    roots: 0f000000
+    rootTransforms:
+    - {fileID: 0}
+    - {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    entranceTF: {fileID: 0}
+    isRandom: 0
+    speed: 3
+    followSpeed: 0.7
+    inBoothSpeed: 1
+    rayLength: 10
+    viewAngle: 60
+    reactionArea: 20
+    soundAreaOffset: 10
+    arrivalPenguinArea: 30
+    distance: 4
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 45
+    cageDistance: 10
+  - name: OGuest016
+    roots: 04000000
+    rootTransforms:
+    - {fileID: 0}
+    - {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    entranceTF: {fileID: 0}
+    isRandom: 0
+    speed: 3
+    followSpeed: 0.7
+    inBoothSpeed: 1
+    rayLength: 10
+    viewAngle: 60
+    reactionArea: 20
+    soundAreaOffset: 10
+    arrivalPenguinArea: 30
+    distance: 4
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 45
+    cageDistance: 10
+  - name: OGuest017
+    roots: 0400000005000000
+    rootTransforms:
+    - {fileID: 0}
+    - {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    entranceTF: {fileID: 0}
+    isRandom: 0
+    speed: 3
+    followSpeed: 0.7
+    inBoothSpeed: 1
+    rayLength: 10
+    viewAngle: 60
+    reactionArea: 20
+    soundAreaOffset: 10
+    arrivalPenguinArea: 30
+    distance: 4
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 45
+    cageDistance: 10
+  - name: OGuest018
+    roots: 1a00000013000000
+    rootTransforms:
+    - {fileID: 0}
+    - {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    entranceTF: {fileID: 0}
+    isRandom: 0
+    speed: 3
+    followSpeed: 0.7
+    inBoothSpeed: 1
+    rayLength: 10
+    viewAngle: 60
+    reactionArea: 20
+    soundAreaOffset: 10
+    arrivalPenguinArea: 30
+    distance: 4
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 20
+    cageDistance: 10
+  - name: OGuest019
+    roots: 0f0000000e0000000800000009000000
+    rootTransforms:
+    - {fileID: 0}
+    - {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    entranceTF: {fileID: 0}
+    isRandom: 0
+    speed: 3
+    followSpeed: 1
+    inBoothSpeed: 1
+    rayLength: 10
+    viewAngle: 75
+    reactionArea: 20
+    soundAreaOffset: 10
+    arrivalPenguinArea: 30
+    distance: 4
+    firstCoolDownTime: 5
+    secondCoolDownTime: 5
+    waitTime: 5
+    cageDistance: 10
+  - name: OGuest020
+    roots: 110000001a0000000d000000070000000c0000000b0000001900000010000000
+    rootTransforms:
+    - {fileID: 0}
+    - {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    entranceTF: {fileID: 0}
+    isRandom: 0
+    speed: 3
+    followSpeed: 1
+    inBoothSpeed: 1
+    rayLength: 10
+    viewAngle: 75
+    reactionArea: 20
+    soundAreaOffset: 10
+    arrivalPenguinArea: 30
+    distance: 4
+    firstCoolDownTime: 5
+    secondCoolDownTime: 5
+    waitTime: 2
+    cageDistance: 10

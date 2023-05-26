@@ -39,10 +39,10 @@ public static class SceneLauncher
 		EditorSceneManager.OpenScene("Assets/Project/Scenes/Game/Stage_001.unity", OpenSceneMode.Single);
 	}
 
-	[MenuItem("Launcher/Stage002", priority = 0)]
+	[MenuItem("Launcher/Stage002", priority = 5)]
 	public static void OpeneStage002Scene()
 	{
-		EditorSceneManager.OpenScene("Assets/Project/Scenes/Stage_002.unity", OpenSceneMode.Single);
+		EditorSceneManager.OpenScene("Assets/Project/Scenes/Game/Stage_002.unity", OpenSceneMode.Single);
 	}
 
 }
