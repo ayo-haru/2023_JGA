@@ -47,13 +47,15 @@ public class ZooKeeperAI : MonoBehaviour
 
     [SerializeField] private Animator animator;
     private bool surpriseFlg = true;    // 驚くアニメーション用フラグ
-    private bool ResetFlg = true;       // 戻すアニメーション用フラグ
+    private bool ResetFlg = false;       // 戻すアニメーション用フラグ
+    private bool bResetPos = false;
     private AudioSource audioSource;
     private Rigidbody rb;
     private CapsuleCollider capsuleCollider;
     private NavMeshAgent navMesh;
     private bool pathPending = true;
     private int rootNum = 0;
+    private Quaternion startDir;    // 初期回転
     private GameObject exclamationEffect;   // ！エフェクト
     private GameObject questionEffect;      // ？エフェクト
 
@@ -134,6 +136,7 @@ public class ZooKeeperAI : MonoBehaviour
         if (capsuleCollider == null) capsuleCollider = this.GetComponent<CapsuleCollider>();
         if (player == null) player = GameObject.FindWithTag("Player").GetComponent<Player>();
         if (gimmickObj == null) gimmickObj = transform.root.gameObject.GetComponent<GimmickObj>();  // 親オブジェクトのスクリプト取得
+        startDir = this.transform.rotation;
         //sphereCollider.radius = search; // colliderのradiusを変更する
 
         // 位置更新を手動で行う
@@ -159,6 +162,7 @@ public class ZooKeeperAI : MonoBehaviour
         }
         else
         {
+            ResetFlg = false;
             NavMeshStop();
         }
     }
@@ -173,7 +177,9 @@ public class ZooKeeperAI : MonoBehaviour
             return;
         }
 
-        if (pathPending) PathPending();
+        // 巡回ルートに要素があるか
+        if (data.rootTransforms.Count >= 1)
+            if (pathPending) PathPending();
         if (ResetFlg)
         {
             if (chaseNow) AnimPlay();
@@ -208,6 +214,7 @@ public class ZooKeeperAI : MonoBehaviour
             NavMeshStop();
             chaseNow = false;
             surpriseFlg = true;
+            bResetPos = false;
             navMesh.speed = data.speed * player.MaxMoveSpeed;
             MySceneManager.GameData.isCatchPenguin = true;
         }
@@ -230,6 +237,8 @@ public class ZooKeeperAI : MonoBehaviour
             {
                 if (chaseNow) return;
                 soundObjFlg = false;
+                if (data.rootTransforms.Count <= 0)
+                    if (bResetPos) bResetPos = false;
                 // コルーチン開始
                 StartCoroutine("PenguinChase");
             }
@@ -315,7 +324,7 @@ public class ZooKeeperAI : MonoBehaviour
             else
             {
                 // オブジェクトの元の位置に到着したか
-                if (navMesh.remainingDistance <= 1.5f    // 目標地点までの距離が1.5ｍ以下になったら到着
+                if (navMesh.remainingDistance <= 2.5f    // 目標地点までの距離が1.5ｍ以下になったら到着
                      && !navMesh.pathPending)            // 経路計算中かどうか（計算中：true　計算完了：false）
                 {
                     // 置くアニメーション終了したらオブジェクトを置く
@@ -328,7 +337,7 @@ public class ZooKeeperAI : MonoBehaviour
         if (soundObjFlg)
         {
             // オブジェクトの位置に到着したか
-            if (navMesh.remainingDistance <= 1.5f    // 目標地点までの距離が1.5ｍ以下になったら到着
+            if (navMesh.remainingDistance <= 2.5f    // 目標地点までの距離が1.5ｍ以下になったら到着
                     && !navMesh.pathPending)         // 経路計算中かどうか（計算中：true　計算完了：false）
             {
                 // プレイヤーに遭遇してない、オブジェクトもないなら
@@ -357,9 +366,14 @@ public class ZooKeeperAI : MonoBehaviour
                 navMesh.SetDestination(data.rootTransforms[rootNum].position); // 目的地の再設定
             }
         }
-        else if (data.rootTransforms.Count <= 0)
+        if (data.rootTransforms.Count <= 0 && bResetPos)
         {
-            NavMeshStop();
+            if (navMesh.remainingDistance <= 2.0f    // 目標地点までの距離が2.0ｍ以下になったら到着
+                 && !navMesh.pathPending)            // 経路計算中かどうか（計算中：true　計算完了：false）
+            {
+                bResetPos = false;
+                NavMeshStop();
+            }
         }
     }
     #endregion
@@ -523,10 +537,17 @@ public class ZooKeeperAI : MonoBehaviour
 
         // エフェクト削除
         if (questionEffect) Destroy(questionEffect);
+        ResetFlg = true;
+        // 巡回ルートに要素があるか
+        if (data.rootTransforms.Count >= 1)
+            navMesh.SetDestination(data.rootTransforms[rootNum].position); // 目的地の再設定
+        else
+        {
+            bResetPos = true;
+            navMesh.SetDestination(data.respawnTF.position);
+        }
         // 動く
         NavMeshMove();
-        ResetFlg = true;
-        navMesh.SetDestination(data.rootTransforms[rootNum].position); // 目的地の再設定
     }
 
     /// <summary>
@@ -585,8 +606,14 @@ public class ZooKeeperAI : MonoBehaviour
             animator.SetFloat("speed", 1f);
             animator.Play("Walk");
             // 動く
+            if (data.rootTransforms.Count >= 1)
+                navMesh.SetDestination(data.rootTransforms[rootNum].position); // 目的地の再設定
+            else
+            {
+                bResetPos = true;
+                navMesh.SetDestination(data.respawnTF.position);
+            }
             NavMeshMove();
-            navMesh.SetDestination(data.rootTransforms[rootNum].position); // 目的地の再設定
         }
     }
 
@@ -604,8 +631,14 @@ public class ZooKeeperAI : MonoBehaviour
         yield return new WaitForSeconds(2.0f);
 
         // 動く
+        if (data.rootTransforms.Count >= 1)
+            navMesh.SetDestination(data.rootTransforms[rootNum].position); // 目的地の再設定
+        else
+        {
+            bResetPos = true;
+            navMesh.SetDestination(data.respawnTF.position);
+        }
         NavMeshMove();
-        navMesh.SetDestination(data.rootTransforms[rootNum].position); // 目的地の再設定
         // エフェクト削除
         if (questionEffect) Destroy(questionEffect);
     }
@@ -656,16 +689,20 @@ public class ZooKeeperAI : MonoBehaviour
     private void PlayerOutOfRange()
     {
         surpriseFlg = true;
+        animator.Play("Idle");
+        if (animator.GetBool("isChase")) animator.SetBool("isChase", false);
         if (exclamationEffect) Destroy(exclamationEffect);
         if (!gimmickFlg)
         {
+            // 巡回ルートに要素があるか
             if (data.rootTransforms.Count >= 1)
             {
                 navMesh.SetDestination(data.rootTransforms[rootNum].position);     // 目的地の再設定
             }
             else
             {
-                navMesh.isStopped = true;   // ナビゲーションの停止（true:ナビゲーションOFF　false:ナビゲーションON）
+                // リスポーン地点に戻る
+                navMesh.SetDestination(data.respawnTF.position);
             }
         }
     }
@@ -727,7 +764,12 @@ public class ZooKeeperAI : MonoBehaviour
         // アニメーション更新
         if (animator.GetBool("isWalk")) animator.SetBool("isWalk", false);
         if (!chaseNow)
+        {
             if (animator.GetBool("isChase")) animator.SetBool("isChase", false);
+            animator.Play("Idle");
+        }
+        if (data.rootTransforms.Count <= 0)
+            if (ResetFlg) ResetFlg = false;
     }
 
     /// <summary>
@@ -735,8 +777,15 @@ public class ZooKeeperAI : MonoBehaviour
     /// </summary>
     private void NavMeshMove()
     {
+        if (data.rootTransforms.Count <= 0)
+        {
+            if (!chaseNow && !bResetPos && !gimmickFlg && !soundObjFlg)
+            {
+                if (ResetFlg) ResetFlg = false;
+                return;
+            }
+        }
         if (!ResetFlg) ResetFlg = true;
-        if (data.rootTransforms.Count <= 0) return; // 巡回ルートがなかったら
         if (navMesh.isStopped) navMesh.isStopped = false;
         if (chaseNow)
         {
@@ -769,9 +818,12 @@ public class ZooKeeperAI : MonoBehaviour
     {
         if (chaseNow) chaseNow = false;
         if (!surpriseFlg) surpriseFlg = true;
+        if (bResetPos) bResetPos = false;
         animator.SetBool("isChase", false);
         // インスペクターで設定したリスポーン位置に再配置する
         navMesh.Warp(data.respawnTF.position);
+        if (data.rootTransforms.Count <= 0)
+            navMesh.transform.rotation = startDir;
     }
 
     /// <summary>
