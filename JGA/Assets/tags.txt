@@ -13,3 +13,4 @@ Guest
 ZooKeeper
 Target
 HideObj
+CollectPoint

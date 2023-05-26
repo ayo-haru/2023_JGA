@@ -22,14 +22,11 @@ public class CanObject : BaseObj , IObjectSound
 	private bool fallFlg;
 	private bool flyFlg;
 
-	protected override void Awake()
+	private void Start()
 	{
 		Init();
 		objType = ObjType.HIT_HOLD;
-	}
 
-	private void Start()
-	{
 		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
 	}
 
@@ -50,6 +47,8 @@ public class CanObject : BaseObj , IObjectSound
 	/// </summary>
 	void Update()
 	{
+		if (PauseManager.isPaused) return;
+
 		PlaySoundChecker(1);
 	}
 	protected override void OnCollisionEnter(Collision collison)

@@ -20,7 +20,7 @@ public class CardBoard : BaseObj
 	private bool isNPosition = false;
 	private bool isBreak = false;
 
-	[SerializeField] private Collider collision0;
+	[SerializeField] private BoxCollider collision0;
 	private GameObject collision1;
 	private GameObject collision2;
 	private GameObject collision3;

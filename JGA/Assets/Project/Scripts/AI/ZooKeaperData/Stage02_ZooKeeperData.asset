@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bacce7b9219de744d837d30d7e6f9af4, type: 3}
+  m_Name: Stage02_ZooKeeperData
+  m_EditorClassIdentifier: 
+  list:
+  - name: ZooKeeper001
+    roots: 160000000c000000
+    rootTransforms:
+    - {fileID: 0}
+    - {fileID: 0}
+    respawnTF: {fileID: 0}
+    status: 1
+    speed: 1.1
+    chaseSpeed: 2
+    search: 30
+    searchAngle: 90
+    searchDistance: 25
+  - name: ZooKeeper002
+    roots: 0d0000000c000000
+    rootTransforms:
+    - {fileID: 0}
+    - {fileID: 0}
+    respawnTF: {fileID: 0}
+    status: 0
+    speed: 1.1
+    chaseSpeed: 2
+    search: 15
+    searchAngle: 90
+    searchDistance: 20
+  - name: ZooKeeper003
+    roots: 0c0000000d00000016000000
+    rootTransforms:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    respawnTF: {fileID: 0}
+    status: 1
+    speed: 1.5
+    chaseSpeed: 2
+    search: 15
+    searchAngle: 90
+    searchDistance: 20
