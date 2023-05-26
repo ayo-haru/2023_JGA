@@ -7,3 +7,5 @@ GuestRay
 ZookeeperRay
 RayHit
 ZooKeeperRB
+CageAnimal
+PlayerOnlyCollision

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   list:
   - name: ZooKeeper001
-    roots: 1500000016000000
+    roots: 160000000d000000
     rootTransforms:
     - {fileID: 0}
     - {fileID: 0}
