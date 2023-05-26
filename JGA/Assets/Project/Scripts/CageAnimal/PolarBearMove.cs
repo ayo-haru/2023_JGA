@@ -70,6 +70,7 @@ public class PolarBearMove : MonoBehaviour
     /// </summary>
     void Awake()
 	{
+        
         //初期化
         currentMoveType = MoveType.IDLE;
         moveType = MoveType.IDLE;
@@ -82,7 +83,7 @@ public class PolarBearMove : MonoBehaviour
 
         anim = this.GetComponent<Animator>();
 
-        bearArea = GameObject.Find("BearArea").GetComponent<BearArea>();
+        //bearArea = GameObject.Find("PolarBearArea").GetComponent<BearArea>();
 
         PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(gameObject);
         PauseManager.OnResumed.Subscribe(x => { ReGame(); }).AddTo(gameObject);
@@ -93,8 +94,8 @@ public class PolarBearMove : MonoBehaviour
 	/// </summary>
 	void Start()
 	{
-		
-	}
+        bearArea = GameObject.Find("PolarBearArea").GetComponent<BearArea>();
+    }
 
 	/// <summary>
 	/// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
