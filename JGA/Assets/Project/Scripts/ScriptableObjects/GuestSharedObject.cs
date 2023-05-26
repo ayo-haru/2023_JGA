@@ -7,6 +7,7 @@
 // 
 // [Date]
 // 2023/04/22	スクリプト作成
+// 2023/05/26	段ボール取得
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -18,6 +19,8 @@ public class GuestSharedObject : MonoBehaviour
     private List<Transform>[] animalsTransform;
     //インタラクトオブジェクト
     private List<BaseObj> interactObjects;
+    //段ボール
+    private List<BaseObj> carboardObjects;
 
     [NamedArrayAttribute(new string[] {"ペンギン","馬","象","ライオン","白熊","鳥"})]
     [SerializeField,Header("TargetAnimalsの名前")] private string[] targetAnimalName = { "Penguin","Horse","Elephant","Lion","Bear","Bird",};
@@ -83,6 +86,7 @@ public class GuestSharedObject : MonoBehaviour
         if (interactObjects == null)
         {
             interactObjects = new List<BaseObj>();
+            carboardObjects = new List<BaseObj>();
             //インタラクトタグのオブジェクトでBaseObjコンポーネントを持っているものは配列に追加
             GameObject[] objects = GameObject.FindGameObjectsWithTag("Interact");
             for (int i = 0; i < objects.Length; ++i)
@@ -90,6 +94,9 @@ public class GuestSharedObject : MonoBehaviour
                 BaseObj baseObj = objects[i].GetComponent<BaseObj>();
                 if (!baseObj) continue;
                 interactObjects.Add(baseObj);
+                CardBoard cardBoard = objects[i].GetComponent<CardBoard>();
+                if (!cardBoard) return;
+                carboardObjects.Add(baseObj);
             }
         }
     }
@@ -124,5 +131,11 @@ public class GuestSharedObject : MonoBehaviour
     {
         Init();
         return interactObjects;
+    }
+
+    public List<BaseObj> GetCarboardObjects()
+    {
+        Init();
+        return carboardObjects;
     }
 }
