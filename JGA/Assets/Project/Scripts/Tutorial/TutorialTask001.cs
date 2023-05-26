@@ -12,7 +12,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TutorialTask002 : ITurorial
+public class TutorialTask001 : ITurorial
 {
     private float timer;    // UIをだしてから遷移するまでの時間
 

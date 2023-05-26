@@ -152,6 +152,7 @@ public class SoundManager : MonoBehaviour
 			{
 				SEs.Add(_SEs[i].clip);
 				audioSource.volume = _SEs[i].volume * Volume.fSE;
+                audioSource.loop = false;
 				audioSource.PlayOneShot(_SEs[i].clip);
 				return;
 			}
@@ -166,6 +167,7 @@ public class SoundManager : MonoBehaviour
 				BGM = BGMs[i].clip;
 				audioSource.clip = BGMs[i].clip;
 				audioSource.volume = BGMs[i].volume * Volume.fBGM;
+                audioSource.loop = true;
 				audioSource.Play();
 				return;
 			}
@@ -196,6 +198,7 @@ public class SoundManager : MonoBehaviour
 		BGM = _BGM.clip;
 		audioSource.clip = _BGM.clip;
 		audioSource.volume = _BGM.volume * Volume.fBGM;
+		audioSource.loop = true;
 		audioSource.Play();
 	}
 
@@ -221,6 +224,7 @@ public class SoundManager : MonoBehaviour
 		SoundData.Sound _SE = MySceneManager.Sound.SEDatas.list[((int)eSE)];
 		SEs.Add(_SE.clip);
 		audioSource.volume = _SE.volume * Volume.fSE;
+        audioSource.loop = false;
 		audioSource.PlayOneShot(_SE.clip);
 	}
 
@@ -243,6 +247,7 @@ public class SoundManager : MonoBehaviour
 			{
 				SEs.Add(_SEs[i].clip);
 				audioSource.volume = _SEs[i].volume * Volume.fSE;
+                audioSource.loop = false;
 				audioSource.PlayOneShot(_SEs[i].clip);
 				return;
 			}
@@ -257,6 +262,7 @@ public class SoundManager : MonoBehaviour
 				BGM = BGMs[i].clip;
 				audioSource.clip = BGMs[i].clip;
 				audioSource.volume = BGMs[i].volume * Volume.fBGM;
+                audioSource.loop = true;
 				audioSource.Play();
 				return;
 			}

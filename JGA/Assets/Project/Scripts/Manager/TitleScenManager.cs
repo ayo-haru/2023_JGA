@@ -137,7 +137,7 @@ public class TitleScenManager : BaseSceneManager {
         if (MySceneManager.GameData.isContinueGame) {   // セーブデータが存在してたか
             // セーブデータ有りなのでデータロード
             SaveManager.LoadAll();  // セーブデータロード
-            nextScene = MySceneManager.GameData.nowScene;   // 次のシーンを更新。シーンのロードをしてnowSceneには前回のシーン番号が入っているからnextにnowを代入
+            nextScene = MySceneManager.GameData.nowScene;   // 次のシーンを更新。セーブデータのロードをしてnowSceneには前回のシーン番号が入っているからnextにnowを代入
         } else {
             // セーブデータがなかったので「はじめから」と同じように振る舞う
             MySceneManager.GameData.nowScene = nextScene = (int)MySceneManager.SceneState.SCENE_GAME_001;
