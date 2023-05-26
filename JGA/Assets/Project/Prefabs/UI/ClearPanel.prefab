@@ -323,6 +323,8 @@ MonoBehaviour:
   buttonColor: {r: 0.8980392, g: 0.6745098, b: 0.8039216, a: 1}
   nextDayButton: {fileID: 8049274094457841820}
   backToTitleButton: {fileID: 8049274094711210143}
+  actionMove: {fileID: 3278397620106996205, guid: e7885aee0a6118d40af8785b5a7003f6,
+    type: 3}
 --- !u!1 &8049274094457841821
 GameObject:
   m_ObjectHideFlags: 0

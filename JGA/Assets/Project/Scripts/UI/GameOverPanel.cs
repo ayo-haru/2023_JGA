@@ -22,64 +22,75 @@ public class GameOverPanel : MonoBehaviour
 
     //ボタン
     [SerializeField, Header("RETRY")] private Button retryButton;
+    private Image retryButtonImage;
     [SerializeField, Header("BACK TO TITLE")] private Button backToTitleButton;
+    private Image backToTitleButtonImage;
 
-    public enum EClearPanelButton {RETRY,BACK_TO_TITLE,};
+    public enum EGameOverPanelButton {RETRY,BACK_TO_TITLE,};
 
     //マウス
     private Vector3 mousePos = Vector3.zero;
     private bool bMouse = true;
 
+    private bool bGamePad;
+
     //次のシーン
     private int nextScene = -1;
+#if UseMyContorller
+    private MyContorller gameInputs;            // 方向キー入力取得
+#else
+    [SerializeField] private InputActionReference actionMove;
+#endif
 
-	void Awake()
+    void Awake()
 	{
         audioSource = GetComponent<AudioSource>();
         nextScene = -1;
         bMouse = true;
         mousePos = Vector3.zero;
-	}
+
+#if UseMyController
+        // Input Actionインスタンス生成
+        gameInputs = new MyContorller();
+
+		// Actionイベント登録
+		gameInputs.Menu.Move.performed += OnMove;
+
+		// Input Actionを有効化
+		gameInputs.Enable();
+#else
+        actionMove.action.performed += OnMove;
+        actionMove.action.canceled += OnMove;
+        actionMove.ToInputAction().Enable();
+#endif
+        retryButtonImage = retryButton.GetComponent<Image>();
+        backToTitleButtonImage = backToTitleButton.GetComponent<Image>();
+        InitInput();
+    }
 
     private void OnEnable()
     {
         nextScene = -1;
-        //マウス、コントローラの値取得
-        Gamepad gamepad = Gamepad.current;
-        mousePos = Input.mousePosition;
-        if (gamepad != null)
-        {
-            bMouse = true;
-            ChangeInput();
-        }
         gameOver.fillAmount = 0.0f;
+        InitInput();
     }
 
     private void Update()
     {
 
         gameOver.fillAmount += Time.deltaTime;
-        //マウス、コントローラの値取得
-        Gamepad gamepad = Gamepad.current;
+        //マウスの状態を行進
         Vector3 oldMousePos = mousePos;
         mousePos = Input.mousePosition;
+        //ゲームパットの状態を更新
+        bGamePad = Gamepad.current != null;
 
-        //コントローラ入力モードで、コントローラがない場合はマウス操作に切り替え
-        if (gamepad == null)
-        {
-            if(!bMouse)ChangeInput();
-            return;
-        }
+        if (bMouse) return;
 
-        //マウス有効の状態でコントローラが押されたらコントローラ入力にする
-        //マウス無効でマウスが動いたらマウス入力を有効
-        if (bMouse)
+        //ゲームパッドがない又はマウスが動かされたらマウス入力に切り替え
+        if (!bGamePad || Vector3.Distance(oldMousePos, mousePos) >= 1.0f)
         {
-            if (gamepad.leftStick.ReadValue() != Vector2.zero || gamepad.aButton.wasReleasedThisFrame) ChangeInput();
-        }
-        else
-        {
-            if (Vector3.Distance(mousePos, oldMousePos) >= 1.0f) ChangeInput();
+            ChangeInput();
         }
     }
 
@@ -122,39 +133,38 @@ public class GameOverPanel : MonoBehaviour
         //マウス→コントローラ
         if (bMouse)
         {
-            //マウスカーソル非表示
-            Cursor.visible = false;
-
-            ColorBlock colors = retryButton.colors;
-            colors.highlightedColor = Color.white;
-            retryButton.colors = backToTitleButton.colors = colors;
-
             //デフォルトのボタンを選択
-            ControllerChangeSelect(EClearPanelButton.RETRY);
+            ControllerChangeSelect(EGameOverPanelButton.RETRY);
         }
         else//コントローラ→マウス
         {
-            //マウスカーソル表示
-            Cursor.visible = true;
-
-            ColorBlock colors = retryButton.colors;
-            colors.highlightedColor = buttonColor;
-            retryButton.colors = backToTitleButton.colors = colors;
             ControllerNoneSelect();
         }
-
+        //入力を切り替え
         bMouse = !bMouse;
+        //カーソルの表示切替
+        Cursor.visible = bMouse;
+        //ボタン画像のraycastTarget切り替え
+        retryButtonImage.raycastTarget = bMouse;
+        backToTitleButtonImage.raycastTarget = bMouse;
     }
 
-    public void ControllerChangeSelect(EClearPanelButton _select)
+    public void InitInput()
+    {
+        mousePos = Input.mousePosition;
+        bMouse = bGamePad = (Gamepad.current) != null;
+        ChangeInput();
+    }
+
+    public void ControllerChangeSelect(EGameOverPanelButton _select)
     {
         ControllerNoneSelect();
         switch (_select)
         {
-            case EClearPanelButton.RETRY:
+            case EGameOverPanelButton.RETRY:
                 retryButton.Select();
                 break;
-            case EClearPanelButton.BACK_TO_TITLE:
+            case EGameOverPanelButton.BACK_TO_TITLE:
                 backToTitleButton.Select();
                 break;
         }
@@ -169,5 +179,15 @@ public class GameOverPanel : MonoBehaviour
     public int GetNextScene()
     {
         return nextScene;
+    }
+
+    private void OnMove(InputAction.CallbackContext context)
+    {
+        if (!PauseManager.isPaused) return;
+        if (!bGamePad) bGamePad = true;
+        if (!bMouse) return;
+
+        //マウス→コントローラ
+        ChangeInput();
     }
 }

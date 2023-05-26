@@ -19,13 +19,11 @@ public class ClearPanel : MonoBehaviour
     private AudioSource audioSource;
 
     [SerializeField, Header("Clear")] private Image Clear;
-
-    //ボタンの色
-    [SerializeField, Header("ボタンの色")] private Color buttonColor;
-
     //ボタン
     [SerializeField, Header("NEXT DAY")] private Button nextDayButton;
+    private Image nextDayButtonImage;
     [SerializeField, Header("BACK TO TITLE")] private Button backToTitleButton;
+    private Image backToTitleButtonImage;
 
     public enum EClearPanelButton {NEXT_DAY,BACK_TO_TITLE,};
 
@@ -33,59 +31,69 @@ public class ClearPanel : MonoBehaviour
     private Vector3 mousePos = Vector3.zero;
     private bool bMouse = true;
 
+    private bool bGamePad;
+
     //次のシーン
     private int nextScene = -1;
-
-	void Awake()
+#if UseMyContorller
+    private MyContorller gameInputs;            // 方向キー入力取得
+#else
+    [SerializeField] private InputActionReference actionMove;
+#endif
+    void Awake()
 	{
         audioSource = GetComponent<AudioSource>();
         nextScene = -1;
         bMouse = true;
         mousePos = Vector3.zero;
-	}
+
+#if UseMyController
+        // Input Actionインスタンス生成
+        gameInputs = new MyContorller();
+
+		// Actionイベント登録
+		gameInputs.Menu.Move.performed += OnMove;
+
+		// Input Actionを有効化
+		gameInputs.Enable();
+#else
+        actionMove.action.performed += OnMove;
+        actionMove.action.canceled += OnMove;
+        actionMove.ToInputAction().Enable();
+#endif
+        nextDayButtonImage = nextDayButton.GetComponent<Image>();
+        backToTitleButtonImage = backToTitleButton.GetComponent<Image>();
+        InitInput();
+    }
 
     private void OnEnable()
     {
         nextScene = -1;
-        //マウス、コントローラの値取得
-        Gamepad gamepad = Gamepad.current;
-        mousePos = Input.mousePosition;
-        if (gamepad != null)
-        {
-            bMouse = true;
-            ChangeInput();
-        }
         Clear.fillAmount = 0.0f;
+        InitInput();
     }
 
     private void Update()
     {
-        Clear.fillAmount += Time.deltaTime;
-        //マウス、コントローラの値取得
-        Gamepad gamepad = Gamepad.current;
+        //Clearの画像を更新
+        if(Clear.fillAmount < 1.0f)Clear.fillAmount += Time.deltaTime;
+
+        //マウスの状態を更新
         Vector3 oldMousePos = mousePos;
         mousePos = Input.mousePosition;
+        //ゲームパットの状態を更新
+        bGamePad = Gamepad.current != null;
 
-        //コントローラ入力モードで、コントローラがない場合はマウス操作に切り替え
-        if (gamepad == null)
-        {
-            if(!bMouse)ChangeInput();
-            return;
-        }
+        if (bMouse) return;
 
-        //マウス有効の状態でコントローラが押されたらコントローラ入力にする
-        //マウス無効でマウスが動いたらマウス入力を有効
-        if (bMouse)
+        //ゲームパッドがない又はマウスが動かされたらマウス入力に切り替え
+        if(!bGamePad || Vector3.Distance(oldMousePos, mousePos) >= 1.0f)
         {
-            if (gamepad.leftStick.ReadValue() != Vector2.zero || gamepad.aButton.wasReleasedThisFrame) ChangeInput();
-        }
-        else
-        {
-            if (Vector3.Distance(mousePos, oldMousePos) >= 1.0f) ChangeInput();
+            ChangeInput();
         }
     }
 
-    #region クリア画面のボタン
+#region クリア画面のボタン
     /// <summary>
     /// NEXT DAYボタン
     /// </summary>
@@ -107,8 +115,8 @@ public class ClearPanel : MonoBehaviour
         SoundDecisionSE();
         nextScene = (int)MySceneManager.SceneState.SCENE_TITLE;
     }
-    #endregion
-    #region SE鳴らす関数
+#endregion
+#region SE鳴らす関数
     public void SoundSelectSE()
     {
         if (!audioSource) return;
@@ -120,7 +128,7 @@ public class ClearPanel : MonoBehaviour
         if (!audioSource) return;
         SoundManager.Play(audioSource, SoundManager.ESE.DECISION_001);
     }
-    #endregion
+#endregion
     /// <summary>
     /// 入力切替
     /// </summary>
@@ -129,28 +137,26 @@ public class ClearPanel : MonoBehaviour
         //マウス→コントローラ
         if (bMouse)
         {
-            //マウスカーソル非表示
-            Cursor.visible = false;
-
-            ColorBlock colors = nextDayButton.colors;
-            colors.highlightedColor = Color.white;
-            nextDayButton.colors = backToTitleButton.colors = colors;
-
             //デフォルトのボタンを選択
             ControllerChangeSelect(EClearPanelButton.NEXT_DAY);
-        }
-        else//コントローラ→マウス
+        }else//コントローラ→マウス
         {
-            //マウスカーソル表示
-            Cursor.visible = true;
-
-            ColorBlock colors = nextDayButton.colors;
-            colors.highlightedColor = buttonColor;
-            nextDayButton.colors = backToTitleButton.colors = colors;
             ControllerNoneSelect();
         }
-
+        //入力を切り替え
         bMouse = !bMouse;
+        //カーソルの表示切替
+        Cursor.visible = bMouse;
+        //ボタン画像のraycastTarget切り替え
+        nextDayButtonImage.raycastTarget = bMouse;
+        backToTitleButtonImage.raycastTarget = bMouse;
+    }
+
+    public void InitInput()
+    {
+        mousePos = Input.mousePosition;
+        bMouse = bGamePad = (Gamepad.current) != null;
+        ChangeInput();
     }
 
     public void ControllerChangeSelect(EClearPanelButton _select)
@@ -175,7 +181,16 @@ public class ClearPanel : MonoBehaviour
 
     public int GetNextScene()
     {
-        Debug.Log(nextScene);
         return nextScene;
+    }
+
+    private void OnMove(InputAction.CallbackContext context)
+    {
+        if (!PauseManager.isPaused) return;
+        if (!bGamePad) bGamePad = true;
+        if (!bMouse) return;
+
+        //マウス→コントローラ
+        ChangeInput();
     }
 }
