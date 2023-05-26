@@ -150,11 +150,6 @@ public class StageSceneManager : BaseSceneManager {
     /// </summary>
     void Start() {
         //----- イベント登録 -----
-        //// クリア
-        //isClear.Subscribe(_ => OnClear()).AddTo(this);
-        //// ゲームオーバー
-        //isGameOver.Subscribe(_ => OnGameOver()).AddTo(this);
-
         // クリア
         isClear.Subscribe(_ => { if (isClear.Value) OnClear();}).AddTo(this);
         // ゲームオーバー
@@ -363,6 +358,10 @@ public class StageSceneManager : BaseSceneManager {
 
         if (isClear.Value) {
             if (!isOnce) {   // 一度だけ処理
+                //　クリア画面取得
+                if (!clearPanel) clearPanel = GameObject.Find("ClearPanel");
+                if (clearPanel && !_ClearPanel) _ClearPanel = clearPanel.GetComponent<ClearPanel>();
+
                 int next = -1;
                 if (_ClearPanel) next = _ClearPanel.GetNextScene();
                 if (next != -1) {
@@ -379,6 +378,10 @@ public class StageSceneManager : BaseSceneManager {
         //----- 制限時間のゲームオーバー -----
         if (isGameOver.Value) {
             if (!isOnce) {
+                // ゲームオーバー画面取得
+                if (!gameOverPanel) gameOverPanel = GameObject.Find("GameOverPanel");
+                if (gameOverPanel && !_GameOverPanel) _GameOverPanel = gameOverPanel.GetComponent<GameOverPanel>();
+
                 int next = -1;
                 if (_GameOverPanel) next = _GameOverPanel.GetNextScene();
                 if (next != -1) {
@@ -575,10 +578,6 @@ public class StageSceneManager : BaseSceneManager {
     /// クリアになった瞬間にやる処理
     /// </summary>
     private void OnClear() {
-        //　クリア画面取得
-        if (!clearPanel) clearPanel = GameObject.Find("ClearPanel");
-        if (clearPanel && !_ClearPanel) _ClearPanel = clearPanel.GetComponent<ClearPanel>();
-
         // ポーズ
         if (!PauseManager.isPaused) {
             PauseManager.isPaused = true;
@@ -605,10 +604,6 @@ public class StageSceneManager : BaseSceneManager {
     /// ゲームオーバーになったらやる処理
     /// </summary>
     private void OnGameOver() {
-        // ゲームオーバー画面取得
-        if (!gameOverPanel) gameOverPanel = GameObject.Find("GameOverPanel");
-        if (gameOverPanel && !_GameOverPanel) _GameOverPanel = gameOverPanel.GetComponent<GameOverPanel>();
-
         // ポーズ
         if (!PauseManager.isPaused) {
             PauseManager.isPaused = true;

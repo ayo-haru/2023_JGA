@@ -175,6 +175,7 @@ public class ClearPanel : MonoBehaviour
 
     public int GetNextScene()
     {
+        Debug.Log(nextScene);
         return nextScene;
     }
 }
