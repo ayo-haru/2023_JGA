@@ -8,6 +8,7 @@
 // [Date]
 // 2023/05/07	スクリプト作成
 // 2023/05/11	最初と最後の丸消した
+// 2023/05/26	Hurryの生成を変更
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -18,7 +19,6 @@ using TMPro;
 public class TimerSliderUI : MonoBehaviour
 {
     [SerializeField] private Slider timerSlider;
-
     //プレイ時間
     [SerializeField, Range(1, 10)] private int playMinutes;
     //ロス時間
@@ -27,19 +27,11 @@ public class TimerSliderUI : MonoBehaviour
     private bool bStart = false;
     //SE用フラグ
     private bool bSound = true;
-    [SerializeField,Range(1,60)] private int soundSeconds = 10;
-    //時間計測用
-    //private float fTimer = 0.0f;
-
+    [SerializeField,Range(1,60),Header("残り何秒で音を鳴らすか")] private int soundSeconds = 10;
     [SerializeField] private AudioSource audioSource;
-
     //HURRY！！
     [SerializeField] private GameObject hurryUI;
-    [SerializeField] private float hurryUIPosY = 200.0f;
 
-    //TimerPoint
-    [SerializeField] private GameObject timerPointPrefab;       //プレハブ
-    [SerializeField] private Transform timerPointsPearent;      //親オブジェクト
     public struct TimerPointObject
     {
         public float percent;
@@ -120,10 +112,8 @@ public class TimerSliderUI : MonoBehaviour
         SoundManager.Play(audioSource, SoundManager.ESE.COUNTDOWN_001);
         bSound = false;
 
-        //HURRY!!を生成
-        GameObject ui = Instantiate(hurryUI);
-        ui.transform.SetParent(gameObject.transform.parent);
-        ui.transform.localPosition = new Vector3(0.0f, transform.localPosition.y - hurryUIPosY, 0.0f);
+        //HURRY!!をを有効化
+        hurryUI.SetActive(true);
     }
     public bool IsFinish()
     {
