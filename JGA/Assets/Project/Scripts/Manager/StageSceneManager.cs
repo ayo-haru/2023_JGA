@@ -151,9 +151,14 @@ public class StageSceneManager : BaseSceneManager {
     void Start() {
         //----- イベント登録 -----
         //// クリア
-        //isClear.Subscribe(value =>  OnClear()).AddTo(this);
+        //isClear.Subscribe(_ => OnClear()).AddTo(this);
         //// ゲームオーバー
-        //isGameOver.Subscribe(value => OnGameOver()).AddTo(this);
+        //isGameOver.Subscribe(_ => OnGameOver()).AddTo(this);
+
+        // クリア
+        isClear.Subscribe(_ => { if (isClear.Value) OnClear();}).AddTo(this);
+        // ゲームオーバー
+        isGameOver.Subscribe(_ => { if (isGameOver.Value) OnGameOver(); }).AddTo(this);
 
         //----- 変数初期化 -----
         // 客の生成する親オブジェクトの取得
@@ -572,9 +577,6 @@ public class StageSceneManager : BaseSceneManager {
     /// クリアになった瞬間にやる処理
     /// </summary>
     private void OnClear() {
-        // 音の再生
-        SoundManager.Play(asList[2], SoundManager.EBGM.GAMECLEAR);
-
         //　クリア画面取得
         if (!clearPanel) clearPanel = GameObject.Find("ClearPanel");
         if (clearPanel && !_ClearPanel) _ClearPanel = clearPanel.GetComponent<ClearPanel>();
@@ -585,6 +587,10 @@ public class StageSceneManager : BaseSceneManager {
             PauseManager.NoMenu = true;
             PauseManager.Pause();
         }
+
+        //----- 音の再生 -----
+        // ポーズ後にやらないとポーズに消される
+        SoundManager.Play(asList[2], SoundManager.EBGM.GAMECLEAR);
 
         // セーブ
         SaveManager.SaveGuestCnt(0);
@@ -601,9 +607,6 @@ public class StageSceneManager : BaseSceneManager {
     /// ゲームオーバーになったらやる処理
     /// </summary>
     private void OnGameOver() {
-        // 音の再生
-        SoundManager.Play(asList[2], SoundManager.EBGM.GAMEOVER);
-
         // ゲームオーバー画面取得
         if (!gameOverPanel) gameOverPanel = GameObject.Find("GameOverPanel");
         if (gameOverPanel && !_GameOverPanel) _GameOverPanel = gameOverPanel.GetComponent<GameOverPanel>();
@@ -614,5 +617,13 @@ public class StageSceneManager : BaseSceneManager {
             PauseManager.NoMenu = true;
             PauseManager.Pause();
         }
+
+        //----- 音の再生 -----
+        // ポーズ後にやらないとポーズに消される
+        SoundManager.Play(asList[2], SoundManager.EBGM.GAMEOVER);
+
+        //----- セーブ -----
+        // 初期値の値で保存。シーン番号は現在のシーン。
+        SaveManager.SaveInitDataAll();
     }
 }
