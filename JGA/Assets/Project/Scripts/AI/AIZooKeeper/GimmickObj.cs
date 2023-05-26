@@ -14,7 +14,10 @@ using UnityEngine;
 
 public class GimmickObj : MonoBehaviour
 {
+    [Header("--- 飼育員で使うギミックを入れてください ---")]
     public List<GameObject> gimmickList;    // ギミックリスト
+
+    [Header("--- 何も入れなくて大丈夫 ---")]
     public List<Vector3> resetPos;          // ギミック初期位置
     public List<Quaternion> resetRot;       // ギミック初期回転
     public List<bool> bReset;               // 元の位置にあるか
