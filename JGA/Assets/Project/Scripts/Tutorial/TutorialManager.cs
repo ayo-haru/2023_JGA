@@ -172,30 +172,30 @@ public class TutorialManager : MonoBehaviour
             case Move01Tutorial:
                 break;
             case Move02Tutorial:
-                task.SetTaskObj(player);
+                task.AddNeedObj(player);
                 break;
             case Hit01Tutorial:
-                currentTask.SetTaskObj(player);
+                currentTask.AddNeedObj(player);
                 break;
             case Hit02Tutorial:
                 break;
             case Appeal01Tutorial:
                 break;
             case Appeal02Tutorial:
-                currentTask.SetTaskObj(player);
+                currentTask.AddNeedObj(player);
                 break;
             case Follow01Tutorial:
-                currentTask.SetTaskObj(guest);
+                currentTask.AddNeedObj(guest);
                 break;
             case Follow02Tutorial:
                 break;
             case Follow03Tutorial:
                 break;
             case Hold01Tutorial:
-                currentTask.SetTaskObj(player);
+                currentTask.AddNeedObj(player);
                 break;
             case Hold02Tutorial:
-                currentTask.SetTaskObj(player);
+                currentTask.AddNeedObj(player);
                 break;
             case Hold03Tutorial:
                 break;
