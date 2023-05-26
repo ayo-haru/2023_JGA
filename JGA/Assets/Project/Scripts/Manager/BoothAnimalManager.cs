@@ -51,7 +51,7 @@ public class BoothAnimalManager : SingletonMonoBehaviour<BoothAnimalManager>
 
 
     //アニマルオブジェクトを入れる用
-    private GameObject animalObject;
+    public GameObject animalObject;
 
     /// <summary>
     /// 最初のフレーム更新の前に呼び出される

@@ -63,6 +63,7 @@ public class MainCamera : MonoBehaviour
     GameObject[] zooKeeperObj;
 
     private int crearGuest;
+    private int guestCheck;
 
     //カメラの範囲取得用
     //映っているものの範囲
@@ -168,6 +169,8 @@ public class MainCamera : MonoBehaviour
 	/// </summary>
 	void Start() {
 
+        guestCheck = MySceneManager.GameData.guestData.dataList.Length;
+
         crearGuest = MySceneManager.GameData.guestCnt;
         //客の情報を格納する
         guestObj = GameObject.FindGameObjectsWithTag("Guest");
@@ -207,22 +210,23 @@ public class MainCamera : MonoBehaviour
 	{
         //一定時間の計算
         scriptStop += Time.deltaTime;
-        
+
         if (scriptStop >= 1.0f)
         {
-            
-            if(crearGuest != MySceneManager.GameData.guestCnt)
+            if (crearGuest != MySceneManager.GameData.guestCnt)
             {
-                guestObj = GameObject.FindGameObjectsWithTag("Guest");
-                crearGuest = MySceneManager.GameData.guestCnt;
-            }
-            
-            if (guestObj.Length < guestObj.Length + MySceneManager.GameData.randomGuestCnt)
-            {
-                //客の情報を格納する
+                
                 guestObj = GameObject.FindGameObjectsWithTag("Guest");
                 //客の範囲取得
                 boundGuest = new Bounds[guestObj.Length];
+                crearGuest = MySceneManager.GameData.guestCnt;
+            }
+            if (guestCheck != MySceneManager.GameData.guestData.dataList.Length + MySceneManager.GameData.randomGuestCnt)
+            {
+                guestObj = GameObject.FindGameObjectsWithTag("Guest");
+                //客の範囲取得
+                boundGuest = new Bounds[guestObj.Length];
+                guestCheck = MySceneManager.GameData.guestData.dataList.Length + MySceneManager.GameData.randomGuestCnt;
             }
             GuestCount();
             if (currentGuestValue >= guestValue)
@@ -247,8 +251,6 @@ public class MainCamera : MonoBehaviour
 	/// </summary>
 	void Update()
 	{
-        
-
         if (pauseFlg && !MySceneManager.GameData.isCatchPenguin)
         {
             return;
