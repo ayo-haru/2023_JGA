@@ -9,10 +9,9 @@
 // 2023/03/11	スクリプト作成
 //=============================================================================
 using System;
-using System.Diagnostics;
 using UniRx;
-using UnityEngine.InputSystem;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PauseManager : SingletonMonoBehaviour<PauseManager>
 {
@@ -27,26 +26,23 @@ public class PauseManager : SingletonMonoBehaviour<PauseManager>
 	private static bool _noMenu = false;
 	public static bool NoMenu { get { return _noMenu; } set { _noMenu = value; } }
 
-	private MyContorller gameInputs;            // 方向キー入力取得
+	[SerializeField] private InputActionReference actionPause;
 
 	public static IObservable<string> OnPaused { get { return pauseSubject; } }
 	public static IObservable<string> OnResumed { get { return resumeSubject; } }
 
 	private void Start()
 	{
-		// Input Actionインスタンス生成
-		gameInputs = new MyContorller();
-
 		// Actionイベント登録
-		gameInputs.Menu.Pause.performed += Pause;
+		actionPause.action.performed += Pause;
 
 		// Input Actionを有効化
-		gameInputs.Enable();
+		actionPause.ToInputAction().Enable();
 	}
 
 	private void OnDisable() {
 		// Input Actionを無効化
-		//gameInputs.Disable();
+		actionPause.ToInputAction().Disable();
 	}
 
 	private void Pause(InputAction.CallbackContext context)

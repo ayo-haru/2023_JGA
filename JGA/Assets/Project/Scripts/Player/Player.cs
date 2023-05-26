@@ -132,7 +132,6 @@ public class Player : MonoBehaviour
 		//--- NULLリファレンス回避
 		if (transform == null) transform = this.gameObject.transform;
 		if (rb == null) rb = GetComponent<Rigidbody>();
-		Debug.Log($"rb:{rb}");
 		if (audioSource == null) audioSource = GetComponent<AudioSource>();
 		if (anim == null) anim = GetComponent<Animator>();
 
@@ -244,18 +243,28 @@ public class Player : MonoBehaviour
 
 	private void OnDestroy()
 	{
+		actionMove.action.performed -= OnMove;
+		actionMove.action.canceled -= OnMove;
+		actionAppeal.action.performed -= OnAppeal;
+		actionAppeal.action.canceled -= OnAppeal;
+		actionHit.action.performed -= OnHit;
+		actionHold.action.performed -= OnHold;
+		actionHold.action.canceled -= OnHold;
+		actionRun.action.performed -= OnRun;
+		actionRun.action.canceled -= OnRun;
+
 		actionMove.ToInputAction().Disable();
 		actionAppeal.ToInputAction().Disable();
 		actionHit.ToInputAction().Disable();
 		actionHold.ToInputAction().Disable();
 		actionRun.ToInputAction().Disable();
+
 		actionMove = null;
 		actionAppeal = null;
 		actionHit = null;
 		actionHold = null;
 		actionRun = null;
 		transform = null;
-		Debug.Log($"rb = null");
 		rb = null;
 		audioSource = null;
 		anim = null;
