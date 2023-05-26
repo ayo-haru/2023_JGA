@@ -12,6 +12,7 @@
 // 2023/04/05	(小楠)オプション画面追加
 // 2023/04/06	(小楠)オプションのスライド移動追加
 // 2023/04/08	(小楠)オプションの処理全部消した
+// 2023/05/26	(小楠)はじめからと続きからを追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -22,7 +23,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public class TitleScenManager : BaseSceneManager {
-    [SerializeField, Header("ゲームを始める")] private Selectable startButton;
+    [SerializeField, Header("はじめから")] private Selectable startButton;
+    [SerializeField, Header("つづきから")] private Selectable continueButton;
     [SerializeField, Header("オプション")] private Selectable optionButton;
     [SerializeField, Header("ゲームをやめる")] private Selectable exitButton;
 
@@ -34,7 +36,7 @@ public class TitleScenManager : BaseSceneManager {
     private Vector3 mousePos;
 
     //タイトル画面のボタン
-    private enum ETitleSelect { TITLESELECT_START, TITLESELECT_OPTION, TITLESELECT_EXIT, MAX_TITLESELECT };
+    private enum ETitleSelect { TITLESELECT_START, TITLESELECT_CONTINUE,TITLESELECT_OPTION, TITLESELECT_EXIT, MAX_TITLESELECT };
 
     //次のシーン
     private int nextScene;
@@ -124,6 +126,17 @@ public class TitleScenManager : BaseSceneManager {
         //コントローラ入力の場合マウスカーソルが非表示のままになってしまうので表示する
         if (!bMouse) Cursor.visible = true;
     }
+
+    public void ContinueButton()
+    {
+        SoundSEDecision();
+        MySceneManager.GameData.oldScene = (int)MySceneManager.SceneState.SCENE_TITLE;  // 今のシーンをひとつ前のシーンとして保存
+        MySceneManager.GameData.nowScene = nextScene;
+        SceneChange(nextScene);
+        //コントローラ入力の場合マウスカーソルが非表示のままになってしまうので表示する
+        if (!bMouse) Cursor.visible = true;
+    }
+
     public void OptionButton() {
         SoundSEDecision();
         ControllerNoneSelect();
@@ -162,6 +175,9 @@ public class TitleScenManager : BaseSceneManager {
         switch (_select) {
             case ETitleSelect.TITLESELECT_START:
                 startButton.Select();
+                break;
+            case ETitleSelect.TITLESELECT_CONTINUE:
+                continueButton.Select();
                 break;
             case ETitleSelect.TITLESELECT_OPTION:
                 optionButton.Select();
