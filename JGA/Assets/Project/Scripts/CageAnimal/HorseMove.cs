@@ -18,7 +18,13 @@ public class HorseMove : MonoBehaviour
     [SerializeField] private Animator animator;
     //private AudioSource audioSource;
     private Rigidbody rb;
+
+    [Header("--- 馬ブース内のバスケットに")]
+    [Header("『HourseBasKet.cs』を追加してください ---\n\n")]
+
+    [Header("--- rootを入れてください ---")]
     [SerializeField] private List<Transform> rootPos;
+
     public float horseSpeed;    // スピード
     public float stopTime;      // その場にとどまる時間
     private float nowTime = 0.0f;   // 経過時間
@@ -27,6 +33,8 @@ public class HorseMove : MonoBehaviour
     private bool bMove = true;
     private bool bEat = false;
     private GameObject basKet;
+
+    [Header("--- basketPosを入れてください ---")]
     [SerializeField] private Transform basketPos;
     private int nCarrot = -1;
 
@@ -74,8 +82,6 @@ public class HorseMove : MonoBehaviour
         }
 
         if (rootPos.Count <= 0) return;
-
-
         Dir();
         if (bMove)
         {
