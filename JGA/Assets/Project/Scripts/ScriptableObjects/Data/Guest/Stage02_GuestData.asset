@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00b025195ba3c784c9fb5da6cd280e9f, type: 3}
+  m_Name: Stage02_GuestData
+  m_EditorClassIdentifier: 
+  dataList:
+  - name: OGuest001
+    roots: 06000000
+    rootTransforms:
+    - {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    entranceTF: {fileID: 0}
+    isRandom: 0
+    speed: 3
+    followSpeed: 0.7
+    inBoothSpeed: 0.5
+    rayLength: 10
+    viewAngle: 60
+    reactionArea: 20
+    soundAreaOffset: 10
+    arrivalPenguinArea: 30
+    distance: 4
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 0
+    cageDistance: 10

@@ -46,7 +46,7 @@ public class PauseManager : SingletonMonoBehaviour<PauseManager>
 
 	private void OnDisable() {
 		// Input Actionを無効化
-		gameInputs.Disable();
+		//gameInputs.Disable();
 	}
 
 	private void Pause(InputAction.CallbackContext context)

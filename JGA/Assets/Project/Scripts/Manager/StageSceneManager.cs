@@ -419,7 +419,7 @@ public class StageSceneManager : BaseSceneManager {
     /// 固定客生成
     /// </summary>
     private void SpawnFixGuest() {
-        GuestData.Data[] _guestList = MySceneManager.GameData.guestData.dataList;   // 設定された人数分生成する
+        GuestData.Data[] _guestList = MySceneManager.GameData.guestData[MySceneManager.GameData.nowScene-1].dataList;   // 設定された人数分生成する
         for (int i = 0; i < _guestList.Length; i++) {
             // 指定された列挙定数から目的地のブースの実際のpositionを設定
             _guestList[i].rootTransforms = new List<Transform>();
@@ -513,7 +513,7 @@ public class StageSceneManager : BaseSceneManager {
     /// 飼育員生成
     /// </summary>
     private void SpawnZookeeper() {
-        ZooKeeperData.Data[] _zooKeeperList = MySceneManager.GameData.zooKeeperData.list;    // 設定された人数分を生成する
+        ZooKeeperData.Data[] _zooKeeperList = MySceneManager.GameData.zooKeeperData[MySceneManager.GameData.nowScene-1].list;    // 設定された人数分を生成する
         GameObject zooKeeperObj;
         zooKeeperObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "ZooKeeper.prefab");   // 生成するオブジェクト
         GameObject parent = GameObject.Find("ZooKeepers");  //  生成するときの親にするオブジェクト

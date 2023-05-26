@@ -24,8 +24,8 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 		public static PrefabContainer gimmickDatas;
 
 		//---データの登録
-		public static ZooKeeperData zooKeeperData;
-		public static GuestData guestData;
+		public static ZooKeeperData[] zooKeeperData;
+		public static GuestData[] guestData;
 
 		//---フラグ
 		public static bool isCatchPenguin;
@@ -143,17 +143,16 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 		Effect.effectDatas = AddressableLoader<EffectData>.Load("EffectData");
 		//---音量
 		Volume.GameVolumeDatas = AddressableLoader<GameVolume>.Load("GameVolume");
-		//---データ
-		GameData.zooKeeperData = AddressableLoader<ZooKeeperData>.Load("ZooKeeperData");
-		GameData.guestData = AddressableLoader<GuestData>.Load("GuestData");
+        //---データ
+        GameData.zooKeeperData = new ZooKeeperData[2];
+        GameData.zooKeeperData[(int)SceneState.SCENE_GAME_001-1] = AddressableLoader<ZooKeeperData>.Load("Stage01_ZooKeeperData");
+		GameData.zooKeeperData[(int)SceneState.SCENE_GAME_002-1] = AddressableLoader<ZooKeeperData>.Load("Stage02_ZooKeeperData");
+		GameData.guestData = new GuestData[2];
+		GameData.guestData[(int)SceneState.SCENE_GAME_001-1] = AddressableLoader<GuestData>.Load("Stage01_GuestData");
+		GameData.guestData[(int)SceneState.SCENE_GAME_002-1] = AddressableLoader<GuestData>.Load("Stage02_GuestData");
 
 		//----- 変数初期化 -----
 		GameData.isCatchPenguin = false;
-	}
-
-	private void Start()
-	{
-
 	}
 
 	/// <summary>

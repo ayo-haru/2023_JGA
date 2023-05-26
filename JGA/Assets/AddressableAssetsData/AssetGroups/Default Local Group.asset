@@ -38,7 +38,7 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
   - m_GUID: b8d0f7bcc608b334f8b85951ed881cba
-    m_Address: ZooKeeperData
+    m_Address: Stage01_ZooKeeperData
     m_ReadOnly: 0
     m_SerializedLabels: []
   - m_GUID: 02f8110a0bd398647a227025922fe6c6
@@ -50,7 +50,7 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
   - m_GUID: edc206c177d6d744f9e004d94759171d
-    m_Address: GuestData
+    m_Address: Stage01_GuestData
     m_ReadOnly: 0
     m_SerializedLabels: []
   - m_GUID: 555fa97676cd0504ab1ae4997208a6d2
@@ -59,6 +59,14 @@ MonoBehaviour:
     m_SerializedLabels: []
   - m_GUID: 0fbd2b002307c90489bf4051d296a3f5
     m_Address: GameVolume
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 56429ea3a481e5744bbf1be044a124ba
+    m_Address: Stage02_GuestData
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: fd99801c85d10534094f14d347f85794
+    m_Address: Stage02_ZooKeeperData
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0
