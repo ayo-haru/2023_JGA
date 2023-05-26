@@ -40,7 +40,17 @@ public class PauseManager : SingletonMonoBehaviour<PauseManager>
 		actionPause.ToInputAction().Enable();
 	}
 
-	private void OnDisable() {
+	private void OnDisable()
+	{
+		// Input Actionを無効化
+		actionPause.ToInputAction().Disable();
+	}
+
+	private void OnDestroy()
+	{
+		// Actionイベント消去
+		actionPause.action.performed -= Pause;
+
 		// Input Actionを無効化
 		actionPause.ToInputAction().Disable();
 	}

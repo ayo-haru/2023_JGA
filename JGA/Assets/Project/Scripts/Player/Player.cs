@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UniRx;
 using Unity.VisualScripting;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -96,7 +97,9 @@ public class Player : MonoBehaviour
 	[SerializeField] private HingeJoint InteractJoint;          // 掴んでいるオブジェクト：HingeJoint
 	[SerializeField] private Vector3 InteractJointAnchor;    // 掴んでいるオブジェクト：InteractJoint.anchor
 
+	// HashSet型 ... 重複登録ができない仕様になっている
 	[SerializeField] private HashSet<Collider> WithinRange = new HashSet<Collider>();  // インタラクト範囲内にあるオブジェクトリスト
+	public List<string> InteractObjects = new List<string>();
 
 	[SerializeField] private InputActionReference actionMove;
 	[SerializeField] private InputActionReference actionAppeal;
@@ -269,7 +272,16 @@ public class Player : MonoBehaviour
 			ReStart();
 			return;
 		}
-		
+
+		if (InteractObjects.Count != WithinRange.Count)
+		{
+			InteractObjects.Clear();
+			foreach (Collider c in WithinRange)
+			{
+				InteractObjects.Add(c.name);
+			}
+		}
+
 		// インタラクトして１フレーム経過後
 		if (_IsHit)
 		{
