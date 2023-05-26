@@ -4911,6 +4911,7 @@ GameObject:
   - component: {fileID: 7220643486012164641}
   - component: {fileID: 6178601032253253241}
   - component: {fileID: 6770283504706706794}
+  - component: {fileID: 2631124228562241058}
   m_Layer: 0
   m_Name: hunsui
   m_TagString: Untagged
@@ -9835,7 +9836,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
-  m_Convex: 1
+  m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -4377122689584563614, guid: 5cd6b288353cb774baaa6dd6fbb309fd, type: 3}
 --- !u!82 &6770283504706706794
@@ -9934,6 +9935,22 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!208 &2631124228562241058
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2172184187617821823}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 5.97, y: 0.05, z: 5.97}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: -2.49, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &2172184187717738440
 GameObject:
   m_ObjectHideFlags: 0
