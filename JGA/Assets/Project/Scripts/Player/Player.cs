@@ -27,7 +27,7 @@ public class Player : MonoBehaviour
 	new private Transform transform;
 	private Rigidbody rb;
 	private AudioSource audioSource;
-	private Animator anim;           // Animatorへの参照
+	private Animator anim;
 
 	// Animatorパラメータ
 	private int HashMove = 0;
@@ -48,9 +48,9 @@ public class Player : MonoBehaviour
 	private float appealForce;                              // アピール時速度
 	private float _maxAppealSpeed;                          // アピール時最高速度
 
-	public float MaxMoveSpeed { get { return _maxMoveSpeed; } }
-	public float MaxRunSpeed { get { return _maxRunSpeed; } }
-	public float MaxAppealSpeed { get { return _maxAppealSpeed; } }
+	public float MaxMoveSpeed	{ get { return _maxMoveSpeed; } }
+	public float MaxRunSpeed	{ get { return _maxRunSpeed; } }
+	public float MaxAppealSpeed	{ get { return _maxAppealSpeed; } }
 
 	[SerializeField] private float joyRunZone = 0.8f;   // ジョイスティックで走り始めるゾーン
 
@@ -70,15 +70,15 @@ public class Player : MonoBehaviour
 	[SerializeField] private bool _IsRandom;    // 待機中のランダムな挙動
 	[SerializeField] private bool _IsMegaphone; // メガホン用フラグ
 
-	public bool IsHit { get { return _IsHit; } set { _IsHit = value; } }
-	public bool IsHitMotion { get { return _IsHitMotion; } }
-	public bool IsHold { get { return _IsHold; } }
-	public bool IsDrag { get { return _IsDrag; } }
-	public bool IsMove { get { return _IsMove; } }
-	public bool IsRun { get { return _IsRun; } }
-	public bool IsAppeal { get { return _IsAppeal; } }
-	public bool IsRandom { get { return _IsRandom; } }
-	public bool IsMegaphone { get { return _IsMegaphone; } }
+	public bool IsHit			{ get { return _IsHit; } set { _IsHit = value; } }
+	public bool IsHitMotion		{ get { return _IsHitMotion; } }
+	public bool IsHold			{ get { return _IsHold; } }
+	public bool IsDrag			{ get { return _IsDrag; } }
+	public bool IsMove			{ get { return _IsMove; } }
+	public bool IsRun			{ get { return _IsRun; } }
+	public bool IsAppeal		{ get { return _IsAppeal; } }
+	public bool IsRandom		{ get { return _IsRandom; } }
+	public bool IsMegaphone		{ get { return _IsMegaphone; } }
 
 	private bool bHitMotion;                    // はたくモーション中は他のモーションさせないフラグ
 
@@ -98,21 +98,17 @@ public class Player : MonoBehaviour
 
 	[SerializeField] private HashSet<Collider> WithinRange = new HashSet<Collider>();  // インタラクト範囲内にあるオブジェクトリスト
 
-#if UseMyContorller
-	private MyContorller gameInputs;	// 方向キー入力取得
-#else
 	[SerializeField] private InputActionReference actionMove;
 	[SerializeField] private InputActionReference actionAppeal;
 	[SerializeField] private InputActionReference actionHit;
 	[SerializeField] private InputActionReference actionHold;
 	[SerializeField] private InputActionReference actionRun; //PC only
-#endif
 
-	private KeyConfigPanel keyConfigPanel;                 // キーコンフィグ変更検知用
-	private Vector2 moveInputValue;                 // 移動方向
-	private Vector3 pauseVelocity;                  // ポーズ時の加速度保存
-	private Vector3 pauseAngularVelocity;           // ポーズ時の加速度保存
-	[SerializeField] private Transform respawnZone;                 // リスポーン位置プレハブ設定用
+	private KeyConfigPanel keyConfigPanel;					// キーコンフィグ変更検知用
+	private Vector2 moveInputValue;							// 移動方向
+	private Vector3 pauseVelocity;							// ポーズ時の加速度保存
+	private Vector3 pauseAngularVelocity;					// ポーズ時の加速度保存
+	[SerializeField] private Transform respawnZone;			// リスポーン位置プレハブ設定用
 
 	//----------------------------------------------------------------------------------------
 
@@ -177,24 +173,6 @@ public class Player : MonoBehaviour
 
 
 		//--- Input Actionイベント登録
-#if UseMyContorller
-		// インスタンス生成
-		gameInputs = new MyContorller();
-
-		// Actionイベント登録
-		gameInputs.Player.Move.performed += OnMove;
-		gameInputs.Player.Move.canceled += OnMove;
-		gameInputs.Player.Appeal.performed += OnAppeal;
-		gameInputs.Player.Appeal.canceled += OnAppeal;
-		gameInputs.Player.Hit.performed += OnHit;
-		gameInputs.Player.Hold.performed += OnHold;
-		gameInputs.Player.Hold.canceled += OnHold;
-		gameInputs.Player.Run.performed += OnRun;
-		gameInputs.Player.Run.canceled += OnRun;
-
-		// Input Actionを有効化
-		gameInputs.Enable();
-#else
 		actionMove.action.performed += OnMove;
 		actionMove.action.canceled += OnMove;
 		actionAppeal.action.performed += OnAppeal;
@@ -211,7 +189,6 @@ public class Player : MonoBehaviour
 		actionHit.ToInputAction().Enable();
 		actionHold.ToInputAction().Enable();
 		actionRun.ToInputAction().Enable();
-#endif
 
 		if (keyConfigPanel == null)
 		{
@@ -230,15 +207,11 @@ public class Player : MonoBehaviour
 	private void OnDisable()
 	{
 		// Input Actionを無効化
-#if UseMyContorller
-		gameInputs.Disable();
-#else
 		actionMove.ToInputAction().Disable();
 		actionAppeal.ToInputAction().Disable();
 		actionHit.ToInputAction().Disable();
 		actionHold.ToInputAction().Disable();
 		actionRun.ToInputAction().Disable();
-#endif
 	}
 
 	private void OnDestroy()
@@ -273,7 +246,7 @@ public class Player : MonoBehaviour
 	private void FixedUpdate()
 	{
 		// はたき中でないとき移動
-		if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
+		if (anim.GetCurrentAnimatorStateInfo(0).shortNameHash != HashHit)
 			Move();
 
 		if (_IsHold && _IsDrag)
@@ -364,7 +337,9 @@ public class Player : MonoBehaviour
 		else
 		{
 			AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
-			if (stateInfo.IsName("Hit"))
+
+			// はたくモーション中でないか
+			if (stateInfo.shortNameHash != HashHit)
 			{
 				// 再生終了時に他モーション再生を許可
 				if (stateInfo.normalizedTime >= 1.0f)
@@ -406,9 +381,8 @@ public class Player : MonoBehaviour
 		// ランダム挙動
 		if (_IsRandom)
 		{
-			AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
 			// ランダムな挙動の再生が終了した時
-			if (stateInfo.normalizedTime >= 1.0f)
+			if (anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
 			{
 				_IsRandom = false;
 				anim.SetBool(HashRandom, false);
@@ -467,15 +441,11 @@ public class Player : MonoBehaviour
 	private void Pause()
 	{
 		// Input Actionを無効化
-#if UseMyContorller
-		gameInputs.Disable();
-#else
 		actionMove.ToInputAction().Disable();
 		actionAppeal.ToInputAction().Disable();
 		actionHit.ToInputAction().Disable();
 		actionHold.ToInputAction().Disable();
 		actionRun.ToInputAction().Disable();
-#endif
 
 		// 物理停止し値を保存しておく
 		pauseVelocity = rb.velocity;
@@ -498,15 +468,11 @@ public class Player : MonoBehaviour
 	private void Resumed()
 	{
 		// Input Actionを有効化
-#if UseMyContorller
-		gameInputs.Enable();
-#else
 		actionMove.ToInputAction().Enable();
 		actionAppeal.ToInputAction().Enable();
 		actionHit.ToInputAction().Enable();
 		actionHold.ToInputAction().Enable();
 		actionRun.ToInputAction().Enable();
-#endif
 
 		// 物理を再開させポーズ前の値を代入
 		rb.velocity = pauseVelocity;
@@ -549,8 +515,10 @@ public class Player : MonoBehaviour
 		if (PauseManager.isPaused)
 			return;
 
+		// 前フレームと方向が違う時
 		if (moveInputValue != context.ReadValue<Vector2>())
 		{
+			// 方向を更新
 			moveInputValue = context.ReadValue<Vector2>();
 			if (!bGamePad)
 			{
@@ -558,8 +526,11 @@ public class Player : MonoBehaviour
 				rb.angularVelocity = rb.angularVelocity / 2;
 			}
 		}
+
+		// 移動していない場合
 		if (context.phase == InputActionPhase.Canceled)
 		{
+			// 慣性をなくす
 			moveInputValue = Vector2.zero;
 			rb.velocity = Vector3.zero;
 			rb.angularVelocity = Vector3.zero;
@@ -807,9 +778,6 @@ public class Player : MonoBehaviour
 				}
 
 				// オブジェクトをくちばし辺りに移動
-				//var pos = holdPos.transform.localPosition - point.localPosition;
-				//InteractCollision.transform.localPosition = pos;
-				//InteractCollision.transform.parent = transform;
 				InteractCollision.transform.parent = holdPos.transform;
 				InteractCollision.transform.localPosition = Vector3.zero;
 				InteractCollision.transform.rotation = transform.rotation;
@@ -900,12 +868,9 @@ public class Player : MonoBehaviour
 		if (bDrag)
 		{
 			InteractCollision.transform.parent = transform;
-			//InteractCollision.transform.parent = holdPos.transform;
 
 			if (InteractCollision.name.Contains("Corn"))
-			{
 				InteractCollision.GetComponent<Rigidbody>().mass = 1.0f;
-			}
 
 			//引きずり開始
 			if (!InteractCollision.TryGetComponent(out Rigidbody rigidbody)) return;
@@ -913,7 +878,6 @@ public class Player : MonoBehaviour
 			InteractJoint = InteractCollision.GetComponent<HingeJoint>();
 			if (!InteractJoint) InteractJoint = rigidbody.AddComponent<HingeJoint>();
 			InteractJoint.connectedBody = rb;
-			//InteractJoint.anchor = InteractJoint.transform.InverseTransformPoint(transform.TransformPoint(holdPos.transform.localPosition));//HoldPosを設定
 			InteractJoint.anchor = transform.position - InteractJoint.transform.position;
 			InteractJoint.axis = Vector3.up;
 			InteractJoint.useLimits = true;
