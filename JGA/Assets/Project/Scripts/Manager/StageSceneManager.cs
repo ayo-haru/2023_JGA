@@ -164,8 +164,6 @@ public class StageSceneManager : BaseSceneManager {
         // 客の生成する親オブジェクトの取得
         guestParent = GameObject.Find("Guests");
 
-
-
         // 生成する客のプレハブ
         guestObj = new GameObject[3];
         guestObj[0] = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Guest001.prefab");
