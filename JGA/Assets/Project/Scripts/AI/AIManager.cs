@@ -176,6 +176,10 @@ public class AIManager : MonoBehaviour
         data = _guestData;
     }
 
+    public EAIState GetNowState()
+    {
+        return nodeList[currentState].stateNum;
+    }
 
     private void Pause()
     {

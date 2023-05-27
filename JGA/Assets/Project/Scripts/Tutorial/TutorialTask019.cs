@@ -1,8 +1,9 @@
 //=============================================================================
 // @File	: [TutorialTask001.cs]
 // @Brief	: 「段ボールがつぶれた音でお客さんが反応した、ペンギンブースに連れて行こう」
+//              ペンギンブースに連れて行ってカウントしたら文字フェード
 // @Author	: Ichida Mai
-// @Editer	: 
+// @Editer	: Ogusu Yuuko
 // @Detail	: 
 // 
 // [Date]
@@ -14,22 +15,20 @@ using UnityEngine;
 
 public class TutorialTask019 : ITurorial
 {
-    private float timer;    // UIをだしてから遷移するまでの時間
-
-    private readonly float MAX_TIME = 3.0f; // 遷移するまでの時間の定数
-
+    private int num = -1;
     /// <summary>
     /// タスク完了に必要となるオブジェクトを設定する
     /// </summary>
     /// <param name="gameObject"></param>
     public void AddNeedObj(GameObject gameObject) {
+        
     }
 
     /// <summary>
     /// チュートリアルタスクが設定されたときに実行
     /// </summary>
     public void OnTaskSetting() {
-        timer = MAX_TIME;
+        num = MySceneManager.GameData.guestCnt;
     }
 
     /// <summary>
@@ -37,12 +36,7 @@ public class TutorialTask019 : ITurorial
     /// </summary>
     /// <returns></returns>
     public bool CheckTask() {
-        timer -= Time.deltaTime;
-        if (timer < 0) {
-            return true;
-        }
-
-        return false;
+        return num < MySceneManager.GameData.guestCnt;
     }
 
 
