@@ -1,12 +1,14 @@
 //=============================================================================
 // @File	: [TutorialTask001.cs]
 // @Brief	: 「これでお客さんを連れてこれた、どんどんお客さんを集めよう」
+//              プレイヤーが移動したら文字フェード
 // @Author	: Ichida Mai
-// @Editer	: 
+// @Editer	: Ogusu Yuuko
 // @Detail	: 
 // 
 // [Date]
 // 2023/05/26	スクリプト作成
+// 2023/05/27	プレイヤーが移動したらの処理を追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -14,22 +16,22 @@ using UnityEngine;
 
 public class TutorialTask012 : ITurorial
 {
-    private float timer;    // UIをだしてから遷移するまでの時間
-
-    private readonly float MAX_TIME = 3.0f; // 遷移するまでの時間の定数
+    private GameObject player;
+    private Player _player;
 
     /// <summary>
     /// タスク完了に必要となるオブジェクトを設定する
     /// </summary>
     /// <param name="gameObject"></param>
     public void AddNeedObj(GameObject gameObject) {
+        player = gameObject;
     }
 
     /// <summary>
     /// チュートリアルタスクが設定されたときに実行
     /// </summary>
     public void OnTaskSetting() {
-        timer = MAX_TIME;
+        _player = player.GetComponent<Player>();
     }
 
     /// <summary>
@@ -37,12 +39,13 @@ public class TutorialTask012 : ITurorial
     /// </summary>
     /// <returns></returns>
     public bool CheckTask() {
-        timer -= Time.deltaTime;
-        if (timer < 0) {
-            return true;
+        if (!_player)
+        {
+            Debug.LogError("プレイヤースクリプトが取得されていません");
+            return false;
         }
 
-        return false;
+        return _player.IsMove;
     }
 
 

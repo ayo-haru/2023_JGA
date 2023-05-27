@@ -197,7 +197,7 @@ public class AIManager : MonoBehaviour
         Handles.color = new Color(0, 1, 0, 0.3f);
         Handles.DrawSolidArc(transform.position,Vector3.up,transform.forward,360.0f,data.reactionArea);
         //音反応エリア
-        Handles.color = new Color(0, 0.5f, 0, 0.3f);
+        Handles.color = new Color(1f, 0.0f, 0, 0.3f);
         Handles.DrawSolidArc(transform.position + transform.forward * data.soundAreaOffset, Vector3.up, transform.forward, 360.0f, data.reactionArea);
         //視界エリア
         Handles.color = new Color(0, 0, 1, 0.3f);

@@ -1,8 +1,9 @@
 //=============================================================================
 // @File	: [TutorialTask001.cs]
 // @Brief	: 「段ボールの上におけるモノを探してみよう」
+//              缶に触れれるくらいになったら文字フェード
 // @Author	: Ichida Mai
-// @Editer	: 
+// @Editer	: Ogusu Yuuko
 // @Detail	: 
 // 
 // [Date]
@@ -14,22 +15,29 @@ using UnityEngine;
 
 public class TutorialTask017 : ITurorial
 {
-    private float timer;    // UIをだしてから遷移するまでの時間
+    //0  : プレイヤー
+    //1~ : 缶
+    private List<GameObject> gameobjectList = new List<GameObject>();
+    private List<Transform> transformList = new List<Transform>();
 
-    private readonly float MAX_TIME = 3.0f; // 遷移するまでの時間の定数
+    private float distance = 2.0f;
 
     /// <summary>
     /// タスク完了に必要となるオブジェクトを設定する
     /// </summary>
     /// <param name="gameObject"></param>
     public void AddNeedObj(GameObject gameObject) {
+        gameobjectList.Add(gameObject);
     }
 
     /// <summary>
     /// チュートリアルタスクが設定されたときに実行
     /// </summary>
     public void OnTaskSetting() {
-        timer = MAX_TIME;
+        for(int i = 0; i < gameobjectList.Count; ++i)
+        {
+            transformList.Add(gameobjectList[i].transform);
+        }
     }
 
     /// <summary>
@@ -37,11 +45,20 @@ public class TutorialTask017 : ITurorial
     /// </summary>
     /// <returns></returns>
     public bool CheckTask() {
-        timer -= Time.deltaTime;
-        if (timer < 0) {
-            return true;
+        if(transformList.Count < 2)
+        {
+            Debug.LogError("必要なトランスフォームが取得されていません");
+            return false;
         }
 
+        for(int i = 1; i < transformList.Count; ++i)
+        {
+            //缶との距離が近いか
+            if (Vector3.Distance(transformList[0].position, transformList[i].position) > distance) continue;
+            //プレイヤーが缶の方向を向いているか
+            if (Vector3.Dot(transformList[0].forward, transformList[i].position - transformList[0].position) < 0) continue;
+            return true;
+        }
         return false;
     }
 
