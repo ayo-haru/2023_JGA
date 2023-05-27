@@ -345,11 +345,15 @@ public class Player : MonoBehaviour
 		{
 			AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
 
-			// はたくモーションの再生終了時に他モーション再生を許可
-			if (stateInfo.shortNameHash != HashHit && stateInfo.normalizedTime >= 1.0f)
+			// はたくモーション中の時
+			if (stateInfo.shortNameHash == HashHit)
 			{
-				bHitMotion = false;
-				anim.SetBool(HashHit, bHitMotion);
+				// 再生終了時に他モーション再生を許可
+				if (stateInfo.normalizedTime >= 1.0f)
+				{
+					bHitMotion = false;
+					anim.SetBool(HashHit, bHitMotion);
+				}
 			}
 		}
 
@@ -1009,7 +1013,7 @@ public class Player : MonoBehaviour
 	private void OnCollisionStay(Collision collision)
 	{
 		// Playerと掴んでいるオブジェクトが接触していると、ぶっ飛ぶので離す
-		if (InteractCollision != null && InteractCollision == collision.collider)
+		if (InteractCollision != null && InteractCollision == collision.collider && (_IsHold || _IsDrag))
 			collision.transform.localPosition += Vector3.forward / 10;
 	}
 
