@@ -1,8 +1,9 @@
 //=============================================================================
 // @File	: [TutorialTask001.cs]
 // @Brief	: 「RT長押ししながら移動でモノをひきずる」
+//              RT長押したら文字フェード
 // @Author	: Ichida Mai
-// @Editer	: 
+// @Editer	: Ogusu Yuuko
 // @Detail	: 
 // 
 // [Date]
@@ -14,22 +15,23 @@ using UnityEngine;
 
 public class TutorialTask015 : ITurorial
 {
-    private float timer;    // UIをだしてから遷移するまでの時間
-
-    private readonly float MAX_TIME = 3.0f; // 遷移するまでの時間の定数
+    private GameObject player;
+    private Player _player;
 
     /// <summary>
     /// タスク完了に必要となるオブジェクトを設定する
     /// </summary>
     /// <param name="gameObject"></param>
     public void AddNeedObj(GameObject gameObject) {
+        player = gameObject;
     }
 
     /// <summary>
     /// チュートリアルタスクが設定されたときに実行
     /// </summary>
     public void OnTaskSetting() {
-        timer = MAX_TIME;
+        if (!player) return;
+        _player = player.GetComponent<Player>();
     }
 
     /// <summary>
@@ -37,12 +39,14 @@ public class TutorialTask015 : ITurorial
     /// </summary>
     /// <returns></returns>
     public bool CheckTask() {
-        timer -= Time.deltaTime;
-        if (timer < 0) {
-            return true;
+        if (_player)
+        {
+            Debug.Log("プレイヤーのスクリプトが取得されていません");
+            return false;
         }
 
-        return false;
+        //引きずっていたら
+        return _player.IsDrag;
     }
 
 
