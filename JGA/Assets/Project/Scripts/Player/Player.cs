@@ -266,13 +266,6 @@ public class Player : MonoBehaviour
 		// ゲームパッドが接続されているか
 		bGamePad = Gamepad.current != null;
 
-		// リスタート処理
-		if (MySceneManager.GameData.isCatchPenguin)
-		{
-			ReStart();
-			return;
-		}
-
 		if (InteractObjects.Count != WithinRange.Count)
 		{
 			InteractObjects.Clear();
@@ -440,6 +433,12 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void Pause()
 	{
+		// リスタート処理
+		if (MySceneManager.GameData.isCatchPenguin)
+		{
+			ReStart();
+			return;
+		}
 		// Input Actionを無効化
 		actionMove.ToInputAction().Disable();
 		actionAppeal.ToInputAction().Disable();
@@ -1041,9 +1040,32 @@ public class Player : MonoBehaviour
 
 	public void ReStart()
 	{
+		if (InteractCollision && InteractCollision.TryGetComponent<BaseObj>(out var baseObj))
+		{
+			switch (baseObj.objType)
+			{
+				case BaseObj.ObjType.HOLD:
+				case BaseObj.ObjType.HIT_HOLD:
+					Hold(false);
+					break;
+				case BaseObj.ObjType.DRAG:
+				case BaseObj.ObjType.HIT_DRAG:
+					Drag(false);
+					break;
+			}
+			InteractCollision = null;
+		}
+
 		// 捕まったら持ってるもの捨てる
-		_IsHold = _IsDrag = false;
-		InteractCollision = null;
+		_IsMove = _IsRun = _IsAppeal = _IsHit = _IsHold = _IsDrag = _IsRandom = false;
+		anim.SetBool(HashMove, false);
+		anim.SetBool(HashRun, false);
+		anim.SetBool(HashAppeal, false);
+		anim.SetBool(HashHit, false);
+		anim.SetBool(HashCarry, false);
+		anim.SetBool(HashDrag, false);
+		anim.SetBool(HashRandom, false);
+
 
 		// インスペクターで設定したリスポーン位置に再配置する
 		this.gameObject.transform.position = respawnZone.position;
