@@ -14,118 +14,136 @@ using UnityEngine;
 
 public class CardBoard : BaseObj
 {
-	[SerializeField] private Animator _animator;
+    [SerializeField] private Animator _animator;
 
-	private bool isPlay = false;
-	private bool isNPosition = false;
-	private bool isBreak = false;
+    private bool isPlay = false;
+    private bool isNPosition = false;
+    private bool isBreak = false;
+    private bool isDrag = false;
 
-	[SerializeField] private BoxCollider collision0;
-	private GameObject collision1;
-	private GameObject collision2;
-	private GameObject collision3;
-	
-	/// <summary>
-	/// 最初のフレーム更新の前に呼び出される
-	/// </summary>
-	void Start()
-	{
-		Init();
-		_animator = GetComponent<Animator>();
-		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-		collision1 = transform.GetChild(1).gameObject;
-		collision2 = transform.GetChild(2).gameObject;
-		collision3 = transform.GetChild(3).gameObject;
-		collision1.SetActive(false);
-		collision2.SetActive(false);
-		collision3.SetActive(false);
-		objType = ObjType.HIT_DRAG;
-	}
+    [SerializeField] private BoxCollider collision0;
+    private GameObject collision1;
+    private GameObject collision2;
+    private GameObject collision3;
 
-	/// <summary>
-	/// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
-	/// </summary>
-	void Update()
-	{
-		// ポーズ処理
-		if (PauseManager.isPaused) { return; }
+    /// <summary>
+    /// 最初のフレーム更新の前に呼び出される
+    /// </summary>
+    void Start()
+    {
+        Init();
+        _animator = GetComponent<Animator>();
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        collision1 = transform.GetChild(1).gameObject;
+        collision2 = transform.GetChild(2).gameObject;
+        collision3 = transform.GetChild(3).gameObject;
+        collision1.SetActive(false);
+        collision2.SetActive(false);
+        collision3.SetActive(false);
+        objType = ObjType.HIT_DRAG;
+    }
 
-		PlaySoundChecker();
-	}
+    /// <summary>
+    /// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
+    /// </summary>
+    void Update()
+    {
+        // ポーズ処理
+        if (PauseManager.isPaused) { return; }
 
-	protected override void OnCollisionEnter(Collision collision)
-	{
-		// ポーズ処理
-		if (PauseManager.isPaused) { return; }
+        // 動きが止まったら動かないようにする
+        if (!rb.isKinematic && rb.IsSleeping())
+        {
+            rb.isKinematic = true;
+        }
 
-		// 段ボールが地面に当たった時の音を変更
-		if (collision.gameObject.tag == "Ground"){
-			if(!isPlaySound && isPlay)
-			{
-				PlayDrop(audioSourcesList[0], SoundManager.ESE.CARDBOARDBOX_002);
-			}
+        PlaySoundChecker();
+    }
 
-			// 段ボールの角度が正常か
-			foreach (ContactPoint point in collision.contacts)
-			{
-				Vector3 relativePoint = transform.InverseTransformPoint(point.point);   // 物がぶつかった座標を取得
+    protected override void OnCollisionEnter(Collision collision)
+    {
+        // ポーズ処理
+        if (PauseManager.isPaused) { return; }
 
-				if (relativePoint.y < -0.5) // 地面が下面と接しているか
-				{
-					isNPosition = true;
-				}
-				else
-				{
-					isNPosition = false;
-				}
-			}
-			if(!isPlay)
-				isPlay = true;
-		}
+        // 段ボールが地面に当たった時の音を変更
+        if (collision.gameObject.tag == "Ground")
+        {
+            if (!isPlaySound && isPlay)
+            {
+                PlayDrop(audioSourcesList[0], SoundManager.ESE.CARDBOARDBOX_002);
+            }
 
-		// 上に物が乗ったら潰れる
-		if (collision.gameObject.tag == "Interact")
-		{
-			foreach(ContactPoint point in collision.contacts)
-			{
-				Vector3 relativePoint = transform.InverseTransformPoint(point.point);   // 物がぶつかった座標を取得
+            // 段ボールの角度が正常か
+            foreach (ContactPoint point in collision.contacts)
+            {
+                Vector3 relativePoint = transform.InverseTransformPoint(point.point);   // 物がぶつかった座標を取得
 
-				if(relativePoint.y > 0.5 && relativePoint.x < 1.0 && relativePoint.x > -1.0 && relativePoint.z < 1.0 && relativePoint.z > -1.0 && isNPosition && !isBreak)
-				{
-					_animator.SetTrigger("Broken");
-					isBreak = true;
-					
-					// コライダー切替
-					collision0.enabled = false;
-					collision1.SetActive(true);
-					collision2.SetActive(true);
-					collision3.SetActive(true);
+                if (relativePoint.y < -0.5) // 地面が下面と接しているか
+                {
+                    isNPosition = true;
+                }
+                else
+                {
+                    isNPosition = false;
+                }
+            }
+            if (!isPlay)
+                isPlay = true;
+        }
 
-					// 潰れたときの音を鳴らす
-					PlayDrop(audioSourcesList[0], SoundManager.ESE.CARDBOARDBOX_002);
+        // 上に物が乗ったら潰れる
+        if (collision.gameObject.tag == "Interact")
+        {
+            foreach (ContactPoint point in collision.contacts)
+            {
+                Vector3 relativePoint = transform.InverseTransformPoint(point.point);   // 物がぶつかった座標を取得
 
-					break;
-				}
-				if(isBreak)
-				{
-					break;
-				}
-			}
-		}
-	}
+                if (relativePoint.y > 0.5 && relativePoint.x < 1.0 && relativePoint.x > -1.0 && relativePoint.z < 1.0 && relativePoint.z > -1.0 && isNPosition && !isBreak)
+                {
+                    _animator.SetTrigger("Broken");
+                    isBreak = true;
 
-	protected override void OnTriggerStay(Collider other)
-	{
-		// ポーズ処理
-		if (PauseManager.isPaused) { return; }
+                    // コライダー切替
+                    collision0.enabled = false;
+                    collision1.SetActive(true);
+                    collision2.SetActive(true);
+                    collision3.SetActive(true);
 
-		if (other.gameObject.tag == "Player")
-		{
-			// 殴られたら音を出す
-			if (player.IsHit)
-			{
-				PlayHit();
-			}
-		}
-	}
+                    // 潰れたときの音を鳴らす
+                    PlayDrop(audioSourcesList[0], SoundManager.ESE.CARDBOARDBOX_002);
+
+                    break;
+                }
+                if (isBreak)
+                {
+                    break;
+                }
+            }
+        }
+    }
+
+    protected override void OnTriggerStay(Collider other)
+    {
+        // ポーズ処理
+        if (PauseManager.isPaused) { return; }
+
+        if (other.gameObject.tag == "Player")
+        {
+            // 殴られたら音を出す
+            if (player.IsHit)
+            {
+                PlayHit();
+            }
+            if (player.IsDrag)
+            {
+                rb.isKinematic = false;
+                isDrag = true;
+            }
+            if(isDrag && !player.IsDrag)
+            {
+                rb.isKinematic = true;
+                isDrag = false;
+            }
+        }
+    }
 }
