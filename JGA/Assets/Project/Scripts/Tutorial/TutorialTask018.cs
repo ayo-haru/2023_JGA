@@ -1,7 +1,6 @@
 //=============================================================================
 // @File	: [TutorialTask001.cs]
 // @Brief	: 「缶がある。段ボールの上までもっていこう」
-//              段ボールのつぶれる音がなったら
 //              客が反応したら
 // @Author	: Ichida Mai
 // @Editer	: Ogusu Yuuko
@@ -16,20 +15,25 @@ using UnityEngine;
 
 public class TutorialTask018 : ITurorial
 {
-
+    private List<GameObject> gameobjectList = new List<GameObject>();
+    private AIManager guest1 = null;
+    private AIManager guest2 = null;
 
     /// <summary>
     /// タスク完了に必要となるオブジェクトを設定する
     /// </summary>
     /// <param name="gameObject"></param>
     public void AddNeedObj(GameObject gameObject) {
+        gameobjectList.Add(gameObject);
     }
 
     /// <summary>
     /// チュートリアルタスクが設定されたときに実行
     /// </summary>
     public void OnTaskSetting() {
-        //timer = MAX_TIME;
+        if (gameobjectList.Count < 2) return;
+        guest1 = gameobjectList[0].GetComponent<AIManager>();
+        guest2 = gameobjectList[1].GetComponent<AIManager>();
     }
 
     /// <summary>
@@ -37,12 +41,12 @@ public class TutorialTask018 : ITurorial
     /// </summary>
     /// <returns></returns>
     public bool CheckTask() {
-        //timer -= Time.deltaTime;
-        //if (timer < 0) {
-           // return true;
-      //  }
-
-        return false;
+        if(!guest1 || !guest2)
+        {
+            Debug.LogError("AIManagerが取得されていません");
+            return false;
+        }
+        return guest1.GetNowState() == EAIState.GUEST_FOLLOW_PENGUIN && guest2.GetNowState() == EAIState.GUEST_FOLLOW_PENGUIN;
     }
 
 

@@ -22,6 +22,8 @@ public class TransitionInteract : AITransition
     private Transform playerTransform;
     private GuestData.Data data;
     private List<BaseObj> interactObjecs;
+    public enum EReactionObject { ALL,CARBOARD,};
+    [SerializeField, Header("反応するインタラクトオブジェクト")] EReactionObject reactionObject = EReactionObject.ALL;
 #if false
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -67,7 +69,8 @@ public class TransitionInteract : AITransition
         if (!Object) return;
         GuestSharedObject sharedObject = Object.GetComponent<GuestSharedObject>();
         if (!sharedObject) return;
-        interactObjecs = sharedObject.GetInteractObjects();
+        interactObjecs = (reactionObject == EReactionObject.ALL) ? sharedObject.GetInteractObjects() : sharedObject.GetCarboardObjects();
+
 #if false
              Debug.LogWarning("GuestSharedObjectなかった");
                 GameObject[] interactObjectList = GameObject.FindGameObjectsWithTag("Interact");
@@ -91,8 +94,8 @@ public class TransitionInteract : AITransition
         //範囲内にあるインタラクトオブジェクトのフラグが立っているか
         for(int i = 0; i < interactObjecs.Count; ++i)
         {
-            if (Vector3.Distance(transform.position + transform.forward * data.soundAreaOffset, interactObjecs[i].transform.position) > data.reactionArea) continue;
-            if (interactObjecs[i].GetisPlaySound()) return true;
+            if (!interactObjecs[i].GetisPlaySound()) continue;
+            if (Vector3.Distance(transform.position + transform.forward * data.soundAreaOffset, interactObjecs[i].transform.position) <= data.reactionArea) return true;
         }
         return false;
     }

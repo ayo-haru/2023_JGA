@@ -95,7 +95,7 @@ public class GuestSharedObject : MonoBehaviour
                 if (!baseObj) continue;
                 interactObjects.Add(baseObj);
                 CardBoard cardBoard = objects[i].GetComponent<CardBoard>();
-                if (!cardBoard) return;
+                if (!cardBoard) continue;
                 carboardObjects.Add(baseObj);
             }
         }
