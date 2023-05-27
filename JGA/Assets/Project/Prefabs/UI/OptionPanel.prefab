@@ -813,6 +813,8 @@ MonoBehaviour:
   delSEButton: {fileID: 8499818146550745522}
   bgmVolumeIcon: {fileID: 5026250845451094664}
   seVolumeIcon: {fileID: 5038194553353268220}
+  actionMove: {fileID: 3278397620106996205, guid: e7885aee0a6118d40af8785b5a7003f6,
+    type: 3}
   slideSpeed: 50
   bSlide: 0
 --- !u!82 &3662988626164159519
