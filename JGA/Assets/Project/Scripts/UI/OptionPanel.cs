@@ -8,6 +8,7 @@
 // [Date]
 // 2023/03/20	スクリプト作成
 // 2023/04/08	(小楠)オプションのスライド移動追加
+// 2023/05/28	(小楠)スクリプト綺麗にした
 //=============================================================================
 using UniRx;
 using UnityEngine;
@@ -27,12 +28,19 @@ public class OptionPanel : MonoBehaviour
     [SerializeField, Header("BGM")] private Button bgmButton;
     [SerializeField, Header("SE")] private Button seButton;
     [SerializeField, Header("キーボード&マウスを設定")] private Button keybordOptionButton;
+    private Image keybordOptionButtonImage;
     [SerializeField, Header("コントローラを設定")] private Button controllerOptionButton;
+    private Image controllerOptionButtonImage;
     [SerializeField, Header("戻る")] private Button backButton;
+    private Image backButtonImage;
     [SerializeField, Header("BGM増やすボタン")] private Button addBGMButton;
+    private Image addBGMButtonImage;
     [SerializeField, Header("BGM減らすボタン")] private Button delBGMButton;
+    private Image delBGMButtonImage;
     [SerializeField, Header("SE増やすボタン")] private Button addSEButton;
+    private Image addSEButtonImage;
     [SerializeField, Header("SE減らすボタン")] private Button delSEButton;
+    private Image delSEButtonImage;
 
     //ボリュームアイコン
     [SerializeField, Header("BGMボリュームアイコン")] private VolumeIcon bgmVolumeIcon;
@@ -43,6 +51,9 @@ public class OptionPanel : MonoBehaviour
     //マウス
     private Vector3 mousePos = Vector3.zero;
     private bool bMouse = true;
+
+    private bool bGamePad;
+    [SerializeField] private InputActionReference actionMove;
 
     public enum EOptionSlide { MIN_SLIDE = -2,LEFT, CENTER, RIGHT,MAX_SLIDE };
     private int nSlide = (int)EOptionSlide.RIGHT;
@@ -61,44 +72,40 @@ public class OptionPanel : MonoBehaviour
         Vector3 pos = rt.localPosition;
         pos.x = screenWidth;
         rt.localPosition = pos;
-	}
+
+        //イベント登録
+        actionMove.action.performed += OnMove;
+        actionMove.action.canceled += OnMove;
+        actionMove.ToInputAction().Enable();
+
+        //ボタンの加増取得
+        keybordOptionButtonImage = keybordOptionButton.GetComponent<Image>();
+        controllerOptionButtonImage = controllerOptionButton.GetComponent<Image>();
+        backButtonImage = backButton.GetComponent<Image>();
+        addBGMButtonImage = addBGMButton.GetComponent<Image>();
+        delBGMButtonImage = delBGMButton.GetComponent<Image>();
+        addSEButtonImage = addSEButton.GetComponent<Image>();
+        delSEButtonImage = delSEButton.GetComponent<Image>();
+    }
 
     private void Update()
     {
         if (nSlide != (int)EOptionSlide.CENTER) return;
         if (bSlide && rt.localPosition != Vector3.zero) return;
+        if (!IsOpen()) return;
 
-        //マウス、コントローラの値取得
-        Gamepad gamepad = Gamepad.current;
-        if (gamepad == null) return;
+        //マウスの状態を更新
         Vector3 oldMousePos = mousePos;
         mousePos = Input.mousePosition;
-
-        //マウス有効の状態でコントローラが押されたらコントローラ入力にする
-        //マウス無効でマウスが動いたらマウス入力を有効
-        if (bMouse)
-        {
-            if (gamepad.leftStick.ReadValue() != Vector2.zero || gamepad.aButton.wasReleasedThisFrame) ChangeInput();
-        }
-        else
-        {
-            if (mousePos != oldMousePos) ChangeInput();
-        }
+        //ゲームパットの状態を更新
+        bGamePad = Gamepad.current != null;
 
         if (bMouse) return;
 
-        //bgmまたはseが選択されている場合、左右でボリュームを変更する
-        GameObject selectedObject = EventSystem.current.currentSelectedGameObject;
-        if (!selectedObject) return;
-        if (bgmButton.gameObject == selectedObject)
+        //ゲームパッドがない又はマウスが動かされたらマウス入力に切り替え
+        if (!bGamePad || Vector3.Distance(oldMousePos, mousePos) >= 1.0f)
         {
-            if (gamepad.dpad.right.wasReleasedThisFrame || gamepad.leftStick.ReadValue().x >= 0.9f) BGMVolAddButton();
-            if (gamepad.dpad.left.wasReleasedThisFrame || gamepad.leftStick.ReadValue().x <= -0.9f) BGMVolDelButton();
-        }
-        else if (seButton.gameObject == selectedObject)
-        {
-            if (gamepad.dpad.right.wasReleasedThisFrame || gamepad.leftStick.ReadValue().x >= 0.9f) SEVolAddButton();
-            if (gamepad.dpad.left.wasReleasedThisFrame || gamepad.leftStick.ReadValue().x <= -0.9f) SEVolDelButton();
+            ChangeInput();
         }
     }
 
@@ -204,6 +211,15 @@ public class OptionPanel : MonoBehaviour
     }
     #endregion
     /// <summary>
+    /// 入力初期化
+    /// </summary>
+    public void InitInput()
+    {
+        mousePos = Input.mousePosition;
+        bMouse = bGamePad = (Gamepad.current) != null;
+        ChangeInput();
+    }
+    /// <summary>
     /// 入力切替
     /// </summary>
     private void ChangeInput()
@@ -211,47 +227,24 @@ public class OptionPanel : MonoBehaviour
         //マウス→コントローラ
         if (bMouse)
         {
-            //マウスカーソル非表示
-            Cursor.visible = false;
-
-            ColorBlock colors = keybordOptionButton.colors;
-            colors.highlightedColor = Color.white;
-            keybordOptionButton.colors = colors;
-            controllerOptionButton.colors = colors;
-            backButton.colors = colors;
-
-            colors = addBGMButton.colors;
-            colors.highlightedColor = Color.clear;
-            addBGMButton.colors = colors;
-            delBGMButton.colors = colors;
-            addSEButton.colors = colors;
-            delSEButton.colors = colors;
-
             //デフォルトのボタンを選択
             ControllerChangeSelect(EOptionButton.BGM);
         }
         else//コントローラ→マウス
         {
-            //マウスカーソル表示
-            Cursor.visible = true;
-
-            ColorBlock colors = keybordOptionButton.colors;
-            colors.highlightedColor = buttonColor;
-            keybordOptionButton.colors = colors;
-            controllerOptionButton.colors = colors;
-            backButton.colors = colors;
-
-            colors = addBGMButton.colors;
-            colors.highlightedColor = Color.white;
-            addBGMButton.colors = colors;
-            delBGMButton.colors = colors;
-            addSEButton.colors = colors;
-            delSEButton.colors = colors;
-
             ControllerNoneSelect();
         }
 
+        //入力を切り替え
         bMouse = !bMouse;
+        Cursor.visible = bMouse;
+        keybordOptionButtonImage.raycastTarget = bMouse;
+        controllerOptionButtonImage.raycastTarget = bMouse;
+        backButtonImage.raycastTarget = bMouse;
+        addBGMButtonImage.raycastTarget = bMouse;
+        delBGMButtonImage.raycastTarget = bMouse;
+        addSEButtonImage.raycastTarget = bMouse;
+        delSEButtonImage.raycastTarget = bMouse;
     }
 
     public void ControllerChangeSelect(EOptionButton _select)
@@ -287,12 +280,35 @@ public class OptionPanel : MonoBehaviour
     {
         if (nSlide == (int)EOptionSlide.CENTER) return;
         nSlide = (int)EOptionSlide.CENTER;
-        Gamepad gamepad = Gamepad.current;
-        bMouse = (gamepad != null);
-        ChangeInput();
+        InitInput();
     }
     public bool IsOpen()
     {
         return nSlide == (int)EOptionSlide.CENTER;
+    }
+
+    private void OnMove(InputAction.CallbackContext context)
+    {
+        if (!IsOpen()) return;
+        if (!bGamePad) bGamePad = true;
+        if (bMouse) ChangeInput();
+
+        //左右の入力があるか？
+        Vector2 move = context.ReadValue<Vector2>();
+        if (move.x < 1.0f && move.x > -1.0f) return;
+
+        //BGMボタンが選択されているか？
+        GameObject selectedObject = EventSystem.current.currentSelectedGameObject;
+        if(selectedObject == bgmButton.gameObject)
+        {
+            if (move.x >= 1.0f) BGMVolAddButton();
+            if (move.x <= -1.0f) BGMVolDelButton();
+        }
+        //SEボタンが選択されているか
+        if(selectedObject == seButton.gameObject)
+        {
+            if (move.x >= 1.0f) SEVolAddButton();
+            if (move.x <= -1.0f) SEVolDelButton();
+        }
     }
 }

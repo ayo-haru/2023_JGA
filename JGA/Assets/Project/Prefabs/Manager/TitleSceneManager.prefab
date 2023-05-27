@@ -44,3 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9451df46477986249ae4ef6f981fe6cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startButton: {fileID: 0}
+  continueButton: {fileID: 0}
+  optionButton: {fileID: 0}
+  exitButton: {fileID: 0}
+  optionPanel: {fileID: 0}
+  actionMove: {fileID: 3278397620106996205, guid: e7885aee0a6118d40af8785b5a7003f6,
+    type: 3}

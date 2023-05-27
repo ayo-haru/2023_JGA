@@ -24,9 +24,13 @@ using UnityEngine.SceneManagement;
 
 public class TitleScenManager : BaseSceneManager {
     [SerializeField, Header("はじめから")] private Selectable startButton;
+    private BoxCollider startButtonCollider;
     [SerializeField, Header("つづきから")] private Selectable continueButton;
+    private BoxCollider continueButtonCollider;
     [SerializeField, Header("オプション")] private Selectable optionButton;
+    private BoxCollider optionButtonCollider;
     [SerializeField, Header("ゲームをやめる")] private Selectable exitButton;
+    private BoxCollider exitButtonCollider;
 
     [SerializeField, Header("オプション")] private OptionPanel optionPanel;
 
@@ -34,6 +38,9 @@ public class TitleScenManager : BaseSceneManager {
     private bool bMouse = true;
     //マウス位置
     private Vector3 mousePos;
+
+    private bool bGamePad;
+    [SerializeField] private InputActionReference actionMove;
 
     //タイトル画面のボタン
     private enum ETitleSelect { TITLESELECT_START, TITLESELECT_CONTINUE,TITLESELECT_OPTION, TITLESELECT_EXIT, MAX_TITLESELECT };
@@ -66,6 +73,15 @@ public class TitleScenManager : BaseSceneManager {
 
         // BGM再生用にオーディオソース取得
         audioSource = GetComponent<AudioSource>();
+
+        actionMove.action.performed += OnMove;
+        actionMove.action.canceled += OnMove;
+        actionMove.ToInputAction().Enable();
+
+        startButtonCollider = startButton.GetComponent<BoxCollider>();
+        continueButtonCollider = continueButton.GetComponent<BoxCollider>();
+        optionButtonCollider = optionButton.GetComponent<BoxCollider>();
+        exitButtonCollider = exitButton.GetComponent<BoxCollider>();
     }
 
     private void Start() {
@@ -74,14 +90,7 @@ public class TitleScenManager : BaseSceneManager {
         //フェード中だったら待機して音を止める
         StartCoroutine(WaitFade());
 
-        //マウス、コントローラの値取得
-        Gamepad gamepad = Gamepad.current;
-        mousePos = Input.mousePosition;
-        if (gamepad != null)
-        {
-            bMouse = true;
-            ChangeInput();
-        }
+        InitInput();
     }
 
     /// <summary>
@@ -89,31 +98,25 @@ public class TitleScenManager : BaseSceneManager {
     /// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
     /// </summary>
     void Update() {
-        //マウス、コントローラの値取得
-        Gamepad gamepad = Gamepad.current;
-
         bool beforeFlag = bFlag;
         bFlag = optionPanel.IsOpen();
         //オプション画面が開かれているときは処理しない
         if (bFlag) return;
         //オプション画面から戻って来た時の初期化処理
-        if (beforeFlag) {
-            bMouse = (gamepad != null);
-            ChangeInput();
-        }
+        if (beforeFlag) InitInput();
 
-        if (gamepad == null) return;
+        //マウスの状態を更新
         Vector3 oldMousePos = mousePos;
         mousePos = Input.mousePosition;
+        //ゲームパットの状態を更新
+        bGamePad = Gamepad.current != null;
 
-        //マウス有効の状態でコントローラが押されたらコントローラ入力にする
-        //マウス無効でマウスが動いたらマウス入力を有効
-        if (bMouse) {
-            if (gamepad.leftStick.ReadValue() != Vector2.zero || gamepad.aButton.wasReleasedThisFrame) ChangeInput();
-        }
-        else
+        if (bMouse) return;
+
+        //ゲームパッドがない又はマウスが動かされたらマウス入力に切り替え
+        if (!bGamePad || Vector3.Distance(oldMousePos, mousePos) >= 1.5f)
         {
-            if(Vector3.Distance(mousePos,oldMousePos) >= 1.0f)ChangeInput();
+            ChangeInput();
         }
     }
 
@@ -164,21 +167,28 @@ public class TitleScenManager : BaseSceneManager {
     }
     #endregion
 
+    public void InitInput()
+    {
+        mousePos = Input.mousePosition;
+        bMouse = bGamePad = (Gamepad.current) != null;
+        ChangeInput();
+    }
 
     private void ChangeInput() {
         //マウス→コントローラ
         if (bMouse) {
-            //マウスカーソル非表示
-            Cursor.visible = false;
             ControllerChangeSelect(ETitleSelect.TITLESELECT_START);
         } else//コントローラ→マウス
           {
-            //マウスカーソル表示
-            Cursor.visible = true;
             ControllerNoneSelect();
         }
 
         bMouse = !bMouse;
+        Cursor.visible = bMouse;
+        startButtonCollider.enabled = bMouse;
+        continueButtonCollider.enabled = bMouse;
+        optionButtonCollider.enabled = bMouse;
+        exitButtonCollider.enabled = bMouse;
     }
 
     private void ControllerChangeSelect(ETitleSelect _select) {
@@ -217,6 +227,16 @@ public class TitleScenManager : BaseSceneManager {
         audioSource.Pause();
         yield return new WaitUntil(() => FadeManager.fadeMode == FadeManager.eFade.Default);
         audioSource.UnPause();
+    }
+
+    private void OnMove(InputAction.CallbackContext context)
+    {
+        if (!bGamePad) bGamePad = true;
+        if (optionPanel.IsOpen()) return;
+        if (!bMouse) return;
+
+        //マウス→コントローラ
+        ChangeInput();
     }
 
 }

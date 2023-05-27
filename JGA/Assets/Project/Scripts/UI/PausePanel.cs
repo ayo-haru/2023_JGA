@@ -120,6 +120,8 @@ public class PausePanel : MonoBehaviour
 
 	private void Update()
 	{
+        if (ActivePanel != pausePanel) return;
+
         //マウスの状態を更新
         Vector3 oldMousePos = mousePos;
         mousePos = Input.mousePosition;
@@ -140,6 +142,7 @@ public class PausePanel : MonoBehaviour
 		if (!PauseManager.isPaused)return;
         if (!bGamePad) bGamePad = true;
         if (!bMouseMode) return;
+        if (ActivePanel != pausePanel) return;
 
         //マウス→コントローラ
         ChangeInput();

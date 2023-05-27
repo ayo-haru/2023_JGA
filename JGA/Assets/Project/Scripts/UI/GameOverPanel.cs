@@ -79,7 +79,7 @@ public class GameOverPanel : MonoBehaviour
     {
 
         gameOver.fillAmount += Time.deltaTime;
-        //マウスの状態を行進
+        //マウスの状態を更新
         Vector3 oldMousePos = mousePos;
         mousePos = Input.mousePosition;
         //ゲームパットの状態を更新
