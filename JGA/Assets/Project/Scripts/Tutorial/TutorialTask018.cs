@@ -1,8 +1,10 @@
 //=============================================================================
 // @File	: [TutorialTask001.cs]
 // @Brief	: 「缶がある。段ボールの上までもっていこう」
+//              段ボールのつぶれる音がなったら
+//              客が反応したら
 // @Author	: Ichida Mai
-// @Editer	: 
+// @Editer	: Ogusu Yuuko
 // @Detail	: 
 // 
 // [Date]
@@ -14,9 +16,7 @@ using UnityEngine;
 
 public class TutorialTask018 : ITurorial
 {
-    private float timer;    // UIをだしてから遷移するまでの時間
 
-    private readonly float MAX_TIME = 3.0f; // 遷移するまでの時間の定数
 
     /// <summary>
     /// タスク完了に必要となるオブジェクトを設定する
@@ -29,7 +29,7 @@ public class TutorialTask018 : ITurorial
     /// チュートリアルタスクが設定されたときに実行
     /// </summary>
     public void OnTaskSetting() {
-        timer = MAX_TIME;
+        //timer = MAX_TIME;
     }
 
     /// <summary>
@@ -37,10 +37,10 @@ public class TutorialTask018 : ITurorial
     /// </summary>
     /// <returns></returns>
     public bool CheckTask() {
-        timer -= Time.deltaTime;
-        if (timer < 0) {
-            return true;
-        }
+        //timer -= Time.deltaTime;
+        //if (timer < 0) {
+           // return true;
+      //  }
 
         return false;
     }

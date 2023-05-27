@@ -15,29 +15,26 @@ using UnityEngine;
 
 public class TutorialTask017 : ITurorial
 {
-    //0  : プレイヤー
-    //1~ : 缶
-    private List<GameObject> gameobjectList = new List<GameObject>();
-    private List<Transform> transformList = new List<Transform>();
+    private GameObject player;
+    private Player _player;
 
-    private float distance = 2.0f;
+    private readonly string canName = "Can_";
+    
 
     /// <summary>
     /// タスク完了に必要となるオブジェクトを設定する
     /// </summary>
     /// <param name="gameObject"></param>
     public void AddNeedObj(GameObject gameObject) {
-        gameobjectList.Add(gameObject);
+        player = gameObject;
     }
 
     /// <summary>
     /// チュートリアルタスクが設定されたときに実行
     /// </summary>
     public void OnTaskSetting() {
-        for(int i = 0; i < gameobjectList.Count; ++i)
-        {
-            transformList.Add(gameobjectList[i].transform);
-        }
+        if (!player) return;
+        _player = player.GetComponent<Player>();
     }
 
     /// <summary>
@@ -45,19 +42,19 @@ public class TutorialTask017 : ITurorial
     /// </summary>
     /// <returns></returns>
     public bool CheckTask() {
-        if(transformList.Count < 2)
+        if (!_player)
         {
-            Debug.LogError("必要なトランスフォームが取得されていません");
+            Debug.LogError("プレイヤーが取得されていません");
             return false;
         }
 
-        for(int i = 1; i < transformList.Count; ++i)
+        //プレイヤーがインタラクトできるオブジェクトがあるか
+        if (_player.InteractObjects.Count <= 0) return false;
+
+        //缶がインタラクトできる状態か
+        for(int i = 0; i < _player.InteractObjects.Count; ++i)
         {
-            //缶との距離が近いか
-            if (Vector3.Distance(transformList[0].position, transformList[i].position) > distance) continue;
-            //プレイヤーが缶の方向を向いているか
-            if (Vector3.Dot(transformList[0].forward, transformList[i].position - transformList[0].position) < 0) continue;
-            return true;
+            if (_player.InteractObjects[i].StartsWith(canName)) return true;
         }
         return false;
     }

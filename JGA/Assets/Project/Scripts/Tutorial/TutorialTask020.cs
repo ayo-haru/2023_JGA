@@ -1,8 +1,9 @@
 //=============================================================================
 // @File	: [TutorialTask001.cs]
 // @Brief	: 「また、連れてこれたね。」
+//              2秒くらい文字フェード
 // @Author	: Ichida Mai
-// @Editer	: 
+// @Editer	: Ogusu Yuuko
 // @Detail	: 
 // 
 // [Date]
@@ -16,7 +17,7 @@ public class TutorialTask020 : ITurorial
 {
     private float timer;    // UIをだしてから遷移するまでの時間
 
-    private readonly float MAX_TIME = 3.0f; // 遷移するまでの時間の定数
+    private readonly float MAX_TIME = 2.0f; // 遷移するまでの時間の定数
 
     /// <summary>
     /// タスク完了に必要となるオブジェクトを設定する
@@ -38,11 +39,7 @@ public class TutorialTask020 : ITurorial
     /// <returns></returns>
     public bool CheckTask() {
         timer -= Time.deltaTime;
-        if (timer < 0) {
-            return true;
-        }
-
-        return false;
+        return timer < 0.0f;
     }
 
 
