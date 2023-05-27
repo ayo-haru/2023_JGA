@@ -999,7 +999,8 @@ public class Player : MonoBehaviour
 		if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj))
 		{
 			if (baseObj.objType == BaseObj.ObjType.HIT ||
-				baseObj.objType == BaseObj.ObjType.HIT_HOLD)
+				baseObj.objType == BaseObj.ObjType.HIT_HOLD ||
+				baseObj.objType == BaseObj.ObjType.HIT_DRAG)
 			{
 				Hit();
 			}
