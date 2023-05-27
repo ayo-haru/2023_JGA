@@ -8,6 +8,7 @@
 // [Date]
 // 2023/03/19	スクリプト作成
 // 2023/04/17	アニメーション追加
+// 2023/05/27	カウントした時の色変更
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -19,8 +20,6 @@ public class GuestNumUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI guestNum;
     //目標人数
     [SerializeField,Range(1,99)] private int clearNum = 10;
-    //現在の人数
-    //private int currentNum = 0;
     //アニメーション時間
     [SerializeField,Range(0,1)] private float animTime = 0.5f;
     private float fTimer = 0.0f;
@@ -74,7 +73,7 @@ public class GuestNumUI : MonoBehaviour
         if (MySceneManager.GameData.guestCnt >= 99) return;
         ++MySceneManager.GameData.guestCnt;
         fTimer = animTime;
-        guestNum.text = string.Format("<color=red><size={0:0}>{1:0}</size></color> / {2:0}", guestNum.fontSize * scaleValue, MySceneManager.GameData.guestCnt, clearNum);
+        guestNum.text = string.Format("<color=blue><size={0:0}>{1:0}</size></color> / {2:0}", guestNum.fontSize * scaleValue, MySceneManager.GameData.guestCnt, clearNum);
 
         SaveManager.SaveAll();  // 客加算時にオートセーブ
     }
