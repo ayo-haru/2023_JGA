@@ -11,6 +11,7 @@
 // 2023/03/30	足音削除
 // 2023/04/28	歩くときのアニメーションスピードをNavMeshAgentの速度基準に変更
 // 2023/05/15	アニメーションの処理をステートからこっちに移動、首の向き変えれるようにした
+// 2023/05/28	後ろ歩きつくった
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -71,6 +72,14 @@ public class GuestAnimation : MonoBehaviour
             animator.transform.localPosition = Vector3.MoveTowards(animator.transform.localPosition,Vector3.zero,0.01f);
         }
 
+        //客の向きとagentの進行方向が逆の場合は後ろ歩き
+        //客の向きとagentの進行方向が同じ場合は前歩き
+        if ((Vector3.Dot(transform.forward, agent.velocity) < 0 && animSpeed > 0) || (Vector3.Dot(transform.forward, agent.velocity) > 0 && animSpeed < 0))
+        {
+            animSpeed *= -1;
+            animator.SetFloat("speed", animSpeed);
+        }
+
         //アニメーションが切り替わっているか
         EGuestAnimState nowState = GetAnimationState();
         if (nowState == state) return;
@@ -78,10 +87,12 @@ public class GuestAnimation : MonoBehaviour
         if (nowState == EGuestAnimState.WALK)
         {
             float fWork = agent.speed / maxAgentSpeed;
-            animator.speed = animSpeed = (fWork < minAnimSpeed) ? minAnimSpeed : (fWork >= maxAnimSpeed) ? maxAnimSpeed : fWork;
+            animSpeed = (fWork < minAnimSpeed) ? minAnimSpeed : (fWork >= maxAnimSpeed) ? maxAnimSpeed : fWork;
+            animator.SetFloat("speed", animSpeed);
         }else if (state == EGuestAnimState.WALK)
         {
-            animator.speed = animSpeed = 1.0f;
+            animSpeed = 1.0f;
+            animator.SetFloat("speed", animSpeed);
         }
 
         //座った状態になったか？
@@ -136,12 +147,12 @@ public class GuestAnimation : MonoBehaviour
 #endif
     private void Pause()
     {
-        if(animator)animator.speed = 0.0f;
+        if (animator) animator.SetFloat("speed", 0.0f);
     }
 
     private void Resumed()
     {
-        if(animator)animator.speed = animSpeed;
+        if (animator) animator.SetFloat("speed", animSpeed);
     }
 
     public void SetAnimation(EGuestAnimState _state)
@@ -176,7 +187,6 @@ public class GuestAnimation : MonoBehaviour
     {
         if (lookAtTarget == _target) return;
 
-        fAnimTimer = 0.0f;
         fAnimTimer = (_target) ? 0.0f : 1.0f;
         beforeLookAtTarget = lookAtTarget;
         lookAtTarget = _target;

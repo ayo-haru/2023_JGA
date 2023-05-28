@@ -150,7 +150,7 @@ public class StateFollowPenguin : AIState
         if (NavMesh.SamplePosition(target.position + posOffset, out NavMeshHit hit, 1.0f, NavMesh.AllAreas)) agent.SetDestination(hit.position);
 
         //アニメーション更新
-        guestAnimation.SetAnimation((agent.velocity.magnitude > 0.2f) ? GuestAnimation.EGuestAnimState.WALK : GuestAnimation.EGuestAnimState.IDLE);
+        guestAnimation.SetAnimation((agent.velocity.magnitude > 0.5f) ? GuestAnimation.EGuestAnimState.WALK : GuestAnimation.EGuestAnimState.IDLE);
     }
 
     public override void FinState()
