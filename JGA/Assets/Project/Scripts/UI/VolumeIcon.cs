@@ -8,6 +8,7 @@
 // [Date]
 // 2023/04/08	スクリプト作成
 // 2023/05/15	音量調整機能実装
+// 2023/05/28	開始時に数字が０になってしまうの直した
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -40,11 +41,11 @@ public class VolumeIcon : MonoBehaviour
 			currentVol = (int)(SoundVolumeManager.GetSE() * maxVol);
 		}
 
-		for (int i = 0; i < currentVol; i++)
-		{
-			rt.localPosition = new Vector3(rt.localPosition.x + interval, rt.localPosition.y, rt.localPosition.z);
-		}
-	}
+        //アイコン位置変更
+        rt.localPosition = new Vector3(rt.localPosition.x + interval * currentVol, rt.localPosition.y, rt.localPosition.z);
+        //テキスト変更
+        text.text = string.Format("{0:0}", currentVol);
+    }
 
 #if false
 	/// <summary>
@@ -81,7 +82,6 @@ public class VolumeIcon : MonoBehaviour
 		text.text = string.Format("{0:0}", currentVol);
 
 		//サウンドマネージャー？の音量設定の関数を呼ぶ
-		//currentVol / (float)maxVol
 		if (bBGM)
 		{
 			SoundVolumeManager.SetBGM((float)currentVol / maxVol);
@@ -103,7 +103,6 @@ public class VolumeIcon : MonoBehaviour
 		text.text = string.Format("{0:0}", currentVol);
 
 		//サウンドマネージャー？の音量設定の関数を呼ぶ
-		//currentVol / (float)maxVol
 		if (bBGM)
 		{
 			SoundVolumeManager.SetBGM((float)currentVol / maxVol);
