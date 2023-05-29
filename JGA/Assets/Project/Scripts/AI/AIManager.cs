@@ -73,6 +73,7 @@ public class AIManager : MonoBehaviour
             data.penguinTF.Add(_StageSceneManager.GetRootTransform(MySceneManager.eRoot.PENGUIN_S));
             data.penguinTF.Add(_StageSceneManager.GetRootTransform(MySceneManager.eRoot.PENGUIN_W));
             data.penguinTF.Add(_StageSceneManager.GetRootTransform(MySceneManager.eRoot.PENGUIN_E));
+            data.entranceTF = (_StageSceneManager.GetRootTransform(MySceneManager.eRoot.ENTRANCE));
 
             //表示名変更
             gameObject.name = data.name;
