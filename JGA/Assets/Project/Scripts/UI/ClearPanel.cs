@@ -31,39 +31,22 @@ public class ClearPanel : MonoBehaviour
     private Vector3 mousePos = Vector3.zero;
     private bool bMouse = true;
 
-    private bool bGamePad;
-
     //次のシーン
     private int nextScene = -1;
-#if UseMyContorller
-    private MyContorller gameInputs;            // 方向キー入力取得
-#else
+
     [SerializeField] private InputActionReference actionMove;
-#endif
+
     void Awake()
 	{
         audioSource = GetComponent<AudioSource>();
         nextScene = -1;
-        bMouse = true;
-        mousePos = Vector3.zero;
 
-#if UseMyController
-        // Input Actionインスタンス生成
-        gameInputs = new MyContorller();
-
-		// Actionイベント登録
-		gameInputs.Menu.Move.performed += OnMove;
-
-		// Input Actionを有効化
-		gameInputs.Enable();
-#else
         actionMove.action.performed += OnMove;
         actionMove.action.canceled += OnMove;
         actionMove.ToInputAction().Enable();
-#endif
+
         nextDayButtonImage = nextDayButton.GetComponent<Image>();
         backToTitleButtonImage = backToTitleButton.GetComponent<Image>();
-        InitInput();
     }
 
     private void OnEnable()
@@ -81,13 +64,11 @@ public class ClearPanel : MonoBehaviour
         //マウスの状態を更新
         Vector3 oldMousePos = mousePos;
         mousePos = Input.mousePosition;
-        //ゲームパットの状態を更新
-        bGamePad = Gamepad.current != null;
 
         if (bMouse) return;
 
-        //ゲームパッドがない又はマウスが動かされたらマウス入力に切り替え
-        if(!bGamePad || Vector3.Distance(oldMousePos, mousePos) >= 1.0f)
+        //マウスが動かされたらマウス入力に切り替え
+        if(Vector3.Distance(oldMousePos, mousePos) >= 1.0f)
         {
             ChangeInput();
         }
@@ -155,7 +136,7 @@ public class ClearPanel : MonoBehaviour
     public void InitInput()
     {
         mousePos = Input.mousePosition;
-        bMouse = bGamePad = (Gamepad.current) != null;
+        bMouse = (Gamepad.current) != null;
         ChangeInput();
     }
 
@@ -187,7 +168,6 @@ public class ClearPanel : MonoBehaviour
     private void OnMove(InputAction.CallbackContext context)
     {
         if (!PauseManager.isPaused) return;
-        if (!bGamePad) bGamePad = true;
         if (!bMouse) return;
 
         //マウス→コントローラ

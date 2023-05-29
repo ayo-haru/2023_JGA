@@ -9,6 +9,7 @@
 // 2023/03/20	スクリプト作成
 // 2023/04/08	(小楠)オプションのスライド移動追加
 // 2023/05/28	(小楠)スクリプト綺麗にした
+// 2023/05/29	(小楠)ゲームパッド繋がってないときにキーボードで操作できないのを修正
 //=============================================================================
 using UniRx;
 using UnityEngine;
@@ -52,7 +53,6 @@ public class OptionPanel : MonoBehaviour
     private Vector3 mousePos = Vector3.zero;
     private bool bMouse = true;
 
-    private bool bGamePad;
     [SerializeField] private InputActionReference actionMove;
 
     public enum EOptionSlide { MIN_SLIDE = -2,LEFT, CENTER, RIGHT,MAX_SLIDE };
@@ -97,13 +97,11 @@ public class OptionPanel : MonoBehaviour
         //マウスの状態を更新
         Vector3 oldMousePos = mousePos;
         mousePos = Input.mousePosition;
-        //ゲームパットの状態を更新
-        bGamePad = Gamepad.current != null;
 
         if (bMouse) return;
 
-        //ゲームパッドがない又はマウスが動かされたらマウス入力に切り替え
-        if (!bGamePad || Vector3.Distance(oldMousePos, mousePos) >= 1.0f)
+        //マウスが動かされたらマウス入力に切り替え
+        if (Vector3.Distance(oldMousePos, mousePos) >= 1.0f)
         {
             ChangeInput();
         }
@@ -216,7 +214,7 @@ public class OptionPanel : MonoBehaviour
     public void InitInput()
     {
         mousePos = Input.mousePosition;
-        bMouse = bGamePad = (Gamepad.current) != null;
+        bMouse = (Gamepad.current) != null;
         ChangeInput();
     }
     /// <summary>
@@ -290,8 +288,8 @@ public class OptionPanel : MonoBehaviour
     private void OnMove(InputAction.CallbackContext context)
     {
         if (!IsOpen()) return;
-        if (!bGamePad) bGamePad = true;
         if (bMouse) ChangeInput();
+
 
         //左右の入力があるか？
         Vector2 move = context.ReadValue<Vector2>();
