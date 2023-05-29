@@ -104,7 +104,14 @@ public class StateFollowPenguinTutorial : AIState
         //プレイヤーが客に向かって歩いてるときは追従しない
         if(!agent.isStopped)agent.isStopped = Vector3.Dot(agent.velocity.normalized, player.vForce.normalized) < 0;
         //目的地設定
-        if (NavMesh.SamplePosition(target.position + posOffset, out NavMeshHit hit, 1.0f, NavMesh.AllAreas)) agent.SetDestination(hit.position);
+        if (NavMesh.SamplePosition(target.position + posOffset, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+        {
+            agent.SetDestination(hit.position);
+        }
+        else
+        {
+            agent.SetDestination(target.position);
+        }
         //アニメーション更新
         guestAnimation.SetAnimation((agent.velocity.magnitude > 0.5f) ? GuestAnimation.EGuestAnimState.WALK : GuestAnimation.EGuestAnimState.IDLE);
     }
