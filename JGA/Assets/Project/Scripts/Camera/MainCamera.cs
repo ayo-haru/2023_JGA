@@ -211,23 +211,24 @@ public class MainCamera : MonoBehaviour
         //一定時間の計算
         scriptStop += Time.deltaTime;
 
+        if (crearGuest != MySceneManager.GameData.guestCnt)
+        {
+            guestObj = GameObject.FindGameObjectsWithTag("Guest");
+            //客の範囲取得
+            boundGuest = new Bounds[guestObj.Length];
+            crearGuest = MySceneManager.GameData.guestCnt;
+        }
+        if (guestCheck != MySceneManager.GameData.guestData.Length + MySceneManager.GameData.randomGuestCnt)
+        {
+            guestObj = GameObject.FindGameObjectsWithTag("Guest");
+            //客の範囲取得
+            boundGuest = new Bounds[guestObj.Length];
+            guestCheck = MySceneManager.GameData.guestData.Length + MySceneManager.GameData.randomGuestCnt;
+        }
+
         if (scriptStop >= 1.0f)
         {
-            if (crearGuest != MySceneManager.GameData.guestCnt)
-            {
-                
-                guestObj = GameObject.FindGameObjectsWithTag("Guest");
-                //客の範囲取得
-                boundGuest = new Bounds[guestObj.Length];
-                crearGuest = MySceneManager.GameData.guestCnt;
-            }
-            if (guestCheck != MySceneManager.GameData.guestData.Length + MySceneManager.GameData.randomGuestCnt)
-            {
-                guestObj = GameObject.FindGameObjectsWithTag("Guest");
-                //客の範囲取得
-                boundGuest = new Bounds[guestObj.Length];
-                guestCheck = MySceneManager.GameData.guestData.Length + MySceneManager.GameData.randomGuestCnt;
-            }
+            
             GuestCount();
             if (currentGuestValue >= guestValue)
             {
