@@ -66,7 +66,6 @@ public class ResultCamera : MonoBehaviour
         mainCamera.SetActive(true);
         resultCamera.SetActive(false);
 
-
         //----- 客人数カウントUIの取得 -----
         guestNumUI = GameObject.Find("GuestNumUI");
         if (guestNumUI)
@@ -122,6 +121,7 @@ public class ResultCamera : MonoBehaviour
 	{
         mainCamera.SetActive(false);
         resultCamera.SetActive(true);
+        EffectManager.Create(new Vector3(0, 26.2f, 0),"ClearEffect",Quaternion.Euler(90.0f,0.0f,0.0f));
     }
 	private void CameraRotate()
 	{
