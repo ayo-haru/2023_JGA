@@ -39,9 +39,9 @@ public class TutorialTask015 : ITurorial
     /// </summary>
     /// <returns></returns>
     public bool CheckTask() {
-        if (_player)
+        if (!_player)
         {
-            Debug.Log("プレイヤーのスクリプトが取得されていません");
+            Debug.LogError("プレイヤーのスクリプトが取得されていません");
             return false;
         }
 

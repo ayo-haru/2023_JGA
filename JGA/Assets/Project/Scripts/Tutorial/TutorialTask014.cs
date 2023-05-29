@@ -16,9 +16,8 @@ using UnityEngine;
 public class TutorialTask014 : ITurorial
 {
     //0  : プレイヤー
-    //1~ : 段ボール
-    private List<GameObject> gameObjectList = new List<GameObject>();
-    private List<Transform> transformList = new List<Transform>();
+    private GameObject player;
+    private Player _player;
 
     private readonly float distance = 2.0f;
 
@@ -27,17 +26,15 @@ public class TutorialTask014 : ITurorial
     /// </summary>
     /// <param name="gameObject"></param>
     public void AddNeedObj(GameObject gameObject) {
-        gameObjectList.Add(gameObject);
+        player = gameObject;
     }
 
     /// <summary>
     /// チュートリアルタスクが設定されたときに実行
     /// </summary>
     public void OnTaskSetting() {
-        for(int i = 0; i < gameObjectList.Count; ++i)
-        {
-            transformList.Add(gameObjectList[i].transform);
-        }
+        if (!player) return;
+        _player = player.GetComponent<Player>();
     }
 
     /// <summary>
@@ -45,18 +42,17 @@ public class TutorialTask014 : ITurorial
     /// </summary>
     /// <returns></returns>
     public bool CheckTask() {
-        //プレイヤーと段ボール合わせて２つないと距離を比較できないため
-        if (transformList.Count <= 1)
+        if (!_player)
         {
-            Debug.LogError("トランスフォームが１つ以下です");
+            Debug.LogError("プレイヤーのスクリプトが取得されていません");
             return false;
         }
-
-        //プレイヤーと段ボールの距離比較
-        for(int i = 1; i < transformList.Count; ++i)
+        
+        for(int i = 0; i < _player.InteractObjects.Count; ++i)
         {
-            if (Vector3.Distance(transformList[0].position, transformList[i].position) <= distance) return true;
+            if (_player.InteractObjects[i].StartsWith("CardBoard_")) return true;
         }
+
         return false;
     }
 
