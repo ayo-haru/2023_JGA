@@ -20,7 +20,7 @@ public class TutorialTask013 : ITurorial
     //プレイヤーのTransform
     private Transform playerTransform;
     //プレイヤーの半径
-    private readonly float r = 2.0f;
+    private readonly float r = 30.0f;
     //ゴール地点
     private readonly Vector3 p0 = new Vector3(-45.42f,1.0f,-64.32f);
     private readonly Vector3 p1 = new Vector3(-64.32f,1.0f,-45.42f);
@@ -61,7 +61,7 @@ public class TutorialTask013 : ITurorial
         Vector2 lineEndToCircleCenter = center - p1;
 
         Vector3 distance = Vector3.Cross(lineStartToEnd, lineStartToCircleCenter);
-        return distance.magnitude > r;
+        return distance.magnitude < r;
     }
 
 

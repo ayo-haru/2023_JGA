@@ -48,9 +48,6 @@ public class TutorialTask017 : ITurorial
             return false;
         }
 
-        //プレイヤーがインタラクトできるオブジェクトがあるか
-        if (_player.InteractObjects.Count <= 0) return false;
-
         //缶がインタラクトできる状態か
         for(int i = 0; i < _player.InteractObjects.Count; ++i)
         {
