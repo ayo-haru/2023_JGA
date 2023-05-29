@@ -2,11 +2,12 @@
 // @File	: [TutorialTask001.cs]
 // @Brief	: 「噴水よりも先に行って、残りのお客さんを集めよう」
 // @Author	: Ichida Mai
-// @Editer	: 
+// @Editer	: Yoshihara Asuka
 // @Detail	: 
 // 
 // [Date]
 // 2023/05/26	スクリプト作成
+// 2023/05/29	チュートリアル用処理作成
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ public class TutorialTask023 : ITurorial
 {
     private float timer;    // UIをだしてから遷移するまでの時間
 
-    private readonly float MAX_TIME = 3.0f; // 遷移するまでの時間の定数
+    private readonly float MAX_TIME = 0.0f; // 遷移するまでの時間の定数
 
     /// <summary>
     /// タスク完了に必要となるオブジェクトを設定する
@@ -51,7 +52,7 @@ public class TutorialTask023 : ITurorial
     /// </summary>
     /// <returns></returns>
     public float GetTransitionTime() {
-        return 1.5f;
+        return 2.0f;
     }
 
 }
