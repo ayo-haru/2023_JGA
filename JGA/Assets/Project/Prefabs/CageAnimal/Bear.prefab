@@ -2492,7 +2492,6 @@ GameObject:
   - component: {fileID: 7535056807155738527}
   - component: {fileID: 4499600612942806501}
   - component: {fileID: 4817794514649424675}
-  - component: {fileID: 9184100395625408105}
   - component: {fileID: 4024832123506928858}
   m_Layer: 0
   m_Name: Bear
@@ -2509,7 +2508,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7195123359571016997}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -16.6371, y: 0.0000019073486, z: 3.063424}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2551,20 +2550,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6cfde130f82af54aab7cc592a9b38f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!136 &9184100395625408105
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7195123359571016997}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 3.5312896
-  m_Height: 7.639078
-  m_Direction: 1
-  m_Center: {x: 0.05553198, y: 3.6168528, z: -0.013667107}
 --- !u!54 &4024832123506928858
 Rigidbody:
   m_ObjectHideFlags: 0
