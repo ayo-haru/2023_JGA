@@ -14,6 +14,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using UniRx;
 
 public class TutorialManager : MonoBehaviour {
     enum TutorialState {
@@ -29,19 +30,16 @@ public class TutorialManager : MonoBehaviour {
     //---プレイヤー
     GameObject player;
 
-    //---チュートリアル用客
-    GameObject guest;
+    private List<ITurorial> tutorialTask;   // タスク一覧
+    private ITurorial currentTask;  // 現在のタスク
 
-    private List<ITurorial> tutorialTask;
-    private ITurorial currentTask;
-
-    private static bool isExecution = false;   // チュートリアルをやるか
+    private static ReactiveProperty<bool> isExecution = new ReactiveProperty<bool>(false);   // チュートリアルをやるか
     private bool isTaskFin;                     // タスクが終了しているか
 
     [SerializeField]
-    private List<GameObject> tutorialText;
-    private GameObject currentTextObj;
-    private Image currentText;
+    private List<GameObject> tutorialText;  // 表示するテキストのプレハブ
+    private GameObject currentTextObj;  // 現在のテキストのプレハブ
+    private Image currentText;  // 現在のテキストのImageコンポーネント
 
 
     //**デバッグ用***************************************************************
@@ -50,7 +48,10 @@ public class TutorialManager : MonoBehaviour {
 #endif
     //*****************************************************************
     private void Awake() {
-        // 変数初期化
+        //----- イベント登録 -----
+        //isExecution.Subscribe(_ => { });
+
+        //----- 変数初期化 -----
         isTaskFin = false;
     }
 
@@ -64,7 +65,6 @@ public class TutorialManager : MonoBehaviour {
         fade = GameObject.Find("FadePanel");
 
         player = GameObject.FindWithTag("Player");
-        //guest = GameObject.Find("TutorialWait_Guest001");
 
         // チュートリアルの一覧
         tutorialTask = new List<ITurorial>()
@@ -102,11 +102,6 @@ public class TutorialManager : MonoBehaviour {
         SetTaskObj(tutorialTask.First());
         StartCoroutine(SetCurrentTask(tutorialTask.First()));
 
-        //currentTextObj = tutorialText.First();
-        //Instantiate(currentTextObj, canvasRT);
-        //currentTextObj.transform.SetSiblingIndex(fade.transform.GetSiblingIndex()); // フェードの裏側に来るようにする
-        //currentText = currentTextObj.GetComponent<Image>();
-
         //**デバッグ用***************************************************************
 #if UNITY_EDITOR
         debugTaskFin = false;
@@ -120,7 +115,7 @@ public class TutorialManager : MonoBehaviour {
     /// </summary>
     void Update() {
         //----- チュートリアルを実行するか -----
-        if (!isExecution) {
+        if (!isExecution.Value) {
             return;
         }
 
@@ -212,6 +207,7 @@ public class TutorialManager : MonoBehaviour {
             case TutorialTask008:
                 break;
             case TutorialTask009:
+                task.AddNeedObj(player);
                 break;
             case TutorialTask010:
                 task.AddNeedObj(player);
@@ -223,21 +219,30 @@ public class TutorialManager : MonoBehaviour {
                 break;
             case TutorialTask013:
                 task.AddNeedObj(player);
+                task.AddNeedObj(GameObject.Find("CardBoard_001"));
+                task.AddNeedObj(GameObject.Find("CardBoard_002"));
+                task.AddNeedObj(GameObject.Find("CardBoard_007"));
                 break;
             case TutorialTask014:
                 task.AddNeedObj(player);
+                task.AddNeedObj(GameObject.Find("CardBoard_001"));
+                task.AddNeedObj(GameObject.Find("CardBoard_002"));
+                task.AddNeedObj(GameObject.Find("CardBoard_007"));
                 break;
             case TutorialTask015:
                 task.AddNeedObj(player);
                 break;
             case TutorialTask016:
                 task.AddNeedObj(player);
+                task.AddNeedObj(GameObject.Find("TutorialWait_Guest002"));
+                task.AddNeedObj(GameObject.Find("TutorialWait_Guest003"));
                 break;
             case TutorialTask017:
                 task.AddNeedObj(player);
                 break;
             case TutorialTask018:
-                task.AddNeedObj(player);
+                task.AddNeedObj(GameObject.Find("TutorialWait_Guest002"));
+                task.AddNeedObj(GameObject.Find("TutorialWait_Guest003"));
                 break;
             case TutorialTask019:
                 break;
@@ -250,7 +255,6 @@ public class TutorialManager : MonoBehaviour {
             case TutorialTask023:
                 break;
             case TutorialTask024:
-                task.AddNeedObj(player);
                 break;
             case TutorialTask025:
                 break;
@@ -265,13 +269,21 @@ public class TutorialManager : MonoBehaviour {
     /// チュートリアル始める
     /// </summary>
     public static void StartTutorial() {
-        isExecution = true;
+        isExecution.Value = true;
     }
 
     /// <summary>
     /// チュートリアル止める
     /// </summary>
     public static void StopTutorial() {
-        isExecution = false;
+        isExecution.Value = false;
+    }
+
+    /// <summary>
+    /// 実行されているかを取得
+    /// </summary>
+    /// <returns></returns>
+    public bool GetExecution() {
+        return isExecution.Value;
     }
 }

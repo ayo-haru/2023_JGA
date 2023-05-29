@@ -30,6 +30,12 @@ public class TutorialTask023 : ITurorial
     /// チュートリアルタスクが設定されたときに実行
     /// </summary>
     public void OnTaskSetting() {
+        // 壁を消す
+        GameObject.Destroy(GameObject.Find("TutorialWall_001"));
+        GameObject.Destroy(GameObject.Find("TutorialWall_002"));
+        GameObject.Destroy(GameObject.Find("TutorialWall_003"));
+        GameObject.Destroy(GameObject.Find("TutorialWall_005"));
+
         timer = MAX_TIME;
     }
 

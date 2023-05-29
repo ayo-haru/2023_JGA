@@ -18,6 +18,15 @@ public class TutorialTask001 : ITurorial
 
     private readonly float MAX_TIME = 3.0f; // 遷移するまでの時間の定数
 
+    // 生成する壁
+    private GameObject wallPrefab;
+    private GameObject tutorialWall_001;
+    private GameObject tutorialWall_002;
+    private GameObject tutorialWall_003;
+    private GameObject tutorialWall_004;
+    private GameObject tutorialWall_005;
+
+
     /// <summary>
     /// タスク完了に必要となるオブジェクトを設定する
     /// </summary>
@@ -30,6 +39,20 @@ public class TutorialTask001 : ITurorial
     /// </summary>
     public void OnTaskSetting() {
         timer = MAX_TIME;
+
+        //----- 壁を生成 -----
+        wallPrefab = PrefabContainerFinder.Find(MySceneManager.GameData.stageObjDatas, "TutorialWall.prefab");
+
+        tutorialWall_001 = GameObject.Instantiate(wallPrefab, new Vector3(23.5f, 0.0f, -42.0f), Quaternion.Euler(0.0f, -45.0f, 0.0f));
+        tutorialWall_001.name = "TutorialWall_001";
+        tutorialWall_002 = GameObject.Instantiate(wallPrefab, new Vector3(-46.5f, 0.0f, -18.0f), Quaternion.Euler(0.0f, 45.0f, 0.0f));
+        tutorialWall_002.name = "TutorialWall_002";
+        tutorialWall_003 = GameObject.Instantiate(wallPrefab, new Vector3(0.0f, 0.0f, -65.5f), Quaternion.Euler(0.0f, 90.0f, 0.0f));
+        tutorialWall_003.name = "TutorialWall_003";
+        tutorialWall_004 = GameObject.Instantiate(wallPrefab, new Vector3(-38.0f, 0.0f, -39.0f), Quaternion.Euler(0.0f, 135.0f, 0.0f));
+        tutorialWall_004.name = "TutorialWall_004";
+        tutorialWall_005 = GameObject.Instantiate(wallPrefab, new Vector3(-98.0f, 0.0f, -107.0f), Quaternion.Euler(0.0f, 135.0f, 0.0f));
+        tutorialWall_005.name = "TutorialWall_005";
     }
 
     /// <summary>

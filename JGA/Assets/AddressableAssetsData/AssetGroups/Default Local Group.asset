@@ -69,6 +69,10 @@ MonoBehaviour:
     m_Address: Stage02_ZooKeeperData
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 9424c51392b3de040a55af51a6cb9fb6
+    m_Address: StageObjData
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 6490bc5112e0d74469e157e8c2cc9fd5, type: 2}
   m_SchemaSet:
