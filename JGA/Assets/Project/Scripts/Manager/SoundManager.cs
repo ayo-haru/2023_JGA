@@ -152,7 +152,7 @@ public class SoundManager : MonoBehaviour
 			{
 				SEs.Add(_SEs[i].clip);
 				audioSource.volume = _SEs[i].volume * Volume.fSE;
-                audioSource.loop = false;
+				audioSource.loop = false;
 				audioSource.PlayOneShot(_SEs[i].clip);
 				return;
 			}
@@ -167,7 +167,7 @@ public class SoundManager : MonoBehaviour
 				BGM = BGMs[i].clip;
 				audioSource.clip = BGMs[i].clip;
 				audioSource.volume = BGMs[i].volume * Volume.fBGM;
-                audioSource.loop = true;
+				audioSource.loop = true;
 				audioSource.Play();
 				return;
 			}
@@ -224,7 +224,7 @@ public class SoundManager : MonoBehaviour
 		SoundData.Sound _SE = MySceneManager.Sound.SEDatas.list[((int)eSE)];
 		SEs.Add(_SE.clip);
 		audioSource.volume = _SE.volume * Volume.fSE;
-        audioSource.loop = false;
+		audioSource.loop = false;
 		audioSource.PlayOneShot(_SE.clip);
 	}
 
@@ -247,7 +247,7 @@ public class SoundManager : MonoBehaviour
 			{
 				SEs.Add(_SEs[i].clip);
 				audioSource.volume = _SEs[i].volume * Volume.fSE;
-                audioSource.loop = false;
+				audioSource.loop = false;
 				audioSource.PlayOneShot(_SEs[i].clip);
 				return;
 			}
@@ -262,7 +262,7 @@ public class SoundManager : MonoBehaviour
 				BGM = BGMs[i].clip;
 				audioSource.clip = BGMs[i].clip;
 				audioSource.volume = BGMs[i].volume * Volume.fBGM;
-                audioSource.loop = true;
+				audioSource.loop = true;
 				audioSource.Play();
 				return;
 			}
@@ -430,6 +430,8 @@ public class SoundManager : MonoBehaviour
 		if (Source == null || Source.Count == 0)
 			return;
 
+		Source.Remove(null);
+
 		foreach (var item in Source)
 		{
 			item.Pause();
@@ -440,6 +442,8 @@ public class SoundManager : MonoBehaviour
 	{
 		if (Source == null || Source.Count == 0)
 			return;
+
+		Source.Remove(null);
 
 		foreach (var item in Source)
 		{
