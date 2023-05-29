@@ -202,7 +202,7 @@ public class PausePanel : MonoBehaviour
         //マウス→コントローラ
         if (bMouseMode)
         {
-            Debug.Log("ああああ");
+            EventSystem.current.SetSelectedGameObject(null);
             backButton.Select();
         }else{//コントローラ→　マウス
             EventSystem.current.SetSelectedGameObject(null);

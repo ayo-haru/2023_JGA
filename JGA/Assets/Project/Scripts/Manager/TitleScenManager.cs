@@ -82,6 +82,20 @@ public class TitleScenManager : BaseSceneManager {
         continueButtonCollider = continueButton.GetComponent<BoxCollider>();
         optionButtonCollider = optionButton.GetComponent<BoxCollider>();
         exitButtonCollider = exitButton.GetComponent<BoxCollider>();
+
+        //セーブデータが存在しない場合は続きからボタンを無効化
+        if (!MySceneManager.GameData.isContinueGame)
+        {
+            //続きからボタン無効化
+            continueButton.interactable = false;
+            //ナビゲーション変更
+            Navigation navigation = startButton.navigation;
+            navigation.selectOnDown = optionButton;
+            startButton.navigation = navigation;
+            navigation = optionButton.navigation;
+            navigation.selectOnUp = startButton;
+            optionButton.navigation = navigation;
+        }
     }
 
     private void Start() {
@@ -134,7 +148,14 @@ public class TitleScenManager : BaseSceneManager {
 
     public void ContinueButton()
     {
+        //非有効だったら実行しない
+        if (!continueButton.IsInteractable()) return;
+
         SoundSEDecision();
+
+        SaveManager.LoadAll();  // セーブデータロード
+        nextScene = MySceneManager.GameData.nowScene;   // 次のシーンを更新。セーブデータのロードをしてnowSceneには前回のシーン番号が入っているからnextにnowを代入
+#if false
         if (MySceneManager.GameData.isContinueGame) {   // セーブデータが存在してたか
             // セーブデータ有りなのでデータロード
             SaveManager.LoadAll();  // セーブデータロード
@@ -143,6 +164,7 @@ public class TitleScenManager : BaseSceneManager {
             // セーブデータがなかったので「はじめから」と同じように振る舞う
             MySceneManager.GameData.nowScene = nextScene = (int)MySceneManager.SceneState.SCENE_GAME_001;
         }
+#endif
         MySceneManager.GameData.oldScene = (int)MySceneManager.SceneState.SCENE_TITLE;  // 今のシーンをひとつ前のシーンとして保存
         SceneChange(nextScene);
         //コントローラ入力の場合マウスカーソルが非表示のままになってしまうので表示する
@@ -163,7 +185,7 @@ public class TitleScenManager : BaseSceneManager {
         Application.Quit();
 #endif
     }
-    #endregion
+#endregion
 
     public void InitInput()
     {
