@@ -72,16 +72,21 @@ public class GuestAnimation : MonoBehaviour
             animator.transform.localPosition = Vector3.MoveTowards(animator.transform.localPosition,Vector3.zero,0.01f);
         }
 
-        //客の向きとagentの進行方向が逆の場合は後ろ歩き
-        //客の向きとagentの進行方向が同じ場合は前歩き
-        if ((Vector3.Dot(transform.forward, agent.velocity) < 0 && animSpeed > 0) || (Vector3.Dot(transform.forward, agent.velocity) > 0 && animSpeed < 0))
+        
+        EGuestAnimState nowState = GetAnimationState();
+        //歩いているか？
+        if (nowState == EGuestAnimState.WALK)
         {
-            animSpeed *= -1;
-            animator.SetFloat("speed", animSpeed);
+            //客の向きとagentの進行方向が逆の場合は後ろ歩き
+            //客の向きとagentの進行方向が同じ場合は前歩き
+            if ((Vector3.Dot(transform.forward, agent.velocity) < 0 && animSpeed > 0) || (Vector3.Dot(transform.forward, agent.velocity) > 0 && animSpeed < 0))
+            {
+                animSpeed *= -1;
+                animator.SetFloat("speed", animSpeed);
+            }
         }
 
-        //アニメーションが切り替わっているか
-        EGuestAnimState nowState = GetAnimationState();
+        // アニメーションが切り替わっているか
         if (nowState == state) return;
         //Walkから他のアニメーション又は他のアニメーションからWalkに切り替わったか？
         if (nowState == EGuestAnimState.WALK)

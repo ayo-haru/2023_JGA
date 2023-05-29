@@ -499,6 +499,9 @@ public class StageSceneManager : BaseSceneManager {
         guestData.penguinTF.Add(rootPos[(int)MySceneManager.eRoot.PENGUIN_W]);
         guestData.penguinTF.Add(rootPos[(int)MySceneManager.eRoot.PENGUIN_E]);
 
+        // エントランスの座標を入れる
+        guestData.entranceTF = rootPos[(int)MySceneManager.eRoot.ENTRANCE];
+
         //----- 目的地のブースをランダムで設定(固定客は作ってない) -----
         int randomRootSum, randomRootNum;
 
