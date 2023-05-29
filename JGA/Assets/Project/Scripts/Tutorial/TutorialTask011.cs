@@ -11,14 +11,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class TutorialTask011 : ITurorial {
-    private float timer;    // UIをだしてから遷移するまでの時間
-
-    private readonly float MAX_TIME = 3.0f; // 遷移するまでの時間の定数
-
-
-    private int oldGuestCnt;
+    private int oldGuestCnt;    // 前フレームまでの集めた客の人数
 
     /// <summary>
     /// タスク完了に必要となるオブジェクトを設定する

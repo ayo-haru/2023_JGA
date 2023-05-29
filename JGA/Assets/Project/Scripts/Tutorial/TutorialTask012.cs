@@ -32,6 +32,8 @@ public class TutorialTask012 : ITurorial
     /// </summary>
     public void OnTaskSetting() {
         _player = player.GetComponent<Player>();
+        // 壁を消す
+        GameObject.Destroy(GameObject.Find("TutorialWall_004"));
     }
 
     /// <summary>
