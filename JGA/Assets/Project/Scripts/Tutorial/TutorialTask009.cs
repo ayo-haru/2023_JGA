@@ -14,22 +14,22 @@ using UnityEngine;
 
 public class TutorialTask009 : ITurorial
 {
-    private float timer;    // UIをだしてから遷移するまでの時間
-
-    private readonly float MAX_TIME = 3.0f; // 遷移するまでの時間の定数
+    private List<GameObject> needObj = new List<GameObject>();
+    private Player _player;
 
     /// <summary>
     /// タスク完了に必要となるオブジェクトを設定する
     /// </summary>
     /// <param name="gameObject"></param>
     public void AddNeedObj(GameObject gameObject) {
+        needObj.Add(gameObject);
     }
 
     /// <summary>
     /// チュートリアルタスクが設定されたときに実行
     /// </summary>
     public void OnTaskSetting() {
-        timer = MAX_TIME;
+        _player = needObj[0].GetComponent<Player>();    // ここではプレイヤーしか使用しないので0番目を直指定
     }
 
     /// <summary>
@@ -37,11 +37,9 @@ public class TutorialTask009 : ITurorial
     /// </summary>
     /// <returns></returns>
     public bool CheckTask() {
-        timer -= Time.deltaTime;
-        if (timer < 0) {
+        if (_player.IsHit) {   //  はたいたとき
             return true;
         }
-
         return false;
     }
 
@@ -51,7 +49,6 @@ public class TutorialTask009 : ITurorial
     /// </summary>
     /// <returns></returns>
     public float GetTransitionTime() {
-        return 1.5f;
+        return 3.0f;
     }
-
 }

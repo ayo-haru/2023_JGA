@@ -16,7 +16,7 @@ public class TutorialTask007 : ITurorial
 {
     private List<GameObject> needObj = new List<GameObject>();
     private Player _player;
-
+    private List<string> InteractObjects = new List<string>();
 
     /// <summary>
     /// タスク完了に必要となるオブジェクトを設定する
@@ -38,11 +38,13 @@ public class TutorialTask007 : ITurorial
     /// </summary>
     /// <returns></returns>
     public bool CheckTask() {
-        if (_player.IsHit) {
-            /*
-             * プレイヤーから当たっているものが取れたら缶との当たり判定を入れる
-             */
-            return true;
+        InteractObjects = _player.InteractObjects;
+        if (_player.IsHit) {   //  はたいたとき
+            foreach (string objName in InteractObjects) {
+                if (objName.IndexOf("Can") != -1) { // 缶と当たってたら
+                    return true;
+                }
+            }
         }
         return false;
     }

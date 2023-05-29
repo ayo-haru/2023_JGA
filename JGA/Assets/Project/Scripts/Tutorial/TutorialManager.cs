@@ -18,19 +18,6 @@ using DG.Tweening;
 public class TutorialManager : MonoBehaviour
 {
     enum TutorialState {
-        GO_TRASHBOX = 0,
-        STHICK,
-        PRESS_A,
-        GUEST_CAN,
-        GUEST_APPEAL,
-        PRESS_B,
-        FOLLOW_GUEST,
-        GUEST_TAKE_EFFECT,
-        GUEST_ARRIVAL,
-        CORN,
-        PRESS_RT,
-        HOLD_OBJ,
-        TIMER
     }
 
     //---キャンバス
@@ -73,7 +60,7 @@ public class TutorialManager : MonoBehaviour
         fade = GameObject.Find("FadePanel");
 
         player = GameObject.FindWithTag("Player");
-        guest = GameObject.Find("TutorialWait_Guest001");
+        //guest = GameObject.Find("TutorialWait_Guest001");
 
         // チュートリアルの一覧
         tutorialTask = new List<ITurorial>()
@@ -184,37 +171,73 @@ public class TutorialManager : MonoBehaviour
 
     void SetTaskObj(ITurorial task) {
         switch (task) {
-            case Move01Tutorial:
+            case TutorialTask001:
                 break;
-            case Move02Tutorial:
+            case TutorialTask002:
+                break;
+            case TutorialTask003:
                 task.AddNeedObj(player);
                 break;
-            case Hit01Tutorial:
-                currentTask.AddNeedObj(player);
+            case TutorialTask004:
+                task.AddNeedObj(player);
                 break;
-            case Hit02Tutorial:
+            case TutorialTask005:
+                task.AddNeedObj(player);
                 break;
-            case Appeal01Tutorial:
+            case TutorialTask006:
+                task.AddNeedObj(player);
                 break;
-            case Appeal02Tutorial:
-                currentTask.AddNeedObj(player);
+            case TutorialTask007:
+                task.AddNeedObj(player);
                 break;
-            case Follow01Tutorial:
-                currentTask.AddNeedObj(guest);
+            case TutorialTask008:
                 break;
-            case Follow02Tutorial:
+            case TutorialTask009:
                 break;
-            case Follow03Tutorial:
+            case TutorialTask010:
+                task.AddNeedObj(player);
                 break;
-            case Hold01Tutorial:
-                currentTask.AddNeedObj(player);
+            case TutorialTask011:
                 break;
-            case Hold02Tutorial:
-                currentTask.AddNeedObj(player);
+            case TutorialTask012:
+                task.AddNeedObj(player);
                 break;
-            case Hold03Tutorial:
+            case TutorialTask013:
+                task.AddNeedObj(player);
                 break;
-            case Timer01Tutorial:
+            case TutorialTask014:
+                task.AddNeedObj(player);
+                break;
+            case TutorialTask015:
+                task.AddNeedObj(player);
+                break;
+            case TutorialTask016:
+                task.AddNeedObj(player);
+                break;
+            case TutorialTask017:
+                task.AddNeedObj(player);
+                break;
+            case TutorialTask018:
+                task.AddNeedObj(player);
+                break;
+            case TutorialTask019:
+                break;
+            case TutorialTask020:
+                break;
+            case TutorialTask021:
+                break;
+            case TutorialTask022:
+                break;
+            case TutorialTask023:
+                break;
+            case TutorialTask024:
+                task.AddNeedObj(player);
+                break;
+            case TutorialTask025:
+                break;
+            case TutorialTask026:
+                break;
+            case TutorialTask027:
                 break;
         }
     }
