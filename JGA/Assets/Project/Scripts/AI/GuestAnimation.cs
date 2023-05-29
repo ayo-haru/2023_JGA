@@ -74,6 +74,34 @@ public class GuestAnimation : MonoBehaviour
 
         
         EGuestAnimState nowState = GetAnimationState();
+        // アニメーションが切り替わっているか
+        if (nowState != state)
+        {
+            //Walkから他のアニメーション又は他のアニメーションからWalkに切り替わったか？
+            if (nowState == EGuestAnimState.WALK)
+            {
+                float fWork = agent.speed / maxAgentSpeed;
+                animSpeed = (fWork < minAnimSpeed) ? minAnimSpeed : (fWork >= maxAnimSpeed) ? maxAnimSpeed : fWork;
+                animator.SetFloat("speed", animSpeed);
+            }
+            else if (state == EGuestAnimState.WALK)
+            {
+                animSpeed = 1.0f;
+                animator.SetFloat("speed", animSpeed);
+            }
+
+            //座った状態になったか？
+            if (nowState == EGuestAnimState.SIT_IDLE)
+            {
+                animator.applyRootMotion = true;
+            }
+            //立ち上がった状態になったか
+            if (nowState == EGuestAnimState.SURPRISED && state == EGuestAnimState.STAND_UP)
+            {
+                animator.applyRootMotion = false;
+            }
+        }
+
         //歩いているか？
         if (nowState == EGuestAnimState.WALK)
         {
@@ -84,31 +112,6 @@ public class GuestAnimation : MonoBehaviour
                 animSpeed *= -1;
                 animator.SetFloat("speed", animSpeed);
             }
-        }
-
-        // アニメーションが切り替わっているか
-        if (nowState == state) return;
-        //Walkから他のアニメーション又は他のアニメーションからWalkに切り替わったか？
-        if (nowState == EGuestAnimState.WALK)
-        {
-            float fWork = agent.speed / maxAgentSpeed;
-            animSpeed = (fWork < minAnimSpeed) ? minAnimSpeed : (fWork >= maxAnimSpeed) ? maxAnimSpeed : fWork;
-            animator.SetFloat("speed", animSpeed);
-        }else if (state == EGuestAnimState.WALK)
-        {
-            animSpeed = 1.0f;
-            animator.SetFloat("speed", animSpeed);
-        }
-
-        //座った状態になったか？
-        if (nowState == EGuestAnimState.SIT_IDLE)
-        {
-            animator.applyRootMotion = true;
-        }
-        //立ち上がった状態になったか
-        if (nowState == EGuestAnimState.SURPRISED && state == EGuestAnimState.STAND_UP)
-        {
-            animator.applyRootMotion = false;
         }
 
         state = nowState;
