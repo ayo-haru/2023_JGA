@@ -74,10 +74,17 @@ public class TimerSliderUI : MonoBehaviour
     /// </summary>
     void FixedUpdate()
 	{
-        if (!bStart || IsFinish() || PauseManager.isPaused) return;
+        if (!bStart || IsFinish()) return;
+        //捕まったら時間減らす
+        if (MySceneManager.GameData.isCatchPenguin)
+        {
+            LossTime();
+        }
 
+        if (PauseManager.isPaused) return;
         MySceneManager.GameData.timer += Time.deltaTime;
         CountDown();
+
 	}
 #if false
     /// <summary>
