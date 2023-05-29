@@ -44,6 +44,12 @@ public class TutorialManager : MonoBehaviour
     private GameObject currentTextObj;
     private Image currentText;
 
+
+    //**デバッグ用***************************************************************
+#if UNITY_EDITOR
+    private bool debugTaskFin;
+#endif
+    //*****************************************************************
     private void Awake() {
         // 変数初期化
         isTaskFin = false;
@@ -102,23 +108,39 @@ public class TutorialManager : MonoBehaviour
         //Instantiate(currentTextObj, canvasRT);
         //currentTextObj.transform.SetSiblingIndex(fade.transform.GetSiblingIndex()); // フェードの裏側に来るようにする
         //currentText = currentTextObj.GetComponent<Image>();
-	}
+
+        //**デバッグ用***************************************************************
+#if UNITY_EDITOR
+    debugTaskFin = false;
+#endif
+    //*****************************************************************
+}
 
 
-	/// <summary>
-	/// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
-	/// </summary>
-	void Update()
+/// <summary>
+/// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
+/// </summary>
+void Update()
 	{
         //----- チュートリアルを実行するか -----
         if (!isExecution) {
             return;
         }
 
+        //**デバッグ用***************************************************************
+#if UNITY_EDITOR
+        if (Input.GetKeyUp(KeyCode.F2)) { 
+            debugTaskFin = true; 
+        }else{
+            debugTaskFin= false;
+        }
+#endif
+    //*****************************************************************
+
         // チュートリアルが存在しタスクが実行されていない場合に処理
         if (currentTask != null && !isTaskFin) {
             // 現在のチュートリアルが実行されたか判定
-            if (currentTask.CheckTask()) {
+            if (currentTask.CheckTask() || debugTaskFin) {
                 isTaskFin = true;
 
                 DOVirtual.DelayedCall(currentTask.GetTransitionTime(), () => {

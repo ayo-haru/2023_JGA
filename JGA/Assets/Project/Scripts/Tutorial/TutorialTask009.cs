@@ -37,7 +37,7 @@ public class TutorialTask009 : ITurorial
     /// </summary>
     /// <returns></returns>
     public bool CheckTask() {
-        if (_player.IsHit) {   //  はたいたとき
+        if (_player.IsAppeal) {   //  アピールしたら
             return true;
         }
         return false;
