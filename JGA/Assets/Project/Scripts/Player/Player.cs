@@ -63,6 +63,7 @@ public class Player : MonoBehaviour
 	[SerializeField] private bool _IsHit;       // はたきフラグ
 	[SerializeField] private bool _IsHitMotion; // はたき開始フラグ
 	[SerializeField] private bool _IsHold;      // つかみフラグ
+	[SerializeField] private bool _IsHoldMotion;// つかみフラグ
 	[SerializeField] private bool _IsDrag;      // 引きずりフラグ
 	[SerializeField] private bool _IsMove;      // 移動フラグ
 	[SerializeField] private bool _IsRun;       // 走りフラグ
@@ -510,7 +511,7 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void OnMove(InputAction.CallbackContext context)
 	{
-		if (PauseManager.isPaused)
+		if (PauseManager.isPaused || _IsHoldMotion)
 			return;
 
 		// 前フレームと方向が違う時
@@ -609,6 +610,7 @@ public class Player : MonoBehaviour
 						anim.SetBool(HashDrag, !_IsHold);
 						break;
 				}
+				_IsHoldMotion = true;
 			}
 		}
 
@@ -949,6 +951,8 @@ public class Player : MonoBehaviour
 		if (InteractCollision == null || !InteractCollision.CompareTag("Interact"))
 			return;
 
+		_IsHoldMotion = false;
+
 		if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj))
 		{
 			switch (baseObj.objType)
@@ -1019,6 +1023,10 @@ public class Player : MonoBehaviour
 	private void OnTriggerEnter(Collider other)
 	{
 		if (!other.CompareTag("Interact"))
+			return;
+		if ((other.name.Contains("Corn") ||
+			other.name.Contains("CardBoard"))
+			&& other as SphereCollider)
 			return;
 
 		// 範囲内のオブジェクトリストに追加
