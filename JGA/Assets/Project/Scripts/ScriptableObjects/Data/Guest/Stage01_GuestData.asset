@@ -32,7 +32,7 @@ MonoBehaviour:
     reactionArea: 20
     soundAreaOffset: 10
     arrivalPenguinArea: 30
-    distance: 4
+    distance: 2
     firstCoolDownTime: 3
     secondCoolDownTime: 5
     waitTime: 0
@@ -49,14 +49,14 @@ MonoBehaviour:
     entranceTF: {fileID: 0}
     isRandom: 0
     speed: 3
-    followSpeed: 0.7
+    followSpeed: 1
     inBoothSpeed: 1
     rayLength: 10
     viewAngle: 60
     reactionArea: 20
     soundAreaOffset: 10
     arrivalPenguinArea: 30
-    distance: 4
+    distance: 2
     firstCoolDownTime: 3
     secondCoolDownTime: 5
     waitTime: 0
@@ -73,14 +73,14 @@ MonoBehaviour:
     entranceTF: {fileID: 0}
     isRandom: 0
     speed: 3
-    followSpeed: 0.7
+    followSpeed: 1
     inBoothSpeed: 0.5
     rayLength: 10
     viewAngle: 60
     reactionArea: 20
     soundAreaOffset: 10
     arrivalPenguinArea: 30
-    distance: 4
+    distance: 2
     firstCoolDownTime: 3
     secondCoolDownTime: 5
     waitTime: 0
@@ -110,7 +110,7 @@ MonoBehaviour:
     waitTime: 0
     cageDistance: 10
   - name: OGuest005
-    roots: 06000000
+    roots: 04000000050000001a00000019000000
     rootTransforms:
     - {fileID: 0}
     penguinTF:
@@ -121,15 +121,87 @@ MonoBehaviour:
     entranceTF: {fileID: 0}
     isRandom: 0
     speed: 3
-    followSpeed: 0.7
-    inBoothSpeed: 0.5
+    followSpeed: 1
+    inBoothSpeed: 1
     rayLength: 10
-    viewAngle: 60
+    viewAngle: 75
     reactionArea: 20
     soundAreaOffset: 10
     arrivalPenguinArea: 30
-    distance: 4
+    distance: 3
     firstCoolDownTime: 3
     secondCoolDownTime: 5
-    waitTime: 0
+    waitTime: 5
+    cageDistance: 10
+  - name: OGuest006
+    roots: 050000001a0000000400000019000000
+    rootTransforms:
+    - {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    entranceTF: {fileID: 0}
+    isRandom: 0
+    speed: 3
+    followSpeed: 1
+    inBoothSpeed: 1
+    rayLength: 10
+    viewAngle: 75
+    reactionArea: 20
+    soundAreaOffset: 10
+    arrivalPenguinArea: 30
+    distance: 3
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 5
+    cageDistance: 10
+  - name: OGuest007
+    roots: 1900000005000000040000001a000000
+    rootTransforms:
+    - {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    entranceTF: {fileID: 0}
+    isRandom: 0
+    speed: 3
+    followSpeed: 1
+    inBoothSpeed: 1
+    rayLength: 10
+    viewAngle: 75
+    reactionArea: 20
+    soundAreaOffset: 10
+    arrivalPenguinArea: 30
+    distance: 3
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 5
+    cageDistance: 10
+  - name: OGuest008
+    roots: 19000000040000001a00000005000000
+    rootTransforms:
+    - {fileID: 0}
+    penguinTF:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    entranceTF: {fileID: 0}
+    isRandom: 0
+    speed: 1
+    followSpeed: 1
+    inBoothSpeed: 1
+    rayLength: 10
+    viewAngle: 75
+    reactionArea: 20
+    soundAreaOffset: 10
+    arrivalPenguinArea: 30
+    distance: 3
+    firstCoolDownTime: 3
+    secondCoolDownTime: 5
+    waitTime: 10
     cageDistance: 10
