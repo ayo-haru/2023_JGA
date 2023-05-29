@@ -44,10 +44,16 @@ public class TutorialManager : MonoBehaviour
 	private GameObject currentTextObj;
 	private Image currentText;
 
-	private void Awake() {
-		// 変数初期化
-		isTaskFin = false;
-	}
+    //**デバッグ用***************************************************************
+#if UNITY_EDITOR
+    private bool debugTaskFin;
+#endif
+    //*****************************************************************
+    
+    private void Awake() {
+        // 変数初期化
+        isTaskFin = false;
+    }
 
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
@@ -98,22 +104,34 @@ public class TutorialManager : MonoBehaviour
 		SetTaskObj(tutorialTask.First());
 		StartCoroutine(SetCurrentTask(tutorialTask.First()));
 
-		//currentTextObj = tutorialText.First();
-		//Instantiate(currentTextObj, canvasRT);
-		//currentTextObj.transform.SetSiblingIndex(fade.transform.GetSiblingIndex()); // フェードの裏側に来るようにする
-		//currentText = currentTextObj.GetComponent<Image>();
-	}
+        //**デバッグ用***************************************************************
+#if UNITY_EDITOR
+    debugTaskFin = false;
+#endif
+    //*****************************************************************
+}
 
 
-	/// <summary>
-	/// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
-	/// </summary>
-	void Update()
+
+/// <summary>
+/// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
+/// </summary>
+void Update()
 	{
 		//----- チュートリアルを実行するか -----
 		if (!isExecution) {
 			return;
 		}
+
+        //**デバッグ用***************************************************************
+#if UNITY_EDITOR
+        if (Input.GetKeyUp(KeyCode.F2)) { 
+            debugTaskFin = true; 
+        }else{
+            debugTaskFin= false;
+        }
+#endif
+    //*****************************************************************
 
 		// チュートリアルが存在しタスクが実行されていない場合に処理
 		if (currentTask != null && !isTaskFin) {
