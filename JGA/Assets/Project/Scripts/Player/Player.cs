@@ -348,11 +348,7 @@ public class Player : MonoBehaviour
 					anim.SetBool(HashHit, bHitMotion);
 				}
 			}
-			else if (DelayHitMotion)
-			{
-
-			}
-			else
+			else if (!DelayHitMotion)
 			{
 				bHitMotion = false;
 				anim.SetBool(HashHit, bHitMotion);
