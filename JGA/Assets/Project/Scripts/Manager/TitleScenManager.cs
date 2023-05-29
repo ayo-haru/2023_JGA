@@ -13,6 +13,7 @@
 // 2023/04/06	(小楠)オプションのスライド移動追加
 // 2023/04/08	(小楠)オプションの処理全部消した
 // 2023/05/26	(小楠)はじめからと続きからを追加
+// 2023/05/29	(小楠)ゲームパッド繋がってないときにキーボードで操作できないのを修正
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -39,7 +40,6 @@ public class TitleScenManager : BaseSceneManager {
     //マウス位置
     private Vector3 mousePos;
 
-    private bool bGamePad;
     [SerializeField] private InputActionReference actionMove;
 
     //タイトル画面のボタン
@@ -108,13 +108,11 @@ public class TitleScenManager : BaseSceneManager {
         //マウスの状態を更新
         Vector3 oldMousePos = mousePos;
         mousePos = Input.mousePosition;
-        //ゲームパットの状態を更新
-        bGamePad = Gamepad.current != null;
 
         if (bMouse) return;
 
-        //ゲームパッドがない又はマウスが動かされたらマウス入力に切り替え
-        if (!bGamePad || Vector3.Distance(oldMousePos, mousePos) >= 1.5f)
+        //マウスが動かされたらマウス入力に切り替え
+        if (Vector3.Distance(oldMousePos, mousePos) >= 1.5f)
         {
             ChangeInput();
         }
@@ -170,7 +168,7 @@ public class TitleScenManager : BaseSceneManager {
     public void InitInput()
     {
         mousePos = Input.mousePosition;
-        bMouse = bGamePad = (Gamepad.current) != null;
+        bMouse = (Gamepad.current) != null;
         ChangeInput();
     }
 
@@ -231,7 +229,6 @@ public class TitleScenManager : BaseSceneManager {
 
     private void OnMove(InputAction.CallbackContext context)
     {
-        if (!bGamePad) bGamePad = true;
         if (optionPanel.IsOpen()) return;
         if (!bMouse) return;
 

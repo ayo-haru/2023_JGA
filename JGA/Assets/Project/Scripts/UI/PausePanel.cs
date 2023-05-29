@@ -7,6 +7,7 @@
 // 
 // [Date]
 // 2023/03/16	スクリプト作成
+// 2023/05/29	(小楠)ゲームパッド繋がってないときにキーボードで操作できないのを修正
 //=============================================================================
 using UniRx;
 using Unity.VisualScripting;
@@ -49,13 +50,9 @@ public class PausePanel : MonoBehaviour
 	private RectTransform rect;
 	[SerializeField]
 	private AudioSource audioSource;
-#if UseMyContorller
-    private MyContorller gameInputs;            // 方向キー入力取得
-#else
+
     [SerializeField] private InputActionReference actionMove;
-#endif
-    //ゲームパットがあるか？
-    private bool bGamePad;
+
     //入力モード　true マウス　false コントローラ
 	private bool bMouseMode;
     //マウス座標
@@ -85,26 +82,14 @@ public class PausePanel : MonoBehaviour
         //最初は非表示
 		if (gameObject.activeSelf)gameObject.SetActive(false);
 
-#if UseMyController
-        // Input Actionインスタンス生成
-        gameInputs = new MyContorller();
-
-		// Actionイベント登録
-		gameInputs.Menu.Move.performed += OnMove;
-
-		// Input Actionを有効化
-		gameInputs.Enable();
-#else
         actionMove.action.performed += OnMove;
         actionMove.action.canceled += OnMove;
         actionMove.ToInputAction().Enable();
-#endif
-        //ゲームパット取得
-        InitInput();
 	}
 
     private void OnEnable()
     {
+        ActivePanel = pausePanel;
         InitInput();
     }
 
@@ -125,13 +110,11 @@ public class PausePanel : MonoBehaviour
         //マウスの状態を更新
         Vector3 oldMousePos = mousePos;
         mousePos = Input.mousePosition;
-        //ゲームパットの状態を更新
-        bGamePad = Gamepad.current != null;
 
         if (bMouseMode) return;
 
-        //ゲームパッドがない又はマウスが動かされたらマウス入力に切り替え
-        if (!bGamePad || Vector3.Distance(oldMousePos, mousePos) >= 1.0f)
+        //マウスが動かされたらマウス入力に切り替え
+        if (Vector3.Distance(oldMousePos, mousePos) >= 1.0f)
         {
             ChangeInput();
         }
@@ -140,7 +123,6 @@ public class PausePanel : MonoBehaviour
 	private void OnMove(InputAction.CallbackContext context)
 	{
 		if (!PauseManager.isPaused)return;
-        if (!bGamePad) bGamePad = true;
         if (!bMouseMode) return;
         if (ActivePanel != pausePanel) return;
 
@@ -211,7 +193,7 @@ public class PausePanel : MonoBehaviour
     public void InitInput()
     {
         mousePos = Input.mousePosition;
-        bMouseMode = bGamePad = (Gamepad.current) != null;
+        bMouseMode = (Gamepad.current) != null;
         ChangeInput();
     }
 
@@ -220,6 +202,7 @@ public class PausePanel : MonoBehaviour
         //マウス→コントローラ
         if (bMouseMode)
         {
+            Debug.Log("ああああ");
             backButton.Select();
         }else{//コントローラ→　マウス
             EventSystem.current.SetSelectedGameObject(null);
