@@ -562,10 +562,7 @@ public class StageSceneManager : BaseSceneManager {
         // 一個前のシーンがタイトルかつ今のシーンがステージ１
         if (MySceneManager.GameData.oldScene == (int)MySceneManager.SceneState.SCENE_TITLE &&
             MySceneManager.GameData.nowScene == (int)MySceneManager.SceneState.SCENE_GAME_001) {
-            /*
-             * 未完成でエラーが出るので一旦コメントアウト
-             */
-            //TutorialManager.StartTutorial();
+            TutorialManager.StartTutorial();
         }
     }
 

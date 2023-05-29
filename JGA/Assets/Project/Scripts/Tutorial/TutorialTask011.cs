@@ -12,11 +12,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TutorialTask011 : ITurorial
-{
+public class TutorialTask011 : ITurorial {
     private float timer;    // UIをだしてから遷移するまでの時間
 
     private readonly float MAX_TIME = 3.0f; // 遷移するまでの時間の定数
+
+
+    private int oldGuestCnt;
 
     /// <summary>
     /// タスク完了に必要となるオブジェクトを設定する
@@ -29,7 +31,7 @@ public class TutorialTask011 : ITurorial
     /// チュートリアルタスクが設定されたときに実行
     /// </summary>
     public void OnTaskSetting() {
-        timer = MAX_TIME;
+        oldGuestCnt = MySceneManager.GameData.guestCnt;
     }
 
     /// <summary>
@@ -37,8 +39,7 @@ public class TutorialTask011 : ITurorial
     /// </summary>
     /// <returns></returns>
     public bool CheckTask() {
-        timer -= Time.deltaTime;
-        if (timer < 0) {
+        if (oldGuestCnt < MySceneManager.GameData.guestCnt) {   // 客のカウントが増えたら
             return true;
         }
 
@@ -51,7 +52,7 @@ public class TutorialTask011 : ITurorial
     /// </summary>
     /// <returns></returns>
     public float GetTransitionTime() {
-        return 1.5f;
+        return 3.0f;
     }
 
 }
