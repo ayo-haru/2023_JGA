@@ -348,6 +348,15 @@ public class Player : MonoBehaviour
 					anim.SetBool(HashHit, bHitMotion);
 				}
 			}
+			else if (DelayHitMotion)
+			{
+
+			}
+			else
+			{
+				bHitMotion = false;
+				anim.SetBool(HashHit, bHitMotion);
+			}
 		}
 
 
@@ -1048,6 +1057,13 @@ public class Player : MonoBehaviour
 
 	public void ReStart()
 	{
+		// はたくモーション中の時
+		if (bHitMotion && anim.GetCurrentAnimatorStateInfo(0).shortNameHash == HashHit)
+		{
+			bHitMotion = false;
+			anim.SetBool(HashHit, bHitMotion);
+		}
+
 		if (InteractCollision && InteractCollision.TryGetComponent<BaseObj>(out var baseObj))
 		{
 			switch (baseObj.objType)
