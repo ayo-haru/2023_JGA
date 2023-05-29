@@ -45,4 +45,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotateFlg: 0
-  rotateTime: 5
+  rotateTime: 10
