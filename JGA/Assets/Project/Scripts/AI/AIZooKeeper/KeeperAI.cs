@@ -26,36 +26,35 @@ public class KeeperAI : MonoBehaviour
     }
 
     [SerializeField] private Animator animator;
-    private bool surpriseFlg = true;
-    private bool questionFlg = true;
-    private bool moveFlg = false;
+    private bool bSurprise = true;
+    private bool bQuestion = true;
+    private bool bMove = false;
+    private bool bHidePlayer = false;
     private AudioSource audioSource;
     private SphereCollider sphereCollider;
     private Rigidbody rb;
     private NavMeshAgent navMesh;
     private RaycastHit rayhit;
-    private int rootNum = 0;
     private GameObject exclamationEffect;   // ！エフェクト
     private GameObject questionEffect;      // ？エフェクト
     private Vector3 startPos;       // 初期位置
     private Quaternion startDir;    // 初期回転
-    private float rotateSpeed = 120;
 
-    [SerializeField] private bool chaseNow = false;    // ペンギンを追いかけているフラグ
+    [SerializeField] private bool bChaseNow = false;    // ペンギンを追いかけているフラグ
     private Player player;
 
     private GameObject parentObj;       // 親オブジェクト取得
     [SerializeField] private GameObject hand;   // オブジェクトを持つ場所
-    private bool gimmickFlg = false;    // ギミックオブジェクトを見つけたか
-    private bool catchFlg = false;      // ギミックオブジェクトを掴んだか
-    private bool soundObjFlg = false;   // 音がなったオブジェクトがあるか
+    private bool bGimmick = false;    // ギミックオブジェクトを見つけたか
+    private bool bCatch = false;      // ギミックオブジェクトを掴んだか
+    private bool bSoundObj = false;   // 音がなったオブジェクトがあるか
     private bool bResetPos = false;
 
     private Radio soundObj;
     private Vector3 soundStartPos;
     private Quaternion soundStartDir;
-    private bool radioResetFlg = true;
-    private bool dirFlg = false;
+    private bool bRadioReset = true;
+    private bool bDir = false;
 
     [SerializeField] private GameObject cube;
 
@@ -96,7 +95,7 @@ public class KeeperAI : MonoBehaviour
         if (audioSource == null) audioSource = this.GetComponent<AudioSource>();
         if (rb == null) rb = this.GetComponent<Rigidbody>();
         if (player == null) player = GameObject.FindWithTag("Player").GetComponent<Player>();
-        if (soundObj == null) soundObj = GameObject.Find("Radio_002").GetComponent<Radio>();
+        if (soundObj == null) soundObj = GameObject.Find("Radio_001").GetComponent<Radio>();
         if (parentObj == null) parentObj = soundObj.gameObject.transform.root.gameObject; // 親オブジェクト取得
         if (cube == null) Debug.LogWarning("cubeにNavmeshStopを入れてください。");
 
@@ -123,12 +122,12 @@ public class KeeperAI : MonoBehaviour
             return;
         }
 
-        if (moveFlg)
+        if (bMove)
         {
             Dir();
-            if (chaseNow) AnimPlay();
+            if (bChaseNow) AnimPlay();
         }
-        if (!chaseNow) Distance();
+        if (!bChaseNow) Distance();
     }
 
     /// <summary>
@@ -159,8 +158,8 @@ public class KeeperAI : MonoBehaviour
         if (collision.gameObject.tag == "Player")
         {
             NavMeshStop();
-            chaseNow = false;
-            moveFlg = false;
+            bChaseNow = false;
+            bMove = false;
             MySceneManager.GameData.isCatchPenguin = true;
         }
         #endregion
@@ -171,37 +170,49 @@ public class KeeperAI : MonoBehaviour
     /// </summary>
     private void OnTriggerStay(Collider other)
     {
-        if (chaseNow) return;
-        if (soundObjFlg) return;
+        if (bSoundObj) return;
 
         // 音がなってるか
         if (other.gameObject == soundObj.gameObject && soundObj.GetPlayRadio())
         {
+            if (bChaseNow) return;
+
             RadioPos();
-            if (radioResetFlg) return;  // ラジオが元の場所にあったら処理しない
+            if (bRadioReset) return;  // ラジオが元の場所にあったら処理しない
 
             navMesh.SetDestination(other.gameObject.transform.position);
 
-            if (dirFlg) dirFlg = false;
+            if (bDir) bDir = false;
             Dir();
             // オブジェクトの方を向いたら一時停止して動く
-            if (dirFlg)
+            if (bDir)
             {
-                if (!soundObjFlg) StartCoroutine("MoveStop");
+                if (!bSoundObj) StartCoroutine("MoveStop");
             }
         }
         else if (other.gameObject.tag == "Player")
         {
-            if (!radioResetFlg) return;
-            if (gimmickFlg) return;
+            if (!bRadioReset) return;
+            if (bGimmick) return;
+            if (bHidePlayer) return;
             var pos = other.transform.position - transform.position;
             float targetAngle = Vector3.Angle(this.transform.forward, pos);
 
             // 視界の角度内に収まってRayが当たっているか
             if (targetAngle < data.searchAngle && RayHit(pos) == 1)
             {
+                if (bChaseNow) return;
                 // コルーチン開始
                 StartCoroutine("PenguinChase");
+            }
+            else
+            {
+                // 隠れたか
+                if (bChaseNow && RayHit(pos) == 3)
+                {
+                    // コルーチン開始
+                    StartCoroutine("HidePenguin");
+                }
             }
         }
     }
@@ -219,11 +230,11 @@ public class KeeperAI : MonoBehaviour
 
         if (x1 != x2 || z1 != z2)
         {
-            radioResetFlg = false;
+            bRadioReset = false;
         }
         else
         {
-            radioResetFlg = true;
+            bRadioReset = true;
         }
     }
     #endregion
@@ -235,28 +246,28 @@ public class KeeperAI : MonoBehaviour
     private void Distance()
     {
         // 音がなったオブジェクトの位置に行く
-        if (soundObjFlg)
+        if (bSoundObj)
         {
             // オブジェクトの位置に到着したか
             if (navMesh.remainingDistance <= 3.0f    // 目標地点までの距離が3.0ｍ以下になったら到着
                     && !navMesh.pathPending)         // 経路計算中かどうか（計算中：true　計算完了：false）
             {
                 // コルーチン開始
-                if (!gimmickFlg) StartCoroutine("SoundObj");
-                if (!catchFlg) StartCoroutine("CatchObj");
+                if (!bGimmick) StartCoroutine("SoundObj");
+                if (!bCatch) StartCoroutine("CatchObj");
             }
         }
         // オブジェクトを元の位置に戻す
-        if (gimmickFlg)
+        if (bGimmick)
         {
-            if (radioResetFlg) return;
-            if (catchFlg)
+            if (bRadioReset) return;
+            if (bCatch)
             {
                 // オブジェクトの元の位置に到着したか
                 if (navMesh.remainingDistance <= 1.5f    // 目標地点までの距離が1.5ｍ以下になったら到着
                      && !navMesh.pathPending)            // 経路計算中かどうか（計算中：true　計算完了：false）
                 {
-                    if (!dirFlg) return;
+                    if (!bDir) return;
                     // コルーチン開始
                     StartCoroutine("ResetObj");
                 }
@@ -269,7 +280,7 @@ public class KeeperAI : MonoBehaviour
                 && !navMesh.pathPending)            // 経路計算中かどうか（計算中：true　計算完了：false）
             {
                 bResetPos = false;
-                moveFlg = false;
+                bMove = false;
                 NavMeshStop();
                 this.transform.position = startPos;
                 this.transform.rotation = startDir;
@@ -331,16 +342,27 @@ public class KeeperAI : MonoBehaviour
             float angle = Vector3.Angle(targetDir, transform.forward);
             if (angle < 30.0f)
             {
-                if (!dirFlg) dirFlg = true;
+                if (!bDir) bDir = true;
             }
             else
             {
-                if (dirFlg) dirFlg = false;
+                if (bDir) bDir = false;
             }
+
+            // 見失った時向きを変えてから移動する
+            if (bDir && bHidePlayer)
+            {
+                // 動く
+                NavMeshMove();
+                bHidePlayer = false;
+            }
+
             if (navMesh.isStopped) return;
             Move();
-            if (chaseNow)
+            if (bChaseNow)
                 navMesh.SetDestination(player.transform.position);
+            else
+                if (!animator.GetBool("isWalk")) animator.SetBool("isWalk", true);
             navMesh.nextPosition = transform.position;
         }
     }
@@ -364,13 +386,14 @@ public class KeeperAI : MonoBehaviour
                 return 1;
             }
             // 当たったオブジェクトがラジオかどうか
-            if (rayhit.collider.gameObject == soundObj && !gimmickFlg)
+            if (rayhit.collider.gameObject == soundObj && !bGimmick)
             {
                 return 2;
             }
             // 当たったオブジェクトが隠れるオブジェクトかどうか
             if (rayhit.collider.tag == "HideObj")
             {
+                bHidePlayer = true;
                 return 3;
             }
         }
@@ -384,10 +407,10 @@ public class KeeperAI : MonoBehaviour
     /// </summary>
     private IEnumerator PenguinChase()
     {
-        if (surpriseFlg)
+        if (bSurprise)
         {
-            surpriseFlg = false;
-            moveFlg = false;
+            bSurprise = false;
+            bMove = false;
             // 驚きモーション中は移動させない
             NavMeshStop();
             // エフェクト表示
@@ -395,7 +418,7 @@ public class KeeperAI : MonoBehaviour
                 CreateEffect(Effect.exclamation);
             // 驚くアニメーション開始
             animator.SetTrigger("isSurprise");
-            chaseNow = true;
+            bChaseNow = true;
         }
 
         yield return new WaitForSeconds(1.5f);
@@ -403,9 +426,38 @@ public class KeeperAI : MonoBehaviour
         // エフェクト削除
         if (exclamationEffect) Destroy(exclamationEffect);
         // ペンギンを追従開始
+        navMesh.SetDestination(player.transform.position);
         NavMeshMove();
         animator.SetBool("isWalk", true);
-        navMesh.SetDestination(player.transform.position);
+    }
+
+    /// <summary>
+    /// ペンギンを見失う
+    /// </summary>
+    private IEnumerator HidePenguin()
+    {
+        if (bMove)
+        {
+            bMove = false;
+            // エフェクト表示
+            if (!questionEffect)
+                CreateEffect(Effect.question);
+            // 止まる
+            NavMeshStop();
+            PlayerOutOfRange();
+            bChaseNow = false;
+        }
+
+        yield return new WaitForSeconds(1.0f);
+
+        // エフェクト削除
+        if (questionEffect) Destroy(questionEffect);
+        bMove = true;
+        bResetPos = true;
+        navMesh.SetDestination(startPos);
+
+        if (bDir) bDir = false;
+        Dir();
     }
 
     /// <summary>
@@ -416,9 +468,9 @@ public class KeeperAI : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
 
         if (cube != null) cube.SetActive(true);
-        if (moveFlg)
+        if (bMove)
         {
-            moveFlg = false;
+            bMove = false;
             // 拾うアニメーション開始
             animator.SetTrigger("isPickUp");
         }
@@ -432,7 +484,7 @@ public class KeeperAI : MonoBehaviour
         // 動く
         NavMeshMove();
         animator.SetBool("isWalk", true);
-        catchFlg = true;
+        bCatch = true;
         // エフェクト削除
         if (questionEffect) Destroy(questionEffect);
     }
@@ -445,9 +497,9 @@ public class KeeperAI : MonoBehaviour
         // 止まる
         NavMeshStop();
         if (cube != null) cube.SetActive(false);
-        if (moveFlg)
+        if (bMove)
         {
-            moveFlg = false;
+            bMove = false;
             // 置くアニメーション開始
             animator.SetFloat("speed", -1f);
             animator.Play("Pick", 0, 1f);
@@ -457,17 +509,17 @@ public class KeeperAI : MonoBehaviour
 
         if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime <= 0)
         {
-            radioResetFlg = true;
+            bRadioReset = true;
             Bring();
             yield return new WaitForSeconds(1.0f);
 
-            gimmickFlg = false;
-            catchFlg = false;
+            bGimmick = false;
+            bCatch = false;
             animator.SetFloat("speed", 1f);
             animator.SetBool("isWalk", true);
             animator.Play("Walk");
             navMesh.SetDestination(startPos); // 目的地の再設定
-            moveFlg = true;
+            bMove = true;
             bResetPos = true;
             // 動く
             NavMeshMove();
@@ -479,9 +531,9 @@ public class KeeperAI : MonoBehaviour
     /// </summary>
     private IEnumerator MoveStop()
     {
-        if (questionFlg)
+        if (bQuestion)
         {
-            questionFlg = false;
+            bQuestion = false;
             // エフェクト表示
             if (!questionEffect)
                 CreateEffect(Effect.question);
@@ -490,7 +542,7 @@ public class KeeperAI : MonoBehaviour
         yield return new WaitForSeconds(3.0f);
 
         NavMeshMove();
-        soundObjFlg = true;
+        bSoundObj = true;
         animator.SetBool("isWalk", true);
     }
 
@@ -506,8 +558,8 @@ public class KeeperAI : MonoBehaviour
 
         // ラジオを戻す
         soundObj.GetComponent<Radio>().PlayRadioSound(false);
-        soundObjFlg = false;
-        gimmickFlg = true;
+        bSoundObj = false;
+        bGimmick = true;
     }
     #endregion
 
@@ -524,7 +576,7 @@ public class KeeperAI : MonoBehaviour
         // ラジオの子オブジェクトを取得
         GameObject childObj = soundObj.gameObject.transform.GetChild(1).gameObject;
 
-        if (!catchFlg)
+        if (!bCatch)
         {
             soundObj.gameObject.layer = ray1;   // 一時的にレイヤーをIgnore Raycastにする
             // 掴む
@@ -539,7 +591,7 @@ public class KeeperAI : MonoBehaviour
             soundObj.gameObject.transform.localPosition = Vector3.zero;
             soundObj.gameObject.transform.rotation = Quaternion.identity;
         }
-        else if (radioResetFlg)
+        else if (bRadioReset)
         {
             if (questionEffect) Destroy(questionEffect);
             soundObj.gameObject.layer = ray2;   // 元のレイヤーに戻す
@@ -568,6 +620,23 @@ public class KeeperAI : MonoBehaviour
             _localScale.z / _lossyScale.z
             );
         return scale;
+    }
+    #endregion
+
+    #region 索敵範囲外の処理
+    /// <summary>
+    /// 索敵範囲外
+    /// </summary>
+    private void PlayerOutOfRange()
+    {
+        bSurprise = true;
+        animator.Play("Idle");
+        if (animator.GetBool("isChase")) animator.SetBool("isChase", false);
+        if (exclamationEffect) Destroy(exclamationEffect);
+
+        // リスポーン地点に戻る
+        navMesh.SetDestination(startPos);
+        //navMesh.SetDestination(data.respawnTF.position);
     }
     #endregion
 
@@ -612,7 +681,7 @@ public class KeeperAI : MonoBehaviour
 
         // アニメーション更新
         if (animator.GetBool("isWalk")) animator.SetBool("isWalk", false);
-        if (!chaseNow)
+        if (!bChaseNow)
             if (animator.GetBool("isChase")) animator.SetBool("isChase", false);
     }
 
@@ -621,9 +690,9 @@ public class KeeperAI : MonoBehaviour
     /// </summary>
     private void NavMeshMove()
     {
-        if (!moveFlg) moveFlg = true;
+        if (!bMove) bMove = true;
         if (navMesh.isStopped) navMesh.isStopped = false;
-        if (chaseNow)
+        if (bChaseNow)
         {
             navMesh.speed = data.speed * player.MaxRunSpeed;
         }
@@ -647,7 +716,7 @@ public class KeeperAI : MonoBehaviour
             data.searchAngle * 2.0f, data.searchDistance);
 
         // NavMeshの経路描画
-        if (chaseNow)
+        if (bChaseNow)
         {
             Gizmos.color = Color.red;
             Vector3 prepos = transform.position;
@@ -665,9 +734,9 @@ public class KeeperAI : MonoBehaviour
     /// </summary>
     private void ReStart()
     {
-        if (chaseNow) chaseNow = false;
-        if (!surpriseFlg) surpriseFlg = true;
-        if (moveFlg) moveFlg = false;
+        if (bChaseNow) bChaseNow = false;
+        if (!bSurprise) bSurprise = true;
+        if (bMove) bMove = false;
         AnimPlay();
         // 初期位置に戻る
         navMesh.Warp(startPos);
@@ -702,7 +771,7 @@ public class KeeperAI : MonoBehaviour
     private void Resumed()
     {
         // 追いかけている時、navMeshが動いている時
-        if (chaseNow || !navMesh.isStopped)
+        if (bChaseNow || !navMesh.isStopped)
             NavMeshMove();
         // アニメーション
         animator.speed = 1.0f;
