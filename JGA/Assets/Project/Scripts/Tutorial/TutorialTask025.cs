@@ -37,12 +37,8 @@ public class TutorialTask025 : ITurorial
     /// </summary>
     /// <returns></returns>
     public bool CheckTask() {
-        timer -= Time.deltaTime;
-        if (timer < 0) {
-            return true;
-        }
-
         return false;
+        
     }
 
 
