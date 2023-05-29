@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: GameVolume
   m_EditorClassIdentifier: 
   volume:
-    fBGM: 1
-    fSE: 1
+    fBGM: 0.5
+    fSE: 0.5
