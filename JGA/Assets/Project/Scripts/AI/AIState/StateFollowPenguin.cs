@@ -147,7 +147,14 @@ public class StateFollowPenguin : AIState
         float dot = Vector3.Dot(agent.velocity.normalized,player.vForce.normalized);
         agent.speed = (ui.GetEmotion() >= EEmotion.ATTENSION_MIDDLE && dot >= 0) ? player.MaxAppealSpeed * data.followSpeed : 0.0f;
 
-        if (NavMesh.SamplePosition(target.position + posOffset, out NavMeshHit hit, 1.0f, NavMesh.AllAreas)) agent.SetDestination(hit.position);
+        if (NavMesh.SamplePosition(target.position + posOffset, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+        {
+            agent.SetDestination(hit.position);
+        }
+        else
+        {
+            agent.SetDestination(target.position);
+        }
 
         //アニメーション更新
         guestAnimation.SetAnimation((agent.velocity.magnitude > 0.5f) ? GuestAnimation.EGuestAnimState.WALK : GuestAnimation.EGuestAnimState.IDLE);
