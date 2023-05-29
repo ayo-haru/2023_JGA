@@ -14,25 +14,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   list:
   - name: ZooKeeper001
-    roots: 160000000c000000
-    rootTransforms:
-    - {fileID: 0}
-    - {fileID: 0}
-    respawnTF: {fileID: 0}
-    status: 1
-    speed: 1.1
-    chaseSpeed: 2
-    search: 30
-    searchAngle: 90
-    searchDistance: 25
-  - name: ZooKeeper002
-    roots: 0d0000000c000000
+    roots: 1300000014000000
     rootTransforms:
     - {fileID: 0}
     - {fileID: 0}
     respawnTF: {fileID: 0}
     status: 0
     speed: 1.1
+    chaseSpeed: 2
+    search: 30
+    searchAngle: 90
+    searchDistance: 25
+  - name: ZooKeeper002
+    roots: 0d000000100000001100000008000000
+    rootTransforms:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    respawnTF: {fileID: 0}
+    status: 0
+    speed: 1.5
     chaseSpeed: 2
     search: 15
     searchAngle: 90
@@ -47,6 +49,19 @@ MonoBehaviour:
     status: 1
     speed: 1.5
     chaseSpeed: 2
+    search: 15
+    searchAngle: 90
+    searchDistance: 20
+  - name: ZooKeeper004
+    roots: 140000001500000013000000
+    rootTransforms:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    respawnTF: {fileID: 0}
+    status: 1
+    speed: 2
+    chaseSpeed: 1.5
     search: 15
     searchAngle: 90
     searchDistance: 20

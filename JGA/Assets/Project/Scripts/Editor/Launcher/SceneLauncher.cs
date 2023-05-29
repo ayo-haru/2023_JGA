@@ -13,11 +13,6 @@ using UnityEditor.SceneManagement;
 
 public static class SceneLauncher
 {
-	[MenuItem("Launcher/Sample001",priority = 0)]
-	public static void OpeneSampleScene()
-	{
-		EditorSceneManager.OpenScene("Assets/Project/Scenes/Sample001.unity", OpenSceneMode.Single);
-	}
 
 	[MenuItem("Launcher/Title", priority = 1)]
 	public static void OpenTitleScene()
@@ -28,9 +23,9 @@ public static class SceneLauncher
 
 	[MenuItem("Launcher/InitializeScene", priority = 2)]
 	public static void OpenInitializeScene()
-    {
+	{
 		EditorSceneManager.OpenScene("Assets/Project/Scenes/InitializeScene.unity", OpenSceneMode.Single);
-    }
+	}
 
 	[MenuItem("Launcher/ProtoType", priority = 3)]
 	public static void OpeneProtoTypeScene()
@@ -43,4 +38,11 @@ public static class SceneLauncher
 	{
 		EditorSceneManager.OpenScene("Assets/Project/Scenes/Game/Stage_001.unity", OpenSceneMode.Single);
 	}
+
+	[MenuItem("Launcher/Stage002", priority = 5)]
+	public static void OpeneStage002Scene()
+	{
+		EditorSceneManager.OpenScene("Assets/Project/Scenes/Game/Stage_002.unity", OpenSceneMode.Single);
+	}
+
 }
