@@ -1,6 +1,6 @@
 //=============================================================================
 // @File	: [TutorialTask001.cs]
-// @Brief	: 「捕まると、こうして檻のほうまで戻される。」
+// @Brief	: 「飼育員を回避しながら、園内を移動しよう」
 // @Author	: Ichida Mai
 // @Editer	: Yoshihara Asuka
 // @Detail	: 
@@ -52,7 +52,7 @@ public class TutorialTask027 : ITurorial
     /// </summary>
     /// <returns></returns>
     public float GetTransitionTime() {
-        return 5.1f;
+        return 10.5f;
     }
 
 }

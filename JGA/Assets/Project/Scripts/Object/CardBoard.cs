@@ -57,7 +57,8 @@ public class CardBoard : BaseObj
             rb.isKinematic = true;
         }
 
-        PlaySoundChecker();
+        // 段ボールがつぶれた音を検索
+        PlaySoundChecker(1);
     }
 
     protected override void OnCollisionEnter(Collision collision)
@@ -110,7 +111,7 @@ public class CardBoard : BaseObj
                     collision3.SetActive(true);
 
                     // 潰れたときの音を鳴らす
-                    PlayDrop(audioSourcesList[0], SoundManager.ESE.CARDBOARDBOX_002);
+                    PlayDrop(audioSourcesList[1], SoundManager.ESE.CARDBOARDBOX_002);
 
                     break;
                 }
