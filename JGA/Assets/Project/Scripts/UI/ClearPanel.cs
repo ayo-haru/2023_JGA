@@ -43,7 +43,7 @@ public class ClearPanel : MonoBehaviour
 
         actionMove.action.performed += OnMove;
         actionMove.action.canceled += OnMove;
-        actionMove.ToInputAction().Enable();
+        
 
         nextDayButtonImage = nextDayButton.GetComponent<Image>();
         backToTitleButtonImage = backToTitleButton.GetComponent<Image>();
@@ -51,9 +51,22 @@ public class ClearPanel : MonoBehaviour
 
     private void OnEnable()
     {
+        actionMove.ToInputAction().Enable();
+
         nextScene = -1;
         Clear.fillAmount = 0.0f;
         InitInput();
+    }
+
+    private void OnDisable()
+    {
+        actionMove.ToInputAction().Disable();
+    }
+
+    private void OnDestroy()
+    {
+        actionMove.action.performed -= OnMove;
+        actionMove.action.canceled -= OnMove;
     }
 
     private void Update()
@@ -136,7 +149,7 @@ public class ClearPanel : MonoBehaviour
     public void InitInput()
     {
         mousePos = Input.mousePosition;
-        bMouse = (Gamepad.current) != null;
+        bMouse = true;
         ChangeInput();
     }
 
@@ -167,6 +180,7 @@ public class ClearPanel : MonoBehaviour
 
     private void OnMove(InputAction.CallbackContext context)
     {
+        if (!gameObject.activeSelf) return;
         if (!PauseManager.isPaused) return;
         if (!bMouse) return;
 
