@@ -84,13 +84,26 @@ public class PausePanel : MonoBehaviour
 
         actionMove.action.performed += OnMove;
         actionMove.action.canceled += OnMove;
-        actionMove.ToInputAction().Enable();
+        
 	}
 
     private void OnEnable()
     {
+        actionMove.ToInputAction().Enable();
+
         ActivePanel = pausePanel;
         InitInput();
+    }
+
+    private void OnDisable()
+    {
+        actionMove.ToInputAction().Disable();
+    }
+
+    private void OnDestroy()
+    {
+        actionMove.action.performed -= OnMove;
+        actionMove.action.canceled -= OnMove;
     }
 
     private void FixedUpdate()
@@ -122,7 +135,8 @@ public class PausePanel : MonoBehaviour
 
 	private void OnMove(InputAction.CallbackContext context)
 	{
-		if (!PauseManager.isPaused)return;
+        if (!gameObject.activeSelf) return;
+        if (!PauseManager.isPaused)return;
         if (!bMouseMode) return;
         if (ActivePanel != pausePanel) return;
 
@@ -193,7 +207,7 @@ public class PausePanel : MonoBehaviour
     public void InitInput()
     {
         mousePos = Input.mousePosition;
-        bMouseMode = (Gamepad.current) != null;
+        bMouseMode = true;
         ChangeInput();
     }
 

@@ -75,8 +75,7 @@ public class TitleScenManager : BaseSceneManager {
         audioSource = GetComponent<AudioSource>();
 
         actionMove.action.performed += OnMove;
-        actionMove.action.canceled += OnMove;
-        actionMove.ToInputAction().Enable();
+        actionMove.action.canceled += OnMove; 
 
         startButtonCollider = startButton.GetComponent<BoxCollider>();
         continueButtonCollider = continueButton.GetComponent<BoxCollider>();
@@ -96,6 +95,20 @@ public class TitleScenManager : BaseSceneManager {
             navigation.selectOnUp = startButton;
             optionButton.navigation = navigation;
         }
+    }
+
+    private void OnEnable()
+    {
+        actionMove.ToInputAction().Enable();
+    }
+    private void OnDisable()
+    {
+        actionMove.ToInputAction().Disable();
+    }
+    private void OnDestroy()
+    {
+        actionMove.action.performed -= OnMove;
+        actionMove.action.canceled -= OnMove;
     }
 
     private void Start() {
@@ -190,7 +203,7 @@ public class TitleScenManager : BaseSceneManager {
     public void InitInput()
     {
         mousePos = Input.mousePosition;
-        bMouse = (Gamepad.current) != null;
+        bMouse = true;
         ChangeInput();
     }
 

@@ -76,7 +76,6 @@ public class OptionPanel : MonoBehaviour
         //イベント登録
         actionMove.action.performed += OnMove;
         actionMove.action.canceled += OnMove;
-        actionMove.ToInputAction().Enable();
 
         //ボタンの加増取得
         keybordOptionButtonImage = keybordOptionButton.GetComponent<Image>();
@@ -86,6 +85,22 @@ public class OptionPanel : MonoBehaviour
         delBGMButtonImage = delBGMButton.GetComponent<Image>();
         addSEButtonImage = addSEButton.GetComponent<Image>();
         delSEButtonImage = delSEButton.GetComponent<Image>();
+    }
+
+    private void OnEnable()
+    {
+        actionMove.ToInputAction().Enable();
+    }
+
+    private void OnDisable()
+    {
+        actionMove.ToInputAction().Disable();
+    }
+
+    private void OnDestroy()
+    {
+        actionMove.action.performed -= OnMove;
+        actionMove.action.canceled -= OnMove;
     }
 
     private void Update()
@@ -214,7 +229,7 @@ public class OptionPanel : MonoBehaviour
     public void InitInput()
     {
         mousePos = Input.mousePosition;
-        bMouse = (Gamepad.current) != null;
+        bMouse = true;
         ChangeInput();
     }
     /// <summary>
