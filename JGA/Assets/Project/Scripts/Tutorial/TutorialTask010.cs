@@ -49,6 +49,6 @@ public class TutorialTask010 : ITurorial
     /// </summary>
     /// <returns></returns>
     public float GetTransitionTime() {
-        return 3.0f;
+        return 2.0f;
     }
 }

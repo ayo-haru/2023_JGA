@@ -12,8 +12,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 public class TutorialTask011 : ITurorial {
-    private int oldGuestCnt;    // 前フレームまでの集めた客の人数
-
     /// <summary>
     /// タスク完了に必要となるオブジェクトを設定する
     /// </summary>
@@ -25,7 +23,6 @@ public class TutorialTask011 : ITurorial {
     /// チュートリアルタスクが設定されたときに実行
     /// </summary>
     public void OnTaskSetting() {
-        oldGuestCnt = MySceneManager.GameData.guestCnt;
     }
 
     /// <summary>
@@ -33,7 +30,7 @@ public class TutorialTask011 : ITurorial {
     /// </summary>
     /// <returns></returns>
     public bool CheckTask() {
-        if (oldGuestCnt < MySceneManager.GameData.guestCnt) {   // 客のカウントが増えたら
+        if (0 < MySceneManager.GameData.guestCnt) {   // 客のカウントが増えたら
             return true;
         }
 
