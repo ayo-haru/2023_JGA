@@ -136,7 +136,6 @@ public class UIManager : MonoBehaviour
         //----- ゲームクリア -----
         if (guestNumUI) {
             if (_GuestNumUI.isClear()) {
-                Debug.Log(canvas);
                 canvas.worldCamera = resultCamera;
                 if (_ResultCamera.rotateFlg) {
                     clearUI.SetActive(true);
