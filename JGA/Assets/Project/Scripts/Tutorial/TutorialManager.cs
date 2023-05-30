@@ -43,9 +43,7 @@ public class TutorialManager : MonoBehaviour {
 
 
     //**デバッグ用***************************************************************
-#if UNITY_EDITOR
     private bool debugTaskFin;
-#endif
     //*****************************************************************
     private void Awake() {
         //----- イベント登録 -----
