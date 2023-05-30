@@ -76,7 +76,7 @@ AudioSource:
   MinDistance: 1
   MaxDistance: 500
   Pan2D: 0
-  rolloffMode: 2
+  rolloffMode: 1
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -253,7 +253,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ceadd5456b1670c47bdcc5c67344b64b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objState: 0
+  objType: 0
+  objDistanceType: 0
   _animator: {fileID: 3760726372742538358}
 --- !u!1 &7518669012373824837
 GameObject:
