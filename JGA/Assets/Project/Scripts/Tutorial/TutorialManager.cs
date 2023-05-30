@@ -103,9 +103,7 @@ public class TutorialManager : MonoBehaviour {
         StartCoroutine(SetCurrentTask(tutorialTask.First()));
 
         //**デバッグ用***************************************************************
-#if UNITY_EDITOR
         debugTaskFin = false;
-#endif
         //*****************************************************************
     }
 

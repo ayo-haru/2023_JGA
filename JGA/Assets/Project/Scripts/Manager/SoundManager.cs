@@ -21,8 +21,6 @@ public class SoundManager : MonoBehaviour
 	{
 		TITLE_001,			// タイトル
 		GAME001,			// ゲーム中
-		GAMECLEAR,			// ゲームクリア
-		GAMEOVER,			// ゲームオーバー
 		INZOO,				// 動物園内雑音
 
 	}
@@ -109,11 +107,13 @@ public class SoundManager : MonoBehaviour
 		CANCEL_001,             // 戻る
 		SLIDE_001,              // スライド
 		COUNTDOWN_001,          // カウントダウン
-								//---------------
+        GAMECLEAR,				// ゲームクリア
+        GAMEOVER,				// ゲームオーバー
+		//---------------
 
-	}
+    }
 
-	private static HashSet<AudioSource> Source = new HashSet<AudioSource>();
+    private static HashSet<AudioSource> Source = new HashSet<AudioSource>();
 	private static AudioClip BGM;
 	private static List<AudioClip> SEs = new List<AudioClip>();
 	private static GameVolume.Volume Volume;

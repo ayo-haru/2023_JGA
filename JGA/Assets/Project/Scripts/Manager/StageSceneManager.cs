@@ -414,8 +414,6 @@ public class StageSceneManager : BaseSceneManager {
                 }
             }
         }
-
-
     }
 
     private void LateUpdate() {
@@ -612,7 +610,7 @@ public class StageSceneManager : BaseSceneManager {
 
         //----- 音の再生 -----
         // ポーズ後にやらないとポーズに消される
-        SoundManager.Play(asList[2], SoundManager.EBGM.GAMECLEAR);
+        SoundManager.Play(asList[2], SoundManager.ESE.GAMECLEAR);
 
         // セーブ
         SaveManager.SaveGuestCnt(0);
@@ -638,7 +636,7 @@ public class StageSceneManager : BaseSceneManager {
 
         //----- 音の再生 -----
         // ポーズ後にやらないとポーズに消される
-        SoundManager.Play(asList[2], SoundManager.EBGM.GAMEOVER);
+        SoundManager.Play(asList[2], SoundManager.ESE.GAMEOVER);
 
         //----- セーブ -----
         // 初期値の値で保存。シーン番号は現在のシーン。
