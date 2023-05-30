@@ -16,7 +16,7 @@ public class TutorialTask001 : ITurorial
 {
     private float timer;    // UIをだしてから遷移するまでの時間
 
-    private readonly float MAX_TIME = 1.0f; // 遷移するまでの時間の定数
+    private readonly float MAX_TIME = 3.0f; // 遷移するまでの時間の定数
 
     // 生成する壁
     private GameObject wallPrefab;
