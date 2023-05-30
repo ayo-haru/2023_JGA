@@ -52,7 +52,7 @@ public class TutorialTask026 : ITurorial
     /// </summary>
     /// <returns></returns>
     public float GetTransitionTime() {
-        return 2.5f;
+        return 3.5f;
     }
 
 }
