@@ -219,15 +219,9 @@ public class TutorialManager : MonoBehaviour {
                 break;
             case TutorialTask013:
                 task.AddNeedObj(player);
-                task.AddNeedObj(GameObject.Find("CardBoard_001"));
-                task.AddNeedObj(GameObject.Find("CardBoard_002"));
-                task.AddNeedObj(GameObject.Find("CardBoard_007"));
                 break;
             case TutorialTask014:
                 task.AddNeedObj(player);
-                task.AddNeedObj(GameObject.Find("CardBoard_001"));
-                task.AddNeedObj(GameObject.Find("CardBoard_002"));
-                task.AddNeedObj(GameObject.Find("CardBoard_007"));
                 break;
             case TutorialTask015:
                 task.AddNeedObj(player);

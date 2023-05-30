@@ -76,7 +76,7 @@ public class AIManager : MonoBehaviour
             data.entranceTF = (_StageSceneManager.GetRootTransform(MySceneManager.eRoot.ENTRANCE));
 
             //表示名変更
-            gameObject.name = data.name;
+            //gameObject.name = data.name;
         }
 
         //エラーチェック

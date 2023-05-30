@@ -71,20 +71,12 @@ public class TutorialTask016 : ITurorial
             Debug.LogError("プレイヤースクリプトが取得されていません");
             return false;
         }
-
-        for(int i = 0; i < player.InteractObjects.Count; ++i)
+        //段ボールインタラクトされた状態で、客二人の近くに居たらtrue
+        for (int i = 0; i < player.InteractObjects.Count; ++i)
         {
             if (!player.InteractObjects[i].StartsWith("CardBoard_")) continue;
-            GameObject cardboard = GameObject.Find(player.InteractObjects[i]);
-            if (!cardboard) continue;
-            //１人目の客の近くに段ボールあるか
-            if (Vector3.Distance(cardboard.transform.position,
-                                    transformList[1].position + transformList[1].forward * data1.soundAreaOffset) >
-                                    data1.reactionArea) continue;
-            //二人目の客の近くに段ボールあるか
-            if (Vector3.Distance(cardboard.transform.position,
-                                    transformList[2].position + transformList[2].forward * data2.soundAreaOffset) >
-                                    data2.reactionArea) continue;
+            if (Vector3.Distance(transformList[0].position, transformList[1].position + transformList[1].forward * data1.soundAreaOffset) > data1.reactionArea) continue;
+            if (Vector3.Distance(transformList[0].position, transformList[2].position + transformList[2].forward * data2.soundAreaOffset) > data2.reactionArea) continue;
             return true;
         }
         return false;
