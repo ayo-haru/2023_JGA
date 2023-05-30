@@ -98,8 +98,11 @@ public class CanObject : BaseObj , IObjectSound
 			}
 
 		}
+		
 
 	}
+
+
 
 	public void PlayPickUp()
 	{
