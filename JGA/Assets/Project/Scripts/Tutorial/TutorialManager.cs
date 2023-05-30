@@ -94,6 +94,11 @@ public class TutorialManager : MonoBehaviour {
             new TutorialTask025(),
             new TutorialTask026(),
             new TutorialTask027(),
+            new TutorialTask028(),
+            new TutorialTask029(),
+            new TutorialTask030(),
+            new TutorialTask031(),
+            new TutorialTask032(),
         };
 
         // 最初のチュートリアルを設定
