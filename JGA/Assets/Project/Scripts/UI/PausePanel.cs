@@ -165,9 +165,12 @@ public class PausePanel : MonoBehaviour
 
 	private void ChangeTitle()
 	{
-		SaveManager.SaveAll();	// タイトル戻る前にセーブ
+		SaveManager.SaveAll();  // タイトル戻る前にセーブ
+		
+		MySceneManager.GameData.oldScene = MySceneManager.GameData.nowScene;
+		MySceneManager.GameData.nowScene = (int)MySceneManager.SceneState.SCENE_TITLE;
 
-		MySceneManager.SceneChange(MySceneManager.SceneState.SCENE_TITLE);
+        MySceneManager.SceneChange(MySceneManager.SceneState.SCENE_TITLE);
 	}
 
 	public void ChangePanel(GameObject panelObj)
