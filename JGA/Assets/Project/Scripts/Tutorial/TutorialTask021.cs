@@ -15,10 +15,6 @@ using UnityEngine;
 
 public class TutorialTask021 : ITurorial
 {
-    private float timer;    // UIをだしてから遷移するまでの時間
-
-    private readonly float MAX_TIME = 10.0f; // 遷移するまでの時間の定数
-
     /// <summary>
     /// タスク完了に必要となるオブジェクトを設定する
     /// </summary>
@@ -30,7 +26,6 @@ public class TutorialTask021 : ITurorial
     /// チュートリアルタスクが設定されたときに実行
     /// </summary>
     public void OnTaskSetting() {
-        timer = MAX_TIME;
     }
 
     /// <summary>
@@ -38,8 +33,7 @@ public class TutorialTask021 : ITurorial
     /// </summary>
     /// <returns></returns>
     public bool CheckTask() {
-        timer -= Time.deltaTime;
-        return timer < 0.0f;
+        return MySceneManager.GameData.guestCnt > 4;
     }
 
 
