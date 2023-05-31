@@ -541,6 +541,9 @@ public class Player : MonoBehaviour
 			rb.velocity = Vector3.zero;
 			rb.angularVelocity = Vector3.zero;
 		}
+
+		// 移動中判定
+		_IsMove = moveInputValue.normalized != Vector2.zero;
 	}
 
 	/// <summary>
@@ -617,6 +620,9 @@ public class Player : MonoBehaviour
 				}
 				_IsHoldMotion = true;
 			}
+			// 移動中判定
+			moveInputValue = Vector2.zero;
+			_IsMove = false;
 		}
 
 		//--- 長押し終了（離す処理）
@@ -641,6 +647,7 @@ public class Player : MonoBehaviour
 						break;
 				}
 			}
+			_IsHoldMotion = false;
 		}
 
 	}
@@ -676,6 +683,10 @@ public class Player : MonoBehaviour
 	/// </summary>
 	private void Move()
 	{
+		// 移動中判定
+		if (moveInputValue.normalized == Vector2.zero)
+			return;
+
 		// ゲームパッド接続時、傾きがjoyRunZone以上の時「走り」の判定にする
 		if (bGamePad)
 			_IsRun = moveInputValue.magnitude >= joyRunZone;
