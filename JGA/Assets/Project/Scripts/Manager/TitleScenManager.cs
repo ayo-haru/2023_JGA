@@ -35,6 +35,9 @@ public class TitleScenManager : BaseSceneManager {
 
     [SerializeField, Header("オプション")] private OptionPanel optionPanel;
 
+    //続きからボタン隠す用
+    private SpriteRenderer continueHideImage;
+
     //入力フラグ
     private bool bMouse = true;
     //マウス位置
@@ -81,6 +84,7 @@ public class TitleScenManager : BaseSceneManager {
         continueButtonCollider = continueButton.GetComponent<BoxCollider>();
         optionButtonCollider = optionButton.GetComponent<BoxCollider>();
         exitButtonCollider = exitButton.GetComponent<BoxCollider>();
+        continueHideImage = continueButton.transform.GetChild(0).GetComponent<SpriteRenderer>();
 
         //セーブデータが存在しない場合は続きからボタンを無効化
         if (!MySceneManager.GameData.isContinueGame)
@@ -94,6 +98,11 @@ public class TitleScenManager : BaseSceneManager {
             navigation = optionButton.navigation;
             navigation.selectOnUp = startButton;
             optionButton.navigation = navigation;
+        }
+        else
+        {
+            //続きから隠すようの画像を非表示にする
+            if(continueHideImage)continueHideImage.enabled = false;
         }
     }
 
