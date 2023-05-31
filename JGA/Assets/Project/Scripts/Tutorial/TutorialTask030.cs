@@ -17,7 +17,7 @@ public class TutorialTask030 : ITurorial
 {
     private float timer;    // UIをだしてから遷移するまでの時間
 
-    private readonly float MAX_TIME = 3.0f; // 遷移するまでの時間の定数
+    private readonly float MAX_TIME = 0.0f; // 遷移するまでの時間の定数
 
     /// <summary>
     /// タスク完了に必要となるオブジェクトを設定する
@@ -52,7 +52,7 @@ public class TutorialTask030 : ITurorial
     /// </summary>
     /// <returns></returns>
     public float GetTransitionTime() {
-        return 0.0f;
+        return 3.0f;
     }
 
 }
