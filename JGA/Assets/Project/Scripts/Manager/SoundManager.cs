@@ -107,13 +107,13 @@ public class SoundManager : MonoBehaviour
 		CANCEL_001,             // 戻る
 		SLIDE_001,              // スライド
 		COUNTDOWN_001,          // カウントダウン
-        GAMECLEAR,				// ゲームクリア
-        GAMEOVER,				// ゲームオーバー
+		GAMECLEAR,				// ゲームクリア
+		GAMEOVER,				// ゲームオーバー
 		//---------------
 
-    }
+	}
 
-    private static HashSet<AudioSource> Source = new HashSet<AudioSource>();
+	private static HashSet<AudioSource> Source = new HashSet<AudioSource>();
 	private static AudioClip BGM;
 	private static List<AudioClip> SEs = new List<AudioClip>();
 	private static GameVolume.Volume Volume;
@@ -434,7 +434,8 @@ public class SoundManager : MonoBehaviour
 
 		foreach (var item in Source)
 		{
-			item.Pause();
+			if (item != null)
+				item.Pause();
 		}
 	}
 
@@ -447,7 +448,8 @@ public class SoundManager : MonoBehaviour
 
 		foreach (var item in Source)
 		{
-			item.UnPause();
+			if (item != null)
+				item.UnPause();
 		}
 	}
 

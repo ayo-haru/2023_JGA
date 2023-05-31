@@ -1052,6 +1052,19 @@ public class Player : MonoBehaviour
 			outline.enabled = true;
 	}
 
+	private void OnTriggerStay(Collider other)
+	{
+		if (!other.CompareTag("Interact"))
+			return;
+		if ((other.name.Contains("Corn") ||
+			other.name.Contains("CardBoard"))
+			&& other as SphereCollider)
+			return;
+
+		// 範囲内のオブジェクトリストに追加
+		WithinRange.Add(other);
+	}
+
 	private void OnTriggerExit(Collider other)
 	{
 		// 範囲内のオブジェクトリストから削除

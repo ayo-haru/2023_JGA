@@ -36,33 +36,35 @@ public class PausePanel : MonoBehaviour
 	[Header("Pauseパネル - オブジェクト")]
 	[SerializeField]
 	private Button backButton;
-    [SerializeField]
-    private Image backButtonImage;
+	[SerializeField]
+	private Image backButtonImage;
 	[SerializeField]
 	private Button optionButton;
-    [SerializeField]
-    private Image optionButtonImage;
+	[SerializeField]
+	private Image optionButtonImage;
 	[SerializeField]
 	private Button titleButton;
-    [SerializeField]
-    private Image titleButtonImage;
+	[SerializeField]
+	private Image titleButtonImage;
 
 	private RectTransform rect;
 	[SerializeField]
 	private AudioSource audioSource;
 
-    [SerializeField] private InputActionReference actionMove;
+	[SerializeField] private InputActionReference actionMove;
 
-    //入力モード　true マウス　false コントローラ
+	//入力モード　true マウス　false コントローラ
 	private bool bMouseMode;
-    //マウス座標
-    private Vector3 mousePos;
+	//マウス座標
+	private Vector3 mousePos;
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
 	/// </summary>
 	void Awake()
 	{
+		audioSource = GetComponent<AudioSource>();
+
 		// ポーズ時の動作を登録
 		PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(this.gameObject);
 		PauseManager.OnResumed.Subscribe(x => { Resumed(); }).AddTo(this.gameObject);
@@ -72,41 +74,41 @@ public class PausePanel : MonoBehaviour
 		//OpitonButton.onClick.AddListener(ChangePanel);
 		titleButton.onClick.AddListener(ChangeTitle);
 
-        //パネル有効化
+		//パネル有効化
 		pausePanel.SetActive(true);
 		optionPanel.SetActive(true);
 		keyConfigPanel.SetActive(true);
 
 		rect = GetComponent<RectTransform>();
 
-        //最初は非表示
+		//最初は非表示
 		if (gameObject.activeSelf)gameObject.SetActive(false);
 
-        actionMove.action.performed += OnMove;
-        actionMove.action.canceled += OnMove;
-        
+		actionMove.action.performed += OnMove;
+		actionMove.action.canceled += OnMove;
+		
 	}
 
-    private void OnEnable()
-    {
-        actionMove.ToInputAction().Enable();
+	private void OnEnable()
+	{
+		actionMove.ToInputAction().Enable();
 
-        ActivePanel = pausePanel;
-        InitInput();
-    }
+		ActivePanel = pausePanel;
+		InitInput();
+	}
 
-    private void OnDisable()
-    {
-        actionMove.ToInputAction().Disable();
-    }
+	private void OnDisable()
+	{
+		actionMove.ToInputAction().Disable();
+	}
 
-    private void OnDestroy()
-    {
-        actionMove.action.performed -= OnMove;
-        actionMove.action.canceled -= OnMove;
-    }
+	private void OnDestroy()
+	{
+		actionMove.action.performed -= OnMove;
+		actionMove.action.canceled -= OnMove;
+	}
 
-    private void FixedUpdate()
+	private void FixedUpdate()
 	{
 		if (ActivePanel == pausePanel && rect.localPosition != new Vector3(0, 0, 0))
 			rect.localPosition = Vector3.MoveTowards(rect.localPosition, new Vector3(0, 0, 0), PanelMoveValue);
@@ -118,30 +120,30 @@ public class PausePanel : MonoBehaviour
 
 	private void Update()
 	{
-        if (ActivePanel != pausePanel) return;
+		if (ActivePanel != pausePanel) return;
 
-        //マウスの状態を更新
-        Vector3 oldMousePos = mousePos;
-        mousePos = Input.mousePosition;
+		//マウスの状態を更新
+		Vector3 oldMousePos = mousePos;
+		mousePos = Input.mousePosition;
 
-        if (bMouseMode) return;
+		if (bMouseMode) return;
 
-        //マウスが動かされたらマウス入力に切り替え
-        if (Vector3.Distance(oldMousePos, mousePos) >= 1.0f)
-        {
-            ChangeInput();
-        }
-    }
+		//マウスが動かされたらマウス入力に切り替え
+		if (Vector3.Distance(oldMousePos, mousePos) >= 1.0f)
+		{
+			ChangeInput();
+		}
+	}
 
 	private void OnMove(InputAction.CallbackContext context)
 	{
-        if (!gameObject.activeSelf) return;
-        if (!PauseManager.isPaused)return;
-        if (!bMouseMode) return;
-        if (ActivePanel != pausePanel) return;
+		if (!gameObject.activeSelf) return;
+		if (!PauseManager.isPaused)return;
+		if (!bMouseMode) return;
+		if (ActivePanel != pausePanel) return;
 
-        //マウス→コントローラ
-        ChangeInput();
+		//マウス→コントローラ
+		ChangeInput();
 	}
 
 	void Pause()
@@ -170,7 +172,7 @@ public class PausePanel : MonoBehaviour
 		MySceneManager.GameData.oldScene = MySceneManager.GameData.nowScene;
 		MySceneManager.GameData.nowScene = (int)MySceneManager.SceneState.SCENE_TITLE;
 
-        MySceneManager.SceneChange(MySceneManager.SceneState.SCENE_TITLE);
+		MySceneManager.SceneChange(MySceneManager.SceneState.SCENE_TITLE);
 	}
 
 	public void ChangePanel(GameObject panelObj)
@@ -180,10 +182,10 @@ public class PausePanel : MonoBehaviour
 	public void ChangePanel(string panelName)
 	{
 		if (panelName.Equals(pausePanel.name))
-        {
-            ActivePanel = pausePanel;
-            InitInput();
-        }
+		{
+			ActivePanel = pausePanel;
+			InitInput();
+		}
 
 		if (panelName.Equals(optionPanel.name))
 			ActivePanel = optionPanel;
@@ -207,30 +209,49 @@ public class PausePanel : MonoBehaviour
 		SoundManager.Play(audioSource, SoundManager.ESE.SLIDE_001);
 	}
 
-    public void InitInput()
-    {
-        mousePos = Input.mousePosition;
-        bMouseMode = true;
-        ChangeInput();
-    }
+	public void InitInput()
+	{
+		mousePos = Input.mousePosition;
+		bMouseMode = true;
+		ChangeInput();
+	}
 
-    public void ChangeInput()
-    {
-        //マウス→コントローラ
-        if (bMouseMode)
-        {
-            EventSystem.current.SetSelectedGameObject(null);
-            backButton.Select();
-        }else{//コントローラ→　マウス
-            EventSystem.current.SetSelectedGameObject(null);
-        }
+	#region SE鳴らす関数
+	public void SoundSelectSE()
+	{
+		if (!audioSource) return;
+		SoundManager.Play(audioSource, SoundManager.ESE.SELECT_001);
+	}
 
-        //入力切替
-        bMouseMode = !bMouseMode;
-        //ボタンのraycastTarget切り替え
-        backButtonImage.raycastTarget = bMouseMode;
-        optionButtonImage.raycastTarget = bMouseMode;
-        titleButtonImage.raycastTarget = bMouseMode;
-        Cursor.visible = bMouseMode;
-    }
+	public void SoundDecisionSE()
+	{
+		if (!audioSource) return;
+		SoundManager.Play(audioSource, SoundManager.ESE.DECISION_001);
+	}
+	public void SoundSlideSE()
+	{
+		if (!audioSource) return;
+		SoundManager.Play(audioSource, SoundManager.ESE.SELECT_001);
+	}
+	#endregion
+
+	public void ChangeInput()
+	{
+		//マウス→コントローラ
+		if (bMouseMode)
+		{
+			EventSystem.current.SetSelectedGameObject(null);
+			backButton.Select();
+		}else{//コントローラ→　マウス
+			EventSystem.current.SetSelectedGameObject(null);
+		}
+
+		//入力切替
+		bMouseMode = !bMouseMode;
+		//ボタンのraycastTarget切り替え
+		backButtonImage.raycastTarget = bMouseMode;
+		optionButtonImage.raycastTarget = bMouseMode;
+		titleButtonImage.raycastTarget = bMouseMode;
+		Cursor.visible = bMouseMode;
+	}
 }
