@@ -91,11 +91,16 @@ public class TransitionInteract : AITransition
         //プレイヤーが範囲内に居るか
         if (Vector3.Distance(transform.position, playerTransform.position) > data.reactionArea) return false;
 
+        //客の音インタラクト反応位置
+        Vector3 guestPos = transform.position + transform.forward * data.soundAreaOffset;
         //範囲内にあるインタラクトオブジェクトのフラグが立っているか
-        for(int i = 0; i < interactObjecs.Count; ++i)
+        for (int i = 0; i < interactObjecs.Count; ++i)
         {
             if (!interactObjecs[i].GetisPlaySound()) continue;
-            if (Vector3.Distance(transform.position + transform.forward * data.soundAreaOffset, interactObjecs[i].transform.position) <= data.reactionArea) return true;
+            //インタラクトオブジェクト位置
+            //インタラクトされた時プレイヤーの子オブジェクトにされるため、ローカル座標からワールド座標に変換
+            Vector3 interactPos = (interactObjecs[i].transform.parent) ? interactObjecs[i].transform.parent.TransformPoint(interactObjecs[i].transform.localPosition) : interactObjecs[i].transform.position;
+            if (Vector3.Distance(guestPos, interactPos) <= data.reactionArea) return true;
         }
         return false;
     }
