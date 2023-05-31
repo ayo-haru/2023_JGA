@@ -158,12 +158,20 @@ public class UIManager : MonoBehaviour
         if (MySceneManager.GameData.nowScene == (int)MySceneManager.SceneState.SCENE_GAME_001) {
             // タイマーの表示非表示
             if (timerUI) {
-                if (_TutorialManager.GetExecution()) {
-                    _TimerUI.CountStop();
-                    timerUI.SetActive(false);
-                } else {
-                    _TimerUI.CountStart();
-                    timerUI.SetActive(true);
+                var currentTutorialTask = _TutorialManager.GetCurrentTask();
+                switch (currentTutorialTask) {
+                    case TutorialTask001:           // チュートリアル開始時
+                        _TimerUI.CountStop();
+                        timerUI.SetActive(false);
+                        break;
+                    case TutorialTask028:           // タイマーチュートリアル開始
+                        timerUI.SetActive(true);
+                        break;
+                    case TutorialTask032:           // チュートリアル終了
+                        _TimerUI.CountStart();
+                        break;
+                    default:
+                        break;
                 }
             }
         }
