@@ -159,12 +159,14 @@ public class PausePanel : MonoBehaviour
 
 	private void Back()
 	{
+        DecisionSound();
 		PauseManager.Resume();
 		PauseManager.isPaused = false;
 	}
 
 	private void ChangeTitle()
 	{
+        DecisionSound();
 		SaveManager.SaveAll();  // タイトル戻る前にセーブ
 		
 		MySceneManager.GameData.oldScene = MySceneManager.GameData.nowScene;
