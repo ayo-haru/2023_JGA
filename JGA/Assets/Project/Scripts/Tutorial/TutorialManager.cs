@@ -281,4 +281,12 @@ public class TutorialManager : MonoBehaviour {
     public bool GetExecution() {
         return isExecution.Value;
     }
+
+    /// <summary>
+    /// 現在のタスクの取得
+    /// </summary>
+    /// <returns></returns>
+    public ITurorial GetCurrentTask() {
+        return currentTask;
+    }
 }
