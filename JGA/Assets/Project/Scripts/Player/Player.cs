@@ -439,7 +439,7 @@ public class Player : MonoBehaviour
 	private void Pause()
 	{
 		// リスタート処理
-		if (MySceneManager.GameData.isCatchPenguin)
+		if (GameData.isCatchPenguin)
 		{
 			ReStart();
 			return;

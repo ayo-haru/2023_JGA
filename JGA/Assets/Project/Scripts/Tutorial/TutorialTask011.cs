@@ -30,7 +30,7 @@ public class TutorialTask011 : ITurorial {
     /// </summary>
     /// <returns></returns>
     public bool CheckTask() {
-        if (0 < MySceneManager.GameData.guestCnt) {   // 客のカウントが増えたら
+        if (0 < GameData.guestCnt) {   // 客のカウントが増えたら
             return true;
         }
 

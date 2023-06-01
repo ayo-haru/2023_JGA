@@ -169,9 +169,9 @@ public class MainCamera : MonoBehaviour
 	/// </summary>
 	void Start() {
 
-        guestCheck = MySceneManager.GameData.guestData.Length;
+        guestCheck = GameData.guestData.Length;
 
-        crearGuest = MySceneManager.GameData.guestCnt;
+        crearGuest = GameData.guestCnt;
         //客の情報を格納する
         guestObj = GameObject.FindGameObjectsWithTag("Guest");
 
@@ -211,19 +211,19 @@ public class MainCamera : MonoBehaviour
         //一定時間の計算
         scriptStop += Time.deltaTime;
 
-        if (crearGuest != MySceneManager.GameData.guestCnt)
+        if (crearGuest != GameData.guestCnt)
         {
             guestObj = GameObject.FindGameObjectsWithTag("Guest");
             //客の範囲取得
             boundGuest = new Bounds[guestObj.Length];
-            crearGuest = MySceneManager.GameData.guestCnt;
+            crearGuest = GameData.guestCnt;
         }
-        if (guestCheck != MySceneManager.GameData.guestData.Length + MySceneManager.GameData.randomGuestCnt)
+        if (guestCheck != GameData.guestData.Length + GameData.randomGuestCnt)
         {
             guestObj = GameObject.FindGameObjectsWithTag("Guest");
             //客の範囲取得
             boundGuest = new Bounds[guestObj.Length];
-            guestCheck = MySceneManager.GameData.guestData.Length + MySceneManager.GameData.randomGuestCnt;
+            guestCheck = GameData.guestData.Length + GameData.randomGuestCnt;
         }
 
         if (scriptStop >= 1.0f)
@@ -252,11 +252,11 @@ public class MainCamera : MonoBehaviour
 	/// </summary>
 	void Update()
 	{
-        if (pauseFlg && !MySceneManager.GameData.isCatchPenguin)
+        if (pauseFlg && !GameData.isCatchPenguin)
         {
             return;
         }
-        if (MySceneManager.GameData.isCatchPenguin)
+        if (GameData.isCatchPenguin)
         {
             cameraParent.position = firstCamPos;
         }
@@ -267,7 +267,7 @@ public class MainCamera : MonoBehaviour
     /// </summary>
     private void CameraMove()
 	{
-        if(pauseFlg && !MySceneManager.GameData.isCatchPenguin)
+        if(pauseFlg && !GameData.isCatchPenguin)
          {
              return;
          }
@@ -338,7 +338,7 @@ public class MainCamera : MonoBehaviour
     //ズームインとズームアウトを決定動かす処理
     private void ZoomInOut()
 	{
-        if (pauseFlg && !MySceneManager.GameData.isCatchPenguin)
+        if (pauseFlg && !GameData.isCatchPenguin)
         {
             return;
         }

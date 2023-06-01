@@ -32,7 +32,7 @@ public class Follow02Tutorial:ITurorial
     /// </summary>
     /// <returns></returns>
     public bool CheckTask() {
-        if(MySceneManager.GameData.guestCnt > 0) {
+        if(GameData.guestCnt > 0) {
             return true;
         }
 

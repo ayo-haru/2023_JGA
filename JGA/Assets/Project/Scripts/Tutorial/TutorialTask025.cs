@@ -40,7 +40,7 @@ public class TutorialTask025 : ITurorial
 	public bool CheckTask() {
 
 		// ペンギンが捕まるまでがこのタスク
-		if (MySceneManager.GameData.isCatchPenguin){
+		if (GameData.isCatchPenguin){
 			return true;
 		}
 		return false;

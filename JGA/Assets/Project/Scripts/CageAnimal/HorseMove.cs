@@ -76,7 +76,7 @@ public class HorseMove : MonoBehaviour
 	/// </summary>
 	void FixedUpdate()
 	{
-        if (PauseManager.isPaused && !MySceneManager.GameData.isCatchPenguin)
+        if (PauseManager.isPaused && !GameData.isCatchPenguin)
         {
             return;
         }
@@ -98,12 +98,12 @@ public class HorseMove : MonoBehaviour
 	/// </summary>
 	void Update()
 	{
-        if (PauseManager.isPaused && !MySceneManager.GameData.isCatchPenguin)
+        if (PauseManager.isPaused && !GameData.isCatchPenguin)
         {
             return;
         }
 
-        if (MySceneManager.GameData.isCatchPenguin)
+        if (GameData.isCatchPenguin)
         {
             // ペンギンが捕まっているときはポーズ中なのでポーズ中でも処理を行う
             rb.velocity = Vector3.zero;

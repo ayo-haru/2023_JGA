@@ -51,7 +51,7 @@ public class StageSceneManager : BaseSceneManager {
     //---客
     [Header("ランダム生成させる客のルートの最大数\n(2～ペンギンとエントランス以外のブースの合計数)")]
     [SerializeField]
-    [Range(2, (int)MySceneManager.eRoot.ENTRANCE - 4)]
+    [Range(2, (int)GameData.eRoot.ENTRANCE - 4)]
     private int guestRootMax = 5;
     [Header("ランダム生成する間隔(秒)")]
     [SerializeField]
@@ -109,19 +109,19 @@ public class StageSceneManager : BaseSceneManager {
         Init();
 
 #if UNITY_EDITOR
-        if (MySceneManager.GameData.nowScene == 0) { // 本来ならnowSceneneには現在のシーン番号が入るがエディタ上で実行した場合は0が入っているので初期化
+        if (GameData.nowScene == 0) { // 本来ならnowSceneneには現在のシーン番号が入るがエディタ上で実行した場合は0が入っているので初期化
             for (int i = 0; i < System.Enum.GetNames(typeof(MySceneManager.SceneState)).Length; i++) {
                 if (SceneManager.GetActiveScene().name == MySceneManager.sceneName[i]) {
-                    MySceneManager.GameData.nowScene = i;
+                    GameData.nowScene = i;
                 }
             }
-            MySceneManager.GameData.oldScene = MySceneManager.GameData.nowScene;
+            GameData.oldScene = GameData.nowScene;
         }
 #endif
 
         isOnce = false;
 
-        if (MySceneManager.GameData.isContinueGame && MySceneManager.GameData.oldScene == (int)MySceneManager.SceneState.SCENE_TITLE) {
+        if (GameData.isContinueGame && GameData.oldScene == (int)MySceneManager.SceneState.SCENE_TITLE) {
             /*
              * セーブデータが存在または初期化済みでタイトルシーンを通ってきた場合つづきから
              */
@@ -130,15 +130,15 @@ public class StageSceneManager : BaseSceneManager {
         }
 
         //----- イベントを静的クラスに保存 -----
-        MySceneManager.GameData.events = new EventParam[this.events.Length];
+        GameData.events = new EventParam[this.events.Length];
         for (int i = 0; i < events.Length; i++) {
             /*
              * 上の ”new EventParam[this.events.Length]"ではサイズを確保しているだけで初期化はされていないので
              * 下の ”new EventParam()”というように ”()” をつけコンストラクタを呼び出し初期化する
              */
-            MySceneManager.GameData.events[i] = new EventParam();
-            MySceneManager.GameData.events[i].eventState = this.events[i].eventState;
-            MySceneManager.GameData.events[i].percent = this.events[i].percent;
+            GameData.events[i] = new EventParam();
+            GameData.events[i].eventState = this.events[i].eventState;
+            GameData.events[i].percent = this.events[i].percent;
         }
 
         // BGM再生用にオーディオソース取得
@@ -161,110 +161,110 @@ public class StageSceneManager : BaseSceneManager {
 
         // 生成する客のプレハブ
         guestObj = new GameObject[3];
-        guestObj[0] = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Guest001.prefab");
-        guestObj[1] = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Guest002.prefab");
-        guestObj[2] = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Guest003.prefab");
+        guestObj[0] = PrefabContainerFinder.Find(GameData.characterDatas, "Guest001.prefab");
+        guestObj[1] = PrefabContainerFinder.Find(GameData.characterDatas, "Guest002.prefab");
+        guestObj[2] = PrefabContainerFinder.Find(GameData.characterDatas, "Guest003.prefab");
 
         // 客ランダム生成の変数初期化
         guestSpawnTimer = guestSpawnTime * 60;
 
         //----- それぞれのブースの座標の取得 -----
-        rootPos = new Transform[Enum.GetNames(typeof(MySceneManager.eRoot)).Length];
+        rootPos = new Transform[Enum.GetNames(typeof(GameData.eRoot)).Length];
         if (isGuestSpawn == true || isZKSpawn == true) {  // デバッグ用エラー出ないように囲んどく
 
             // 客のルート取得===================================================================
             #region 客ルート
-            if (!rootPos[(int)MySceneManager.eRoot.PENGUIN_N]) {
-                rootPos[(int)MySceneManager.eRoot.PENGUIN_N] = GameObject.Find("PenguinCagePos_N").GetComponent<Transform>();
+            if (!rootPos[(int)GameData.eRoot.PENGUIN_N]) {
+                rootPos[(int)GameData.eRoot.PENGUIN_N] = GameObject.Find("PenguinCagePos_N").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.PENGUIN_S]) {
-                rootPos[(int)MySceneManager.eRoot.PENGUIN_S] = GameObject.Find("PenguinCagePos_S").GetComponent<Transform>();
+            if (!rootPos[(int)GameData.eRoot.PENGUIN_S]) {
+                rootPos[(int)GameData.eRoot.PENGUIN_S] = GameObject.Find("PenguinCagePos_S").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.PENGUIN_W]) {
-                rootPos[(int)MySceneManager.eRoot.PENGUIN_W] = GameObject.Find("PenguinCagePos_W").GetComponent<Transform>();
+            if (!rootPos[(int)GameData.eRoot.PENGUIN_W]) {
+                rootPos[(int)GameData.eRoot.PENGUIN_W] = GameObject.Find("PenguinCagePos_W").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.PENGUIN_E]) {
-                rootPos[(int)MySceneManager.eRoot.PENGUIN_E] = GameObject.Find("PenguinCagePos_E").GetComponent<Transform>();
+            if (!rootPos[(int)GameData.eRoot.PENGUIN_E]) {
+                rootPos[(int)GameData.eRoot.PENGUIN_E] = GameObject.Find("PenguinCagePos_E").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.RESTSPOT_01]) {
-                rootPos[(int)MySceneManager.eRoot.RESTSPOT_01] = GameObject.Find("RestSpotPos01").GetComponent<Transform>();
+            if (!rootPos[(int)GameData.eRoot.RESTSPOT_01]) {
+                rootPos[(int)GameData.eRoot.RESTSPOT_01] = GameObject.Find("RestSpotPos01").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.RESTSPOT_02]) {
-                rootPos[(int)MySceneManager.eRoot.RESTSPOT_02] = GameObject.Find("RestSpotPos02").GetComponent<Transform>();
+            if (!rootPos[(int)GameData.eRoot.RESTSPOT_02]) {
+                rootPos[(int)GameData.eRoot.RESTSPOT_02] = GameObject.Find("RestSpotPos02").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.HORSE_01]) {
-                rootPos[(int)MySceneManager.eRoot.HORSE_01] = GameObject.Find("HorseCagePos01").GetComponent<Transform>();
+            if (!rootPos[(int)GameData.eRoot.HORSE_01]) {
+                rootPos[(int)GameData.eRoot.HORSE_01] = GameObject.Find("HorseCagePos01").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.HORSE_02])
+            if (!rootPos[(int)GameData.eRoot.HORSE_02])
             {
-                rootPos[(int)MySceneManager.eRoot.HORSE_02] = GameObject.Find("HorseCagePos02").GetComponent<Transform>();
+                rootPos[(int)GameData.eRoot.HORSE_02] = GameObject.Find("HorseCagePos02").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.HORSE_03])
+            if (!rootPos[(int)GameData.eRoot.HORSE_03])
             {
-                rootPos[(int)MySceneManager.eRoot.HORSE_03] = GameObject.Find("HorseCagePos03").GetComponent<Transform>();
+                rootPos[(int)GameData.eRoot.HORSE_03] = GameObject.Find("HorseCagePos03").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.ZEBRA_01]) {
-                rootPos[(int)MySceneManager.eRoot.ZEBRA_01] = GameObject.Find("ZebraCagePos01").GetComponent<Transform>();
+            if (!rootPos[(int)GameData.eRoot.ZEBRA_01]) {
+                rootPos[(int)GameData.eRoot.ZEBRA_01] = GameObject.Find("ZebraCagePos01").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.ZEBRA_02])
+            if (!rootPos[(int)GameData.eRoot.ZEBRA_02])
             {
-                rootPos[(int)MySceneManager.eRoot.ZEBRA_02] = GameObject.Find("ZebraCagePos02").GetComponent<Transform>();
+                rootPos[(int)GameData.eRoot.ZEBRA_02] = GameObject.Find("ZebraCagePos02").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.ZEBRA_03])
+            if (!rootPos[(int)GameData.eRoot.ZEBRA_03])
             {
-                rootPos[(int)MySceneManager.eRoot.ZEBRA_03] = GameObject.Find("ZebraCagePos03").GetComponent<Transform>();
+                rootPos[(int)GameData.eRoot.ZEBRA_03] = GameObject.Find("ZebraCagePos03").GetComponent<Transform>();
             }
 
-            if (!rootPos[(int)MySceneManager.eRoot.POLARBEAR]) {
-                rootPos[(int)MySceneManager.eRoot.POLARBEAR] = GameObject.Find("PolarBearCagePos").GetComponent<Transform>();
+            if (!rootPos[(int)GameData.eRoot.POLARBEAR]) {
+                rootPos[(int)GameData.eRoot.POLARBEAR] = GameObject.Find("PolarBearCagePos").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.BEAR_01]) {
-                rootPos[(int)MySceneManager.eRoot.BEAR_01] = GameObject.Find("BearCagePos01").GetComponent<Transform>();
+            if (!rootPos[(int)GameData.eRoot.BEAR_01]) {
+                rootPos[(int)GameData.eRoot.BEAR_01] = GameObject.Find("BearCagePos01").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.BEAR_02]) {
-                rootPos[(int)MySceneManager.eRoot.BEAR_02] = GameObject.Find("BearCagePos02").GetComponent<Transform>();
+            if (!rootPos[(int)GameData.eRoot.BEAR_02]) {
+                rootPos[(int)GameData.eRoot.BEAR_02] = GameObject.Find("BearCagePos02").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.PANDA]) {
-                rootPos[(int)MySceneManager.eRoot.PANDA] = GameObject.Find("PandaCagePos").GetComponent<Transform>();
+            if (!rootPos[(int)GameData.eRoot.PANDA]) {
+                rootPos[(int)GameData.eRoot.PANDA] = GameObject.Find("PandaCagePos").GetComponent<Transform>();
             }
 
-            if (!rootPos[(int)MySceneManager.eRoot.ENTRANCE]) {
-                rootPos[(int)MySceneManager.eRoot.ENTRANCE] = GameObject.Find("EntrancePos").GetComponent<Transform>();
+            if (!rootPos[(int)GameData.eRoot.ENTRANCE]) {
+                rootPos[(int)GameData.eRoot.ENTRANCE] = GameObject.Find("EntrancePos").GetComponent<Transform>();
             }
             #endregion
             //===============================================================================
 
             // 飼育員巡回ルート取得==============================================================
             #region 飼育員巡回ルール
-            if (!rootPos[(int)MySceneManager.eRoot.BELL_AREA]) {
-                rootPos[(int)MySceneManager.eRoot.BELL_AREA] = GameObject.Find("BellArea").GetComponent<Transform>();
+            if (!rootPos[(int)GameData.eRoot.BELL_AREA]) {
+                rootPos[(int)GameData.eRoot.BELL_AREA] = GameObject.Find("BellArea").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.POLAR_AREA]) {
-                rootPos[(int)MySceneManager.eRoot.POLAR_AREA] = GameObject.Find("PolarArea").GetComponent<Transform>();
+            if (!rootPos[(int)GameData.eRoot.POLAR_AREA]) {
+                rootPos[(int)GameData.eRoot.POLAR_AREA] = GameObject.Find("PolarArea").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.BEAR_AREA]) {
-                rootPos[(int)MySceneManager.eRoot.BEAR_AREA] = GameObject.Find("BearArea").GetComponent<Transform>();
+            if (!rootPos[(int)GameData.eRoot.BEAR_AREA]) {
+                rootPos[(int)GameData.eRoot.BEAR_AREA] = GameObject.Find("BearArea").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.PANDA_AREA_01]) {
-                rootPos[(int)MySceneManager.eRoot.PANDA_AREA_01] = GameObject.Find("PandaArea01").GetComponent<Transform>();
+            if (!rootPos[(int)GameData.eRoot.PANDA_AREA_01]) {
+                rootPos[(int)GameData.eRoot.PANDA_AREA_01] = GameObject.Find("PandaArea01").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.PANDA_AREA_02]) {
-                rootPos[(int)MySceneManager.eRoot.PANDA_AREA_02] = GameObject.Find("PandaArea02").GetComponent<Transform>();
+            if (!rootPos[(int)GameData.eRoot.PANDA_AREA_02]) {
+                rootPos[(int)GameData.eRoot.PANDA_AREA_02] = GameObject.Find("PandaArea02").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.HOURSE_AREA]) {
-                rootPos[(int)MySceneManager.eRoot.HOURSE_AREA] = GameObject.Find("HourseArea").GetComponent<Transform>();
+            if (!rootPos[(int)GameData.eRoot.HOURSE_AREA]) {
+                rootPos[(int)GameData.eRoot.HOURSE_AREA] = GameObject.Find("HourseArea").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.ZEBRA_AREA_01]) {
-                rootPos[(int)MySceneManager.eRoot.ZEBRA_AREA_01] = GameObject.Find("ZebraArea01").GetComponent<Transform>();
+            if (!rootPos[(int)GameData.eRoot.ZEBRA_AREA_01]) {
+                rootPos[(int)GameData.eRoot.ZEBRA_AREA_01] = GameObject.Find("ZebraArea01").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.ZEBRA_AREA_02]) {
-                rootPos[(int)MySceneManager.eRoot.ZEBRA_AREA_02] = GameObject.Find("ZebraArea02").GetComponent<Transform>();
+            if (!rootPos[(int)GameData.eRoot.ZEBRA_AREA_02]) {
+                rootPos[(int)GameData.eRoot.ZEBRA_AREA_02] = GameObject.Find("ZebraArea02").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.FOUNTAIN_AREA]) {
-                rootPos[(int)MySceneManager.eRoot.FOUNTAIN_AREA] = GameObject.Find("FountainArea").GetComponent<Transform>();
+            if (!rootPos[(int)GameData.eRoot.FOUNTAIN_AREA]) {
+                rootPos[(int)GameData.eRoot.FOUNTAIN_AREA] = GameObject.Find("FountainArea").GetComponent<Transform>();
             }
-            if (!rootPos[(int)MySceneManager.eRoot.LAKE_AREA]) {
-                rootPos[(int)MySceneManager.eRoot.LAKE_AREA] = GameObject.Find("LakeArea").GetComponent<Transform>();
+            if (!rootPos[(int)GameData.eRoot.LAKE_AREA]) {
+                rootPos[(int)GameData.eRoot.LAKE_AREA] = GameObject.Find("LakeArea").GetComponent<Transform>();
             }
             #endregion
             //===============================================================================
@@ -272,8 +272,8 @@ public class StageSceneManager : BaseSceneManager {
 
         //----- プレイヤーの生成 -----
         if (isPlayerSpawn) {
-            playerObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "Player.prefab");
-            playerInstance = Instantiate(playerObj, MySceneManager.GameData.playerPos, Quaternion.Euler(0.0f, 180.0f, 0.0f));
+            playerObj = PrefabContainerFinder.Find(GameData.characterDatas, "Player.prefab");
+            playerInstance = Instantiate(playerObj, GameData.playerPos, Quaternion.Euler(0.0f, 180.0f, 0.0f));
             playerInstance.name = "Player";
         }
 
@@ -320,8 +320,8 @@ public class StageSceneManager : BaseSceneManager {
 
     void Update() {
         //----- プレイヤーの座標保存 -----
-        MySceneManager.GameData.playerPos = playerInstance.transform.position;
-        SaveSystem.SaveLastPlayerPos(MySceneManager.GameData.playerPos);
+        GameData.playerPos = playerInstance.transform.position;
+        SaveSystem.SaveLastPlayerPos(GameData.playerPos);
 
 
         //----- 時間系の処理 -----
@@ -334,7 +334,7 @@ public class StageSceneManager : BaseSceneManager {
 
                     guestSpawnTimer--;
                     if (guestSpawnTimer <= 0) { // 間隔開けて生成
-                        if (events[_TimerUI.CurrentTimerPoint() - 1].eventState == MySceneManager.eEvent.GUEST_ENTER) {  // 現在のイベントがエントランスに入るだったら
+                        if (events[_TimerUI.CurrentTimerPoint() - 1].eventState == GameData.eEvent.GUEST_ENTER) {  // 現在のイベントがエントランスに入るだったら
                             // 生成
                             SpawnRondomGuest();
                             // カウントリセット
@@ -387,8 +387,8 @@ public class StageSceneManager : BaseSceneManager {
                 int next = -1;
                 if (_ClearPanel) next = _ClearPanel.GetNextScene();
                 if (next != -1) {
-                    MySceneManager.GameData.oldScene = MySceneManager.GameData.nowScene;  // 今のシーンをひとつ前のシーンとして保存
-                    MySceneManager.GameData.nowScene = next;
+                    GameData.oldScene = GameData.nowScene;  // 今のシーンをひとつ前のシーンとして保存
+                    GameData.nowScene = next;
                     SceneChange(next);  // シーン遷移
                     isOnce = true;
 
@@ -407,8 +407,8 @@ public class StageSceneManager : BaseSceneManager {
                 int next = -1;
                 if (_GameOverPanel) next = _GameOverPanel.GetNextScene();
                 if (next != -1) {
-                    MySceneManager.GameData.oldScene = MySceneManager.GameData.nowScene;  // 今のシーンをひとつ前のシーンとして保存
-                    MySceneManager.GameData.nowScene = next;
+                    GameData.oldScene = GameData.nowScene;  // 今のシーンをひとつ前のシーンとして保存
+                    GameData.nowScene = next;
                     SceneChange(next);  // シーン遷移
                     isOnce = true;
                 }
@@ -421,8 +421,8 @@ public class StageSceneManager : BaseSceneManager {
         /*
          * Updateで下ろすと各処理と同フレーム中にフラグが降りてしまうためLateに書いた
          */
-        if (MySceneManager.GameData.isCatchPenguin) {
-            MySceneManager.GameData.isCatchPenguin = false;
+        if (GameData.isCatchPenguin) {
+            GameData.isCatchPenguin = false;
         }
     }
 
@@ -431,7 +431,7 @@ public class StageSceneManager : BaseSceneManager {
     /// </summary>
     /// <param name="_root"></param>
     /// <returns></returns>
-    public Transform GetRootTransform(MySceneManager.eRoot _root) {
+    public Transform GetRootTransform(GameData.eRoot _root) {
         return rootPos[(int)_root];
     }
 
@@ -439,7 +439,7 @@ public class StageSceneManager : BaseSceneManager {
     /// 固定客生成
     /// </summary>
     private void SpawnFixGuest() {
-        GuestData.Data[] _guestList = MySceneManager.GameData.guestData[MySceneManager.GameData.nowScene-1].dataList;   // 設定された人数分生成する
+        GuestData.Data[] _guestList = GameData.guestData[GameData.nowScene-1].dataList;   // 設定された人数分生成する
         for (int i = 0; i < _guestList.Length; i++) {
             // 指定された列挙定数から目的地のブースの実際のpositionを設定
             _guestList[i].rootTransforms = new List<Transform>();
@@ -448,13 +448,13 @@ public class StageSceneManager : BaseSceneManager {
             }
             // ペンギンブースの座標を入れる
             _guestList[i].penguinTF = new List<Transform>();
-            _guestList[i].penguinTF.Add(rootPos[(int)MySceneManager.eRoot.PENGUIN_N]);
-            _guestList[i].penguinTF.Add(rootPos[(int)MySceneManager.eRoot.PENGUIN_S]);
-            _guestList[i].penguinTF.Add(rootPos[(int)MySceneManager.eRoot.PENGUIN_W]);
-            _guestList[i].penguinTF.Add(rootPos[(int)MySceneManager.eRoot.PENGUIN_E]);
+            _guestList[i].penguinTF.Add(rootPos[(int)GameData.eRoot.PENGUIN_N]);
+            _guestList[i].penguinTF.Add(rootPos[(int)GameData.eRoot.PENGUIN_S]);
+            _guestList[i].penguinTF.Add(rootPos[(int)GameData.eRoot.PENGUIN_W]);
+            _guestList[i].penguinTF.Add(rootPos[(int)GameData.eRoot.PENGUIN_E]);
 
             // エントランスの座標を入れる
-            _guestList[i].entranceTF = rootPos[(int)MySceneManager.eRoot.ENTRANCE];
+            _guestList[i].entranceTF = rootPos[(int)GameData.eRoot.ENTRANCE];
 
             // 生成
             GameObject guestInstace;
@@ -476,7 +476,7 @@ public class StageSceneManager : BaseSceneManager {
     private void SpawnRondomGuest() {
         GuestData.Data guestData = new GuestData.Data { // 初期化
             name = "FGuest",
-            entranceTF = rootPos[(int)MySceneManager.eRoot.ENTRANCE],
+            entranceTF = rootPos[(int)GameData.eRoot.ENTRANCE],
             isRandom = true,
             speed = 3,
             followSpeed = 0.7f,
@@ -492,13 +492,13 @@ public class StageSceneManager : BaseSceneManager {
         };
         // ペンギンブースの座標を入れる
         guestData.penguinTF = new List<Transform>();
-        guestData.penguinTF.Add(rootPos[(int)MySceneManager.eRoot.PENGUIN_N]);
-        guestData.penguinTF.Add(rootPos[(int)MySceneManager.eRoot.PENGUIN_S]);
-        guestData.penguinTF.Add(rootPos[(int)MySceneManager.eRoot.PENGUIN_W]);
-        guestData.penguinTF.Add(rootPos[(int)MySceneManager.eRoot.PENGUIN_E]);
+        guestData.penguinTF.Add(rootPos[(int)GameData.eRoot.PENGUIN_N]);
+        guestData.penguinTF.Add(rootPos[(int)GameData.eRoot.PENGUIN_S]);
+        guestData.penguinTF.Add(rootPos[(int)GameData.eRoot.PENGUIN_W]);
+        guestData.penguinTF.Add(rootPos[(int)GameData.eRoot.PENGUIN_E]);
 
         // エントランスの座標を入れる
-        guestData.entranceTF = rootPos[(int)MySceneManager.eRoot.ENTRANCE];
+        guestData.entranceTF = rootPos[(int)GameData.eRoot.ENTRANCE];
 
         //----- 目的地のブースをランダムで設定(固定客は作ってない) -----
         int randomRootSum, randomRootNum;
@@ -510,7 +510,7 @@ public class StageSceneManager : BaseSceneManager {
         for (int j = 0; j < randomRootSum; j++) {   //　乱数で算出したルートの数だけルートを決める
                                                     // ルートをランダムで設定
             do {
-                randomRootNum = UnityEngine.Random.Range(4, (int)MySceneManager.eRoot.ENTRANCE);  // ペンギンのルートが入っているところより大きく、エントランスより小さく
+                randomRootNum = UnityEngine.Random.Range(4, (int)GameData.eRoot.ENTRANCE);  // ペンギンのルートが入っているところより大きく、エントランスより小さく
             } while (guestData.rootTransforms.Contains(rootPos[randomRootNum]));
             guestData.rootTransforms.Add(rootPos[randomRootNum]);
         }
@@ -518,11 +518,11 @@ public class StageSceneManager : BaseSceneManager {
         //----- 生成 -----
         // それぞれのカウントを加算
         guestSum++;
-        MySceneManager.GameData.randomGuestCnt++;
+        GameData.randomGuestCnt++;
 
         GameObject guestInstace;
         int GuestIndex = UnityEngine.Random.Range(0, 3);
-        guestInstace = Instantiate(guestObj[GuestIndex], rootPos[(int)MySceneManager.eRoot.ENTRANCE].position, Quaternion.identity);
+        guestInstace = Instantiate(guestObj[GuestIndex], rootPos[(int)GameData.eRoot.ENTRANCE].position, Quaternion.identity);
 
         if (guestParent) {
             guestInstace.transform.parent = guestParent.transform;   // 親にする
@@ -536,9 +536,9 @@ public class StageSceneManager : BaseSceneManager {
     /// 飼育員生成
     /// </summary>
     private void SpawnZookeeper() {
-        ZooKeeperData.Data[] _zooKeeperList = MySceneManager.GameData.zooKeeperData[MySceneManager.GameData.nowScene-1].list;    // 設定された人数分を生成する
+        ZooKeeperData.Data[] _zooKeeperList = GameData.zooKeeperData[GameData.nowScene-1].list;    // 設定された人数分を生成する
         GameObject zooKeeperObj;
-        zooKeeperObj = PrefabContainerFinder.Find(MySceneManager.GameData.characterDatas, "ZooKeeper.prefab");   // 生成するオブジェクト
+        zooKeeperObj = PrefabContainerFinder.Find(GameData.characterDatas, "ZooKeeper.prefab");   // 生成するオブジェクト
         GameObject parent = GameObject.Find("ZooKeepers");  //  生成するときの親にするオブジェクト
         for (int i = 0; i < _zooKeeperList.Length; i++) {
             GameObject spawnPos = GameObject.Find(_zooKeeperList[i].name + "Spawn"); // 生成位置を名前で取得する
@@ -572,14 +572,14 @@ public class StageSceneManager : BaseSceneManager {
     /// ステージを初めの状態からやる
     /// </summary>
     private void BeginGame() {
-        MySceneManager.GameData.guestCnt = 0;
-        MySceneManager.GameData.timer = 0.0f;
+        GameData.guestCnt = 0;
+        GameData.timer = 0.0f;
         playerRespawn = GameObject.Find("PlayerSpawn");
-        MySceneManager.GameData.playerPos = playerRespawn.transform.position;
+        GameData.playerPos = playerRespawn.transform.position;
 
-        // 一個前  のシーンがタイトルかつ今のシーンがステージ１
-        if (MySceneManager.GameData.oldScene == (int)MySceneManager.SceneState.SCENE_TITLE &&
-            MySceneManager.GameData.nowScene == (int)MySceneManager.SceneState.SCENE_GAME_001) {
+        // 一個前のシーンがタイトルかつ今のシーンがステージ１
+        if (GameData.oldScene == (int)MySceneManager.SceneState.SCENE_TITLE &&
+            GameData.nowScene == (int)MySceneManager.SceneState.SCENE_GAME_001) {
             TutorialManager.StartTutorial();
         }
     }
@@ -615,12 +615,12 @@ public class StageSceneManager : BaseSceneManager {
         // セーブ
         SaveManager.SaveGuestCnt(0);
         SaveManager.SaveTimer(0.0f);
-        if (System.Enum.GetNames(typeof(MySceneManager.SceneState)).Length > MySceneManager.GameData.nowScene) {  // 最大シーンではないとき
-            SaveManager.SaveLastStageNum(MySceneManager.GameData.nowScene+1);
+        if (System.Enum.GetNames(typeof(MySceneManager.SceneState)).Length > GameData.nowScene) {  // 最大シーンではないとき
+            SaveManager.SaveLastStageNum(GameData.nowScene+1);
         } else {
-            SaveManager.SaveLastStageNum(MySceneManager.GameData.nowScene);
+            SaveManager.SaveLastStageNum(GameData.nowScene);
         }
-        SaveManager.SaveLastPlayerPos(MySceneManager.GameData.playerPos);
+        SaveManager.SaveLastPlayerPos(GameData.playerPos);
     }
 
     /// <summary>

@@ -64,16 +64,16 @@ public class AIManager : MonoBehaviour
             StageSceneManager _StageSceneManager = GameObject.Find("StageSceneManager").GetComponent<StageSceneManager>();
             data.rootTransforms = new List<Transform>();
             for (int i = 0; i < data.roots.Length; i++) {
-                MySceneManager.eRoot index = data.roots[i];
+                GameData.eRoot index = data.roots[i];
                 data.rootTransforms.Add(_StageSceneManager.GetRootTransform(index));
             }
 
             data.penguinTF = new List<Transform>();
-            data.penguinTF.Add(_StageSceneManager.GetRootTransform(MySceneManager.eRoot.PENGUIN_N));
-            data.penguinTF.Add(_StageSceneManager.GetRootTransform(MySceneManager.eRoot.PENGUIN_S));
-            data.penguinTF.Add(_StageSceneManager.GetRootTransform(MySceneManager.eRoot.PENGUIN_W));
-            data.penguinTF.Add(_StageSceneManager.GetRootTransform(MySceneManager.eRoot.PENGUIN_E));
-            data.entranceTF = (_StageSceneManager.GetRootTransform(MySceneManager.eRoot.ENTRANCE));
+            data.penguinTF.Add(_StageSceneManager.GetRootTransform(GameData.eRoot.PENGUIN_N));
+            data.penguinTF.Add(_StageSceneManager.GetRootTransform(GameData.eRoot.PENGUIN_S));
+            data.penguinTF.Add(_StageSceneManager.GetRootTransform(GameData.eRoot.PENGUIN_W));
+            data.penguinTF.Add(_StageSceneManager.GetRootTransform(GameData.eRoot.PENGUIN_E));
+            data.entranceTF = (_StageSceneManager.GetRootTransform(GameData.eRoot.ENTRANCE));
 
             //表示名変更
             //gameObject.name = data.name;

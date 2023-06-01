@@ -127,7 +127,7 @@ public class ZooKeeperAI : MonoBehaviour
             data.rootTransforms = new List<Transform>();
             for (int i = 0; i < data.roots.Length; i++)
             {
-                MySceneManager.eRoot index = data.roots[i];
+                GameData.eRoot index = data.roots[i];
                 data.rootTransforms.Add(_StageSceneManager.GetRootTransform(index));
             }
         }
@@ -169,7 +169,7 @@ public class ZooKeeperAI : MonoBehaviour
     /// </summary>
     void FixedUpdate()
     {
-        if (PauseManager.isPaused && !MySceneManager.GameData.isCatchPenguin)
+        if (PauseManager.isPaused && !GameData.isCatchPenguin)
         {
             return;
         }
@@ -187,13 +187,13 @@ public class ZooKeeperAI : MonoBehaviour
 
     private void Update()
     {
-        if (PauseManager.isPaused && !MySceneManager.GameData.isCatchPenguin)
+        if (PauseManager.isPaused && !GameData.isCatchPenguin)
         {
             NavMeshStop();
             return;
         }
 
-        if (MySceneManager.GameData.isCatchPenguin)
+        if (GameData.isCatchPenguin)
         {
             // ペンギンが捕まっているときはポーズ中なのでポーズ中でも処理を行う
             ReStart();
@@ -213,7 +213,7 @@ public class ZooKeeperAI : MonoBehaviour
             bSurprise = true;
             bResetPos = false;
             navMesh.speed = data.speed * player.MaxMoveSpeed;
-            MySceneManager.GameData.isCatchPenguin = true;
+            GameData.isCatchPenguin = true;
         }
         #endregion
     }
