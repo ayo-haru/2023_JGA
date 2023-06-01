@@ -17,7 +17,7 @@ using UnityEngine;
 
 public class BoothAnimalManager : SingletonMonoBehaviour<BoothAnimalManager>
 {
-	protected override bool dontDestroyOnLoad { get {return true; } }
+	//protected override bool dontDestroyOnLoad { get {return true; } }
 
 	//ペンギンの生成に使うため
 	private GameObject penguinObj;

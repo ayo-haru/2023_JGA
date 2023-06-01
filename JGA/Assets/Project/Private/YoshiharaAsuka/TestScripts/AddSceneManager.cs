@@ -1,25 +1,24 @@
 //=============================================================================
-// @File	: [Test.cs]
+// @File	: [AddSceneManager.cs]
 // @Brief	: 
 // @Author	: Yoshihara Asuka
 // @Editer	: 
 // @Detail	: 
 // 
 // [Date]
-// 2023/02/08	スクリプト作成
+// 2023/06/01	スクリプト作成
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class TestManager : SingletonMonoBehaviour<TestManager>
+public class AddSceneManager : SingletonMonoBehaviour<AddSceneManager>
 {
-	//protected override bool dontDestroyOnLoad { get {return true; } }
-
-	private string[] LoadSceneName =	
+	private string[] AddSceneName =
 	{
 		"TestAddScene1",
+		"TestAddScene2",
 	};
 
 	/// <summary>
@@ -27,22 +26,32 @@ public class TestManager : SingletonMonoBehaviour<TestManager>
 	/// </summary>
 	void Start()
 	{
-		
+
 	}
 
 	/// <summary>
 	/// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
 	/// </summary>
+	[System.Obsolete]
 	void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.F1)){
-			SceneManager.LoadScene(LoadSceneName[0], LoadSceneMode.Additive);
+		if (Input.GetKeyDown(KeyCode.F1))
+		{
+			SceneManager.LoadScene(AddSceneName[0], LoadSceneMode.Additive);
 		}
-	}
+		if (Input.GetKeyDown(KeyCode.F2))
+		{
+			SceneManager.LoadScene(AddSceneName[1], LoadSceneMode.Additive);
+		}
 
-	public void Test()
-	{
-		Debug.Log("我シングルトンなり");
+		if (Input.GetKeyDown(KeyCode.F3))
+		{
+			SceneManager.UnloadScene(AddSceneName[0]);
+		}
+
+		if (Input.GetKeyDown(KeyCode.F4)) {
+			SceneManager.UnloadScene(AddSceneName[1]);
+		}
 	}
 }
 

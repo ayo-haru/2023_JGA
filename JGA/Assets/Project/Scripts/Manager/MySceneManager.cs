@@ -31,7 +31,7 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 	}
 
 	// このクラスを持つオブジェクトは消えない
-	protected override bool dontDestroyOnLoad { get { return true; } }
+	//protected override bool dontDestroyOnLoad { get { return true; } }
 
 	//----- シーン遷移で使用 -----
 	public enum SceneState

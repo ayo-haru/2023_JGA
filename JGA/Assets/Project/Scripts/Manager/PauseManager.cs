@@ -15,8 +15,8 @@ using UnityEngine.InputSystem;
 
 public class PauseManager : SingletonMonoBehaviour<PauseManager>
 {
-	protected override bool dontDestroyOnLoad
-	{ get { return true; } }
+	//protected override bool dontDestroyOnLoad
+	//{ get { return true; } }
 
 	private static Subject<string> pauseSubject = new Subject<string>();
 	private static Subject<string> resumeSubject = new Subject<string>();

@@ -9,7 +9,7 @@
 // 
 // [Date]
 // 2023/02/08	スクリプト作成
-// 2023/06/01	編集、dontDestroyOnLoadプロパティだったのを変更
+// 2023/06/01	編集、dontDestroyOnLoadプロパティだったのを、直接指定するようにした
 //=============================================================================
 using System;
 using System.Collections;
@@ -59,6 +59,6 @@ public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBe
 		}
 
 		instance = this as T;
-		DontDestroyOnLoad(gameObject);
+		DontDestroyOnLoad(this.gameObject);
 	}
 }

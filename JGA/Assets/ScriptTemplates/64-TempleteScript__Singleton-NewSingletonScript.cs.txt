@@ -14,7 +14,6 @@ using UnityEngine;
 
 public class #SCRIPTNAME# : SingletonMonoBehaviour<#SCRIPTNAME#>
 {
-	protected override bool dontDestroyOnLoad { get {return true; } }
 
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
