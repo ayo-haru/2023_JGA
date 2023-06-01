@@ -9,6 +9,7 @@
 // 
 // [Date]
 // 2023/02/08	スクリプト作成
+// 2023/06/01	編集、dontDestroyOnLoadプロパティだったのを変更
 //=============================================================================
 using System;
 using System.Collections;
@@ -17,37 +18,47 @@ using UnityEngine;
 
 public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBehaviour
 {
-    protected abstract bool dontDestroyOnLoad { get;}
+	//protected abstract bool dontDestroyOnLoad { get;}
 
-    private static T instance;
+	private static T instance;
 
-    public static T Instance
-    {
-        get 
-        {
-            if (!instance)
-            {
-                Type t = typeof(T);
+	public static T Instance
+	{
+		get 
+		{
+			if (!instance)
+			{
+				//Type t = typeof(T);
 
-                instance = (T)FindObjectOfType(t);
-                if (!instance)
-                {
-                    Debug.LogError(t + "is nothing.");
-                }
-            }
-            return instance;
-        }
-    }
+				//instance = (T)FindObjectOfType(t);
+				instance = FindObjectOfType<T>();
+				if (!instance)
+				{
+					Debug.LogError(typeof(T) + "is missing int the scene.");
+				}
+			}
+			return instance;
+		}
+	}
 
 
-    protected virtual void Awake()
-    {
-        if(this != Instance){
-            Destroy(this);
-            return;
-        }
-        if (dontDestroyOnLoad){
-            DontDestroyOnLoad(this.gameObject);
-        }
-    }
+	protected virtual void Awake()
+	{
+		//if(this != Instance){
+		//    Destroy(this);
+		//    return;
+		//}
+		//if (dontDestroyOnLoad){
+		//    DontDestroyOnLoad(this.gameObject);
+		//}
+
+		// インスタンスしたものがnullの場合と、別のモノを参照した場合を判定
+		if(instance != null && instance != this){
+			Destroy(gameObject);
+			return;
+		}
+
+		instance = this as T;
+		DontDestroyOnLoad(gameObject);
+	}
 }
