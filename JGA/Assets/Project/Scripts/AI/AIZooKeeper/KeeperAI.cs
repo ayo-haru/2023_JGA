@@ -117,7 +117,7 @@ public class KeeperAI : MonoBehaviour
     /// </summary>
     void FixedUpdate()
     {
-        if (PauseManager.isPaused && !MySceneManager.GameData.isCatchPenguin)
+        if (PauseManager.isPaused && !GameData.isCatchPenguin)
         {
             return;
         }
@@ -135,13 +135,13 @@ public class KeeperAI : MonoBehaviour
     /// </summary>
     void Update()
     {
-        if (PauseManager.isPaused && !MySceneManager.GameData.isCatchPenguin)
+        if (PauseManager.isPaused && !GameData.isCatchPenguin)
         {
             NavMeshStop();
             return;
         }
 
-        if (MySceneManager.GameData.isCatchPenguin)
+        if (GameData.isCatchPenguin)
         {
             NavMeshStop();
             // ペンギンが捕まっているときはポーズ中なのでポーズ中でも処理を行う
@@ -160,7 +160,7 @@ public class KeeperAI : MonoBehaviour
             NavMeshStop();
             bChaseNow = false;
             bMove = false;
-            MySceneManager.GameData.isCatchPenguin = true;
+            GameData.isCatchPenguin = true;
         }
         #endregion
     }

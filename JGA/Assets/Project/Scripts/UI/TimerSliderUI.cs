@@ -58,16 +58,16 @@ public class TimerSliderUI : MonoBehaviour
 
         float width = gameObject.GetComponent<RectTransform>().rect.width;
         //イベントの数を取得
-        int nEvent = MySceneManager.GameData.events.Length;
+        int nEvent = GameData.events.Length;
         timerPoints = new TimerPointObject[nEvent];
         //イベントの数＋最初と最後の丸を生成
         for (int i = 0; i < nEvent; ++i)
         {
-            timerPoints[i].percent = MySceneManager.GameData.events[i].percent / 100.0f;
+            timerPoints[i].percent = GameData.events[i].percent / 100.0f;
         }
 
         //スライダー更新
-        timerSlider.value = MySceneManager.GameData.timer / (playMinutes * 60.0f);
+        timerSlider.value = GameData.timer / (playMinutes * 60.0f);
     }
     /// <summary>
     /// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
@@ -76,13 +76,13 @@ public class TimerSliderUI : MonoBehaviour
 	{
         if (!bStart || IsFinish()) return;
         //捕まったら時間減らす
-        if (MySceneManager.GameData.isCatchPenguin)
+        if (GameData.isCatchPenguin)
         {
             LossTime();
         }
 
         if (PauseManager.isPaused) return;
-        MySceneManager.GameData.timer += Time.deltaTime;
+        GameData.timer += Time.deltaTime;
         CountDown();
 
 	}
@@ -97,13 +97,13 @@ public class TimerSliderUI : MonoBehaviour
 #endif
     public void LossTime()
     {
-        MySceneManager.GameData.timer += (playMinutes * 60.0f * (lossSecondsParcent / 100.0f));
+        GameData.timer += (playMinutes * 60.0f * (lossSecondsParcent / 100.0f));
         CountDown();
     }
     private void CountDown()
     {
         //スライダー更新
-        timerSlider.value = MySceneManager.GameData.timer / (playMinutes * 60.0f);
+        timerSlider.value = GameData.timer / (playMinutes * 60.0f);
 
         //TimerPointの位置を経過していたら画像を変更
         for(int i = nCurrentPoint; i < timerPoints.Length; ++i)
@@ -113,7 +113,7 @@ public class TimerSliderUI : MonoBehaviour
         }
 
         if (!bSound) return;
-        if (MySceneManager.GameData.timer < (playMinutes * 60.0f - soundSeconds)) return;
+        if (GameData.timer < (playMinutes * 60.0f - soundSeconds)) return;
         
         //制限時間間近の場合は音鳴らす
         SoundManager.Play(audioSource, SoundManager.ESE.COUNTDOWN_001);
@@ -124,7 +124,7 @@ public class TimerSliderUI : MonoBehaviour
     }
     public bool IsFinish()
     {
-        return MySceneManager.GameData.timer >= playMinutes * 60.0f;
+        return GameData.timer >= playMinutes * 60.0f;
     }
     public void CountStart()
     {

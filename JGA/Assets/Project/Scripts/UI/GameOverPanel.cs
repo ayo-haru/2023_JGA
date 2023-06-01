@@ -93,7 +93,7 @@ public class GameOverPanel : MonoBehaviour
     public void RetryButton()
     {
         SoundDecisionSE();
-        nextScene = MySceneManager.GameData.nowScene;
+        nextScene = GameData.nowScene;
     }
     /// <summary>
     /// BACK TO TITLEボタン

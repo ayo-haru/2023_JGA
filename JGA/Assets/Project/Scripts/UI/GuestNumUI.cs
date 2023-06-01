@@ -40,7 +40,7 @@ public class GuestNumUI : MonoBehaviour
 	/// </summary>
 	void Start()
 	{
-        guestNum.text = string.Format("{0:0} / {1:0}", MySceneManager.GameData.guestCnt, clearNum);
+        guestNum.text = string.Format("{0:0} / {1:0}", GameData.guestCnt, clearNum);
     }
     /// <summary>
     /// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
@@ -52,7 +52,7 @@ public class GuestNumUI : MonoBehaviour
         fTimer -= Time.deltaTime;
         if(fTimer <= 0.0f)
         {
-            guestNum.text = string.Format("{0:0} / {1:0}", MySceneManager.GameData.guestCnt, clearNum);
+            guestNum.text = string.Format("{0:0} / {1:0}", GameData.guestCnt, clearNum);
         }
 	}
 
@@ -63,23 +63,23 @@ public class GuestNumUI : MonoBehaviour
     void Update() {
         //デバッグ用f1でクリア画面になる
         if (Input.GetKeyUp(KeyCode.F1)) {
-            MySceneManager.GameData.guestCnt = clearNum;
+            GameData.guestCnt = clearNum;
         }
     }
 #endif
 
     public void Add()
     {
-        if (MySceneManager.GameData.guestCnt >= 99) return;
-        ++MySceneManager.GameData.guestCnt;
+        if (GameData.guestCnt >= 99) return;
+        ++GameData.guestCnt;
         fTimer = animTime;
-        guestNum.text = string.Format("<color=blue><size={0:0}>{1:0}</size></color> / {2:0}", guestNum.fontSize * scaleValue, MySceneManager.GameData.guestCnt, clearNum);
+        guestNum.text = string.Format("<color=blue><size={0:0}>{1:0}</size></color> / {2:0}", guestNum.fontSize * scaleValue, GameData.guestCnt, clearNum);
 
         SaveManager.SaveAll();  // 客加算時にオートセーブ
     }
 
     public bool isClear() {
-        return MySceneManager.GameData.guestCnt >= clearNum;
+        return GameData.guestCnt >= clearNum;
     }
 
 }

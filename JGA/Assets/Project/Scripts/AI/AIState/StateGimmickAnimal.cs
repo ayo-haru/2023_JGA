@@ -28,7 +28,7 @@ public class StateGimmickAnimal : AIState
     //ナビメッシュエージェント
     private NavMeshAgent agent;
     //注目する動物
-    [SerializeField] private MySceneManager.eRoot animal = MySceneManager.eRoot.POLARBEAR;
+    [SerializeField] private GameData.eRoot animal = GameData.eRoot.POLARBEAR;
     //動物のTransform
     private Transform animalTransform;
 #if false

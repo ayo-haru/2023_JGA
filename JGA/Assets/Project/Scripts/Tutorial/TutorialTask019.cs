@@ -28,7 +28,7 @@ public class TutorialTask019 : ITurorial
     /// チュートリアルタスクが設定されたときに実行
     /// </summary>
     public void OnTaskSetting() {
-        num = MySceneManager.GameData.guestCnt;
+        num = GameData.guestCnt;
     }
 
     /// <summary>
@@ -36,7 +36,7 @@ public class TutorialTask019 : ITurorial
     /// </summary>
     /// <returns></returns>
     public bool CheckTask() {
-        return num < MySceneManager.GameData.guestCnt;
+        return num < GameData.guestCnt;
     }
 
 

@@ -15,16 +15,16 @@ using UnityEngine;
 public class SaveManager {
 
     public static void SaveAll() {
-        SaveSystem.SaveGuestCnt(MySceneManager.GameData.guestCnt);
-        SaveSystem.SaveTimer(MySceneManager.GameData.timer);
-        SaveSystem.SaveLastStageNum(MySceneManager.GameData.nowScene);
-        SaveSystem.SaveLastPlayerPos(MySceneManager.GameData.playerPos);
+        SaveSystem.SaveGuestCnt(GameData.guestCnt);
+        SaveSystem.SaveTimer(GameData.timer);
+        SaveSystem.SaveLastStageNum(GameData.nowScene);
+        SaveSystem.SaveLastPlayerPos(GameData.playerPos);
     }
 
     public static void SaveInitDataAll() {
         SaveSystem.SaveGuestCnt(0);
         SaveSystem.SaveTimer(0.0f);
-        SaveSystem.SaveLastStageNum(MySceneManager.GameData.nowScene);
+        SaveSystem.SaveLastStageNum(GameData.nowScene);
         SaveSystem.SaveLastPlayerPos(Vector3.zero);
     }
 
@@ -42,9 +42,9 @@ public class SaveManager {
     }
 
     public static void LoadAll() {
-        MySceneManager.GameData.guestCnt = SaveSystem.sd.guestCnt;
-        MySceneManager.GameData.timer = SaveSystem.sd.timer;
-        MySceneManager.GameData.nowScene = SaveSystem.sd.lastStageNum;
-        MySceneManager.GameData.playerPos = SaveSystem.sd.lastPlayerPos;
+        GameData.guestCnt = SaveSystem.sd.guestCnt;
+        GameData.timer = SaveSystem.sd.timer;
+        GameData.nowScene = SaveSystem.sd.lastStageNum;
+        GameData.playerPos = SaveSystem.sd.lastPlayerPos;
     }
 }

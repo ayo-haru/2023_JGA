@@ -135,7 +135,7 @@ public class StateDefaultRootWalk : AIState
             (agent.destination.z - agent.stoppingDistance < data.entranceTF.position.z && agent.destination.z + agent.stoppingDistance > data.entranceTF.position.z))
         {
             //カウントの減算とオブジェクト消す
-            MySceneManager.GameData.randomGuestCnt--;
+            GameData.randomGuestCnt--;
             Destroy(this.gameObject);
 
             return;

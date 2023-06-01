@@ -171,8 +171,8 @@ public class PausePanel : MonoBehaviour
         DecisionSound();
 		SaveManager.SaveAll();  // タイトル戻る前にセーブ
 		
-		MySceneManager.GameData.oldScene = MySceneManager.GameData.nowScene;
-		MySceneManager.GameData.nowScene = (int)MySceneManager.SceneState.SCENE_TITLE;
+		GameData.oldScene = GameData.nowScene;
+		GameData.nowScene = (int)MySceneManager.SceneState.SCENE_TITLE;
 
 		MySceneManager.SceneChange(MySceneManager.SceneState.SCENE_TITLE);
 	}

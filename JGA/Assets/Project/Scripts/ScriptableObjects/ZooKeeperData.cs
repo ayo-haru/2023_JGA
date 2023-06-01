@@ -19,7 +19,7 @@ public class ZooKeeperData : ScriptableObject{
         [Header("飼育員の名前\n(初期位置のﾌﾟﾚﾊﾌﾞの名前はName+Spawnになる)")]
         public string name = "Zookeeper";
         [Header("飼育員の巡回ルート")]
-        public MySceneManager.eRoot[] roots;
+        public GameData.eRoot[] roots;
         [HideInInspector]　// 巡回ルートのトランスフォーム
         public List<Transform> rootTransforms;
         [HideInInspector] // スポーン位置のトランスフォーム

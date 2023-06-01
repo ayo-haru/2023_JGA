@@ -12,6 +12,6 @@
 [System.Serializable]
 public class EventParam
 {
-    public MySceneManager.eEvent eventState;
+    public GameData.eEvent eventState;
     public int percent;
 }

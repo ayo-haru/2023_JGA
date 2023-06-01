@@ -85,7 +85,7 @@ public class BoothAnimalManager : SingletonMonoBehaviour<BoothAnimalManager>
             return;
         }
 
-        penguinObj = PrefabContainerFinder.Find(MySceneManager.GameData.animalDatas, "Penguin.prefab");
+        penguinObj = PrefabContainerFinder.Find(GameData.animalDatas, "Penguin.prefab");
        
         for (int i = 0;i < penguinCount;i++)
 		{
@@ -103,7 +103,7 @@ public class BoothAnimalManager : SingletonMonoBehaviour<BoothAnimalManager>
 
         }
 
-		bearObj = PrefabContainerFinder.Find(MySceneManager.GameData.animalDatas, "Bear.prefab");
+		bearObj = PrefabContainerFinder.Find(GameData.animalDatas, "Bear.prefab");
 
 		for(int i = 0; i < bearCount;i++) 
 		{
@@ -119,7 +119,7 @@ public class BoothAnimalManager : SingletonMonoBehaviour<BoothAnimalManager>
             bearOBject.transform.parent = animalObject.transform;
         }
 
-        polarBearObj = PrefabContainerFinder.Find(MySceneManager.GameData.animalDatas, "PolarBear.prefab");
+        polarBearObj = PrefabContainerFinder.Find(GameData.animalDatas, "PolarBear.prefab");
 
         for (int i = 0; i < polarBearCount; i++)
         {
@@ -135,7 +135,7 @@ public class BoothAnimalManager : SingletonMonoBehaviour<BoothAnimalManager>
             polarBearOBject.transform.parent = animalObject.transform;
         }
 
-        pandaObj = PrefabContainerFinder.Find(MySceneManager.GameData.animalDatas, "Panda.prefab");
+        pandaObj = PrefabContainerFinder.Find(GameData.animalDatas, "Panda.prefab");
 
         for (int i = 0; i < pandaCount; i++)
         {

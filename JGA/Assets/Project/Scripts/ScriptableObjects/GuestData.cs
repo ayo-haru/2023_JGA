@@ -27,7 +27,7 @@ public class GuestData : ScriptableObject
         [Header("表示名")]
         public string name;
         [Header("客の巡回ルート\n(初期位置にもなるので１個は入れてほしい)")]
-        public MySceneManager.eRoot[] roots;
+        public GameData.eRoot[] roots;
         [HideInInspector]   // 巡回ルートのトランスフォーム
         public List<Transform> rootTransforms;
         [HideInInspector]   // ペンギンブースの位置

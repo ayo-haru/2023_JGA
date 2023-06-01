@@ -88,7 +88,7 @@ public class ZooKeeper : MonoBehaviour
     /// </summary>
     void FixedUpdate()
     {
-        if (PauseManager.isPaused && !MySceneManager.GameData.isCatchPenguin)
+        if (PauseManager.isPaused && !GameData.isCatchPenguin)
         {
             return;
         }
@@ -106,12 +106,12 @@ public class ZooKeeper : MonoBehaviour
     /// </summary>
     void Update()
     {
-        if (PauseManager.isPaused && !MySceneManager.GameData.isCatchPenguin)
+        if (PauseManager.isPaused && !GameData.isCatchPenguin)
         {
             return;
         }
 
-        if (MySceneManager.GameData.isCatchPenguin)
+        if (GameData.isCatchPenguin)
         {
             // ペンギンが捕まっているときはポーズ中なのでポーズ中でも処理を行う
             ReStart();
@@ -126,7 +126,7 @@ public class ZooKeeper : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            MySceneManager.GameData.isCatchPenguin = true;
+            GameData.isCatchPenguin = true;
         }
 
         // フェンスに当たったら横に避ける

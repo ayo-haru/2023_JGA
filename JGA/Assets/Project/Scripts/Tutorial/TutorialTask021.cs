@@ -33,7 +33,7 @@ public class TutorialTask021 : ITurorial
     /// </summary>
     /// <returns></returns>
     public bool CheckTask() {
-        return MySceneManager.GameData.guestCnt > 4;
+        return GameData.guestCnt > 4;
     }
 
 

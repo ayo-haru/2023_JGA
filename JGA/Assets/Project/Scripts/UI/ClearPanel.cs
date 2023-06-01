@@ -94,11 +94,11 @@ public class ClearPanel : MonoBehaviour
     public void NextDayButton()
     {
         SoundDecisionSE();
-        if (System.Enum.GetNames(typeof(MySceneManager.SceneState)).Length > MySceneManager.GameData.nowScene)
+        if (System.Enum.GetNames(typeof(MySceneManager.SceneState)).Length > GameData.nowScene)
         {  // 最大シーンではないとき
-            nextScene = MySceneManager.GameData.nowScene + 1;
+            nextScene = GameData.nowScene + 1;
         }else{
-            nextScene = MySceneManager.GameData.nowScene;
+            nextScene = GameData.nowScene;
         }
     }
     /// <summary>

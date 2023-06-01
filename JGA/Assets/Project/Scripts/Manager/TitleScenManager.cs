@@ -63,7 +63,7 @@ public class TitleScenManager : BaseSceneManager {
         Init();
 
         //セーブデータ読み込み
-        MySceneManager.GameData.isContinueGame = SaveSystem.load();
+        GameData.isContinueGame = SaveSystem.load();
 
         //もしセーブデータがなかったら次に遷移するシーンはゲーム001
         //if (MySceneManager.GameData.isContinueGame) {
@@ -87,7 +87,7 @@ public class TitleScenManager : BaseSceneManager {
         continueHideImage = continueButton.transform.GetChild(0).GetComponent<SpriteRenderer>();
 
         //セーブデータが存在しない場合は続きからボタンを無効化
-        if (!MySceneManager.GameData.isContinueGame)
+        if (!GameData.isContinueGame)
         {
             //続きからボタン無効化
             continueButton.interactable = false;
@@ -157,10 +157,10 @@ public class TitleScenManager : BaseSceneManager {
     #region タイトル画面のボタン
     public void StartButton() {
         SoundSEDecision();
-        MySceneManager.GameData.oldScene = (int)MySceneManager.SceneState.SCENE_TITLE;  // 今のシーンをひとつ前のシーンとして保存
-        MySceneManager.GameData.nowScene = nextScene = (int)MySceneManager.SceneState.SCENE_GAME_001;   // 次のシーンを更新
+        GameData.oldScene = (int)MySceneManager.SceneState.SCENE_TITLE;  // 今のシーンをひとつ前のシーンとして保存
+        GameData.nowScene = nextScene = (int)MySceneManager.SceneState.SCENE_GAME_001;   // 次のシーンを更新
         //初めから用に初期化
-        MySceneManager.GameData.isContinueGame = false; // startでセーブデータがあったとしてもfalseにする
+        GameData.isContinueGame = false; // startでセーブデータがあったとしてもfalseにする
         SaveManager.SaveInitDataAll();  // データをリセットして保存
         
         SceneChange(nextScene);
@@ -176,7 +176,7 @@ public class TitleScenManager : BaseSceneManager {
         SoundSEDecision();
 
         SaveManager.LoadAll();  // セーブデータロード
-        nextScene = MySceneManager.GameData.nowScene;   // 次のシーンを更新。セーブデータのロードをしてnowSceneには前回のシーン番号が入っているからnextにnowを代入
+        nextScene = GameData.nowScene;   // 次のシーンを更新。セーブデータのロードをしてnowSceneには前回のシーン番号が入っているからnextにnowを代入
 #if false
         if (MySceneManager.GameData.isContinueGame) {   // セーブデータが存在してたか
             // セーブデータ有りなのでデータロード
@@ -187,7 +187,7 @@ public class TitleScenManager : BaseSceneManager {
             MySceneManager.GameData.nowScene = nextScene = (int)MySceneManager.SceneState.SCENE_GAME_001;
         }
 #endif
-        MySceneManager.GameData.oldScene = (int)MySceneManager.SceneState.SCENE_TITLE;  // 今のシーンをひとつ前のシーンとして保存
+        GameData.oldScene = (int)MySceneManager.SceneState.SCENE_TITLE;  // 今のシーンをひとつ前のシーンとして保存
         SceneChange(nextScene);
         //コントローラ入力の場合マウスカーソルが非表示のままになってしまうので表示する
         if (!bMouse) Cursor.visible = true;

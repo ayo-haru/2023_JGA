@@ -54,13 +54,13 @@ public class UIManager : MonoBehaviour
         canvasObj = GameObject.Find("Canvas");
         canvas = canvasObj.GetComponent<Canvas>();
 
-        if (MySceneManager.GameData.nowScene != (int)MySceneManager.SceneState.SCENE_TITLE) {
+        if (GameData.nowScene != (int)MySceneManager.SceneState.SCENE_TITLE) {
             InitGameUI();
         }
     }
 
     void Update() {
-        if (MySceneManager.GameData.nowScene != (int)MySceneManager.SceneState.SCENE_TITLE) {
+        if (GameData.nowScene != (int)MySceneManager.SceneState.SCENE_TITLE) {
             UpdateGameUI();
         }
     }
@@ -75,19 +75,19 @@ public class UIManager : MonoBehaviour
         fade = GameObject.Find("FadePanel");
 
         //----- 操作方法のUIの読み込みと出現 -----
-        operationUIPrefab = PrefabContainerFinder.Find(MySceneManager.GameData.UIDatas, "OperationUI.prefab");
+        operationUIPrefab = PrefabContainerFinder.Find(GameData.UIDatas, "OperationUI.prefab");
         operationUI = Instantiate(operationUIPrefab, _canvasRT);
         operationUI.name = operationUIPrefab.name;    // 名前を変更
         operationUI.transform.SetSiblingIndex(fade.transform.GetSiblingIndex()); // フェードの裏側に来るようにする
 
         //----- クリアのUI読み込みと出現 ------
-        clearUIPrefab = PrefabContainerFinder.Find(MySceneManager.GameData.UIDatas, "ClearUI.prefab");
+        clearUIPrefab = PrefabContainerFinder.Find(GameData.UIDatas, "ClearUI.prefab");
         clearUI = Instantiate(clearUIPrefab, _canvasRT);
         clearUI.name = clearUIPrefab.name;    // 名前を変更
         clearUI.transform.SetSiblingIndex(fade.transform.GetSiblingIndex());    // フェードの裏側に来るようにする
 
         //----- ゲームオーバーのUI読み込みと出現 -----
-        failedUIPrefab = PrefabContainerFinder.Find(MySceneManager.GameData.UIDatas, "FailedUI.prefab");
+        failedUIPrefab = PrefabContainerFinder.Find(GameData.UIDatas, "FailedUI.prefab");
         failedUI = Instantiate(failedUIPrefab, _canvasRT);
         failedUI.name = failedUIPrefab.name; // 名前を変更
         failedUI.transform.SetSiblingIndex(fade.transform.GetSiblingIndex()); // フェードの裏側に来るようにする
@@ -122,7 +122,7 @@ public class UIManager : MonoBehaviour
         resultCamera = GameObject.Find("ResultCamera").GetComponent<Camera>();
 
         //----- チュートリアルマネージャーの取得 -----
-        if (MySceneManager.GameData.nowScene == (int)MySceneManager.SceneState.SCENE_GAME_001) {
+        if (GameData.nowScene == (int)MySceneManager.SceneState.SCENE_GAME_001) {
             GameObject _tutotialManagerObj;
             _tutotialManagerObj = GameObject.Find("TutorialManager");
             if (_tutotialManagerObj) {
@@ -155,7 +155,7 @@ public class UIManager : MonoBehaviour
         }
 
         //-----  チュートリアル中かで変わるUI -----
-        if (MySceneManager.GameData.nowScene == (int)MySceneManager.SceneState.SCENE_GAME_001) {
+        if (GameData.nowScene == (int)MySceneManager.SceneState.SCENE_GAME_001) {
             // タイマーの表示非表示
             if (timerUI) {
                 var currentTutorialTask = _TutorialManager.GetCurrentTask();

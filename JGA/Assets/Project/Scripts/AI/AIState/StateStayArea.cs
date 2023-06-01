@@ -190,6 +190,6 @@ public class StateStayArea : AIState
         if (!Object) return;
         GuestSharedObject sharedObject = Object.GetComponent<GuestSharedObject>();
         if (!sharedObject) return;
-        animal = sharedObject.GetAnimalTransform(MySceneManager.eRoot.PENGUIN_E);
+        animal = sharedObject.GetAnimalTransform(GameData.eRoot.PENGUIN_E);
     }
 }

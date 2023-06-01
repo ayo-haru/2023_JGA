@@ -59,7 +59,7 @@ public class FadeManager : MonoBehaviour {
     /// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
     /// </summary>
     void Update() {
-        if (MySceneManager.GameData.isCatchPenguin) {   // ペンギンを捕まえたらフェードアウト開始
+        if (GameData.isCatchPenguin) {   // ペンギンを捕まえたらフェードアウト開始
             StartFadeIn();
         }
 

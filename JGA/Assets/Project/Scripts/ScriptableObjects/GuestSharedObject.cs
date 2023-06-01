@@ -66,7 +66,7 @@ public class GuestSharedObject : MonoBehaviour
         //コンポーネント取得
         if (animalsTransform == null)
         {
-            animalsTransform = new List<Transform>[(int)MySceneManager.eRoot.ENTRANCE - (int)MySceneManager.eRoot.PENGUIN_E];
+            animalsTransform = new List<Transform>[(int)GameData.eRoot.ENTRANCE - (int)GameData.eRoot.PENGUIN_E];
             for (int i = 0; i < animalsTransform.Length; ++i)
             {
                 if (animalsTransform[i] == null) animalsTransform[i] = new List<Transform>();
@@ -101,12 +101,12 @@ public class GuestSharedObject : MonoBehaviour
         }
     }
 
-    public Transform GetAnimalTransform(MySceneManager.eRoot _root)
+    public Transform GetAnimalTransform(GameData.eRoot _root)
     {
         Init();
-        if (_root == MySceneManager.eRoot.ENTRANCE) return null;
+        if (_root == GameData.eRoot.ENTRANCE) return null;
 
-        int index = (int)_root - (int)MySceneManager.eRoot.PENGUIN_E;
+        int index = (int)_root - (int)GameData.eRoot.PENGUIN_E;
         if (index < 0) index = 0;
 
         if (animalsTransform[index].Count <= 0) return null;
