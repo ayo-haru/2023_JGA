@@ -24,9 +24,13 @@ public class KeyConfigPanel : MonoBehaviour
 		GAMEPAD,
 	};
 
+	[SerializeField] TMP_Text	keyConfigText;
 	[SerializeField] GameObject	LayoutKeyboard;
 	[SerializeField] GameObject	LayoutGamePad;
 	[SerializeField] GameObject	WaitPanel;
+
+	[SerializeField] Button KeyMoveButton;
+	[SerializeField] Button PadMoveButton;
 
 	SettingMode settingMode = SettingMode.KEYBOARD;
 
@@ -49,17 +53,33 @@ public class KeyConfigPanel : MonoBehaviour
 
 	}
 
+	public void StartKeyConfig()
+	{
+		EventSystem.current.SetSelectedGameObject(null);
+		switch (settingMode)
+		{
+			case SettingMode.KEYBOARD:
+				KeyMoveButton.Select();
+				break;
+			case SettingMode.GAMEPAD:
+				PadMoveButton.Select();
+				break;
+		}
+	}
+
 	public void ChangePanel(GameObject obj)
 	{
 		if (obj == LayoutKeyboard)
 		{
 			settingMode = SettingMode.KEYBOARD;
 			ChangePanel(settingMode);
+			keyConfigText.text = "KeyBoard";
 		}
 		else if (obj == LayoutGamePad)
 		{
 			settingMode = SettingMode.GAMEPAD;
 			ChangePanel(settingMode);
+			keyConfigText.text = "GamePad";
 		}
 		else
 		{

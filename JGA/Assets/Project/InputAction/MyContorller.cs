@@ -75,6 +75,17 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
             ],
             ""bindings"": [
                 {
+                    ""name"": """",
+                    ""id"": ""ba710e39-33f6-44ed-854d-c3702eb2f452"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
                     ""name"": ""2D Vector"",
                     ""id"": ""2f1ec988-dbf9-4f5f-b9da-ea921bf18b40"",
                     ""path"": ""2DVector"",
@@ -131,12 +142,12 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""ba710e39-33f6-44ed-854d-c3702eb2f452"",
-                    ""path"": ""<Gamepad>/leftStick"",
+                    ""id"": ""b86b9dd1-fd84-466c-b1ee-67955fa0e0c7"",
+                    ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""Move"",
+                    ""action"": ""Appeal"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -164,33 +175,22 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""74171726-f7a2-477e-82f7-59f31f2b8a5f"",
-                    ""path"": ""<Mouse>/leftButton"",
+                    ""id"": ""b81c6db9-8b26-448a-a4ce-dfc37950a0a6"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard"",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Hit"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""ef1cb05f-e57a-48a4-816a-0e4f29bacc10"",
-                    ""path"": ""<Mouse>/rightButton"",
-                    ""interactions"": ""Hold(duration=0.01,pressPoint=0.02)"",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Hold"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""b81c6db9-8b26-448a-a4ce-dfc37950a0a6"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""id"": ""74171726-f7a2-477e-82f7-59f31f2b8a5f"",
+                    ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""Keyboard"",
                     ""action"": ""Hit"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -208,12 +208,12 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""b86b9dd1-fd84-466c-b1ee-67955fa0e0c7"",
-                    ""path"": ""<Gamepad>/buttonEast"",
-                    ""interactions"": """",
+                    ""id"": ""ef1cb05f-e57a-48a4-816a-0e4f29bacc10"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": ""Hold(duration=0.01,pressPoint=0.02)"",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Appeal"",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Hold"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -245,17 +245,6 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
             ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""fc84a5e1-3988-4620-86fe-1bb82429f449"",
-                    ""path"": ""<Keyboard>/i"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""ZoomIn"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""a6cae345-5c9e-46e5-8502-3140f8aeb6ea"",
                     ""path"": ""<Gamepad>/leftShoulder"",
                     ""interactions"": """",
@@ -267,22 +256,33 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""c532e160-5849-41bd-8b59-fcb51866d608"",
-                    ""path"": ""<Keyboard>/o"",
+                    ""id"": ""892bcde2-e222-479c-8d11-c496554a61e8"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard"",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""ZoomOut"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""892bcde2-e222-479c-8d11-c496554a61e8"",
-                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""id"": ""fc84a5e1-3988-4620-86fe-1bb82429f449"",
+                    ""path"": ""<Keyboard>/i"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""ZoomIn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c532e160-5849-41bd-8b59-fcb51866d608"",
+                    ""path"": ""<Keyboard>/o"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
                     ""action"": ""ZoomOut"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -324,6 +324,17 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
             ""bindings"": [
                 {
                     ""name"": """",
+                    ""id"": ""40661860-e6d3-4c4d-8fdd-aedbcdad620f"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""eb0da03d-7326-46a0-b4c8-faa5b5e52675"",
                     ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
@@ -335,12 +346,12 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""40661860-e6d3-4c4d-8fdd-aedbcdad620f"",
-                    ""path"": ""<Gamepad>/start"",
+                    ""id"": ""a093ac9c-3716-48fb-910d-4ed7b3e1282e"",
+                    ""path"": ""<Gamepad>/dpad"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""Pause"",
+                    ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -401,12 +412,12 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""a093ac9c-3716-48fb-910d-4ed7b3e1282e"",
-                    ""path"": ""<Gamepad>/dpad"",
+                    ""id"": ""a5f2f0ea-2703-436e-a4a2-ea2fc7f44061"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""Move"",
+                    ""action"": ""Decision"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -417,17 +428,6 @@ public partial class @MyContorller : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
-                    ""action"": ""Decision"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""a5f2f0ea-2703-436e-a4a2-ea2fc7f44061"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
                     ""action"": ""Decision"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
