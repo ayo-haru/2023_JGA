@@ -1535,7 +1535,7 @@ GameObject:
   - component: {fileID: 3467336638128748143}
   m_Layer: 0
   m_Name: Hourse
-  m_TagString: Untagged
+  m_TagString: TargetAnimals
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
