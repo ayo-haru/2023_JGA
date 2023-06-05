@@ -44,16 +44,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca90ddd2eaac5df4e80cbc96a47827c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectName:
-  - m_animal: 
-    m_cagePos: 
-  - m_animal: 
-    m_cagePos: 
-  - m_animal: 
-    m_cagePos: 
-  - m_animal: 
-    m_cagePos: 
-  - m_animal: 
-    m_cagePos: 
-  - m_animal: 
-    m_cagePos: 
+  targetAnimalName:
+  - Penguin
+  - Hourse
+  - Zebra
+  - Lion
+  - PolarBear
+  - Panda
+  - Bear
+  cagePosName:
+  - Penguin
+  - Horse
+  - Zebra
+  - Lion
+  - PolarBear
+  - Panda
+  - Bear

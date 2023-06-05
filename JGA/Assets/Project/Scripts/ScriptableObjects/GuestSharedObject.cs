@@ -22,10 +22,8 @@ public class GuestSharedObject : MonoBehaviour
     //段ボール
     private List<BaseObj> carboardObjects;
 
-    [NamedArrayAttribute(new string[] {"ペンギン","馬","象","ライオン","白熊","鳥"})]
-    [SerializeField,Header("TargetAnimalsの名前")] private string[] targetAnimalName = { "Penguin","Horse","Elephant","Lion","Bear","Bird",};
-    [NamedArrayAttribute(new string[] {"ペンギン","馬","象","ライオン","白熊","鳥"})]
-    [SerializeField,Header("CagePosの名前")] private string[] cagePosName = { "Penguin", "Horse", "Elephant", "Lion", "PolarBear", "Bird", };
+    [SerializeField,Header("TargetAnimalsの名前\n動物の名前を入れて下さい。（_や連番は除く）")] private string[] targetAnimalName = { "Penguin","Horse","Elephant","Lion","Bear","Bird",};
+    [SerializeField,Header("CagePosの名前\n↑の動物がいるCagePosの名前を入れて下さい")] private string[] cagePosName = { "Penguin", "Horse", "Elephant", "Lion", "PolarBear", "Bird", };
 
 
 #if false
