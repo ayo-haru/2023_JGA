@@ -18,11 +18,14 @@ EditorBuildSettings:
     path: Assets/Project/Scenes/Game/Stage_002.unity
     guid: 25792a1ec2a734840882e88c0f8af0fa
   - enabled: 1
-    path: Assets/Project/Private/YoshiharaAsuka/AddScene/TestManagaerScene.unity
+    path: Assets/Project/Private/YoshiharaAsuka/AddScene/TestManagerScene.unity
     guid: 2e55e10cf4d0fa044bdca03c24d94e14
   - enabled: 1
     path: Assets/Project/Private/YoshiharaAsuka/AddScene/TestAddScene1.unity
     guid: c6e375c091da8134d82a01c22a714302
+  - enabled: 1
+    path: Assets/Project/Private/YoshiharaAsuka/AddScene/TestAddScene2.unity
+    guid: 3546616e0cce56b47a1548907797326d
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: d988ba3f438543143b87a8925593af1d,
       type: 2}

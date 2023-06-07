@@ -17,10 +17,7 @@ public class TestManager : SingletonMonoBehaviour<TestManager>
 {
 	//protected override bool dontDestroyOnLoad { get {return true; } }
 
-	private string[] LoadSceneName =	
-	{
-		"TestAddScene1",
-	};
+
 
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
@@ -35,9 +32,6 @@ public class TestManager : SingletonMonoBehaviour<TestManager>
 	/// </summary>
 	void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.F1)){
-			SceneManager.LoadScene(LoadSceneName[0], LoadSceneMode.Additive);
-		}
 	}
 
 	public void Test()
