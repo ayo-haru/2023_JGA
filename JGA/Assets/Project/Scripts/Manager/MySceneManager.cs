@@ -84,9 +84,11 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager>
 	/// <param name="_nextScene">遷移先のシーンの定数</param>
 	public static void SceneChange(SceneState _nextScene)
 	{
+		Resources.UnloadUnusedAssets();
 		SceneManager.LoadScene(sceneName[(int)_nextScene]);
 	}
 	public static void SceneChange(int _nextScene) {
+		Resources.UnloadUnusedAssets();
 		SceneManager.LoadScene(sceneName[_nextScene]);
 	}
 
