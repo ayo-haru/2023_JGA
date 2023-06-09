@@ -582,27 +582,7 @@ public class Player : MonoBehaviour
 			if (WithinRange.Count == 0)
 				return;
 
-			// 現在のインタラクト対象を登録
-			if (InteractOutline != null)
-			{
-				InteractCollision = InteractOutline.GetComponent<Collider>();
-			}
-			else    // もし一番近くのオブジェクト情報を保持していない場合
-			{
-				float length = 10.0f;
-
-				// プレイヤーに一番近いオブジェクトをインタラクト対象とする
-				foreach (Collider obj in WithinRange)
-				{
-					float distance = Vector3.Distance(transform.position, obj.transform.position);
-
-					if (length > distance)
-					{
-						length = distance;
-						InteractCollision = obj;
-					}
-				}
-			}
+			DecideNearestObject();
 
 			// オブジェクトの種類によって持つアニメーションを変える
 			if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj))
@@ -993,28 +973,7 @@ public class Player : MonoBehaviour
 		if (WithinRange.Count == 0)
 			return;
 
-		//--- 現在のインタラクト対象を登録
-		if (InteractOutline != null)
-		{
-			InteractCollision = InteractOutline.GetComponent<Collider>();
-		}
-		else    // もし一番近くのオブジェクト情報を保持していない場合
-		{
-			float length = 10.0f;
-
-			// プレイヤーに一番近いオブジェクトをインタラクト対象とする
-			foreach (Collider obj in WithinRange)
-			{
-				float distance = Vector3.Distance(transform.position, obj.transform.position);
-
-				if (length > distance)
-				{
-					length = distance;
-					InteractCollision = obj;
-					break;
-				}
-			}
-		}
+		DecideNearestObject();
 
 		if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj))
 		{
@@ -1113,5 +1072,33 @@ public class Player : MonoBehaviour
 
 		// インスペクターで設定したリスポーン位置に再配置する
 		this.gameObject.transform.position = respawnZone.position;
+	}
+
+	/// <summary>
+	/// プレイヤーに一番近いオブジェクトを登録
+	/// </summary>
+	void DecideNearestObject()
+	{
+		//--- 現在のインタラクト対象を登録
+		if (InteractOutline != null)
+		{
+			InteractCollision = InteractOutline.GetComponent<Collider>();
+		}
+		else    // もし一番近くのオブジェクト情報を保持していない場合
+		{
+			float length = 10.0f;
+
+			// プレイヤーに一番近いオブジェクトをインタラクト対象とする
+			foreach (Collider obj in WithinRange)
+			{
+				float distance = Vector3.Distance(transform.position, obj.transform.position);
+
+				if (length > distance)
+				{
+					length = distance;
+					InteractCollision = obj;
+				}
+			}
+		}
 	}
 }
