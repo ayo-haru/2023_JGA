@@ -101,6 +101,9 @@ public class AIManager : MonoBehaviour
         }
         //乱数初期化
         UnityEngine.Random.InitState(DateTime.Now.Millisecond);
+
+        //ゲストマネージャーに追加
+        //guestManager.AddGuest(gameObject);
     }
 
 	/// <summary>
