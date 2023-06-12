@@ -12,6 +12,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
+
 public class GuestManager : MonoBehaviour
 {
     //客一覧
@@ -56,11 +58,11 @@ public class GuestManager : MonoBehaviour
             guestPrefab.Add(PrefabContainerFinder.Find(GameData.characterDatas, guestPrefabName[i]));
         }
         //客のルート取得
+        guestRootPos = new Transform[guestRootPosName.Length];
         for(int i = 0; i < guestRootPosName.Length; ++i)
         {
             GameObject rootPos = GameObject.Find(guestRootPosName[i]);
-            if (!rootPos) continue;
-            guestRootPos[i] = rootPos.transform;
+            guestRootPos[i] = (rootPos) ? rootPos.transform : null;
         }
         //親取得
         guestParent = GameObject.Find("Guests");
@@ -99,36 +101,11 @@ public class GuestManager : MonoBehaviour
 
         for (int i = 0; i < _guestList.Length; i++)
         {
-            // 指定された列挙定数から目的地のブースの実際のpositionを設定
-            _guestList[i].rootTransforms = new List<Transform>();
-            for (int j = 0; j < _guestList[i].roots.Length; j++)
-            {
-                _guestList[i].rootTransforms.Add(guestRootPos[(int)_guestList[i].roots[j]]);
-            }
-            // ペンギンブースの座標を入れる
-            _guestList[i].penguinTF = new List<Transform>();
-            _guestList[i].penguinTF.Add(guestRootPos[(int)GameData.eRoot.PENGUIN_N]);
-            _guestList[i].penguinTF.Add(guestRootPos[(int)GameData.eRoot.PENGUIN_S]);
-            _guestList[i].penguinTF.Add(guestRootPos[(int)GameData.eRoot.PENGUIN_W]);
-            _guestList[i].penguinTF.Add(guestRootPos[(int)GameData.eRoot.PENGUIN_E]);
-            // エントランスの座標を入れる
-            _guestList[i].entranceTF = guestRootPos[(int)GameData.eRoot.ENTRANCE];
-
-            // 生成
-            GameObject guestInstace;
-            int GuestIndex = UnityEngine.Random.Range(0, 3);
-            guestInstace = Instantiate(guestPrefab[GuestIndex], _guestList[i].rootTransforms[0].position, Quaternion.identity);
-            if (guestParent)
-            {
-                guestInstace.transform.SetParent(guestParent.transform);
-            }
-            guestInstace.name = _guestList[i].name; // 表示名変更
-
-            // データの流し込み
-            if(guestInstace.TryGetComponent(out AIManager ai))
-            {
-                ai.SetGuestData(_guestList[i]);
-            }
+            //客を生成
+            GameObject guest = Create(_guestList[i]);
+            if (!guest) continue;
+            //生成できてたら名前を変更する
+            guest.name = _guestList[i].name;
         }
     }
 
@@ -137,6 +114,7 @@ public class GuestManager : MonoBehaviour
     /// </summary>
     private void SpawnRondomGuest()
     {
+        //-----データ初期化-----
         GuestData.Data guestData = new GuestData.Data
         { 
             name = "FGuest",
@@ -155,50 +133,88 @@ public class GuestManager : MonoBehaviour
             cageDistance = 10.0f
         };
 
-        // ペンギンブースの座標を入れる
-        guestData.penguinTF = new List<Transform>();
-        guestData.penguinTF.Add(guestRootPos[(int)GameData.eRoot.PENGUIN_N]);
-        guestData.penguinTF.Add(guestRootPos[(int)GameData.eRoot.PENGUIN_S]);
-        guestData.penguinTF.Add(guestRootPos[(int)GameData.eRoot.PENGUIN_W]);
-        guestData.penguinTF.Add(guestRootPos[(int)GameData.eRoot.PENGUIN_E]);
-
-        // エントランスの座標を入れる
-        guestData.entranceTF = guestRootPos[(int)GameData.eRoot.ENTRANCE];
-
-        //----- 目的地のブースをランダムで設定(固定客は作ってない) -----
-        int randomRootSum, randomRootNum;
-
-        // ルートをいくつ設定するかをランダムで決定
-        randomRootSum = UnityEngine.Random.Range(2, guestRootMax + 1);    // ランダムの最大値は1大きくしないと設定した数が含まれない
-
-        guestData.rootTransforms = new List<Transform>();
-        for (int j = 0; j < randomRootSum; j++)
-        {   //　乱数で算出したルートの数だけルートを決める
-            // ルートをランダムで設定
+        //-----ルートを決める-----
+        //ルートの数を決める
+        int rootNum = UnityEngine.Random.Range(2, guestRootMax + 1);
+        //ランダムでルートを入れる
+        guestData.roots = new GameData.eRoot[rootNum];
+        for (int i = 0; i < rootNum; ++i)
+        {
+            GameData.eRoot root;
             do
             {
-                randomRootNum = UnityEngine.Random.Range(4, (int)GameData.eRoot.ENTRANCE);  // ペンギンのルートが入っているところより大きく、エントランスより小さく
-            } while (guestData.rootTransforms.Contains(guestRootPos[randomRootNum]));
-            guestData.rootTransforms.Add(guestRootPos[randomRootNum]);
+                root = (GameData.eRoot)UnityEngine.Random.Range(4, (int)GameData.eRoot.ENTRANCE);
+            } while (guestData.roots.Contains(root));
+            guestData.roots[i] = root;
         }
 
-        //----- 生成 -----
-        // それぞれのカウントを加算
-        guestSum++;
-        GameData.randomGuestCnt++;
+        //-----客を生成-----
+        GameObject guest = Create(guestData);
+        if (!guest) return;
+        guest.name = guestData.name + String.Format("{0:D3}", guestSum);
 
-        GameObject guestInstace;
-        int GuestIndex = UnityEngine.Random.Range(0, 3);
-        guestInstace = Instantiate(guestPrefab[GuestIndex], guestRootPos[(int)GameData.eRoot.ENTRANCE].position, Quaternion.identity);
+        ++guestSum;
+        ++GameData.randomGuestCnt;
+    }
+    /// <summary>
+    /// 客生成処理
+    /// </summary>
+    private GameObject Create(GuestData.Data data)
+    {
+        //-----ペンギンブースの座標設定-----
+        data.penguinTF = new List<Transform>();
+        for(int i = 0; i<= (int)GameData.eRoot.PENGUIN_E; ++i)
+        {
+            if (!guestRootPos[i]) continue;
+            data.penguinTF.Add(guestRootPos[i]);
+        }
+        if(data.penguinTF.Count <= 0)
+        {
+            Debug.Log("ペンギンブース取得出来なかったため、生成できませんでした");
+            return null;
+        }
+        //-----エントランスの座標設定-----
+        if (guestRootPos[(int)GameData.eRoot.ENTRANCE])
+        {
+            data.entranceTF = guestRootPos[(int)GameData.eRoot.ENTRANCE];
+        }else{
+            Debug.Log("エントランスが取得できなかったため、生成出来ませんでした");
+            return null;
+        }
 
+        // -----指定された列挙定数から目的地のブースの実際のpositionを設定-----
+        data.rootTransforms = new List<Transform>();
+        for (int j = 0; j < data.roots.Length; j++)
+        {
+            if (!guestRootPos[(int)data.roots[j]]) continue;
+            data.rootTransforms.Add(guestRootPos[(int)data.roots[j]]);
+        }
+        if(data.rootTransforms.Count <= 0)
+        {
+            Debug.Log("ルートが設定出来なかったため、生成できませんでした");
+            return null;
+        }
+
+        //-----生成-----
+        GameObject instance = null;
+        //プレハブの中からランダムで1つ生成
+        int index = UnityEngine.Random.Range(0, guestPrefab.Count);
+        instance = Instantiate(guestPrefab[index], data.rootTransforms[0].position, Quaternion.identity);
+        //親オブジェクト設定
         if (guestParent)
         {
-            guestInstace.transform.parent = guestParent.transform;   // 親にする
+            instance.transform.SetParent(guestParent.transform);
         }
-        guestInstace.name = guestData.name + String.Format("{0:D3}", guestSum); // 表示名変更
-                                                                                // データの流し込み
-        guestInstace.GetComponent<AIManager>().SetGuestData(guestData);
+        //AIマネージャにデータ渡す
+        if(instance.TryGetComponent(out AIManager ai))
+        {
+            ai.SetGuestData(data);
+        }else{
+            Destroy(instance);
+            instance = null;
+            Debug.LogError("AIマネージャが取得できなかったため、生成できませんでした");
+        }
+
+        return instance;
     }
-
-
 }
