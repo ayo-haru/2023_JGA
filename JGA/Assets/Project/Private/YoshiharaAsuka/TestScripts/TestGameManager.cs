@@ -28,9 +28,36 @@ public class TestGameManager : SingletonMonoBehaviour<TestGameManager>
 	/// </summary>
 	void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.Space)){
+
+#if UNITY_EDITOR
+		if (Input.GetKeyDown(KeyCode.F1)){
 			TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_TEST01);
 		}
+
+		if (Input.GetKeyDown(KeyCode.F2))
+		{
+			TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_TEST02);
+		}
+
+		if (Input.GetKeyDown(KeyCode.F3))
+		{
+			TestMySceneManager.SubtractScene(TestMySceneManager.SCENE.SCENE_TEST01);
+		}
+
+		if (Input.GetKeyDown(KeyCode.F4))
+		{
+			TestMySceneManager.SubtractScene(TestMySceneManager.SCENE.SCENE_TEST02);
+		}
+
+		if (Input.GetKeyDown(KeyCode.A))
+		{
+			TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_TESTUI);
+		}
+
+
+#endif
+
+
 	}
 }
 
