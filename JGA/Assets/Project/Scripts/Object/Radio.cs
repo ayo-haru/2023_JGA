@@ -20,13 +20,12 @@ public class Radio : BaseObj
 	private bool isRadioSound = false;
 
 	private GameObject effect = null;						// ガヤガヤエフェクト
-	private GameObject effectPoint;							// エフェクト再生位置
+	private GameObject effectPoint;                         // エフェクト再生位置
 
-	/// <summary>
-	/// 最初のフレーム更新の前に呼び出される
-	/// </summary>
-	void Start()
+	public override void OnStart()
 	{
+		m_BaseObj = this;
+
 		Init();
 
 		objType = ObjType.HIT_HOLD;
@@ -38,17 +37,13 @@ public class Radio : BaseObj
 
 	}
 
-	/// <summary>
-	/// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
-	/// </summary>
-	void Update()
+	public override void OnUpdate()
 	{
 		if (PauseManager.isPaused) return;              // ポーズ中処理
 
 		PlaySoundChecker();
-		
+
 	}
-	
 
 	//　当たり判定処理===============================================
 	protected override void OnCollisionEnter(Collision collision)

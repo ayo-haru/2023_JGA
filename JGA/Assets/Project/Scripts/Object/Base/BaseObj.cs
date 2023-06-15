@@ -44,6 +44,7 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 
 
 	//---共通変数宣言---
+	protected BaseObj m_BaseObj;
 	protected Rigidbody rb;                     // リジッドボディ使用
 
 	//protected AudioSource audioSource;		// オーディオソース
@@ -96,6 +97,8 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 		distance = -1;
 
 	}
+	public virtual void OnStart() { }
+	public virtual void OnUpdate() {}
 
 	/// <summary>
 	/// 引数無しの場合はリストの一番最初にあるオーディオソースを判定

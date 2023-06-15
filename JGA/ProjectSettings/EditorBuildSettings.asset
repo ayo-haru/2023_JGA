@@ -21,7 +21,7 @@ EditorBuildSettings:
     path: Assets/Project/Private/YoshiharaAsuka/AddScene/TestManagerScene.unity
     guid: 2e55e10cf4d0fa044bdca03c24d94e14
   - enabled: 1
-    path: Assets/Project/Private/YoshiharaAsuka/AddScene/TestUISCene.unity
+    path: Assets/Project/Private/YoshiharaAsuka/AddScene/TestUIScene.unity
     guid: a18c20ea6bf7e824b8cb3bd7765ca269
   - enabled: 1
     path: Assets/Project/Private/YoshiharaAsuka/AddScene/TestAddScene1.unity

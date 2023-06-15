@@ -56,7 +56,7 @@ public static class TestMySceneManager
 	/// <param name="scene"></param>
 	public static void SubtractScene(SCENE scene)
 	{
-		if (CheckLoadScene(SetSceneName[(int)scene])){
+		if (!CheckLoadScene(SetSceneName[(int)scene])){
 			Debug.Log(SetSceneName[(int)scene] + "は読み込まれていないシーンです");
 			return;
 		}
