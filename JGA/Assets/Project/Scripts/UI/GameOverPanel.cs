@@ -17,9 +17,6 @@ using UnityEngine.EventSystems;
 public class GameOverPanel : MonoBehaviour
 {
     private AudioSource audioSource;
-    [SerializeField, Header("GAMEOVER")] private Image gameOver;
-    //ボタンの色
-    [SerializeField, Header("ボタンの色")] private Color buttonColor;
 
     //ボタン
     [SerializeField, Header("RETRY")] private Button retryButton;
@@ -55,7 +52,6 @@ public class GameOverPanel : MonoBehaviour
         actionMove.ToInputAction().Enable();
 
         nextScene = -1;
-        gameOver.fillAmount = 0.0f;
         InitInput();
     }
 
@@ -72,7 +68,6 @@ public class GameOverPanel : MonoBehaviour
 
     private void Update()
     {
-        gameOver.fillAmount += Time.deltaTime;
         //マウスの状態を更新
         Vector3 oldMousePos = mousePos;
         mousePos = Input.mousePosition;

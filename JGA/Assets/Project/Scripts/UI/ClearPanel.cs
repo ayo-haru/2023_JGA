@@ -18,7 +18,6 @@ public class ClearPanel : MonoBehaviour
 {
     private AudioSource audioSource;
 
-    [SerializeField, Header("Clear")] private Image Clear;
     //ボタン
     [SerializeField, Header("NEXT DAY")] private Button nextDayButton;
     private Image nextDayButtonImage;
@@ -54,7 +53,6 @@ public class ClearPanel : MonoBehaviour
         actionMove.ToInputAction().Enable();
 
         nextScene = -1;
-        //Clear.fillAmount = 0.0f;
         InitInput();
     }
 
@@ -71,9 +69,6 @@ public class ClearPanel : MonoBehaviour
 
     private void Update()
     {
-        //Clearの画像を更新
-        //if(Clear.fillAmount < 1.0f)Clear.fillAmount += Time.deltaTime;
-
         //マウスの状態を更新
         Vector3 oldMousePos = mousePos;
         mousePos = Input.mousePosition;
