@@ -68,10 +68,26 @@ public class GuestManager : MonoBehaviour
         guestParent = GameObject.Find("Guests");
     }
 
-	/// <summary>
-	/// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
-	/// </summary>
-	void FixedUpdate()
+    private void OnEnable()
+    {
+        for(int i = 0;i < guestList.Count; ++i)
+        {
+            if(guestList[i])guestList[i].SetActive(true);
+        }
+    }
+
+    private void OnDisable()
+    {
+        for (int i = 0; i < guestList.Count; ++i)
+        {
+            if (guestList[i]) guestList[i].SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
+    /// </summary>
+    void FixedUpdate()
 	{
 
 	}
@@ -91,7 +107,14 @@ public class GuestManager : MonoBehaviour
     {
         guestList.Add(guest);
     }
-
+    /// <summary>
+    /// 客の削除
+    /// </summary>
+    /// <param name="guest"></param>
+    public void RemoveGuest(GameObject guest)
+    {
+        guestList.Remove(guest);
+    }
     /// <summary>
     /// 固定客生成
     /// </summary>
