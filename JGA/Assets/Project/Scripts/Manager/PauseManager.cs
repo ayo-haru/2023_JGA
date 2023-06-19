@@ -2,85 +2,105 @@
 // @File	: [PauseManager.cs]
 // @Brief	: 
 // @Author	: Sakai Ryotaro
-// @Editer	: 
+// @Editer	: Ichida Mai
 // @Detail	: 
 // 
 // [Date]
 // 2023/03/11	スクリプト作成
+// 2023/03/16	シーン遷移直後ポーズがかからないの修正
+//				フェードにポーズの処理が乗っかっていたので切り離し
 //=============================================================================
 using System;
 using UniRx;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
-public class PauseManager : SingletonMonoBehaviour<PauseManager>
-{
-	//protected override bool dontDestroyOnLoad
-	//{ get { return true; } }
+public class PauseManager : SingletonMonoBehaviour<PauseManager> {
+    //protected override bool dontDestroyOnLoad
+    //{ get { return true; } }
 
-	private static Subject<string> pauseSubject = new Subject<string>();
-	private static Subject<string> resumeSubject = new Subject<string>();
+    private static Subject<string> pauseSubject = new Subject<string>();
+    private static Subject<string> resumeSubject = new Subject<string>();
 
-	private static bool _isPaused = false;
-	public static bool isPaused { get { return _isPaused; } set { _isPaused = value; } }
-	private static bool _noMenu = false;
-	public static bool NoMenu { get { return _noMenu; } set { _noMenu = value; } }
+    private static bool _isPaused = false;
+    public static bool isPaused { get { return _isPaused; } set { _isPaused = value; } }
+    private static bool _noMenu = false;
+    public static bool NoMenu { get { return _noMenu; } set { _noMenu = value; } }
 
-	[SerializeField] private InputActionReference actionPause;
+    [SerializeField] private InputActionReference actionPause;
 
-	public static IObservable<string> OnPaused { get { return pauseSubject; } }
-	public static IObservable<string> OnResumed { get { return resumeSubject; } }
+    //フェードを監視
+    private ReactiveProperty<FadeManager.eFade> fadeMode = new ReactiveProperty<FadeManager.eFade>(FadeManager.eFade.Default);
 
-	private void Start()
-	{
-		// Actionイベント登録
-		actionPause.action.performed += Pause;
+    public static IObservable<string> OnPaused { get { return pauseSubject; } }
+    public static IObservable<string> OnResumed { get { return resumeSubject; } }
 
-		// Input Actionを有効化
-		actionPause.ToInputAction().Enable();
-	}
+    private void Start() {
+        // Actionイベント登録
+        actionPause.action.performed += OnPause;
 
-	private void OnDisable()
-	{
-		// Input Actionを無効化
-		actionPause.ToInputAction().Disable();
-	}
+        // Input Actionを有効化
+        actionPause.ToInputAction().Enable();
 
-	private void OnDestroy()
-	{
-		// Actionイベント消去
-		actionPause.action.performed -= Pause;
+        // フェード用変数初期化
+        fadeMode.Value = FadeManager.fadeMode;
+        fadeMode.Subscribe(_ => { 
+            if (fadeMode.Value == FadeManager.eFade.Default) {
+                isPaused = false;
+                NoMenu = false;
+                Resume();
+            }
+        }).AddTo(this);
+    }
 
-		// Input Actionを無効化
-		actionPause.ToInputAction().Disable();
-	}
+    private void OnDisable() {
+        // Input Actionを無効化
+        actionPause.ToInputAction().Disable();
+    }
 
-	private void Pause(InputAction.CallbackContext context)
-	{
-		if (FadeManager.fadeMode != FadeManager.eFade.Default)
-		{       // フェード中はポーズの開始の入力を受け付けない
-			return;
-		}
+    private void OnDestroy() {
+        // Actionイベント消去
+        actionPause.action.performed -= OnPause;
 
-		_isPaused = !_isPaused;
+        // Input Actionを無効化
+        actionPause.ToInputAction().Disable();
+    }
 
-		if (_isPaused)
-		{
-			Pause();
-		}
-		else
-		{
-			Resume();
-		}
-	}
+    private void Update() {
+        // 監視対象の変数を更新
+        fadeMode.Value = FadeManager.fadeMode;
 
-	public static void Pause()
-	{
-		pauseSubject.OnNext("pause");
-	}
+        // フェード中ポーズのための判定
+        if (FadeManager.fadeMode != FadeManager.eFade.Default) {
+            if (!isPaused) {
+                isPaused = true;
+                NoMenu = true;
+                Pause();
+            }
+        }
+    }
 
-	public static void Resume()
-	{
-		resumeSubject.OnNext("resume");
-	}
+    private void OnPause(InputAction.CallbackContext context) {
+        if (FadeManager.fadeMode != FadeManager.eFade.Default) {
+            // フェード中はポーズの開始の入力を受け付けない
+            return;
+        }
+
+        _isPaused = !_isPaused;
+
+        if (_isPaused) {
+            Pause();
+        } else {
+            Resume();
+        }
+    }
+
+    public static void Pause() {
+        pauseSubject.OnNext("pause");
+    }
+
+    public static void Resume() {
+        resumeSubject.OnNext("resume");
+    }
 }

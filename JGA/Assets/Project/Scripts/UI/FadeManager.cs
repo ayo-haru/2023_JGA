@@ -86,12 +86,10 @@ public class FadeManager : MonoBehaviour {
                     fadeMode = eFade.Default;
 
                     alpha = 0.0f;
-                    PauseManager.isPaused = false;
-                    PauseManager.NoMenu = false;
-                    PauseManager.Resume();
                 }
             }
         }
+
         image.color = new Color(0.0f, 0.0f, 0.0f, alpha);
 
         image.raycastTarget = (fadeMode != eFade.Default);
@@ -105,12 +103,6 @@ public class FadeManager : MonoBehaviour {
 
         oldFadeMode = fadeMode;
         fadeMode = eFade.FadeOut;
-
-        if (!PauseManager.isPaused) {
-            PauseManager.isPaused = true;
-            PauseManager.NoMenu = true;
-            PauseManager.Pause();
-        }
     }
 
     /// <summary>
@@ -121,12 +113,6 @@ public class FadeManager : MonoBehaviour {
 
         oldFadeMode = fadeMode;
         fadeMode = eFade.FadeIn;
-
-        if (!PauseManager.isPaused) {
-            PauseManager.isPaused = true;
-            PauseManager.NoMenu = true;
-            PauseManager.Pause();
-        }
     }
     /// <summary>
     /// フェードイン開始。シーン切り替わった瞬間のイベント用関数。
@@ -138,12 +124,6 @@ public class FadeManager : MonoBehaviour {
 
         oldFadeMode = fadeMode;
         fadeMode = eFade.FadeIn;
-
-        if (!PauseManager.isPaused) {
-            PauseManager.isPaused = true;
-            PauseManager.NoMenu = true;
-            PauseManager.Pause();
-        }
     }
 
     /// <summary>
