@@ -54,7 +54,7 @@ public class ClearPanel : MonoBehaviour
         actionMove.ToInputAction().Enable();
 
         nextScene = -1;
-        Clear.fillAmount = 0.0f;
+        //Clear.fillAmount = 0.0f;
         InitInput();
     }
 
@@ -72,7 +72,7 @@ public class ClearPanel : MonoBehaviour
     private void Update()
     {
         //Clearの画像を更新
-        if(Clear.fillAmount < 1.0f)Clear.fillAmount += Time.deltaTime;
+        //if(Clear.fillAmount < 1.0f)Clear.fillAmount += Time.deltaTime;
 
         //マウスの状態を更新
         Vector3 oldMousePos = mousePos;
