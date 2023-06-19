@@ -106,10 +106,16 @@ public class AIManager : MonoBehaviour
         //guestManager.AddGuest(gameObject);
     }
 
-	/// <summary>
-	/// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
-	/// </summary>
-	void FixedUpdate()
+    private void OnDestroy()
+    {
+        //ゲストマネージャーから削除
+        //guestManager.RemoveGuest(gameObject);
+    }
+
+    /// <summary>
+    /// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
+    /// </summary>
+    void FixedUpdate()
 	{
         if (PauseManager.isPaused) return;
         //ステートの切り替え
