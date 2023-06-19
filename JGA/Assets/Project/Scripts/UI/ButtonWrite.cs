@@ -35,11 +35,29 @@ public class ButtonWrite : MonoBehaviour
 	{
         //マテリアル、テクスチャを設定
         if (!mat) return;
-        if (!TryGetComponent(out Image image)) return;
-        myMaterial = new Material(mat);
-        image.material = myMaterial;
-        myMaterial.SetTexture("_MainTex", image.mainTexture);
+        if (TryGetComponent(out Image image))
+        {
+            myMaterial = new Material(mat);
+            image.material = myMaterial;
+            myMaterial.SetTexture("_MainTex", image.mainTexture);
+        }
+        else if(TryGetComponent(out SpriteRenderer sr))
+        {
+            myMaterial = new Material(mat);
+            sr.material = myMaterial;
+            myMaterial.SetTexture("_MainTex", sr.sprite.texture);
+        }
+        
 	}
+
+    private void OnDestroy()
+    {
+        if (myMaterial)
+        {
+            Destroy(myMaterial);
+            myMaterial = null;
+        }
+    }
 #if false
     /// <summary>
     /// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
@@ -49,10 +67,10 @@ public class ButtonWrite : MonoBehaviour
 		
 	}
 #endif
-	/// <summary>
-	/// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
-	/// </summary>
-	void Update()
+    /// <summary>
+    /// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
+    /// </summary>
+    void Update()
 	{
         if (!myMaterial) return;
         myMaterial.SetFloat("_Threshold", threshold);
