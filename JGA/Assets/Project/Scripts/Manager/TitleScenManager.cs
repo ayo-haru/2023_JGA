@@ -33,6 +33,7 @@ public class TitleScenManager : BaseSceneManager {
     [SerializeField, Header("ゲームをやめる")] private Selectable exitButton;
     private BoxCollider exitButtonCollider;
 
+    [SerializeField] private GameObject optionObject;
     [SerializeField, Header("オプション")] private OptionPanel optionPanel;
 
     //続きからボタン隠す用
@@ -135,7 +136,7 @@ public class TitleScenManager : BaseSceneManager {
     /// </summary>
     void Update() {
         bool beforeFlag = bFlag;
-        bFlag = optionPanel.IsOpen();
+        bFlag = optionObject.activeSelf;
         //オプション画面が開かれているときは処理しない
         if (bFlag) return;
         //オプション画面から戻って来た時の初期化処理
@@ -196,6 +197,7 @@ public class TitleScenManager : BaseSceneManager {
     public void OptionButton() {
         SoundSEDecision();
         ControllerNoneSelect();
+        optionObject.SetActive(true);
         //オプション画面を開く
         optionPanel.Open();
     }
@@ -273,7 +275,7 @@ public class TitleScenManager : BaseSceneManager {
 
     private void OnMove(InputAction.CallbackContext context)
     {
-        if (optionPanel.IsOpen()) return;
+        if (optionObject.activeSelf) return;
         if (!bMouse) return;
 
         //マウス→コントローラ
