@@ -18,7 +18,7 @@ public class PlayerManager : MonoBehaviour
 
 	[Header("PlayerManager")]
 	[SerializeField, Tooltip("歩行速度")]
-	private float moveSpeed = 7;
+	private float moveSpeed = 25;
 	public float MoveSpeed { get { return moveSpeed; } set { moveSpeed = value; } }
 	[SerializeField, Tooltip("歩行時最高速度")]
 	private float _maxMoveSpeed = 5;
