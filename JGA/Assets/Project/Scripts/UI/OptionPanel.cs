@@ -20,10 +20,6 @@ using UnityEngine.EventSystems;
 public class OptionPanel : MonoBehaviour
 {
     private AudioSource audioSource;
-    private RectTransform rt;
-
-    //ボタンの色
-    [SerializeField, Header("ボタンの色")] private Color buttonColor;
 
     //ボタン
     [SerializeField, Header("BGM")] private Button bgmButton;
@@ -55,27 +51,15 @@ public class OptionPanel : MonoBehaviour
 
     [SerializeField] private InputActionReference actionMove;
 
-    public enum EOptionSlide { MIN_SLIDE = -2,LEFT, CENTER, RIGHT,MAX_SLIDE };
-    private int nSlide = (int)EOptionSlide.RIGHT;
-    [SerializeField, Range(1.0f, 100.0f)] private float slideSpeed = 10.0f;
-    private float screenWidth = 1920.0f;
-    [SerializeField] private bool bSlide = false;
-    
-
+    private bool bOpen = false;
 
 	void Awake()
 	{
-        audioSource = GetComponent<AudioSource>();
-        rt = GetComponent<RectTransform>();
-
-        //初期位置設定
-        Vector3 pos = rt.localPosition;
-        pos.x = screenWidth;
-        rt.localPosition = pos;
-
         //イベント登録
         actionMove.action.performed += OnMove;
         actionMove.action.canceled += OnMove;
+
+        audioSource = GetComponent<AudioSource>();
 
         //ボタンの加増取得
         keybordOptionButtonImage = keybordOptionButton.GetComponent<Image>();
@@ -94,6 +78,9 @@ public class OptionPanel : MonoBehaviour
 
     private void OnDisable()
     {
+        ControllerNoneSelect();
+        bOpen = false;
+
         actionMove.ToInputAction().Disable();
     }
 
@@ -105,8 +92,6 @@ public class OptionPanel : MonoBehaviour
 
     private void Update()
     {
-        if (nSlide != (int)EOptionSlide.CENTER) return;
-        if (bSlide && rt.localPosition != Vector3.zero) return;
         if (!IsOpen()) return;
 
         //マウスの状態を更新
@@ -124,10 +109,7 @@ public class OptionPanel : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!bSlide) return;
-        if (nSlide >= (int)EOptionSlide.MAX_SLIDE || nSlide <= (int)EOptionSlide.MIN_SLIDE) return;
-        if (rt.localPosition.x == screenWidth * nSlide) return;
-        rt.localPosition = Vector3.MoveTowards(rt.localPosition, new Vector3(screenWidth * nSlide, rt.localPosition.y, rt.localPosition.z), slideSpeed);
+
     }
     #region オプション画面ボタン
     /// <summary>
@@ -136,9 +118,8 @@ public class OptionPanel : MonoBehaviour
     public void BackButton()
     {
         SoundDecisionSE();
-        //オプション画面を閉じる
-        nSlide = (int)EOptionSlide.RIGHT;
         ControllerNoneSelect();
+        bOpen = false;
     }
     /// <summary>
     /// キーボード&マウス設定ボタン
@@ -146,9 +127,8 @@ public class OptionPanel : MonoBehaviour
     public void OptionKeybordButton()
     {
         SoundDecisionSE();
-        //キーボード＆マウス設定を開く
-        nSlide = (int)EOptionSlide.LEFT;
         ControllerNoneSelect();
+        bOpen = false;
     }
     /// <summary>
     /// コントローラ設定ボタン
@@ -156,9 +136,8 @@ public class OptionPanel : MonoBehaviour
     public void OptionControllerButton()
     {
         SoundDecisionSE();
-        //コントローラ設定を開く
-        nSlide = (int)EOptionSlide.LEFT;
         ControllerNoneSelect();
+        bOpen = false;
     }
     /// <summary>
     /// BGM音量上げるボタン
@@ -291,13 +270,13 @@ public class OptionPanel : MonoBehaviour
 
     public void Open()
     {
-        if (nSlide == (int)EOptionSlide.CENTER) return;
-        nSlide = (int)EOptionSlide.CENTER;
+        if (IsOpen()) return;
+        bOpen = true;
         InitInput();
     }
     public bool IsOpen()
     {
-        return nSlide == (int)EOptionSlide.CENTER;
+        return bOpen;
     }
 
     private void OnMove(InputAction.CallbackContext context)
