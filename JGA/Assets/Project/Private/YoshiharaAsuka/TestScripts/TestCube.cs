@@ -15,6 +15,7 @@ using UnityEngine;
 public class TestCube : MonoBehaviour
 {
 	[SerializeField] GameObject objects;
+	[SerializeField] List<GameObject> gameObjects = new List<GameObject>();
 
 
 
@@ -24,6 +25,7 @@ public class TestCube : MonoBehaviour
 	void Start()
 	{
 		objects = null;
+		gameObjects = GimickObjectManager.Instance.GetGimickObjectAll();
 
 	}
 
@@ -33,17 +35,6 @@ public class TestCube : MonoBehaviour
 	void FixedUpdate()
 	{
 
-		if (objects == null){
-			Debug.Log(objects + "is not Fined");
-		}
-
-		if (Input.GetKeyDown(KeyCode.L)){
-			objects = GameObject.Find("Sphere");
-		}
-
-		if (Input.GetKeyDown(KeyCode.O)){
-			objects.transform.Rotate(0, 5, 0);
-		}
 		
 	}
 
@@ -52,6 +43,9 @@ public class TestCube : MonoBehaviour
 	/// </summary>
 	void Update()
 	{
-		
+
+		GimickObjectManager.Instance.GetGimickObjectType<Radio>();
+		objects = GimickObjectManager.Instance.GetGimickObject<Radio>();
+
 	}
 }

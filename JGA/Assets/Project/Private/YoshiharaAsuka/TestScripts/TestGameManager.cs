@@ -11,16 +11,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class TestGameManager : SingletonMonoBehaviour<TestGameManager>
 {
-
+	[Header("GimickObjectManager")]
+	[SerializeField]
+	bool GimickObjectManager = false;
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
 	/// </summary>
 	void Start()
 	{
-		
 	}
 
 	/// <summary>
@@ -53,11 +55,8 @@ public class TestGameManager : SingletonMonoBehaviour<TestGameManager>
 		{
 			TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_TESTUI);
 		}
-
-
 #endif
-
-
 	}
+
 }
 

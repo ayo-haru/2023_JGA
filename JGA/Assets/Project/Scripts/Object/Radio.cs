@@ -19,16 +19,17 @@ public class Radio : BaseObj
 	private bool isOncePlaySound = false;                   // 複数回音を鳴らすのを回避するためのフラグ
 	private bool isRadioSound = false;
 
-	private GameObject effect = null;						// ガヤガヤエフェクト
+	private GameObject effect;								// ガヤガヤエフェクト
 	private GameObject effectPoint;                         // エフェクト再生位置
 
+
+
+	/// <summary>
+	/// Startで行いたい処理を記載
+	/// </summary>
 	public override void OnStart()
 	{
-		m_BaseObj = this;
-
-		Init();
-
-		objType = ObjType.HIT_HOLD;
+		Init(ObjType.HIT_HOLD);
 
 		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
 
@@ -37,26 +38,42 @@ public class Radio : BaseObj
 
 	}
 
+	/// <summary>
+	/// Updateで行いたい処理を記載
+	/// </summary>
 	public override void OnUpdate()
 	{
 		if (PauseManager.isPaused) return;              // ポーズ中処理
 
 		PlaySoundChecker();
-
 	}
 
+#if false
 	//　当たり判定処理===============================================
 	protected override void OnCollisionEnter(Collision collision)
 	{
-		// ポーズ処理
+		/* GimickObjectManagerがない場合は処理を行わない */
+		if (gimickObjectManager == null){
+			Debug.LogError("<color=#fd7e00>GimickObjectManagerがありません</color>");
+			return;
+		}
+
+		/* ポーズ中なら処理を行わない */
 		if (PauseManager.isPaused) { return; }
 
-		if (collision.gameObject.tag == "Ground") { PlayDrop(); }		// 地面と当たった時
+		if (collision.gameObject.tag == "Ground") { PlayDrop(); }       // 地面と当たった時
+
 
 	}
 
 	protected override void OnTriggerStay(Collider other)
 	{
+		/* GimickObjectManagerがない場合は処理を行わない */
+		if (gimickObjectManager == null) {
+			Debug.LogError("<color=#fd7e00>GimickObjectManagerがありません</color>");
+			return; 
+		}
+
 		// ポーズ処理
 		if (PauseManager.isPaused) { return; }
 
@@ -80,6 +97,8 @@ public class Radio : BaseObj
 		}
 	}
 	//========================================================
+
+#endif
 
 	/// <summary>
 	/// スイッチのトグル処理

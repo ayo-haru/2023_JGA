@@ -24,6 +24,7 @@ public static class TestMySceneManager
 		"TestAddScene1",
 		"TestAddScene2",
 		"TestUIScene",
+		"TestGimickObjectScene",
 		//"TestManagerScene",
 	};
 
@@ -33,6 +34,7 @@ public static class TestMySceneManager
 		SCENE_TEST01,
 		SCENE_TEST02,
 		SCENE_TESTUI,
+		SCENE_TESTGIMICK,
 	}
 
 	/// <summary>
