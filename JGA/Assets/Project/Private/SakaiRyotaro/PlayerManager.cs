@@ -8,33 +8,48 @@
 // [Date]
 // 2023/06/05	スクリプト作成
 //=============================================================================
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
 	private GameObject _player;
+	public Rigidbody _playerRb;
 
 	[Header("PlayerManager")]
 	[SerializeField, Tooltip("歩行速度")]
 	private float moveSpeed = 7;
+	public float MoveSpeed { get { return moveSpeed; } set { moveSpeed = value; } }
 	[SerializeField, Tooltip("歩行時最高速度")]
 	private float _maxMoveSpeed = 5;
+	public float MaxMoveSpeed { get { return _maxMoveSpeed; } set { _maxMoveSpeed = value; } }
 	[SerializeField, Tooltip("歩行速度に対する疾走速度の倍率")]
 	private float runMagnification = 1.5f;
+	public float RunMagnification { get { return runMagnification; } set { runMagnification = value; } }
 
 	[SerializeField, Tooltip("リスタート座標")]
 	private Transform respawnZone;
 
 	[SerializeField] private List<PlayerAction> playerActions = new List<PlayerAction>();
 
+	private Vector2 _moveInputValue;                         // 移動方向
+	public Vector2 MoveInputValue { get { return _moveInputValue; } set { _moveInputValue = value; } }
+
+
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
 	/// </summary>
 	void Awake()
 	{
-		
+		if (!_player)
+			_player = GameObject.FindGameObjectWithTag("Player");
+		_playerRb = _player.GetComponent<Rigidbody>();
+		playerActions.AddRange(_player.GetComponents<PlayerAction>());
+
+		foreach (var action in playerActions)
+		{
+			action.AwakeState(this);
+		}
 	}
 
 	/// <summary>
@@ -42,9 +57,10 @@ public class PlayerManager : MonoBehaviour
 	/// </summary>
 	void Start()
 	{
-		if (!_player)
-			_player = GameObject.FindGameObjectWithTag("Player");
-		playerActions.AddRange(_player.GetComponents<PlayerAction>());
+		foreach (var action in playerActions)
+		{
+			action.StartState();
+		}
 	}
 
 	/// <summary>

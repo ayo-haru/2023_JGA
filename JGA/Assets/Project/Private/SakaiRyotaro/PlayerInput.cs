@@ -36,8 +36,10 @@ public class PlayerInput : PlayerAction
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
 	/// </summary>
-	void Awake()
+	public override void AwakeState(PlayerManager pm)
 	{
+		base.AwakeState(pm);
+
 		//--- Input Actionイベント登録
 		actionMove.action.performed += Move;
 		actionMove.action.canceled += Move;
@@ -101,9 +103,9 @@ public class PlayerInput : PlayerAction
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
 	/// </summary>
-	void Start()
+	public override void StartState()
 	{
-		
+
 	}
 
 	/// <summary>
@@ -119,12 +121,15 @@ public class PlayerInput : PlayerAction
 	/// </summary>
 	public override void UpdateState()
 	{
-		Debug.Log($"UpdateState:{this.GetType().Name}");
+
 	}
 
 	private void Move(InputAction.CallbackContext context)
 	{
-
+		if (context.phase == InputActionPhase.Canceled)
+			_playerManager.MoveInputValue = Vector2.zero;
+		else
+			_playerManager.MoveInputValue = context.ReadValue<Vector2>();
 	}
 
 	private void Appeal(InputAction.CallbackContext context)
