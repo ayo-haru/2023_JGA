@@ -13,8 +13,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+[System.Serializable]
 public class UIManager : MonoBehaviour
 {
+    private static UIManager instance;
+
+    public static UIManager UIManagerInstance { get { return instance; } }
+
     //---キャンバス
 	GameObject canvasObj;
     Canvas canvas;
@@ -39,8 +44,18 @@ public class UIManager : MonoBehaviour
     GameObject operationUI;
 
     //---時間UI
+    private GameObject timerUIPrefab;
     private GameObject timerUI;
     private TimerSliderUI _TimerUI;
+    [Header("プレイ時間")]
+    [Range(1, 10)] public int playMinutes;
+    [Header("ロス時間")]
+    [Tooltip("実プレイ時間の何％分減らしたいか指定してください")]
+    [Range(1, 100)] 
+    public int lossSecondsParcent = 10;
+    [Header("残り何秒で音を鳴らすか")]
+    [Range(1, 60)]
+    public int soundSeconds = 10;
 
     //---客人数UI
     private GameObject guestNumUI;
