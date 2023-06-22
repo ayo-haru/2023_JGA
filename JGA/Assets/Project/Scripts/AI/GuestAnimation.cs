@@ -63,16 +63,20 @@ public class GuestAnimation : MonoBehaviour
 	/// </summary>
 	void FixedUpdate()
 	{
+        MyFixedUpdate();
+    }
+
+    public void MyFixedUpdate()
+    {
         if (PauseManager.isPaused) return;
         if (!animator || !agent) return;
 
         //立ち上がった時に位置がNavmeshとモデルの位置がずれるため、補正する
         if (!animator.applyRootMotion && animator.transform.localPosition != Vector3.zero)
         {
-            animator.transform.localPosition = Vector3.MoveTowards(animator.transform.localPosition,Vector3.zero,0.01f);
+            animator.transform.localPosition = Vector3.MoveTowards(animator.transform.localPosition, Vector3.zero, 0.01f);
         }
 
-        
         EGuestAnimState nowState = GetAnimationState();
         // アニメーションが切り替わっているか
         if (nowState != state)
@@ -119,12 +123,16 @@ public class GuestAnimation : MonoBehaviour
 
     private void LateUpdate()
     {
+        MyLateUpdate();
+    }
+
+    public void MyLateUpdate()
+    {
         if (PauseManager.isPaused) return;
         if (!neckTransform) return;
         //座っている又は立っている最中は回転しない
         EGuestAnimState state = GetAnimationState();
         if (state == EGuestAnimState.SIT_IDLE || state == EGuestAnimState.STAND_UP) return;
-
 
         if (lookAtTarget)
         {
@@ -136,7 +144,7 @@ public class GuestAnimation : MonoBehaviour
             rot = Quaternion.LookRotation(lookAtTarget.position - transform.position);
             transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * (Mathf.Abs(neckTransform.rotation.y) * 10.0f + 1.0f));
         }
-        else if(beforeLookAtTarget)
+        else if (beforeLookAtTarget)
         {
             //首を元の位置に戻す
             if (fAnimTimer > 0.0f) fAnimTimer -= Time.deltaTime;

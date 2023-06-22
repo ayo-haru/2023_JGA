@@ -34,8 +34,9 @@ public class AIManager : MonoBehaviour
     //現在のステート
     private int currentState = 0;
 
-    //ナビメッシュエージェント
     private NavMeshAgent agent;
+    private GuestAnimation guestAnimation;
+    private EmosionUI ui;
 
     [Space(100)]
     [Header("デバッグ用直置きしたプレハブか？\nチェックいれて下のdataを設定すると\n直置きでも使えるよ")]
@@ -58,6 +59,11 @@ public class AIManager : MonoBehaviour
 	/// </summary>
 	void Start()
 	{
+        //コンポーネント取得
+        agent = GetComponent<NavMeshAgent>();
+        guestAnimation = GetComponent<GuestAnimation>();
+        ui = GetComponentInChildren<EmosionUI>();
+
         //デバッグ用直置きしたとき用のデータセット。
         //自動生成はStageSceneManagerで行っている
         if (isDebug) {
@@ -79,8 +85,7 @@ public class AIManager : MonoBehaviour
             //gameObject.name = data.name;
         }
 
-        //エラーチェック
-        #region
+        #region エラーチェック
         if (nodeList.Length <= 0) Debug.LogError("ノードが設定されていません");
         for (int i = 0; i < nodeList.Length - 1; ++i)
         {
@@ -103,13 +108,7 @@ public class AIManager : MonoBehaviour
         UnityEngine.Random.InitState(DateTime.Now.Millisecond);
 
         //ゲストマネージャーに追加
-        //guestManager.AddGuest(gameObject);
-    }
-
-    private void OnDestroy()
-    {
-        //ゲストマネージャーから削除
-        //guestManager.RemoveGuest(gameObject);
+        //guestManager.AddGuest(this);
     }
 
     /// <summary>
@@ -125,11 +124,27 @@ public class AIManager : MonoBehaviour
             ChangeState(nodeList[currentState].transitions[i].toNode);
             break;
         }
-
-
         //ステートの更新処理
         if (nodeList[currentState].state) nodeList[currentState].state.UpdateState();
     }
+
+    public void MyFixedUpdate()
+    {
+        if (PauseManager.isPaused) return;
+        //ステートの切り替え
+        for (int i = 0; i < nodeList[currentState].transitions.Count; ++i)
+        {
+            if (!nodeList[currentState].transitions[i].toNodeTransition.IsTransition()) continue;
+            ChangeState(nodeList[currentState].transitions[i].toNode);
+            break;
+        }
+        //ステートの更新処理
+        if (nodeList[currentState].state) nodeList[currentState].state.UpdateState();
+
+        //アニメーション更新
+        if (guestAnimation)　guestAnimation.MyFixedUpdate();
+    }
+
 #if false
     /// <summary>
     /// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
@@ -139,6 +154,13 @@ public class AIManager : MonoBehaviour
 
     }
 #endif
+    public void MyLateUpdate()
+    {
+        //アニメーション
+        if(guestAnimation)guestAnimation.MyLateUpdate();
+        //UI
+        if(ui)ui.MyLateUpdate();
+    }
     /// <summary>
     /// ステートの切り替え
     /// </summary>
@@ -170,8 +192,7 @@ public class AIManager : MonoBehaviour
     {
         for (int i = 0; i < nodeList.Length; ++i)
         {
-            if (nState != nodeList[i].stateNum) continue;
-            return i;
+            if (nState == nodeList[i].stateNum) return i;
         }
 
         Debug.LogError("存在しないノードです");
@@ -193,14 +214,12 @@ public class AIManager : MonoBehaviour
 
     private void Pause()
     {
-        if (!agent) agent = GetComponent<NavMeshAgent>();
         if (agent) agent.isStopped = true;
         
     }
 
     private void Resumed()
     {
-        if (!agent) agent = GetComponent<NavMeshAgent>();
         if (agent) agent.isStopped = false;
     }
 
