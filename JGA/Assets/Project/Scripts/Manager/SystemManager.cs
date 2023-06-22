@@ -37,18 +37,18 @@ public class SystemManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (useSound.Value) {
-            gameObject.AddComponent<SoundManager>();
-        }
-        if (useFade.Value) {
-            //gameObject.AddComponent<FadeManager>();
-        }
-        if (usePause.Value) {
-            gameObject.AddComponent<PauseManager>();
-        }
-        if (useUI.Value) {
-            gameObject.AddComponent<UIManager>();
-        }
+        //if (useSound.Value) {
+        //    gameObject.AddComponent<SoundManager>();
+        //}
+        //if (useFade.Value) {
+        //    //gameObject.AddComponent<FadeManager>();
+        //}
+        //if (usePause.Value) {
+        //    gameObject.AddComponent<PauseManager>();
+        //}
+        //if (useUI.Value) {
+        //    gameObject.AddComponent<UIManager>();
+        //}
     }
 
     // Update is called once per frame
