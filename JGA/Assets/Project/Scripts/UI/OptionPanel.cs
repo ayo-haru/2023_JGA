@@ -265,6 +265,7 @@ public class OptionPanel : MonoBehaviour
 
     public void ControllerNoneSelect()
     {
+        if (!EventSystem.current) return;
         EventSystem.current.SetSelectedGameObject(null);
     }
 
