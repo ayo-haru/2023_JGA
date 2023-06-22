@@ -17,7 +17,7 @@ using System.Linq;
 public class GuestManager : MonoBehaviour
 {
     //客一覧
-    private List<GameObject> guestList = new List<GameObject>();
+    private List<AIManager> guestList = new List<AIManager>();
     //客のプレハブ
     private List<GameObject> guestPrefab = new List<GameObject>();
     private string[] guestPrefabName = { "Guest001.prefab" , "Guest002.prefab" , "Guest003.prefab" ,};
@@ -38,15 +38,15 @@ public class GuestManager : MonoBehaviour
     private GameObject guestParent;
 
     [SerializeField] private int guestRootMax = 3;
-
-	/// <summary>
-	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
-	/// </summary>
-	void Awake()
+#if false
+    /// <summary>
+    /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
+    /// </summary>
+    void Awake()
 	{
 		
 	}
-
+#endif
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
 	/// </summary>
@@ -72,7 +72,7 @@ public class GuestManager : MonoBehaviour
     {
         for(int i = 0;i < guestList.Count; ++i)
         {
-            if(guestList[i])guestList[i].SetActive(true);
+            if(guestList[i])guestList[i].gameObject.SetActive(true);
         }
     }
 
@@ -80,7 +80,7 @@ public class GuestManager : MonoBehaviour
     {
         for (int i = 0; i < guestList.Count; ++i)
         {
-            if (guestList[i]) guestList[i].SetActive(false);
+            if (guestList[i]) guestList[i].gameObject.SetActive(false);
         }
     }
 
@@ -89,32 +89,48 @@ public class GuestManager : MonoBehaviour
     /// </summary>
     void FixedUpdate()
 	{
-
+        for(int i = 0; i < guestList.Count; ++i)
+        {
+            if (guestList[i])
+            {
+                guestList[i].MyFixedUpdate();
+            }else{
+                guestList.RemoveAt(i);
+                --i;
+            }
+        }
 	}
-
-	/// <summary>
-	/// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
-	/// </summary>
-	void Update()
+#if false
+    /// <summary>
+    /// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
+    /// </summary>
+    void Update()
 	{
-		
+
 	}
+#endif
+    private void LateUpdate()
+    {
+        for(int i = 0; i < guestList.Count; ++i)
+        {
+            if (guestList[i])
+            {
+                guestList[i].MyLateUpdate();
+            }else{
+                guestList.RemoveAt(i);
+                --i;
+            }
+        }
+    }
     /// <summary>
     /// 客の追加
     /// </summary>
     /// <param name="guest"></param>
-    public void AddGuest(GameObject guest)
+    public void AddGuest(AIManager guest)
     {
         guestList.Add(guest);
     }
-    /// <summary>
-    /// 客の削除
-    /// </summary>
-    /// <param name="guest"></param>
-    public void RemoveGuest(GameObject guest)
-    {
-        guestList.Remove(guest);
-    }
+
     /// <summary>
     /// 固定客生成
     /// </summary>

@@ -60,6 +60,11 @@ public class EmosionUI : MonoBehaviour
 
     private void LateUpdate()
     {
+        MyLateUpdate();
+    }
+
+    public void MyLateUpdate()
+    {
         if (!effect) return;
         effect.transform.position = gameObject.transform.position;
     }
