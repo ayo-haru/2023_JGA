@@ -19,6 +19,11 @@ public class ButtonWrite : MonoBehaviour
     private Material myMaterial;
     [SerializeField] private float threshold = 0.0f;
     [SerializeField] private Color pink = new Color(0.8980392f, 0.6745098f, 0.8039216f, 1f);
+    private Animator animator;
+    [SerializeField,Range(0.5f,2.0f)] float writeSpeed = 1.0f;
+
+    [SerializeField] private bool play = true;
+
 #if false
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -47,7 +52,11 @@ public class ButtonWrite : MonoBehaviour
             sr.material = myMaterial;
             myMaterial.SetTexture("_MainTex", sr.sprite.texture);
         }
-        
+        //アニメーション設定
+        if(TryGetComponent(out animator))
+        {
+            animator.SetFloat("speed", play ? writeSpeed : 0.0f);
+        }
 	}
 
     private void OnDestroy()
@@ -74,6 +83,7 @@ public class ButtonWrite : MonoBehaviour
 	{
         if (!myMaterial) return;
         myMaterial.SetFloat("_Threshold", threshold);
+        animator.SetFloat("speed", play ? writeSpeed : 0.0f);
     }
 
     public void WhiteToPink()
@@ -88,5 +98,11 @@ public class ButtonWrite : MonoBehaviour
         if (!myMaterial) return;
         myMaterial.SetColor("_ChangeColor", new Color(1, 1, 1, 1));
         myMaterial.SetColor("_BaseColor", new Color(1, 1, 1, 0));
+    }
+
+    public void StartWriteAnimation()
+    {
+        if (!animator) return;
+        animator.SetFloat("speed",writeSpeed);
     }
 }
