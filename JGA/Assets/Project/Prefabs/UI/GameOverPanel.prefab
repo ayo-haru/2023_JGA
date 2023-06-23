@@ -272,6 +272,8 @@ MonoBehaviour:
   mat: {fileID: 2100000, guid: 05e78cd3c2b777d47b49080e1a5fdd10, type: 2}
   threshold: 0
   pink: {r: 0.8980392, g: 0.6745098, b: 0.8039216, a: 1}
+  writeSpeed: 1.5
+  play: 0
 --- !u!1 &9201831648688626911
 GameObject:
   m_ObjectHideFlags: 0
@@ -385,6 +387,8 @@ MonoBehaviour:
   mat: {fileID: 2100000, guid: 05e78cd3c2b777d47b49080e1a5fdd10, type: 2}
   threshold: 0
   pink: {r: 0.8980392, g: 0.6745098, b: 0.8039216, a: 1}
+  writeSpeed: 1
+  play: 1
 --- !u!1 &9201831649484211092
 GameObject:
   m_ObjectHideFlags: 0
@@ -581,6 +585,8 @@ MonoBehaviour:
   mat: {fileID: 2100000, guid: 05e78cd3c2b777d47b49080e1a5fdd10, type: 2}
   threshold: 0
   pink: {r: 0.8980392, g: 0.6745098, b: 0.8039216, a: 1}
+  writeSpeed: 1.5
+  play: 0
 --- !u!95 &5982296101101618492
 Animator:
   serializedVersion: 5

@@ -319,7 +319,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f88cf5ec36cc70459b512c631d087e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Clear: {fileID: 8049274094703982548}
   nextDayButton: {fileID: 8049274094457841820}
   backToTitleButton: {fileID: 8049274094711210143}
   actionMove: {fileID: 3278397620106996205, guid: e7885aee0a6118d40af8785b5a7003f6,
@@ -437,6 +436,8 @@ MonoBehaviour:
   mat: {fileID: 2100000, guid: 05e78cd3c2b777d47b49080e1a5fdd10, type: 2}
   threshold: 0
   pink: {r: 0.8980392, g: 0.6745098, b: 0.8039216, a: 1}
+  writeSpeed: 2
+  play: 1
 --- !u!1001 &1349436452259247577
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -444,6 +445,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7297116005839073618}
     m_Modifications:
+    - target: {fileID: 7465447733758658279, guid: ea44ed62464924140a741dba6ca3b196,
+        type: 3}
+      propertyPath: writeSpeed
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7465447733758658279, guid: ea44ed62464924140a741dba6ca3b196,
+        type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9011400943214015814, guid: ea44ed62464924140a741dba6ca3b196,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
@@ -579,6 +590,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: BackToTitleButton
       objectReference: {fileID: 0}
+    - target: {fileID: 9011400943214015867, guid: ea44ed62464924140a741dba6ca3b196,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea44ed62464924140a741dba6ca3b196, type: 3}
 --- !u!114 &8049274094711210143 stripped
@@ -610,6 +626,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: NextDayButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 3702203017856520312, guid: 2e3f0a442ce0f934484fa0cbc007fecd,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3702203017856520313, guid: 2e3f0a442ce0f934484fa0cbc007fecd,
         type: 3}
@@ -741,6 +762,16 @@ PrefabInstance:
       propertyPath: m_Delegates.Array.data[1].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 8049274093542162500}
+    - target: {fileID: 7580679091301631222, guid: 2e3f0a442ce0f934484fa0cbc007fecd,
+        type: 3}
+      propertyPath: writeSpeed
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7580679091301631222, guid: 2e3f0a442ce0f934484fa0cbc007fecd,
+        type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2e3f0a442ce0f934484fa0cbc007fecd, type: 3}
 --- !u!224 &8049274094457841816 stripped
