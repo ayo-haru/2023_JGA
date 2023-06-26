@@ -20,57 +20,42 @@ public class MegaPhone : BaseObj
 
     private bool flyFlg;
 
-    protected override void Awake()
+    public override void OnStart()
     {
-        Init();
-        objType = ObjType.HIT_HOLD;
-    }
+        Init(ObjType.HIT_HOLD);
 
-    private void Start()
-    {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-    }
-
-
-    /// <summary>
-    /// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
-    /// </summary>
-    void FixedUpdate()
-    {
 
     }
 
-    /// <summary>
-    /// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
-    /// </summary>
-    void Update()
+    public override void OnUpdate()
     {
-        // ポーズ処理
-        if (PauseManager.isPaused) { return; }
+        if (PauseManager.isPaused) return;              // ポーズ中処理
 
-        //SEが鳴ってるときになっているフラグを返す
-        PlaySoundChecker(1);
+        PlaySoundChecker();
 
-        if(player.IsMegaphone && fallFlg)
+        if (player.IsMegaphone && fallFlg)
         {
             //メガホンでの鳴き声を鳴らす
             SoundManager.Play(audioSourcesList[1], SoundManager.ESE.PENGUIN_MEGAVOICE);
         }
-
     }
-    protected override void OnCollisionEnter(Collision collison)
+
+    protected override void OnCollisionEnter(Collision collision)
     {
+        base.OnCollisionEnter(collision);
+
         // ポーズ処理
         if (PauseManager.isPaused) { return; }
 
         //プレイヤーと当たっていてプレイヤーが持っていなかったら
-        if (collison.gameObject.tag == "Player" && !fallFlg)
+        if (collision.gameObject.tag == "Player" && !fallFlg)
         {
             PlayHit();
         }
 
         //地面に当たったときにプレイヤーが持っている状態から落としたら
-        if (collison.gameObject.tag == "Ground" )
+        if (collision.gameObject.tag == "Ground" )
         {
             if (fallFlg)
             {
@@ -87,6 +72,8 @@ public class MegaPhone : BaseObj
 
     protected override void OnTriggerStay(Collider other)
     {
+        base.OnTriggerStay(other);
+
         // ポーズ処理
         if (PauseManager.isPaused) { return; }
 

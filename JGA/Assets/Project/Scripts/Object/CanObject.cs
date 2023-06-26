@@ -22,47 +22,36 @@ public class CanObject : BaseObj , IObjectSound
 	private bool fallFlg;
 	private bool flyFlg;
 
-	private void Start()
+    public override void OnStart()
 	{
-		Init();
-		objType = ObjType.HIT_HOLD;
+		Init(ObjType.HIT_HOLD);
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+    }
 
-		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-	}
+    public override void OnUpdate()
+    {
+        if (PauseManager.isPaused) return;              // ポーズ中処理
 
-	private void OnWillRenderObject()
+        PlaySoundChecker();
+    }
+
+    private void OnWillRenderObject()
 	{
 		Debug.Log("映った");
 	}
-	/// <summary>
-	/// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
-	/// </summary>
-	void FixedUpdate()
+	
+	protected override void OnCollisionEnter(Collision collision)
 	{
-		
-	}
+        base.OnCollisionEnter(collision);
+        // ポーズ処理
+        if (PauseManager.isPaused) { return; }
 
-	/// <summary>
-	/// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
-	/// </summary>
-	void Update()
-	{
-		if (PauseManager.isPaused) return;
-
-		PlaySoundChecker(1);
-	}
-	protected override void OnCollisionEnter(Collision collison)
-	{
-
-		// ポーズ処理
-		if (PauseManager.isPaused) { return; }
-
-		if (collison.gameObject.tag == "Player"  && !fallFlg)
+		if (collision.gameObject.tag == "Player"  && !fallFlg)
 		{
 			SoundManager.Play(audioSourcesList[1], SoundManager.ESE.CAN_ROLL);
 		}
 		
-		if (collison.gameObject.tag == "Ground")
+		if (collision.gameObject.tag == "Ground")
 		{
 			
 			if (fallFlg)
@@ -80,8 +69,9 @@ public class CanObject : BaseObj , IObjectSound
 
 	protected override void OnTriggerStay(Collider other)
 	{
-		// ポーズ処理
-		if (PauseManager.isPaused) { return; }
+        base.OnTriggerStay(other);
+        // ポーズ処理
+        if (PauseManager.isPaused) { return; }
 
 		if (player.IsHit && other.tag == "Player")
 		{
