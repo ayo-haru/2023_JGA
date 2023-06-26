@@ -46,18 +46,10 @@ public class AnimalBase : MonoBehaviour
 
     protected bool turnFlg;                   //ターン用フラグ
 
-    protected virtual void Init()
+    protected virtual void Awake()
 	{
 
-	}
-
-    /// <summary>
-    /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
-    /// </summary>
-    void Awake()
-	{
-		
-	}
+    }
 
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
@@ -82,4 +74,6 @@ public class AnimalBase : MonoBehaviour
 	{
 		
 	}
+
+
 }
