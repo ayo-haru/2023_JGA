@@ -26,13 +26,13 @@ public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBe
 	{
 		get 
 		{
-			if (!instance)
+			if (instance == null)
 			{
 				//Type t = typeof(T);
 
 				//instance = (T)FindObjectOfType(t);
 				instance = FindObjectOfType<T>();
-				if (!instance)
+				if (instance == null)
 				{
 					Debug.LogError(typeof(T) + "is missing int the scene.");
 				}

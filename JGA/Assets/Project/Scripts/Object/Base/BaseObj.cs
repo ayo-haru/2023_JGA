@@ -10,6 +10,7 @@
 // 2023/04/04   OutLineスクリプトを追加するようにattributeつけました(吉原)
 // 2023/04/18   ポーズ処理変更
 // 2023/05/12   改良しようとしている。
+// 2023/06/16   距離のステートを削除(使わなそう),初期値記載
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -33,39 +34,30 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 		RETURN		= 6,    // 元に戻す(飼育員)
 	}
 
-	//-----オブジェクトとの距離別のステート -----
-	public enum ObjDistanceType
-	{
-		NONE	= 0,		// 測定不能
-		NEAR,				// 近い(真横)
-		MID,				// 普通(カメラ範囲に収まる範囲)
-		FAR,				// 遠い(カメラに見えない)
-	}
-
-
 	//---共通変数宣言---
-	protected Rigidbody rb;                     // リジッドボディ使用
+	protected GimickObjectManager gimickObjectManager = null;	// ギミックオブジェクトマネージャー
+	protected Rigidbody rb = null;								// リジッドボディ使用
 
-	//protected AudioSource audioSource;		// オーディオソース
+	//protected AudioSource audioSource;						// オーディオソース
 	// オーディオソースをリストで格納
 	protected List<AudioSource> audioSourcesList = new List<AudioSource>();
 
-	protected Player player;					// プレイヤー取得
-	[SerializeField] public ObjType objType;						// オブジェクトのタイプ
-	public ObjDistanceType　objDistanceType;		// 距離のタイプ
-	protected bool isPlaySound;					// 音が鳴っているか
-	protected float distance;					// オブジェクトとの距離		
-	//-------------
+	protected Player player = null;								// プレイヤー取得
+	[SerializeField] public ObjType objType;					// オブジェクトのタイプ
+	protected bool isPlaySound;									// 音が鳴っているか
+	//----------------
 
-	// 地面との接触判定に使用する変数
-
-	//
 
 	//--- ポーズ用変数 ---
 	protected Vector3 pauseVelocity = Vector3.zero;
 	protected Vector3 pauseAngleVelocity = Vector3.zero;
 	//-----------------
 
+
+
+	/// <summary>
+	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
+	/// </summary>
 	protected virtual void Awake()
 	{
 		/*
@@ -76,26 +68,145 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 
 	}
 
+	/// <summary>
+	/// オブジェクトが有効化された直後に呼び出される
+	/// </summary>
+	protected virtual void OnEnable()
+	{
+		// GimickObjectManagerのコンポーネントを検索
+		gimickObjectManager = FindObjectOfType<GimickObjectManager>();
 
-	protected virtual void OnCollisionEnter(Collision collision) { }
-	protected virtual void OnCollisionStay(Collision collision) { }
-	protected virtual void OnCollisionExit(Collision collision) { }
+		GimickObjectManager.Instance.AddGimickObjectsList(this);
 
-	protected virtual void OnTriggerEnter(Collider other) { }
-	protected virtual void OnTriggerStay(Collider other) { }
-	protected virtual void OnTriggerExit(Collider other) { }
+	}
+
+	/// <summary>
+	/// Behaviourが無効になった直後に呼び出される
+	/// </summary>
+	protected virtual void OnDisable()
+	{
+		Uninit();
+	}
+
+	protected virtual void OnDestroy() {}
 
 
+	protected virtual void OnCollisionEnter(Collision collision) 
+	{
+		/* GimickObjectManagerがない場合は処理を行わない */
+		if (gimickObjectManager == null){
+			Debug.LogError("<color=#fd7e00>GimickObjectManagerがありません</color>");
+			return;
+		}
 
+		/* ポーズフラグ中は処理を行わない。 */
+		if(PauseManager.isPaused) return;
+	}
+
+	protected virtual void OnCollisionStay(Collision collision) 
+	{
+		/* GimickObjectManagerがない場合は処理を行わない */
+		if (gimickObjectManager == null)
+		{
+			Debug.LogError("<color=#fd7e00>GimickObjectManagerがありません</color>");
+			return;
+		}
+
+		/* ポーズフラグ中は処理を行わない。 */
+		if (PauseManager.isPaused) return;
+
+	}
+
+	protected virtual void OnCollisionExit(Collision collision)
+	{
+		/* GimickObjectManagerがない場合は処理を行わない */
+		if (gimickObjectManager == null)
+		{
+			Debug.LogError("<color=#fd7e00>GimickObjectManagerがありません</color>");
+			return;
+		}
+
+		/* ポーズフラグ中は処理を行わない。 */
+		if (PauseManager.isPaused) return;
+
+	}
+
+	protected virtual void OnTriggerEnter(Collider other) 
+	{
+		/* GimickObjectManagerがない場合は処理を行わない */
+		if (gimickObjectManager == null)
+		{
+			Debug.LogError("<color=#fd7e00>GimickObjectManagerがありません</color>");
+			return;
+		}
+
+		/* ポーズフラグ中は処理を行わない。 */
+		if (PauseManager.isPaused) return;
+
+	}
+
+	protected virtual void OnTriggerStay(Collider other) 
+	{
+		/* GimickObjectManagerがない場合は処理を行わない */
+		if (gimickObjectManager == null)
+		{
+			Debug.LogError("<color=#fd7e00>GimickObjectManagerがありません</color>");
+			return;
+		}
+
+		/* ポーズフラグ中は処理を行わない。 */
+		if (PauseManager.isPaused) return;
+
+	}
+
+	protected virtual void OnTriggerExit(Collider other) 
+	{
+		/* GimickObjectManagerがない場合は処理を行わない */
+		if (gimickObjectManager == null)
+		{
+			Debug.LogError("<color=#fd7e00>GimickObjectManagerがありません</color>");
+			return;
+		}
+
+		/* ポーズフラグ中は処理を行わない。 */
+		if (PauseManager.isPaused) return;
+
+	}
+
+
+	/// <summary>
+	/// 初期化処理を行う
+	/// </summary>
 	protected void Init()
 	{
 		rb  = GetComponent<Rigidbody>();
 		GetComponents<AudioSource>(audioSourcesList);
 		objType = ObjType.NONE;
 		isPlaySound = false;
-		distance = -1;
+		
+	}
+
+	/// <summary>
+	/// オブジェクトのタイプを変更する初期化関数
+	/// </summary>
+	/// <param name="objType">オブジェクトのステート</param>
+	protected void Init(ObjType Type)
+	{
+		rb = GetComponent<Rigidbody>();
+		GetComponents<AudioSource>(audioSourcesList);
+		objType = Type;
+		isPlaySound = false;
 
 	}
+
+	
+	/// <summary>
+	/// 終了処理を行う(ここではオブジェクトが破壊された時等に行いたい処理を記載)
+	/// </summary>
+	protected void Uninit() { }
+
+	public virtual void OnStart() { }
+	public virtual void OnUpdate() { }
 
 	/// <summary>
 	/// 引数無しの場合はリストの一番最初にあるオーディオソースを判定
@@ -124,39 +235,6 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 	public bool GetisPlaySound() { return isPlaySound; }
 
 
-	/// <summary>
-	/// 自分とオブジェクトの距離を計算し、返す処理
-	/// </summary>
-	protected int CalculateDistance(GameObject gameObject)
-	{
-		// オブジェクトが取得できない場合は負の値(測定不能とする)を返す。
-		if (gameObject == null) return -1;
-
-
-		// 自分と相手がどれだけ離れているか = 指定のオブジェクト(引数に代入) - 自分のポジション
-		distance = Vector3.Distance(gameObject.transform.position, this.gameObject.transform.position);
-
-		// 小数点以下はいらないので、無理やりキャストしちゃいます。
-		return (int)distance;
-	}
-
-	/// <summary>
-	/// distanceの値に応じて距離タイプの列挙を定義
-	/// </summary>
-	/// <returns></returns>
-	protected ObjDistanceType GetDistanceType()
-	{
-		/*
-		 * 数字は適当です
-		 */
-		if (distance < 0) objDistanceType = ObjDistanceType.NONE;
-		if (50 < distance) objDistanceType = ObjDistanceType.NEAR;
-		if (150 < distance) objDistanceType = ObjDistanceType.FAR;
-
-
-		return objDistanceType;
-
-	}
 	/// <summary>
 	/// ポーズの処理
 	/// </summary>

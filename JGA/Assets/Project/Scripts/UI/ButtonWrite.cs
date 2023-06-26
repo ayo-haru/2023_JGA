@@ -59,6 +59,12 @@ public class ButtonWrite : MonoBehaviour
         }
 	}
 
+    private void OnDisable()
+    {
+        if (!myMaterial) return;
+        myMaterial.SetColor("_ChangeColor", Color.white);
+        myMaterial.SetColor("_BaseColor", Color.white);
+    }
     private void OnDestroy()
     {
         if (myMaterial)
@@ -90,19 +96,18 @@ public class ButtonWrite : MonoBehaviour
     {
         if (!myMaterial) return;
         myMaterial.SetColor("_ChangeColor", pink);
-        myMaterial.SetColor("_BaseColor", new Color(1, 1, 1, 1));
+        myMaterial.SetColor("_BaseColor", Color.white);
     }
 
     public void ClearToWhite()
     {
         if (!myMaterial) return;
-        myMaterial.SetColor("_ChangeColor", new Color(1, 1, 1, 1));
-        myMaterial.SetColor("_BaseColor", new Color(1, 1, 1, 0));
+        myMaterial.SetColor("_ChangeColor", Color.white);
+        myMaterial.SetColor("_BaseColor", Color.clear);
     }
 
     public void StartWriteAnimation()
     {
-        if (!animator) return;
-        animator.SetFloat("speed",writeSpeed);
+        play = true;
     }
 }

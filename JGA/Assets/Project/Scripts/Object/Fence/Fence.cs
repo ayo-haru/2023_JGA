@@ -8,6 +8,7 @@
 // [Date]
 // 2023/04/03	スクリプト作成
 // 2023/04/18	ポーズ解除変更
+// 2023/06/26	OnEnabaleのオーバライド追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -16,37 +17,47 @@ using UnityEngine;
 public class Fence : BaseObj
 {
 
-
+	//protected override void OnEnable()
+	//{
+	//	/* Baseの処理にListに入れる処理があるので、このオブジェクトでは
+	//	  リストに入れる処理をしたくないため、ここでオーバライドする。(吉原)
+	//	*/
+	//}
 
 	/// <summary>
-	/// 最初のフレーム更新の前に呼び出される
+	/// Startで行いたい処理を記載
 	/// </summary>
-	void Start()
+	public override void OnStart()
 	{
 		Init();
 
-		rb.isKinematic = true;		// 柵ではrigidbodyを使用しない。
-
+		rb.isKinematic = true;      // 柵ではrigidbodyを使用しない。
 	}
 
+
+	/// <summary>
+	/// Updateで行いたい処理を記載
+	/// </summary>
+	public override void OnUpdate()
+	{
+		PlaySoundChecker();
+	}
+
+	// 当たり判定の処理==========================================================
 	protected override void OnCollisionEnter(Collision collision)
 	{
-		// ポーズ処理
-		if (PauseManager.isPaused) { return; }
+		/* 
+		 * BaseObjの方にエラーチェックの処理を記載しているため、必ずbaseの処理を最初に記載すること!(吉原)
+		*/
+		base.OnCollisionEnter(collision);
 
 		if (collision.gameObject){
 			PlayHit(audioSourcesList[0],SoundManager.ESE.STEALFENCE);
 		}
 	}
+	//=======================================================================
 
 
-	/// <summary>
-	/// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
-	/// </summary>
-	void Update()
-	{
-		PlaySoundChecker();
-	}
 
 	protected override void Pause() {
 		base.Pause();

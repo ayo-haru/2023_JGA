@@ -7,6 +7,7 @@
 // 
 // [Date]
 // 2023/04/03	スクリプト作成
+// 2023/06/26	GimickObjectManagerで管理するように変更
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -19,51 +20,49 @@ public class Radio : BaseObj
 	private bool isOncePlaySound = false;                   // 複数回音を鳴らすのを回避するためのフラグ
 	private bool isRadioSound = false;
 
-	private GameObject effect = null;						// ガヤガヤエフェクト
-	private GameObject effectPoint;							// エフェクト再生位置
+	private GameObject effect;								// ガヤガヤエフェクト
+	private GameObject effectPoint;                         // エフェクト再生位置
+
+
 
 	/// <summary>
-	/// 最初のフレーム更新の前に呼び出される
+	/// Startで行いたい処理を記載
 	/// </summary>
-	void Start()
+	public override void OnStart()
 	{
-		Init();
-
-		objType = ObjType.HIT_HOLD;
+		Init(ObjType.HIT_HOLD);
 
 		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
 
 		// 子にあるエフェクト再生オブジェクトを検索
 		effectPoint = GameObject.Find("EffectPoint");
-
 	}
 
 	/// <summary>
-	/// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
+	/// Updateで行いたい処理を記載
 	/// </summary>
-	void Update()
+	public override void OnUpdate()
 	{
 		if (PauseManager.isPaused) return;              // ポーズ中処理
 
 		PlaySoundChecker();
-		
 	}
-	
 
+
+#if true
 	//　当たり判定処理===============================================
 	protected override void OnCollisionEnter(Collision collision)
 	{
-		// ポーズ処理
-		if (PauseManager.isPaused) { return; }
+		base.OnCollisionEnter(collision);
 
-		if (collision.gameObject.tag == "Ground") { PlayDrop(); }		// 地面と当たった時
+		if (collision.gameObject.tag == "Ground") { PlayDrop(); }       // 地面と当たった時
+
 
 	}
 
 	protected override void OnTriggerStay(Collider other)
 	{
-		// ポーズ処理
-		if (PauseManager.isPaused) { return; }
+		base.OnTriggerStay(other);
 
 		// ペンギンをはたいたときの処理
 		if (other.gameObject.tag == "Player" && player.IsHit){
@@ -85,6 +84,8 @@ public class Radio : BaseObj
 		}
 	}
 	//========================================================
+
+#endif
 
 	/// <summary>
 	/// スイッチのトグル処理

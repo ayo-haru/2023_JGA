@@ -54,6 +54,7 @@ public class TitleScenManager : BaseSceneManager {
 
     private AudioSource audioSource;
     private bool bFlag = false;
+    private bool bAnimFlag = false;
 
     private void Awake() {
         /*
@@ -135,6 +136,12 @@ public class TitleScenManager : BaseSceneManager {
     /// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
     /// </summary>
     void Update() {
+        //フェードが終わったらアニメーション開始
+        if (!bAnimFlag && FadeManager.fadeMode != FadeManager.eFade.FadeOut)
+        {
+            StartUIAnimation();
+        }
+
         bool beforeFlag = bFlag;
         bFlag = optionObject.activeSelf;
         //オプション画面が開かれているときは処理しない
@@ -153,6 +160,21 @@ public class TitleScenManager : BaseSceneManager {
         {
             ChangeInput();
         }
+    }
+
+    public void StartUIAnimation()
+    {
+        bAnimFlag = true;
+
+        ButtonWrite buttonWrite;
+        if (startButton.TryGetComponent(out buttonWrite)) buttonWrite.StartWriteAnimation();
+        if (continueButton.TryGetComponent(out buttonWrite)) buttonWrite.StartWriteAnimation();
+        if (optionButton.TryGetComponent(out buttonWrite)) buttonWrite.StartWriteAnimation();
+        if (exitButton.TryGetComponent(out buttonWrite)) buttonWrite.StartWriteAnimation();
+
+        if (!continueHideImage) return;
+        if (!continueHideImage.enabled) return;
+        if (continueHideImage.TryGetComponent(out buttonWrite)) buttonWrite.StartWriteAnimation();
     }
 
     #region タイトル画面のボタン
