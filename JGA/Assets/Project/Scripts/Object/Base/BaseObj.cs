@@ -203,10 +203,7 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 	/// <summary>
 	/// 終了処理を行う(ここではオブジェクトが破壊された時等に行いたい処理を記載)
 	/// </summary>
-	protected void Uninit()
-	{
-		GimickObjectManager.Instance.RemoveGimickObjectsList(this);
-	}
+	protected void Uninit() { }
 
 	public virtual void OnStart() { }
 	public virtual void OnUpdate() { }

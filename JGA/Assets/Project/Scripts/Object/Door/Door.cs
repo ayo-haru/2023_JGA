@@ -45,7 +45,6 @@ public class Door : BaseObj
 	}
 
 
-
 	protected override void OnCollisionEnter(Collision collision)
 	{
 		base.OnCollisionEnter(collision);
