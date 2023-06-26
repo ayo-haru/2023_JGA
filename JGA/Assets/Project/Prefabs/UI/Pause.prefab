@@ -296,6 +296,8 @@ MonoBehaviour:
   mat: {fileID: 2100000, guid: 05e78cd3c2b777d47b49080e1a5fdd10, type: 2}
   threshold: 0
   pink: {r: 0.8980392, g: 0.6745098, b: 0.8039216, a: 1}
+  writeSpeed: 1
+  play: 1
 --- !u!95 &7790165565876029900
 Animator:
   serializedVersion: 5
@@ -306,7 +308,7 @@ Animator:
   m_GameObject: {fileID: 615984022396295002}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 4d27dbeb55656d94dbacb793fe9f7d1e, type: 2}
+  m_Controller: {fileID: 9100000, guid: 2951d0f9510255a4a92bbbd96239bbc4, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -736,7 +738,7 @@ Animator:
   m_GameObject: {fileID: 3397197936146242311}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 4d27dbeb55656d94dbacb793fe9f7d1e, type: 2}
+  m_Controller: {fileID: 9100000, guid: 2951d0f9510255a4a92bbbd96239bbc4, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -761,6 +763,8 @@ MonoBehaviour:
   mat: {fileID: 2100000, guid: 05e78cd3c2b777d47b49080e1a5fdd10, type: 2}
   threshold: 0
   pink: {r: 0.8980392, g: 0.6745098, b: 0.8039216, a: 1}
+  writeSpeed: 1
+  play: 1
 --- !u!1 &7529195184847130041
 GameObject:
   m_ObjectHideFlags: 0
@@ -957,6 +961,8 @@ MonoBehaviour:
   mat: {fileID: 2100000, guid: 05e78cd3c2b777d47b49080e1a5fdd10, type: 2}
   threshold: 0
   pink: {r: 0.8980392, g: 0.6745098, b: 0.8039216, a: 1}
+  writeSpeed: 1
+  play: 1
 --- !u!95 &2427595187466699049
 Animator:
   serializedVersion: 5
@@ -967,7 +973,7 @@ Animator:
   m_GameObject: {fileID: 7529195184847130041}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 4d27dbeb55656d94dbacb793fe9f7d1e, type: 2}
+  m_Controller: {fileID: 9100000, guid: 2951d0f9510255a4a92bbbd96239bbc4, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
