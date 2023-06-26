@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 264c3b9323e7c9e43b29ba9c691d5649, type: 3}
+  m_Name: ManagerObjData
+  m_EditorClassIdentifier: 
+  list:
+  - displayName: CameraManager
+    ID: 0
+    prefab: {fileID: 3137904715027496426, guid: 662b9a94dca28dd48896e92937bd1663,
+      type: 3}
+  - displayName: EffectManager
+    ID: 1
+    prefab: {fileID: 849449908598888639, guid: be0324aacd9ddaa4fbdfeb7e02e9c8f8, type: 3}
+  - displayName: PauseManager
+    ID: 2
+    prefab: {fileID: 1717990910744684887, guid: 29572029f16b5d842b256bc395d3b876,
+      type: 3}
+  - displayName: SceneManager
+    ID: 3
+    prefab: {fileID: 2155479152351787080, guid: 25ed7de7c7039b841ab20e2b1f5648e5,
+      type: 3}
+  - displayName: SoundManager
+    ID: 4
+    prefab: {fileID: 3071791438835046813, guid: b86b6cff6f12ec247aaed35488929b46,
+      type: 3}
+  - displayName: StageSceneManager
+    ID: 5
+    prefab: {fileID: 6348633696836463273, guid: d638d426e9cc2624284238320dd145d2,
+      type: 3}
+  - displayName: TitleSceneManager
+    ID: 6
+    prefab: {fileID: 5730447064661370271, guid: a368f146237d0754da913e9493219054,
+      type: 3}
+  - displayName: TutotrialManager
+    ID: 7
+    prefab: {fileID: 7085664040304305533, guid: dfb584c618b8bcf4eaf30f9249059425,
+      type: 3}
+  - displayName: FadeManager
+    ID: 8
+    prefab: {fileID: 1546919043776897491, guid: e095a337224192a40bb4d6a9996e5888,
+      type: 3}
+  - displayName: UIManager
+    ID: 9
+    prefab: {fileID: 6255948501538626518, guid: 24e7492986124a542acccd7b1c443031,
+      type: 3}

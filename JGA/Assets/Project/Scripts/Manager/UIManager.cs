@@ -10,6 +10,7 @@
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -47,6 +48,7 @@ public class UIManager : MonoBehaviour
     private GameObject timerUIPrefab;
     private GameObject timerUI;
     private TimerSliderUI _TimerUI;
+    [Header("----- 時間UI設定項目 -----")]
     [Header("プレイ時間")]
     [Range(1, 10)] public int playMinutes;
     [Header("ロス時間")]
@@ -60,6 +62,13 @@ public class UIManager : MonoBehaviour
     //---客人数UI
     private GameObject guestNumUI;
     private GuestNumUI _GuestNumUI;
+    [Header("----- 客カウントUI設定項目 -----")]
+    //目標人数
+    [Range(1, 99)] public int clearNum = 10;
+    //アニメーション時間
+    [Range(0, 1)] public float animTime = 0.5f;
+    //拡大率
+    [Range(1, 2)] public float scaleValue = 1.5f;
 
     //---チュートリアル
     private TutorialManager _TutorialManager;

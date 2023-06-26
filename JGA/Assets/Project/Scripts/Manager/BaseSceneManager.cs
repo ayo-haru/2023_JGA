@@ -42,7 +42,7 @@ public class BaseSceneManager : MonoBehaviour
         gameObject.AddComponent<AudioSource>();
         
         // UIのマネージャーを設定する
-        gameObject.AddComponent<UIManager>();
+        //gameObject.AddComponent<UIManager>();
     }
 
 

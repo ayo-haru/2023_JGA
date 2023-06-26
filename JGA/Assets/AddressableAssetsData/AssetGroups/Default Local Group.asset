@@ -73,6 +73,10 @@ MonoBehaviour:
     m_Address: StageObjData
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 12976e2729da7de4186444ae998866e7
+    m_Address: ManagerObjData
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 6490bc5112e0d74469e157e8c2cc9fd5, type: 2}
   m_SchemaSet:
