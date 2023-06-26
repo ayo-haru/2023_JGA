@@ -45,16 +45,6 @@ public class Option : MonoBehaviour
 		ActivePanel = optionPanel;
 	}
 
-	private void OnDisable()
-	{
-
-	}
-
-	private void OnDestroy()
-	{
-		
-	}
-
 	private void FixedUpdate()
 	{
 		if (ActivePanel == optionPanel && rect.localPosition != Vector3.zero)
@@ -67,12 +57,12 @@ public class Option : MonoBehaviour
         }
 			
 	}
-
-	private void Update()
+#if false
+    private void Update()
 	{
 
 	}
-
+#endif
 	public void ChangePanel(GameObject panelObj)
 	{
 		ChangePanel(panelObj.name);
@@ -88,7 +78,7 @@ public class Option : MonoBehaviour
             ActivePanel = keyConfigPanel;
         }
 	}
-	#region SE鳴らす関数
+#region SE鳴らす関数
 	public void SoundSelectSE()
 	{
 		if (!audioSource) return;
@@ -105,5 +95,5 @@ public class Option : MonoBehaviour
 		if (!audioSource) return;
 		SoundManager.Play(audioSource, SoundManager.ESE.SELECT_001);
 	}
-	#endregion
+#endregion
 }
