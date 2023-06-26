@@ -7,6 +7,7 @@
 // 
 // [Date]
 // 2023/04/03	スクリプト作成
+// 2023/06/26	GimickObjectManagerで管理するように変更
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -48,18 +49,11 @@ public class Radio : BaseObj
 	}
 
 
-#if false
+#if true
 	//　当たり判定処理===============================================
 	protected override void OnCollisionEnter(Collision collision)
 	{
-		/* GimickObjectManagerがない場合は処理を行わない */
-		if (gimickObjectManager == null){
-			Debug.LogError("<color=#fd7e00>GimickObjectManagerがありません</color>");
-			return;
-		}
-
-		/* ポーズ中なら処理を行わない */
-		if (PauseManager.isPaused) { return; }
+		base.OnCollisionEnter(collision);
 
 		if (collision.gameObject.tag == "Ground") { PlayDrop(); }       // 地面と当たった時
 
@@ -68,14 +62,7 @@ public class Radio : BaseObj
 
 	protected override void OnTriggerStay(Collider other)
 	{
-		/* GimickObjectManagerがない場合は処理を行わない */
-		if (gimickObjectManager == null) {
-			Debug.LogError("<color=#fd7e00>GimickObjectManagerがありません</color>");
-			return; 
-		}
-
-		// ポーズ処理
-		if (PauseManager.isPaused) { return; }
+		base.OnTriggerStay(other);
 
 		// ペンギンをはたいたときの処理
 		if (other.gameObject.tag == "Player" && player.IsHit){

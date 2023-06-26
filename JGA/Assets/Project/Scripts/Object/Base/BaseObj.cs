@@ -91,13 +91,87 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 	protected virtual void OnDestroy() {}
 
 
-	protected virtual void OnCollisionEnter(Collision collision) { }
-	protected virtual void OnCollisionStay(Collision collision) { }
-	protected virtual void OnCollisionExit(Collision collision) { }
+	protected virtual void OnCollisionEnter(Collision collision) 
+	{
+		/* GimickObjectManagerがない場合は処理を行わない */
+		if (gimickObjectManager == null){
+			Debug.LogError("<color=#fd7e00>GimickObjectManagerがありません</color>");
+			return;
+		}
 
-	protected virtual void OnTriggerEnter(Collider other) { }
-	protected virtual void OnTriggerStay(Collider other) { }
-	protected virtual void OnTriggerExit(Collider other) { }
+		/* ポーズフラグ中は処理を行わない。 */
+		if(PauseManager.isPaused) return;
+	}
+
+	protected virtual void OnCollisionStay(Collision collision) 
+	{
+		/* GimickObjectManagerがない場合は処理を行わない */
+		if (gimickObjectManager == null)
+		{
+			Debug.LogError("<color=#fd7e00>GimickObjectManagerがありません</color>");
+			return;
+		}
+
+		/* ポーズフラグ中は処理を行わない。 */
+		if (PauseManager.isPaused) return;
+
+	}
+
+	protected virtual void OnCollisionExit(Collision collision)
+	{
+		/* GimickObjectManagerがない場合は処理を行わない */
+		if (gimickObjectManager == null)
+		{
+			Debug.LogError("<color=#fd7e00>GimickObjectManagerがありません</color>");
+			return;
+		}
+
+		/* ポーズフラグ中は処理を行わない。 */
+		if (PauseManager.isPaused) return;
+
+	}
+
+	protected virtual void OnTriggerEnter(Collider other) 
+	{
+		/* GimickObjectManagerがない場合は処理を行わない */
+		if (gimickObjectManager == null)
+		{
+			Debug.LogError("<color=#fd7e00>GimickObjectManagerがありません</color>");
+			return;
+		}
+
+		/* ポーズフラグ中は処理を行わない。 */
+		if (PauseManager.isPaused) return;
+
+	}
+
+	protected virtual void OnTriggerStay(Collider other) 
+	{
+		/* GimickObjectManagerがない場合は処理を行わない */
+		if (gimickObjectManager == null)
+		{
+			Debug.LogError("<color=#fd7e00>GimickObjectManagerがありません</color>");
+			return;
+		}
+
+		/* ポーズフラグ中は処理を行わない。 */
+		if (PauseManager.isPaused) return;
+
+	}
+
+	protected virtual void OnTriggerExit(Collider other) 
+	{
+		/* GimickObjectManagerがない場合は処理を行わない */
+		if (gimickObjectManager == null)
+		{
+			Debug.LogError("<color=#fd7e00>GimickObjectManagerがありません</color>");
+			return;
+		}
+
+		/* ポーズフラグ中は処理を行わない。 */
+		if (PauseManager.isPaused) return;
+
+	}
 
 
 	/// <summary>

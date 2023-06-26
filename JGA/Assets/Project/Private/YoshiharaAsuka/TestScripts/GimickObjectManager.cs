@@ -32,7 +32,7 @@ public class GimickObjectManager : SingletonMonoBehaviour<GimickObjectManager>
 	private void OnDestroy()
 	{
 		// このオブジェクトが破壊されたときにシーンを削除
-		TestMySceneManager.SubtractScene(TestMySceneManager.SCENE.SCENE_TESTGIMICK);
+		//TestMySceneManager.SubtractScene(TestMySceneManager.SCENE.SCENE_TESTGIMICK);
 	}
 
 
@@ -41,9 +41,7 @@ public class GimickObjectManager : SingletonMonoBehaviour<GimickObjectManager>
 	/// </summary>
 	private void Start()
 	{
-		Debug.Log(GimickObjectsList.Count);
-
-		TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_TESTGIMICK);
+		//TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_TESTGIMICK);
 
 		if(GimickObjectsList.Count == 0) { return; }
 
@@ -58,8 +56,6 @@ public class GimickObjectManager : SingletonMonoBehaviour<GimickObjectManager>
 	/// </summary>
 	void Update()
 	{
-		Debug.Log(GimickObjectsList.Count);
-
 		if (GimickObjectsList.Count == 0) { return; }
 
 		foreach (BaseObj Gimickobjects in GimickObjectsList)
