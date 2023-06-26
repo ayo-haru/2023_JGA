@@ -1,30 +1,28 @@
 //=============================================================================
-// @File	: [Test.cs]
+// @File	: [TestFade.cs]
 // @Brief	: 
 // @Author	: Yoshihara Asuka
 // @Editer	: 
 // @Detail	: 
 // 
 // [Date]
-// 2023/02/08	スクリプト作成
+// 2023/06/09	スクリプト作成
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-public class TestManager : SingletonMonoBehaviour<TestManager>
+public class TestFade : MonoBehaviour
 {
-	//protected override bool dontDestroyOnLoad { get {return true; } }
-
-
+	[SerializeField]
+	private Image fadeImage = null;
 
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
 	/// </summary>
 	void Start()
 	{
-		
 	}
 
 	/// <summary>
@@ -34,9 +32,12 @@ public class TestManager : SingletonMonoBehaviour<TestManager>
 	{
 	}
 
-	public void Test()
+	private void FixedUpdate()
 	{
-		Debug.Log("我シングルトンなり");
-	}
-}
 
+	}
+
+
+
+
+}

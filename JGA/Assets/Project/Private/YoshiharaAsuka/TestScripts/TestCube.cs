@@ -1,21 +1,21 @@
 //=============================================================================
-// @File	: [Test.cs]
+// @File	: [TestCube.cs]
 // @Brief	: 
 // @Author	: Yoshihara Asuka
 // @Editer	: 
 // @Detail	: 
 // 
 // [Date]
-// 2023/02/08	スクリプト作成
+// 2023/06/02	スクリプト作成
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class TestManager : SingletonMonoBehaviour<TestManager>
+public class TestCube : MonoBehaviour
 {
-	//protected override bool dontDestroyOnLoad { get {return true; } }
+	[SerializeField] GameObject objects;
+	[SerializeField] List<GameObject> gameObjects = new List<GameObject>();
 
 
 
@@ -24,6 +24,17 @@ public class TestManager : SingletonMonoBehaviour<TestManager>
 	/// </summary>
 	void Start()
 	{
+		objects = null;
+		//gameObjects = GimickObjectManager.Instance.GetGimickObjectAll();
+
+	}
+
+	/// <summary>
+	/// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
+	/// </summary>
+	void FixedUpdate()
+	{
+
 		
 	}
 
@@ -32,11 +43,9 @@ public class TestManager : SingletonMonoBehaviour<TestManager>
 	/// </summary>
 	void Update()
 	{
-	}
 
-	public void Test()
-	{
-		Debug.Log("我シングルトンなり");
+		//GimickObjectManager.Instance.GetGimickObjectType<Radio>();
+		//objects = GimickObjectManager.Instance.GetGimickObject<Radio>();
+
 	}
 }
-

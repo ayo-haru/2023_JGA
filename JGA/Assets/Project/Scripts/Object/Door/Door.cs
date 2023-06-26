@@ -7,6 +7,7 @@
 // 
 // [Date]
 // 2023/04/10	スクリプト作成
+// 2023/06/26	OnEnabaleのオーバライド追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -16,10 +17,19 @@ public class Door : BaseObj
 {
 	[SerializeField] private Animator _animator;
 
+	//protected override void OnEnable()
+	//{
+	//	/* Baseの処理にListに入れる処理があるので、このオブジェクトでは
+	//	  リストに入れる処理をしたくないため、ここでオーバライドする。(吉原)
+	//	   Fence同様
+	//	*/
+	//}
+
 	/// <summary>
-	/// 最初のフレーム更新の前に呼び出される
+	/// Startで行いたい処理を記載
 	/// </summary>
-	void Start()
+	public override void OnStart()
+
 	{
 		Init();
 
@@ -27,28 +37,18 @@ public class Door : BaseObj
 	}
 
 	/// <summary>
-	/// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
+	/// Updateで行いたい処理を記載
 	/// </summary>
-	void FixedUpdate()
+	public override void OnUpdate()
 	{
-		
+
 	}
 
-	/// <summary>
-	/// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
-	/// </summary>
-	void Update()
-	{
-		// ポーズ中は処理しない
-		if (PauseManager.isPaused){
-			return;
-		}
-	}
+
 
 	protected override void OnCollisionEnter(Collision collision)
 	{
-		if (PauseManager.isPaused) return;
-
+		base.OnCollisionEnter(collision);
 
 		if (collision.gameObject.tag == "Player"){
 			_animator.SetTrigger("Open");

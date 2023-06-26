@@ -17,29 +17,29 @@ public class TestLoadScene
 {
 #if false
 
-    private const string ActiveSceneName = "ProtoType";
-    // ロードするシーンを検索
-    private const string LoadSceneName = "TestGround";
+	private const string ActiveSceneName = "ProtoType";
+	// ロードするシーンを検索
+	private const string LoadSceneName = "TestGround";
 
-    /// <summary>
-    /// シーンを呼び出す。
-    /// </summary>
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    public static void LoadGroundScene()
-    {
-        // 現在のアクティブシーン名を取得
-        Scene activeSceneName = SceneManager.GetActiveScene();
+	/// <summary>
+	/// シーンを呼び出す。
+	/// </summary>
+	[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+	public static void LoadGroundScene()
+	{
+		// 現在のアクティブシーン名を取得
+		Scene activeSceneName = SceneManager.GetActiveScene();
 
-        // 現在開いているシーンが"ProtoType"シーンの場合、ステージシーン(Dummy)を読み込む。
-        if(activeSceneName.name == ActiveSceneName)
+		// 現在開いているシーンが"ProtoType"シーンの場合、ステージシーン(Dummy)を読み込む。
+		if(activeSceneName.name == ActiveSceneName)
 		{
-            SceneManager.LoadScene(LoadSceneName, LoadSceneMode.Additive);
+			SceneManager.LoadScene(LoadSceneName, LoadSceneMode.Additive);
 		}
 		else{
 			Debug.LogWarning(ActiveSceneName + "シーンではないので、ステージシーンを読み込みませんでした。");
 		}
-    }
-    #endif
+	}
+	#endif
 
 
 }
