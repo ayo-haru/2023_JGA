@@ -21,22 +21,12 @@ public class GuestManager : MonoBehaviour
     //客のプレハブ
     private List<GameObject> guestPrefab = new List<GameObject>();
     private string[] guestPrefabName = { "Guest001.prefab" , "Guest002.prefab" , "Guest003.prefab" ,};
-    //客の巡回ルート
-    private Transform[] guestRootPos;
-    private string[] guestRootPosName = {
-        "PenguinCagePos_N", "PenguinCagePos_S", "PenguinCagePos_W", "PenguinCagePos_E",
-        "RestSpotPos01" , "RestSpotPos02" ,
-        "HorseCagePos01" , "HorseCagePos02" , "HorseCagePos03" ,
-        "ZebraCagePos01" , "ZebraCagePos02" , "ZebraCagePos03" ,
-        "PolarBearCagePos" ,
-        "BearCagePos01" , "BearCagePos02" ,
-        "PandaCagePos" ,
-        "EntrancePos" ,};
     //客の生成人数（ランダムデータ）
     private int guestSum = 0;
     //客の親オブジェクト
     private GameObject guestParent;
 
+    private StageSceneManager stageSceneManager = null;
     [SerializeField] private int guestRootMax = 3;
 #if false
     /// <summary>
@@ -56,13 +46,6 @@ public class GuestManager : MonoBehaviour
         for(int i = 0; i < guestPrefabName.Length; ++i)
         {
             guestPrefab.Add(PrefabContainerFinder.Find(GameData.characterDatas, guestPrefabName[i]));
-        }
-        //客のルート取得
-        guestRootPos = new Transform[guestRootPosName.Length];
-        for(int i = 0; i < guestRootPosName.Length; ++i)
-        {
-            GameObject rootPos = GameObject.Find(guestRootPosName[i]);
-            guestRootPos[i] = (rootPos) ? rootPos.transform : null;
         }
         //親取得
         guestParent = GameObject.Find("Guests");
@@ -157,7 +140,7 @@ public class GuestManager : MonoBehaviour
         GuestData.Data guestData = new GuestData.Data
         { 
             name = "FGuest",
-            entranceTF = guestRootPos[(int)GameData.eRoot.ENTRANCE],
+            entranceTF = null,
             isRandom = true,
             speed = 3,
             followSpeed = 0.7f,
@@ -200,12 +183,24 @@ public class GuestManager : MonoBehaviour
     /// </summary>
     private GameObject Create(GuestData.Data data)
     {
+        //ステージシーンマネージャ取得
+        if (!stageSceneManager)
+        {
+            GameObject manager = GameObject.Find("StageSceneManager");
+            if((!manager) ? true : !manager.TryGetComponent(out stageSceneManager))
+            {
+                Debug.LogError("ステージシーンマネージャがないため生成できませんでした");
+                return null;
+            }
+        }
+
+        Transform t = null;
         //-----ペンギンブースの座標設定-----
         data.penguinTF = new List<Transform>();
-        for(int i = 0; i<= (int)GameData.eRoot.PENGUIN_E; ++i)
+        for(int i = 0; i < 4; ++i)
         {
-            if (!guestRootPos[i]) continue;
-            data.penguinTF.Add(guestRootPos[i]);
+            t = stageSceneManager.GetRootTransform(GameData.eRoot.PENGUIN_N + i);
+            if (t) data.penguinTF.Add(t);
         }
         if(data.penguinTF.Count <= 0)
         {
@@ -213,9 +208,9 @@ public class GuestManager : MonoBehaviour
             return null;
         }
         //-----エントランスの座標設定-----
-        if (guestRootPos[(int)GameData.eRoot.ENTRANCE])
-        {
-            data.entranceTF = guestRootPos[(int)GameData.eRoot.ENTRANCE];
+        t = stageSceneManager.GetRootTransform(GameData.eRoot.ENTRANCE);
+        if (t){
+            data.entranceTF = t;
         }else{
             Debug.Log("エントランスが取得できなかったため、生成出来ませんでした");
             return null;
@@ -225,8 +220,8 @@ public class GuestManager : MonoBehaviour
         data.rootTransforms = new List<Transform>();
         for (int j = 0; j < data.roots.Length; j++)
         {
-            if (!guestRootPos[(int)data.roots[j]]) continue;
-            data.rootTransforms.Add(guestRootPos[(int)data.roots[j]]);
+            t = stageSceneManager.GetRootTransform(data.roots[j]);
+            if (t) data.rootTransforms.Add(t);
         }
         if(data.rootTransforms.Count <= 0)
         {
