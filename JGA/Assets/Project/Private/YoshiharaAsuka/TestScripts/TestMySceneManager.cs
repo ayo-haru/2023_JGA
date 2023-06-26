@@ -21,16 +21,17 @@ public static class TestMySceneManager
 	[SerializeField]
 	private static string[] SetSceneName =
 	{
+		"TestManagerScene",
 		"TestAddScene1",
 		"TestAddScene2",
 		"TestUIScene",
 		"TestGimickObjectScene",
-		//"TestManagerScene",
 	};
 
 	/* シーン名の列挙を定義 */
 	public enum SCENE
 	{ 
+		SCENE_TESTMANAGAERSCENE,
 		SCENE_TEST01,
 		SCENE_TEST02,
 		SCENE_TESTUI,

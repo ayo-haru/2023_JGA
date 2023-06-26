@@ -840,5 +840,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GimickObjectManager
       objectReference: {fileID: 0}
+    - target: {fileID: 7234625745326861927, guid: d6aa2ce5f2414a44d9e3eae2c417620e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d6aa2ce5f2414a44d9e3eae2c417620e, type: 3}

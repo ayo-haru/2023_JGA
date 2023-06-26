@@ -35,7 +35,6 @@ public class Radio : BaseObj
 
 		// 子にあるエフェクト再生オブジェクトを検索
 		effectPoint = GameObject.Find("EffectPoint");
-
 	}
 
 	/// <summary>
@@ -47,6 +46,7 @@ public class Radio : BaseObj
 
 		PlaySoundChecker();
 	}
+
 
 #if false
 	//　当たり判定処理===============================================

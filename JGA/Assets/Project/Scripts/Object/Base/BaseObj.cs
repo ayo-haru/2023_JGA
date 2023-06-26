@@ -100,7 +100,9 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 	protected virtual void OnTriggerExit(Collider other) { }
 
 
-
+	/// <summary>
+	/// 初期化処理を行う
+	/// </summary>
 	protected void Init()
 	{
 		rb  = GetComponent<Rigidbody>();
@@ -123,6 +125,10 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 
 	}
 
+	
+	/// <summary>
+	/// 終了処理を行う(ここではオブジェクトが破壊された時等に行いたい処理を記載)
+	/// </summary>
 	protected void Uninit()
 	{
 		GimickObjectManager.Instance.RemoveGimickObjectsList(this);

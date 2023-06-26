@@ -1,32 +1,35 @@
 //=============================================================================
-// @File	: [TestCube.cs]
+// @File	: [TestSceneLoad.cs]
 // @Brief	: 
 // @Author	: Yoshihara Asuka
 // @Editer	: 
 // @Detail	: 
 // 
 // [Date]
-// 2023/06/02	スクリプト作成
+// 2023/06/21	スクリプト作成
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TestCube : MonoBehaviour
+public class TestSceneLoad : MonoBehaviour
 {
-	[SerializeField] GameObject objects;
-	[SerializeField] List<GameObject> gameObjects = new List<GameObject>();
 
 
+	/// <summary>
+	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
+	/// </summary>
+	void Awake()
+	{
+		TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_TESTGIMICK);
+	}
 
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
 	/// </summary>
 	void Start()
 	{
-		objects = null;
-		//gameObjects = GimickObjectManager.Instance.GetGimickObjectAll();
-
+		
 	}
 
 	/// <summary>
@@ -34,7 +37,6 @@ public class TestCube : MonoBehaviour
 	/// </summary>
 	void FixedUpdate()
 	{
-
 		
 	}
 
@@ -43,9 +45,6 @@ public class TestCube : MonoBehaviour
 	/// </summary>
 	void Update()
 	{
-
-		//GimickObjectManager.Instance.GetGimickObjectType<Radio>();
-		//objects = GimickObjectManager.Instance.GetGimickObject<Radio>();
-
+		
 	}
 }
