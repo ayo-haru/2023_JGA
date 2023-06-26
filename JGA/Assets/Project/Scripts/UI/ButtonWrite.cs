@@ -105,4 +105,9 @@ public class ButtonWrite : MonoBehaviour
         myMaterial.SetColor("_ChangeColor", Color.white);
         myMaterial.SetColor("_BaseColor", Color.clear);
     }
+
+    public void StartWriteAnimation()
+    {
+        play = true;
+    }
 }
