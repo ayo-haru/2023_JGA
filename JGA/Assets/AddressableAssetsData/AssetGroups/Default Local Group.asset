@@ -73,6 +73,8 @@ MonoBehaviour:
     m_Address: StageObjData
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 12976e2729da7de4186444ae998866e7
+    m_Address: ManagerObjData
   - m_GUID: c468157553c919e4e86a8b53c1df35ee
     m_Address: GimickObjectsData
     m_ReadOnly: 0

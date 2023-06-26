@@ -85,7 +85,7 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager> {
         Addressables.Release(Effect.effectDatas);
         Addressables.Release(Volume.GameVolumeDatas);
         for (int i = 0; i < GameData.zooKeeperData.Length; i++) {
-            Addressables.Release(GameData.zooKeeperData);
+            Addressables.Release(GameData.zooKeeperData[i]);
         }
         for (int i = 0; i < GameData.guestData.Length; i++) {
             Addressables.Release(GameData.guestData[i]);

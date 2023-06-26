@@ -16,12 +16,6 @@ using UnityEngine;
 //[CustomEditor(typeof(UIManager))]
 public class UIManagerEditor : Editor
 {
-    private static SerializedObject _instance;
-
-    private void OnEnable() {
-        _instance = serializedObject;
-    }
-
     public override void OnInspectorGUI() {
         DrawDefaultInspector();
     }
