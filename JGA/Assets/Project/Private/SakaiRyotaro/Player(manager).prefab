@@ -627,6 +627,8 @@ GameObject:
   - component: {fileID: 4938975301294798415}
   - component: {fileID: 2020110682}
   - component: {fileID: 2020110683}
+  - component: {fileID: 4623923624579519311}
+  - component: {fileID: 8857606518234349503}
   m_Layer: 10
   m_Name: Player(manager)
   m_TagString: Player
@@ -849,6 +851,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c7a4c3f71e769e42a65bbedf073171f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerAnimation: {fileID: 8857606518234349503}
   actionMove: {fileID: -3561246758459141259, guid: e7885aee0a6118d40af8785b5a7003f6,
     type: 3}
   actionAppeal: {fileID: -7643113778988684927, guid: e7885aee0a6118d40af8785b5a7003f6,
@@ -872,6 +875,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _vForce: {x: 0, y: 0, z: 0}
+--- !u!114 &4623923624579519311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6059633014066229634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32d8c07337900784ab74c6b8acf4651e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InteractCollision: {fileID: 0}
+  InteractObjects: []
+--- !u!114 &8857606518234349503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6059633014066229634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 088a51beea2b3944a954a8926508bd54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7144897059089238918
 GameObject:
   m_ObjectHideFlags: 0
