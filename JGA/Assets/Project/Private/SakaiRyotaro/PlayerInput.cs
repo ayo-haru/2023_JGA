@@ -15,6 +15,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerInput : PlayerAction
 {
+	[SerializeField] private PlayerAnimation playerAnimation;
+
 	private static Subject<string> MoveSubject = new Subject<string>();
 	private static Subject<string> AppealSubject = new Subject<string>();
 	private static Subject<string> HitSubject = new Subject<string>();
@@ -57,6 +59,9 @@ public class PlayerInput : PlayerAction
 		actionHit.ToInputAction().Enable();
 		actionHold.ToInputAction().Enable();
 		actionRun.ToInputAction().Enable();
+
+		if (playerAnimation == null)
+			playerAnimation = GetComponent<PlayerAnimation>();
 	}
 
 	public void Disable()
@@ -127,9 +132,15 @@ public class PlayerInput : PlayerAction
 	private void Move(InputAction.CallbackContext context)
 	{
 		if (context.phase == InputActionPhase.Canceled)
+		{
 			_playerManager.MoveInputValue = Vector2.zero;
+			playerAnimation.SetAnimation(PlayerAnimation.Animenum.ANIM_MOVE, false);
+		}
 		else
+		{
 			_playerManager.MoveInputValue = context.ReadValue<Vector2>();
+			playerAnimation.SetAnimation(PlayerAnimation.Animenum.ANIM_MOVE, true);
+		}
 	}
 
 	private void Appeal(InputAction.CallbackContext context)
