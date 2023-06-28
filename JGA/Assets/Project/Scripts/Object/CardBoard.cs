@@ -29,7 +29,7 @@ public class CardBoard : BaseObj
     /// <summary>
     /// 最初のフレーム更新の前に呼び出される
     /// </summary>
-    void Start()
+    public override void OnStart()
     {
         Init();
         _animator = GetComponent<Animator>();
@@ -46,7 +46,7 @@ public class CardBoard : BaseObj
     /// <summary>
     /// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
     /// </summary>
-    void Update()
+    public override void OnUpdate()
     {
         // ポーズ処理
         if (PauseManager.isPaused) { return; }
@@ -64,7 +64,7 @@ public class CardBoard : BaseObj
     protected override void OnCollisionEnter(Collision collision)
     {
         // ポーズ処理
-        if (PauseManager.isPaused) { return; }
+        base.OnCollisionEnter(collision);
 
         // 段ボールが地面に当たった時の音を変更
         if (collision.gameObject.tag == "Ground")
@@ -126,7 +126,7 @@ public class CardBoard : BaseObj
     protected override void OnTriggerStay(Collider other)
     {
         // ポーズ処理
-        if (PauseManager.isPaused) { return; }
+        base.OnTriggerStay(other);
 
         if (other.gameObject.tag == "Player")
         {
