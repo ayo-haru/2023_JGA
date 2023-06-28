@@ -18,7 +18,7 @@ public class GimickObjectManager : SingletonMonoBehaviour<GimickObjectManager>
 {
 	[SerializeField]
 	private List<BaseObj> GimickObjectsList = new List<BaseObj>();
-
+	
 	/// <summary>
 	/// オブジェクトが有効化された時
 	/// </summary>
@@ -54,21 +54,22 @@ public class GimickObjectManager : SingletonMonoBehaviour<GimickObjectManager>
 	/// <summary>
 	/// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
 	/// </summary>
-	void Update()
+	private void Update()
 	{
 		if (GimickObjectsList.Count == 0) { return; }
 
-		foreach (BaseObj Gimickobjects in GimickObjectsList)
-		{
+		foreach (BaseObj Gimickobjects in GimickObjectsList){
 			Gimickobjects.OnUpdate();
 		}
 	}
 
-	/// <summary>
-	/// リストにギミックオブジェクトを追加
-	/// </summary>
-	/// <param name="obj"></param>
-	public void AddGimickObjectsList(BaseObj obj)
+
+
+		/// <summary>
+		/// リストにギミックオブジェクトを追加
+		/// </summary>
+		/// <param name="obj"></param>
+		public void AddGimickObjectsList(BaseObj obj)
 	{
 		/* 重複チェックを入れようと思ったが、
 		 * 同じオブジェクト複数個使用する可能性がある

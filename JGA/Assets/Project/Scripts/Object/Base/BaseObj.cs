@@ -11,11 +11,14 @@
 // 2023/04/18   ポーズ処理変更
 // 2023/05/12   改良しようとしている。
 // 2023/06/16   距離のステートを削除(使わなそう),初期値記載
+// 2023/06/28   多分、破壊されたときにリストから削除しつつ破壊する処理できた…？
+//              GimickObjectManagerが無い時のエラー処理を色々記載。
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(AudioSource))]
@@ -45,6 +48,8 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 	protected Player player = null;								// プレイヤー取得
 	[SerializeField] public ObjType objType;					// オブジェクトのタイプ
 	protected bool isPlaySound;									// 音が鳴っているか
+
+	public UnityEvent OnDestroyed = new UnityEvent();
 	//----------------
 
 
@@ -76,7 +81,13 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 		// GimickObjectManagerのコンポーネントを検索
 		gimickObjectManager = FindObjectOfType<GimickObjectManager>();
 
-		GimickObjectManager.Instance.AddGimickObjectsList(this);
+		if(gimickObjectManager == null){
+			Destroy(this);
+		}
+		else{
+			GimickObjectManager.Instance.AddGimickObjectsList(this);
+
+		}
 
 	}
 
@@ -88,8 +99,13 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 		Uninit();
 	}
 
-	protected virtual void OnDestroy() {}
+	protected virtual void OnDestroy()
+	{
+		Debug.Log(this.gameObject.name + "破壊されました");
+		OnDestroyed.Invoke();
+	}
 
+	#region 当たり判定処理===============================================
 
 	protected virtual void OnCollisionEnter(Collision collision) 
 	{
@@ -172,6 +188,7 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 		if (PauseManager.isPaused) return;
 
 	}
+#endregion
 
 
 	/// <summary>
@@ -203,7 +220,16 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 	/// <summary>
 	/// 終了処理を行う(ここではオブジェクトが破壊された時等に行いたい処理を記載)
 	/// </summary>
-	protected void Uninit() { }
+	protected void Uninit() 
+	{
+		this.OnDestroyed.AddListener(() => 
+		{ 
+			Debug.Log(this.gameObject.name + "破壊されました");
+			if (gimickObjectManager){
+				GimickObjectManager.Instance.RemoveGimickObjectsList(this);
+			}
+		});
+	}
 
 	public virtual void OnStart() { }
 	public virtual void OnUpdate() { }
