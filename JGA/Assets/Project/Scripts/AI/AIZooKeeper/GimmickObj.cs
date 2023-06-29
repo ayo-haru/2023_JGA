@@ -25,18 +25,14 @@ public class GimmickObj : MonoBehaviour
 
     void Awake()
     {
-        Vector3 pos;
-        Quaternion rot;
         ListClear(resetPos, resetRot, bReset, bBring);
         if (gimmickList.Count >= 1)
         {
             // ギミックの初期位置、フラグ取得
             for (int i = 0; i < gimmickList.Count; i++)
             {
-                pos = gimmickList[i].transform.position;
-                rot = gimmickList[i].transform.rotation;
-                resetPos.Add(pos);
-                resetRot.Add(rot);
+                resetPos.Add(gimmickList[i].transform.position);
+                resetRot.Add(gimmickList[i].transform.rotation);
                 bReset.Add(true);
                 bBring.Add(false);
             }
