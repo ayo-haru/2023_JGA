@@ -2,11 +2,12 @@
 // @File	: [SoundManager.cs]
 // @Brief	: 
 // @Author	: Sakai Ryotaro
-// @Editer	: 
+// @Editer	: Ogusu Yuuko
 // @Detail	: 
 // 
 // [Date]
 // 2023/03/16	スクリプト作成
+// 2023/06/29	BGMの音量変更を追加【小楠】
 //=============================================================================
 using System.Collections.Generic;
 using UniRx;
@@ -416,6 +417,24 @@ public class SoundManager : MonoBehaviour
 		MySceneManager.Sound.BGMDatas.list[((int)eSE)].volume = value;
 		audioSource.volume = value;
 	}
+
+    /// <summary>
+    /// 再生中のBGMの音量を変更
+    /// </summary>
+    public static void SetVolume()
+    {
+        SoundData.Sound[] BGMs = MySceneManager.Sound.BGMDatas.list;
+        List<AudioSource> list = Source.ToListPooled();
+        for (int i = 0; i < list.Count; ++i)
+        {
+            for(int j = 0; j < BGMs.Length; ++j)
+            {
+                if (list[i].clip != BGMs[j].clip) continue;
+                list[i].volume = BGMs[j].volume * Volume.fBGM;
+                break;
+            }
+        }
+    }
 
 
 

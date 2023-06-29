@@ -2,11 +2,12 @@
 // @File	: [SoundVolumeManager.cs]
 // @Brief	: 
 // @Author	: Sakai Ryotaro
-// @Editer	: 
+// @Editer	: Ogusu Yuuko
 // @Detail	: 
 // 
 // [Date]
 // 2023/03/16	スクリプト作成
+// 2023/06/29	BGMの音量変更を追加【小楠】
 //=============================================================================
 using System.Collections.Generic;
 using UniRx;
@@ -41,6 +42,8 @@ public class SoundVolumeManager : MonoBehaviour
 	public static void SetBGM(float vol)
 	{
 		MySceneManager.Volume.GameVolumeDatas.volume.fBGM = vol;
+        //再生中のBGMの音量を変える
+        SoundManager.SetVolume();
 	}
 
 	public static void SetSE(float vol)
