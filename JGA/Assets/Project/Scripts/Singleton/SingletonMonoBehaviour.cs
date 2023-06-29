@@ -58,6 +58,7 @@ public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBe
 			return;
 		}
 
+		Debug.Log(this.name + "生成されました");
 		instance = this as T;
 		DontDestroyOnLoad(this.gameObject);
 	}

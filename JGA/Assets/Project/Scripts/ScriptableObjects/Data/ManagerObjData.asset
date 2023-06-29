@@ -52,3 +52,7 @@ MonoBehaviour:
     ID: 9
     prefab: {fileID: 6255948501538626518, guid: 24e7492986124a542acccd7b1c443031,
       type: 3}
+  - displayName: GimickObjectManager
+    ID: 10
+    prefab: {fileID: 7234625745326861927, guid: d6aa2ce5f2414a44d9e3eae2c417620e,
+      type: 3}

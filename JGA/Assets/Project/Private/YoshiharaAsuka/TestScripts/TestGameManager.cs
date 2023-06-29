@@ -15,9 +15,13 @@ using UnityEditor;
 
 public class TestGameManager : SingletonMonoBehaviour<TestGameManager>
 {
+	// マネージャーオブジェクトのプレハブを取得
+	public static PrefabContainer managerObj = AddressableLoader<PrefabContainer>.Load("ManagerobjData");
+
 	[Header("生成したいオブジェクトにチェックを入れてください。")]
 	[SerializeField]
-	bool GimickObjectManager = false;
+	private bool isCreateGimickObjectManager = false;
+	private GameObject gimickObjectManaager = PrefabContainerFinder.Find(managerObj,"GimickObjectManager");
 
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
@@ -68,8 +72,8 @@ public class TestGameManager : SingletonMonoBehaviour<TestGameManager>
 
 	private void CreateGimickObjectManager()
 	{
-		if(!GimickObjectManager) return;
-		this.gameObject.AddComponent<GimickObjectManager>();
+		if(!isCreateGimickObjectManager) return;
+		Instantiate(gimickObjectManaager);
 	}
 }
 
