@@ -39,10 +39,12 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 
 	//---共通変数宣言---
 	protected GimickObjectManager gimickObjectManager = null;	// ギミックオブジェクトマネージャー
-	protected Rigidbody rb = null;								// リジッドボディ使用
+	protected Rigidbody rb = null;                              // リジッドボディ使用
 
 	//protected AudioSource audioSource;						// オーディオソース
+
 	// オーディオソースをリストで格納
+	[SerializeField]
 	protected List<AudioSource> audioSourcesList = new List<AudioSource>();
 
 	protected Player player = null;								// プレイヤー取得
@@ -71,6 +73,19 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 		PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(this.gameObject);
 		PauseManager.OnResumed.Subscribe(x => { Resumed(); }).AddTo(this.gameObject);
 
+		// GimickObjectManagerのコンポーネントを検索
+		gimickObjectManager = FindObjectOfType<GimickObjectManager>();
+
+		if (gimickObjectManager == null)
+		{
+			Destroy(this.gameObject);
+		}
+		else
+		{
+			GimickObjectManager.Instance.AddGimickObjectsList(this);
+
+		}
+
 	}
 
 	/// <summary>
@@ -78,16 +93,7 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 	/// </summary>
 	protected virtual void OnEnable()
 	{
-		// GimickObjectManagerのコンポーネントを検索
-		gimickObjectManager = FindObjectOfType<GimickObjectManager>();
 
-		if(gimickObjectManager == null){
-			Destroy(this);
-		}
-		else{
-			GimickObjectManager.Instance.AddGimickObjectsList(this);
-
-		}
 
 	}
 
@@ -101,7 +107,6 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 
 	protected virtual void OnDestroy()
 	{
-		Debug.Log(this.gameObject.name + "破壊されました");
 		OnDestroyed.Invoke();
 	}
 

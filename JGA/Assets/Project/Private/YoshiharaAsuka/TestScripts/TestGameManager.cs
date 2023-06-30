@@ -16,13 +16,22 @@ using UnityEditor;
 public class TestGameManager : SingletonMonoBehaviour<TestGameManager>
 {
 	// マネージャーオブジェクトのプレハブを取得
-	public static PrefabContainer managerObj = AddressableLoader<PrefabContainer>.Load("ManagerobjData");
-
+	public static PrefabContainer managerObj;
 	[Header("生成したいオブジェクトにチェックを入れてください。")]
 	[SerializeField]
 	private bool isCreateGimickObjectManager = false;
-	private GameObject gimickObjectManaager = PrefabContainerFinder.Find(managerObj,"GimickObjectManager");
 
+	private GameObject gimickObjectManaager;
+
+	protected override void Awake()
+	{
+		base.Awake();
+
+		managerObj = AddressableLoader<PrefabContainer>.Load("ManagerObjData");
+
+		gimickObjectManaager = PrefabContainerFinder.Find(managerObj, "GimickObjectManager");
+
+	}
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
 	/// </summary>
