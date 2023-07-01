@@ -33,9 +33,11 @@ public class GuestAnimation : MonoBehaviour
     //アニメーションステート
     public enum EGuestAnimState { IDLE,WALK,SURPRISED,SIT_IDLE,STAND_UP,WAIT,WATCH1,WATCH2,MAX_GUEST_ANIM_STATE,};
     private EGuestAnimState state;
+    //首を向ける方向
     private Transform lookAtTarget = null;
     private Transform beforeLookAtTarget = null;
     private float fAnimTimer;
+
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
 	/// </summary>

@@ -147,22 +147,21 @@ public class StateStayArea : AIState
         //経路計算中
         if (agent.pathPending) return;
 
-        //指定位置に着いたら
-        if (agent.remainingDistance <= agent.stoppingDistance)
-        {
-            guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.IDLE);
-            //待機アニメーションの再生
-            switch (Random.Range(0, 3))
-            {
-                case 0: guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.IDLE);break;
-                case 1: guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.WATCH1);break;
-                case 2: guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.WATCH2);break;
-            }
+        //指定位置に移動中
+        if (agent.remainingDistance > agent.stoppingDistance) return;
 
-            //ui設定
-            ui.SetEmotion(EEmotion.HIGH_TENSION);
-            isStay = true;
+        //待機アニメーションの再生
+        guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.IDLE);
+        switch (Random.Range(0, 3))
+        {
+            case 1: guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.WATCH1); break;
+            case 2: guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.WATCH2); break;
         }
+
+        //ui設定
+        ui.SetEmotion(EEmotion.HIGH_TENSION);
+
+        isStay = true;
     }
 
     public override void FinState()
