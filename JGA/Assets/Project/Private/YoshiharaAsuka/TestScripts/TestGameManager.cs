@@ -17,19 +17,29 @@ public class TestGameManager : SingletonMonoBehaviour<TestGameManager>
 {
 	// マネージャーオブジェクトのプレハブを取得
 	public static PrefabContainer managerObj;
+
+	/* ----インスペクター公開----*/
 	[Header("生成したいオブジェクトにチェックを入れてください。")]
+
 	[SerializeField]
-	private bool isCreateGimickObjectManager = false;
+	private bool isCreateGimickObject = false;
+
+	[SerializeField]
+	private bool isCreateGuest = false;
 
 	private GameObject gimickObjectManaager;
+	private GameObject guestManager;
 
 	protected override void Awake()
 	{
 		base.Awake();
 
+		// マネージャーデータのアセットを取得
 		managerObj = AddressableLoader<PrefabContainer>.Load("ManagerObjData");
 
+		// 以下各オブジェクト・マネージャーを取得
 		gimickObjectManaager = PrefabContainerFinder.Find(managerObj, "GimickObjectManager");
+		guestManager = PrefabContainerFinder.Find(managerObj, "guestManager");
 
 	}
 	/// <summary>
@@ -38,6 +48,7 @@ public class TestGameManager : SingletonMonoBehaviour<TestGameManager>
 	private void Start()
 	{
 		CreateGimickObjectManager();
+		CreateGuestManager();
 	}
 
 	/// <summary>
@@ -46,43 +57,24 @@ public class TestGameManager : SingletonMonoBehaviour<TestGameManager>
 	private void Update()
 	{
 
-#if UNITY_EDITOR
-		if (Input.GetKeyDown(KeyCode.F1)){
-			TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_TEST01);
-		}
-
-		if (Input.GetKeyDown(KeyCode.F2))
-		{
-			TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_TEST02);
-		}
-
-		if (Input.GetKeyDown(KeyCode.F3))
-		{
-			TestMySceneManager.SubtractScene(TestMySceneManager.SCENE.SCENE_TEST01);
-		}
-
-		if (Input.GetKeyDown(KeyCode.F4))
-		{
-			TestMySceneManager.SubtractScene(TestMySceneManager.SCENE.SCENE_TEST02);
-		}
-
-		if (Input.GetKeyDown(KeyCode.F5))
-		{
-			TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_TESTGIMICK);
-		}
+	}
 
 
-		if (Input.GetKeyDown(KeyCode.A))
-		{
-			TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_TESTUI);
-		}
-#endif
+	private void RegistManager()
+	{
+
 	}
 
 	private void CreateGimickObjectManager()
 	{
-		if(!isCreateGimickObjectManager) return;
+		if(!isCreateGimickObject) return;
 		Instantiate(gimickObjectManaager);
+	}
+
+	private void CreateGuestManager()
+	{
+		if (!isCreateGuest) return;
+		Instantiate(guestManager);
 	}
 }
 

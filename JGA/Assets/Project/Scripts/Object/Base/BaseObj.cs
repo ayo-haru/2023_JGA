@@ -91,11 +91,7 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 	/// <summary>
 	/// オブジェクトが有効化された直後に呼び出される
 	/// </summary>
-	protected virtual void OnEnable()
-	{
-
-
-	}
+	protected virtual void OnEnable() { }
 
 	/// <summary>
 	/// Behaviourが無効になった直後に呼び出される

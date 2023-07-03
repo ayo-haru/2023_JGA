@@ -282,7 +282,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51e6903b252c05a4b9d010dea1667493, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isCreateGimickObjectManager: 1
+  isCreateGimickObject: 0
+  isCreateGuest: 0
 --- !u!1 &1404278795
 GameObject:
   m_ObjectHideFlags: 0
