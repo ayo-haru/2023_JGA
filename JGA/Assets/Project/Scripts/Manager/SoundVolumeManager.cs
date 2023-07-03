@@ -16,7 +16,7 @@ using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SoundVolumeManager : MonoBehaviour
+public static class SoundVolumeManager /* : MonoBehaviour*/
 {
 	public static GameVolume.Volume GetVolume()
 	{
@@ -42,8 +42,8 @@ public class SoundVolumeManager : MonoBehaviour
 	public static void SetBGM(float vol)
 	{
 		MySceneManager.Volume.GameVolumeDatas.volume.fBGM = vol;
-        //再生中のBGMの音量を変える
-        SoundManager.SetVolume();
+		//再生中のBGMの音量を変える
+		SoundManager.SetVolume();
 	}
 
 	public static void SetSE(float vol)

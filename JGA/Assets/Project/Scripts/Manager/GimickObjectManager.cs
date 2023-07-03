@@ -25,6 +25,7 @@ public class GimickObjectManager : SingletonMonoBehaviour<GimickObjectManager>
 	private void OnEnable()
 	{
 		// このオブジェクトが有効化された時にシーンを生成
+		TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_TESTGIMICK);
 	}
 
 	/// <summary>
