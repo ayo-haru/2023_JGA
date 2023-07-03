@@ -16,6 +16,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 public class OptionPanel : MonoBehaviour
 {
@@ -43,25 +44,21 @@ public class OptionPanel : MonoBehaviour
     [SerializeField, Header("BGMボリュームアイコン")] private VolumeIcon bgmVolumeIcon;
     [SerializeField, Header("SEボリュームアイコン")] private VolumeIcon seVolumeIcon;
 
-    public enum EOptionButton { BGM,SE,OPTION_KEYBORD,OPTION_CONTROLLER,BACK,MAX_OPTION_BUTTON};
-
-    //マウス
-    private Vector3 mousePos = Vector3.zero;
-    private bool bMouse = true;
-
-    [SerializeField] private InputActionReference actionMove;
-
     private bool bOpen = false;
+    
+    private MenuSettingItem item;
 
 	void Awake()
 	{
-        //イベント登録
-        actionMove.action.performed += OnMove;
-        actionMove.action.canceled += OnMove;
+        //MenuInputManagerが置かれていなかった場合は生成
+        if (MenuInputManager.Instance == null)
+        {
+            MenuInputManager.Create();
+        }
 
+        //コンポーネント取得
         audioSource = GetComponent<AudioSource>();
 
-        //ボタンの加増取得
         keybordOptionButtonImage = keybordOptionButton.GetComponent<Image>();
         controllerOptionButtonImage = controllerOptionButton.GetComponent<Image>();
         backButtonImage = backButton.GetComponent<Image>();
@@ -69,75 +66,59 @@ public class OptionPanel : MonoBehaviour
         delBGMButtonImage = delBGMButton.GetComponent<Image>();
         addSEButtonImage = addSEButton.GetComponent<Image>();
         delSEButtonImage = delSEButton.GetComponent<Image>();
+
+        //メニュー設定
+        List<Image> images = new List<Image>();
+        if(keybordOptionButtonImage) images.Add(keybordOptionButtonImage);
+        if (controllerOptionButtonImage) images.Add(controllerOptionButtonImage);
+        if (backButtonImage) images.Add(backButtonImage);
+        if (addBGMButtonImage) images.Add(addBGMButtonImage);
+        if (delBGMButtonImage) images.Add(delBGMButtonImage);
+        if (addSEButtonImage) images.Add(addSEButtonImage);
+        if (delSEButtonImage) images.Add(delSEButtonImage);
+        item = new MenuSettingItem(bgmButton, images);
+        item.onMove += OnMove;
     }
 
-    private void OnEnable()
+#if false
+    private void Start()
     {
-        actionMove.ToInputAction().Enable();
+        
     }
-
-    private void OnDisable()
-    {
-        ControllerNoneSelect();
-        bOpen = false;
-
-        actionMove.ToInputAction().Disable();
-    }
-
-    private void OnDestroy()
-    {
-        actionMove.action.performed -= OnMove;
-        actionMove.action.canceled -= OnMove;
-    }
-
     private void Update()
     {
-        if (!IsOpen()) return;
-
-        //マウスの状態を更新
-        Vector3 oldMousePos = mousePos;
-        mousePos = Input.mousePosition;
-
-        if (bMouse) return;
-
-        //マウスが動かされたらマウス入力に切り替え
-        if (Vector3.Distance(oldMousePos, mousePos) >= 1.0f)
-        {
-            ChangeInput();
-        }
     }
 
     private void FixedUpdate()
     {
 
     }
-    #region オプション画面ボタン
+#endif
+#region オプション画面ボタン
     /// <summary>
     /// 戻るボタン
     /// </summary>
     public void BackButton()
     {
-        SoundDecisionSE();
-        ControllerNoneSelect();
         bOpen = false;
+        MenuInputManager.PopMenu();
+        SoundDecisionSE();
     }
     /// <summary>
     /// キーボード&マウス設定ボタン
     /// </summary>
     public void OptionKeybordButton()
     {
-        SoundDecisionSE();
-        ControllerNoneSelect();
         bOpen = false;
+        SoundDecisionSE();
     }
     /// <summary>
     /// コントローラ設定ボタン
     /// </summary>
     public void OptionControllerButton()
     {
-        SoundDecisionSE();
-        ControllerNoneSelect();
         bOpen = false;
+        SoundDecisionSE();
     }
     /// <summary>
     /// BGM音量上げるボタン
@@ -183,8 +164,8 @@ public class OptionPanel : MonoBehaviour
             SoundDecisionSE();
         }
     }
-    #endregion
-    #region SE鳴らす関数
+#endregion
+#region SE鳴らす関数
     public void SoundSelectSE()
     {
         if (!audioSource) return;
@@ -201,79 +182,18 @@ public class OptionPanel : MonoBehaviour
         if (!audioSource) return;
         SoundManager.Play(audioSource, SoundManager.ESE.SELECT_001);
     }
-    #endregion
-    /// <summary>
-    /// 入力初期化
-    /// </summary>
-    public void InitInput()
-    {
-        mousePos = Input.mousePosition;
-        bMouse = true;
-        ChangeInput();
-    }
-    /// <summary>
-    /// 入力切替
-    /// </summary>
-    private void ChangeInput()
-    {
-        //マウス→コントローラ
-        if (bMouse)
-        {
-            //デフォルトのボタンを選択
-            ControllerChangeSelect(EOptionButton.BGM);
-        }
-        else//コントローラ→マウス
-        {
-            ControllerNoneSelect();
-        }
-
-        //入力を切り替え
-        bMouse = !bMouse;
-        Cursor.visible = bMouse;
-        keybordOptionButtonImage.raycastTarget = bMouse;
-        controllerOptionButtonImage.raycastTarget = bMouse;
-        backButtonImage.raycastTarget = bMouse;
-        addBGMButtonImage.raycastTarget = bMouse;
-        delBGMButtonImage.raycastTarget = bMouse;
-        addSEButtonImage.raycastTarget = bMouse;
-        delSEButtonImage.raycastTarget = bMouse;
-    }
-
-    public void ControllerChangeSelect(EOptionButton _select)
-    {
-        ControllerNoneSelect();
-        switch (_select)
-        {
-            case EOptionButton.BGM:
-                bgmButton.Select();
-                break;
-            case EOptionButton.SE:
-                seButton.Select();
-                break;
-            case EOptionButton.OPTION_KEYBORD:
-                keybordOptionButton.Select();
-                break;
-            case EOptionButton.OPTION_CONTROLLER:
-                controllerOptionButton.Select();
-                break;
-            case EOptionButton.BACK:
-                backButton.Select();
-                break;
-        }
-        SoundSelectSE();
-    }
-
-    public void ControllerNoneSelect()
-    {
-        if (!EventSystem.current) return;
-        EventSystem.current.SetSelectedGameObject(null);
-    }
+#endregion
 
     public void Open()
     {
         if (IsOpen()) return;
         bOpen = true;
-        InitInput();
+    }
+    public void NewOpen()
+    {
+        if (IsOpen()) return;
+        bOpen = true;
+        MenuInputManager.PushMenu(item);
     }
     public bool IsOpen()
     {
@@ -282,10 +202,6 @@ public class OptionPanel : MonoBehaviour
 
     private void OnMove(InputAction.CallbackContext context)
     {
-        if (!IsOpen()) return;
-        if (bMouse) ChangeInput();
-
-
         //左右の入力があるか？
         Vector2 move = context.ReadValue<Vector2>();
         if (move.x < 1.0f && move.x > -1.0f) return;
