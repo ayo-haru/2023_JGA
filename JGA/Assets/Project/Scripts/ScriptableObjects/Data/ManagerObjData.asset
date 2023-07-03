@@ -56,3 +56,7 @@ MonoBehaviour:
     ID: 10
     prefab: {fileID: 7234625745326861927, guid: d6aa2ce5f2414a44d9e3eae2c417620e,
       type: 3}
+  - displayName: GuestManager
+    ID: 11
+    prefab: {fileID: 6574745801723262668, guid: 6db7d7bc5e17eb94297f87a302d507cf,
+      type: 3}
