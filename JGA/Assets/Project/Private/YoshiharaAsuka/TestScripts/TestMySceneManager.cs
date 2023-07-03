@@ -26,6 +26,7 @@ public static class TestMySceneManager
 		"TestAddScene2",
 		"TestUIScene",
 		"TestGimickObjectScene",
+		"TestGuestSpawonScene",
 	};
 
 	/* シーン名の列挙を定義 */
@@ -36,6 +37,7 @@ public static class TestMySceneManager
 		SCENE_TEST02,
 		SCENE_TESTUI,
 		SCENE_TESTGIMICK,
+		SCENE_TESTGUESTSPAWON,
 	}
 
 	/// <summary>

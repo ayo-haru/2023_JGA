@@ -14,7 +14,7 @@ using UnityEngine;
 using System;
 using System.Linq;
 
-public class GuestManager : MonoBehaviour
+public class GuestManager : SingletonMonoBehaviour<GuestManager>
 {
     //客一覧
     private List<AIManager> guestList = new List<AIManager>();
@@ -24,19 +24,22 @@ public class GuestManager : MonoBehaviour
     //客の生成人数（ランダムデータ）
     private int guestSum = 0;
     //客の親オブジェクト
+    [SerializeField]
     private GameObject guestParent;
 
     private StageSceneManager stageSceneManager = null;
     [SerializeField] private int guestRootMax = 3;
-#if false
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
     /// </summary>
-    void Awake()
+    protected override void Awake()
 	{
-		
+        base.Awake();
+
+        //客生成用のシーンを読み込み
+        TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_TESTGUESTSPAWON);
 	}
-#endif
+
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
 	/// </summary>
@@ -48,7 +51,9 @@ public class GuestManager : MonoBehaviour
             guestPrefab.Add(PrefabContainerFinder.Find(GameData.characterDatas, guestPrefabName[i]));
         }
         //親取得
-        guestParent = GameObject.Find("Guests");
+        guestParent = GameObject.Find("GuestSpawon");
+
+        SpawnFixGuest();
     }
 
     private void OnEnable()

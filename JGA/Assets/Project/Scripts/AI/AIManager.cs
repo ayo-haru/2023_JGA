@@ -108,7 +108,7 @@ public class AIManager : MonoBehaviour
         UnityEngine.Random.InitState(DateTime.Now.Millisecond);
 
         //ゲストマネージャーに追加
-        //guestManager.AddGuest(this);
+        //GuestManager.Instance.AddGuest(this);
     }
 
     /// <summary>
