@@ -13,6 +13,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 public class ClearPanel : MonoBehaviour
 {
@@ -24,64 +25,49 @@ public class ClearPanel : MonoBehaviour
     [SerializeField, Header("BACK TO TITLE")] private Button backToTitleButton;
     private Image backToTitleButtonImage;
 
-    public enum EClearPanelButton {NEXT_DAY,BACK_TO_TITLE,};
-
-    //マウス
-    private Vector3 mousePos = Vector3.zero;
-    private bool bMouse = true;
-
     //次のシーン
     private int nextScene = -1;
 
-    [SerializeField] private InputActionReference actionMove;
+    private MenuSettingItem item;
+
 
     void Awake()
 	{
-        audioSource = GetComponent<AudioSource>();
         nextScene = -1;
 
-        actionMove.action.performed += OnMove;
-        actionMove.action.canceled += OnMove;
-        
+        //MenuInputManagerが置かれていなかった場合は生成
+        if (MenuInputManager.Instance == null)
+        {
+            MenuInputManager.Create();
+        }
 
+        audioSource = GetComponent<AudioSource>();
         nextDayButtonImage = nextDayButton.GetComponent<Image>();
         backToTitleButtonImage = backToTitleButton.GetComponent<Image>();
+
+        //メニュー設定
+        List<Image> images = new List<Image>();
+        if(nextDayButtonImage)images.Add(nextDayButtonImage);
+        if(backToTitleButtonImage)images.Add(backToTitleButtonImage);
+        item = new MenuSettingItem(nextDayButton, images);
     }
 
     private void OnEnable()
     {
-        actionMove.ToInputAction().Enable();
-
         nextScene = -1;
-        InitInput();
+        MenuInputManager.PushMenu(item);
     }
 
     private void OnDisable()
     {
-        actionMove.ToInputAction().Disable();
+        MenuInputManager.PopMenu();
     }
-
-    private void OnDestroy()
-    {
-        actionMove.action.performed -= OnMove;
-        actionMove.action.canceled -= OnMove;
-    }
-
+#if false
     private void Update()
     {
-        //マウスの状態を更新
-        Vector3 oldMousePos = mousePos;
-        mousePos = Input.mousePosition;
 
-        if (bMouse) return;
-
-        //マウスが動かされたらマウス入力に切り替え
-        if(Vector3.Distance(oldMousePos, mousePos) >= 1.0f)
-        {
-            ChangeInput();
-        }
     }
-
+#endif
 #region クリア画面のボタン
     /// <summary>
     /// NEXT DAYボタン
@@ -118,68 +104,8 @@ public class ClearPanel : MonoBehaviour
         SoundManager.Play(audioSource, SoundManager.ESE.DECISION_001);
     }
 #endregion
-    /// <summary>
-    /// 入力切替
-    /// </summary>
-    private void ChangeInput()
-    {
-        //マウス→コントローラ
-        if (bMouse)
-        {
-            //デフォルトのボタンを選択
-            ControllerChangeSelect(EClearPanelButton.NEXT_DAY);
-        }else//コントローラ→マウス
-        {
-            ControllerNoneSelect();
-        }
-        //入力を切り替え
-        bMouse = !bMouse;
-        //カーソルの表示切替
-        Cursor.visible = bMouse;
-        //ボタン画像のraycastTarget切り替え
-        nextDayButtonImage.raycastTarget = bMouse;
-        backToTitleButtonImage.raycastTarget = bMouse;
-    }
-
-    public void InitInput()
-    {
-        mousePos = Input.mousePosition;
-        bMouse = true;
-        ChangeInput();
-    }
-
-    public void ControllerChangeSelect(EClearPanelButton _select)
-    {
-        ControllerNoneSelect();
-        switch (_select)
-        {
-            case EClearPanelButton.NEXT_DAY:
-                nextDayButton.Select();
-                break;
-            case EClearPanelButton.BACK_TO_TITLE:
-                backToTitleButton.Select();
-                break;
-        }
-        SoundSelectSE();
-    }
-
-    public void ControllerNoneSelect()
-    {
-        EventSystem.current.SetSelectedGameObject(null);
-    }
-
     public int GetNextScene()
     {
         return nextScene;
-    }
-
-    private void OnMove(InputAction.CallbackContext context)
-    {
-        if (!gameObject.activeSelf) return;
-        if (!PauseManager.isPaused) return;
-        if (!bMouse) return;
-
-        //マウス→コントローラ
-        ChangeInput();
     }
 }

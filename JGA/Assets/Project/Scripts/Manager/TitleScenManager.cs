@@ -44,7 +44,7 @@ public class TitleScenManager : BaseSceneManager {
     //マウス位置
     private Vector3 mousePos;
 
-    [SerializeField] private InputActionReference actionMove;
+    //[SerializeField] private InputActionReference actionMove;
 
     //タイトル画面のボタン
     private enum ETitleSelect { TITLESELECT_START, TITLESELECT_CONTINUE,TITLESELECT_OPTION, TITLESELECT_EXIT, MAX_TITLESELECT };
@@ -76,12 +76,17 @@ public class TitleScenManager : BaseSceneManager {
         //    nextScene = (int)MySceneManager.SceneState.SCENE_GAME_001;
         //}
 
+
+        //MenuInputManagerが置かれていなかった場合は生成
+        if (MenuInputManager.Instance == null)
+        {
+            MenuInputManager.Create();
+        }
+
         // BGM再生用にオーディオソース取得
         audioSource = GetComponent<AudioSource>();
 
-        actionMove.action.performed += OnMove;
-        actionMove.action.canceled += OnMove; 
-
+        //ボタンの当たり判定と画像のコンポーネント取得
         startButtonCollider = startButton.GetComponent<BoxCollider>();
         continueButtonCollider = continueButton.GetComponent<BoxCollider>();
         optionButtonCollider = optionButton.GetComponent<BoxCollider>();
@@ -107,28 +112,23 @@ public class TitleScenManager : BaseSceneManager {
             if(continueHideImage)continueHideImage.enabled = false;
         }
     }
-
-    private void OnEnable()
-    {
-        actionMove.ToInputAction().Enable();
-    }
-    private void OnDisable()
-    {
-        actionMove.ToInputAction().Disable();
-    }
     private void OnDestroy()
     {
-        actionMove.action.performed -= OnMove;
-        actionMove.action.canceled -= OnMove;
+        if(MenuInputManager.Instance)MenuInputManager.PopMenu();
     }
 
     private void Start() {
         //BGM再生
-       SoundManager.Play(audioSource, SoundManager.EBGM.TITLE_001);
+        SoundManager.Play(audioSource, SoundManager.EBGM.TITLE_001);
         //フェード中だったら待機して音を止める
         StartCoroutine(WaitFade());
 
-        InitInput();
+        List<BoxCollider> boxColliders = new List<BoxCollider>();
+        boxColliders.Add(startButtonCollider);
+        boxColliders.Add(continueButtonCollider);
+        boxColliders.Add(optionButtonCollider);
+        boxColliders.Add(exitButtonCollider);
+        MenuInputManager.PushMenu(new MenuSettingItem(startButton, boxColliders));
     }
 
     /// <summary>
@@ -141,7 +141,7 @@ public class TitleScenManager : BaseSceneManager {
         {
             StartUIAnimation();
         }
-
+#if false
         bool beforeFlag = bFlag;
         bFlag = optionObject.activeSelf;
         //オプション画面が開かれているときは処理しない
@@ -160,6 +160,7 @@ public class TitleScenManager : BaseSceneManager {
         {
             ChangeInput();
         }
+#endif
     }
 
     public void StartUIAnimation()
@@ -177,18 +178,16 @@ public class TitleScenManager : BaseSceneManager {
         if (continueHideImage.TryGetComponent(out buttonWrite)) buttonWrite.StartWriteAnimation();
     }
 
-    #region タイトル画面のボタン
+#region タイトル画面のボタン
     public void StartButton() {
-        SoundSEDecision();
         GameData.oldScene = (int)MySceneManager.SceneState.SCENE_TITLE;  // 今のシーンをひとつ前のシーンとして保存
         GameData.nowScene = nextScene = (int)MySceneManager.SceneState.SCENE_GAME_001;   // 次のシーンを更新
         //初めから用に初期化
         GameData.isContinueGame = false; // startでセーブデータがあったとしてもfalseにする
         SaveManager.SaveInitDataAll();  // データをリセットして保存
-        
         SceneChange(nextScene);
-        //コントローラ入力の場合マウスカーソルが非表示のままになってしまうので表示する
-        if (!bMouse) Cursor.visible = true;
+
+        SoundSEDecision();
     }
 
     public void ContinueButton()
@@ -196,10 +195,10 @@ public class TitleScenManager : BaseSceneManager {
         //非有効だったら実行しない
         if (!continueButton.IsInteractable()) return;
 
-        SoundSEDecision();
-
         SaveManager.LoadAll();  // セーブデータロード
         nextScene = GameData.nowScene;   // 次のシーンを更新。セーブデータのロードをしてnowSceneには前回のシーン番号が入っているからnextにnowを代入
+        GameData.oldScene = (int)MySceneManager.SceneState.SCENE_TITLE;  // 今のシーンをひとつ前のシーンとして保存
+        SceneChange(nextScene);
 #if false
         if (MySceneManager.GameData.isContinueGame) {   // セーブデータが存在してたか
             // セーブデータ有りなのでデータロード
@@ -210,18 +209,14 @@ public class TitleScenManager : BaseSceneManager {
             MySceneManager.GameData.nowScene = nextScene = (int)MySceneManager.SceneState.SCENE_GAME_001;
         }
 #endif
-        GameData.oldScene = (int)MySceneManager.SceneState.SCENE_TITLE;  // 今のシーンをひとつ前のシーンとして保存
-        SceneChange(nextScene);
-        //コントローラ入力の場合マウスカーソルが非表示のままになってしまうので表示する
-        if (!bMouse) Cursor.visible = true;
+        SoundSEDecision();
     }
 
     public void OptionButton() {
-        SoundSEDecision();
-        ControllerNoneSelect();
-        optionObject.SetActive(true);
         //オプション画面を開く
-        optionPanel.Open();
+        optionObject.SetActive(true);
+        optionPanel.NewOpen();
+        SoundSEDecision();
     }
     public void ExitButton() {
         SoundSEDecision();
@@ -231,55 +226,8 @@ public class TitleScenManager : BaseSceneManager {
         Application.Quit();
 #endif
     }
-#endregion
-
-    public void InitInput()
-    {
-        mousePos = Input.mousePosition;
-        bMouse = true;
-        ChangeInput();
-    }
-
-    private void ChangeInput() {
-        //マウス→コントローラ
-        if (bMouse) {
-            ControllerChangeSelect(ETitleSelect.TITLESELECT_START);
-        } else//コントローラ→マウス
-          {
-            ControllerNoneSelect();
-        }
-
-        bMouse = !bMouse;
-        Cursor.visible = bMouse;
-        startButtonCollider.enabled = bMouse;
-        continueButtonCollider.enabled = bMouse;
-        optionButtonCollider.enabled = bMouse;
-        exitButtonCollider.enabled = bMouse;
-    }
-
-    private void ControllerChangeSelect(ETitleSelect _select) {
-        ControllerNoneSelect();
-        switch (_select) {
-            case ETitleSelect.TITLESELECT_START:
-                startButton.Select();
-                break;
-            case ETitleSelect.TITLESELECT_CONTINUE:
-                continueButton.Select();
-                break;
-            case ETitleSelect.TITLESELECT_OPTION:
-                optionButton.Select();
-                break;
-            case ETitleSelect.TITLESELECT_EXIT:
-                exitButton.Select();
-                break;
-        }
-        SoundSESelect();
-    }
-
-    private void ControllerNoneSelect() {
-        EventSystem.current.SetSelectedGameObject(null);
-    }
-
+    #endregion
+    #region SE鳴らす関数
     public void SoundSESelect() {
         if (!audioSource) return;
         SoundManager.Play(audioSource, SoundManager.ESE.SELECT_001);
@@ -288,20 +236,10 @@ public class TitleScenManager : BaseSceneManager {
         if (!audioSource) return;
         SoundManager.Play(audioSource, SoundManager.ESE.DECISION_001);
     }
-
+    #endregion
     IEnumerator WaitFade() {
         audioSource.Pause();
         yield return new WaitUntil(() => FadeManager.fadeMode == FadeManager.eFade.Default);
         audioSource.UnPause();
     }
-
-    private void OnMove(InputAction.CallbackContext context)
-    {
-        if (optionObject.activeSelf) return;
-        if (!bMouse) return;
-
-        //マウス→コントローラ
-        ChangeInput();
-    }
-
 }

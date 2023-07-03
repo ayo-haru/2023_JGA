@@ -15,6 +15,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class KeyConfigPanel : MonoBehaviour
 {
@@ -36,10 +37,16 @@ public class KeyConfigPanel : MonoBehaviour
 
 	void Awake()
 	{
-		ChangePanel(settingMode);
-	}
+        //MenuInputManagerが置かれていなかった場合は生成
+        if (MenuInputManager.Instance == null)
+        {
+            MenuInputManager.Create();
+        }
 
-	private void Update()
+        ChangePanel(settingMode);
+	}
+#if false
+    private void Update()
 	{
 		// ゲームパッドを検出
 		//if (settingMode == SettingMode.KEYBOARD && Gamepad.current != null)
@@ -52,17 +59,17 @@ public class KeyConfigPanel : MonoBehaviour
 		//}
 
 	}
-
+#endif
 	public void StartKeyConfig()
 	{
 		EventSystem.current.SetSelectedGameObject(null);
 		switch (settingMode)
 		{
 			case SettingMode.KEYBOARD:
-				KeyMoveButton.Select();
+                MenuInputManager.PushMenu(new MenuSettingItem(KeyMoveButton));
 				break;
 			case SettingMode.GAMEPAD:
-				PadMoveButton.Select();
+                MenuInputManager.PushMenu(new MenuSettingItem(PadMoveButton));
 				break;
 		}
 	}
@@ -94,7 +101,8 @@ public class KeyConfigPanel : MonoBehaviour
 		LayoutGamePad.SetActive(mode == SettingMode.GAMEPAD);
 	}
 
-	//private void FixedUpdate()
-	//{
-	//}
+    public void CloseKeyConfig()
+    {
+        MenuInputManager.PopMenu();
+    }
 }

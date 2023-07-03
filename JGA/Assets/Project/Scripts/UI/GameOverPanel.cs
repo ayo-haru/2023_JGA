@@ -13,6 +13,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 public class GameOverPanel : MonoBehaviour
 {
@@ -23,65 +24,55 @@ public class GameOverPanel : MonoBehaviour
     private Image retryButtonImage;
     [SerializeField, Header("BACK TO TITLE")] private Button backToTitleButton;
     private Image backToTitleButtonImage;
-
-    public enum EGameOverPanelButton {RETRY,BACK_TO_TITLE,};
-
-    //マウス
-    private Vector3 mousePos = Vector3.zero;
-    private bool bMouse = true;
-
     //次のシーン
     private int nextScene = -1;
 
-    [SerializeField] private InputActionReference actionMove;
+    private MenuSettingItem item;
+
+    //[SerializeField] private InputActionReference actionMove;
 
     void Awake()
 	{
-        audioSource = GetComponent<AudioSource>();
         nextScene = -1;
 
-        actionMove.action.performed += OnMove;
-        actionMove.action.canceled += OnMove;
+        //MenuInputManagerが置かれていなかった場合は生成
+        if (MenuInputManager.Instance == null)
+        {
+            MenuInputManager.Create();
+        }
 
+        audioSource = GetComponent<AudioSource>();
         retryButtonImage = retryButton.GetComponent<Image>();
         backToTitleButtonImage = backToTitleButton.GetComponent<Image>();
+
+        //メニュー設定
+        List<Image> images = new List<Image>();
+        if(retryButtonImage)images.Add(retryButtonImage);
+        if(backToTitleButtonImage)images.Add(backToTitleButtonImage);
+        item = new MenuSettingItem(retryButton, images);
     }
 
     private void OnEnable()
     {
-        actionMove.ToInputAction().Enable();
-
         nextScene = -1;
-        InitInput();
+
+        List<Image> images = new List<Image>();
+        images.Add(retryButtonImage);
+        images.Add(backToTitleButtonImage);
+        MenuInputManager.PushMenu(item);
     }
 
     private void OnDisable()
     {
-        actionMove.ToInputAction().Disable();
+        MenuInputManager.PopMenu();
     }
-
-    private void OnDestroy()
-    {
-        actionMove.action.performed -= OnMove;
-        actionMove.action.canceled -= OnMove;
-    }
-
+#if false
     private void Update()
     {
-        //マウスの状態を更新
-        Vector3 oldMousePos = mousePos;
-        mousePos = Input.mousePosition;
 
-        if (bMouse) return;
-
-        //ゲームパッドがない又はマウスが動かされたらマウス入力に切り替え
-        if (Vector3.Distance(oldMousePos, mousePos) >= 1.0f)
-        {
-            ChangeInput();
-        }
     }
-
-    #region ゲームオーバー画面のボタン
+#endif
+#region ゲームオーバー画面のボタン
     /// <summary>
     /// NEXT DAYボタン
     /// </summary>
@@ -98,8 +89,8 @@ public class GameOverPanel : MonoBehaviour
         SoundDecisionSE();
         nextScene = (int)MySceneManager.SceneState.SCENE_TITLE;
     }
-    #endregion
-    #region SE鳴らす関数
+#endregion
+#region SE鳴らす関数
     public void SoundSelectSE()
     {
         if (!audioSource) return;
@@ -111,70 +102,10 @@ public class GameOverPanel : MonoBehaviour
         if (!audioSource) return;
         SoundManager.Play(audioSource, SoundManager.ESE.DECISION_001);
     }
-    #endregion
-    /// <summary>
-    /// 入力切替
-    /// </summary>
-    private void ChangeInput()
-    {
-        //マウス→コントローラ
-        if (bMouse)
-        {
-            //デフォルトのボタンを選択
-            ControllerChangeSelect(EGameOverPanelButton.RETRY);
-        }
-        else//コントローラ→マウス
-        {
-            ControllerNoneSelect();
-        }
-        //入力を切り替え
-        bMouse = !bMouse;
-        //カーソルの表示切替
-        Cursor.visible = bMouse;
-        //ボタン画像のraycastTarget切り替え
-        retryButtonImage.raycastTarget = bMouse;
-        backToTitleButtonImage.raycastTarget = bMouse;
-    }
-
-    public void InitInput()
-    {
-        mousePos = Input.mousePosition;
-        bMouse = true;
-        ChangeInput();
-    }
-
-    public void ControllerChangeSelect(EGameOverPanelButton _select)
-    {
-        ControllerNoneSelect();
-        switch (_select)
-        {
-            case EGameOverPanelButton.RETRY:
-                retryButton.Select();
-                break;
-            case EGameOverPanelButton.BACK_TO_TITLE:
-                backToTitleButton.Select();
-                break;
-        }
-        SoundSelectSE();
-    }
-
-    public void ControllerNoneSelect()
-    {
-        EventSystem.current.SetSelectedGameObject(null);
-    }
+#endregion
 
     public int GetNextScene()
     {
         return nextScene;
-    }
-
-    private void OnMove(InputAction.CallbackContext context)
-    {
-        if (this.gameObject.activeSelf) return;
-        if (!PauseManager.isPaused) return;
-        if (!bMouse) return;
-
-        //マウス→コントローラ
-        ChangeInput();
     }
 }
