@@ -9,20 +9,21 @@
 // 2023/06/05	スクリプト作成
 //=============================================================================
 
+using UniRx;
 using UnityEngine;
 
 public class PlayerAnimation : PlayerAction
 {
 	public enum Animenum    // いい名前思いつかなかった
 	{
-		ANIM_MOVE,
-		ANIM_RUN,
-		ANIM_APPEAL,
-		ANIM_HIT,
-		ANIM_CARRY,
-		ANIM_DRAG,
-		ANIM_RANDOM,
-		ANIM_ANIMSPEED,
+		MOVE,
+		RUN,
+		APPEAL,
+		HIT,
+		CARRY,
+		DRAG,
+		RANDOM,
+		ANIMSPEED,
 
 		MAX_ANIM
 	}
@@ -58,6 +59,11 @@ public class PlayerAnimation : PlayerAction
 		HashDrag = Animator.StringToHash("Drag");
 		HashRandom = Animator.StringToHash("Random");
 		HashAnimSpeed = Animator.StringToHash("AnimSpeed");
+
+		PlayerInputCallback.OnAppeal.Subscribe(x => { Appeal(); }).AddTo(this.gameObject);
+		PlayerInputCallback.OnHit.Subscribe(x => { Hit(); }).AddTo(this.gameObject);
+		PlayerInputCallback.OnHold.Subscribe(x => { Hold(); }).AddTo(this.gameObject);
+		PlayerInputCallback.OnRun.Subscribe(x => { Run(); }).AddTo(this.gameObject);
 	}
 
 	/// <summary>
@@ -104,49 +110,153 @@ public class PlayerAnimation : PlayerAction
 		}
 	}
 
-	public void SetAnimation(Animenum num, bool? @bool)
+	public void SetAnimation(Animenum num, bool? @bool = null)
 	{
+		// もし@boolに値が与えられていない場合
+		// 対象のモーションをtrueにし、その他のモーションはfalseにする
 		if (!@bool.HasValue)
 		{
-			anim.SetBool(HashMove, Animenum.ANIM_MOVE == num);
-			anim.SetBool(HashRun, Animenum.ANIM_RUN == num);
-			anim.SetBool(HashAppeal, Animenum.ANIM_APPEAL == num);
-			anim.SetBool(HashHit, Animenum.ANIM_HIT == num);
-			anim.SetBool(HashCarry, Animenum.ANIM_CARRY == num);
-			anim.SetBool(HashDrag, Animenum.ANIM_DRAG == num);
-			anim.SetBool(HashRandom, Animenum.ANIM_RANDOM == num);
+			anim.SetBool(HashMove, Animenum.MOVE == num);
+			anim.SetBool(HashRun, Animenum.RUN == num);
+			anim.SetBool(HashAppeal, Animenum.APPEAL == num);
+			anim.SetBool(HashHit, Animenum.HIT == num);
+			anim.SetBool(HashCarry, Animenum.CARRY == num);
+			anim.SetBool(HashDrag, Animenum.DRAG == num);
+			anim.SetBool(HashRandom, Animenum.RANDOM == num);
 		}
+		// もし@boolに値が与えられていた場合
+		// 対象のモーションのみtrueにする
 		else
 		{
 			int hash = 0;
 			switch (num)
 			{
-				case Animenum.ANIM_MOVE:
-					hash = HashMove;
-					break;
-				case Animenum.ANIM_RUN:
-					hash = HashRun;
-					break;
-				case Animenum.ANIM_APPEAL:
-					hash = HashAppeal;
-					break;
-				case Animenum.ANIM_HIT:
-					hash = HashHit;
-					break;
-				case Animenum.ANIM_CARRY:
-					hash = HashCarry;
-					break;
-				case Animenum.ANIM_DRAG:
-					hash = HashDrag;
-					break;
-				case Animenum.ANIM_RANDOM:
-					hash = HashRandom;
-					break;
-					//case Animenum.ANIM_ANIMSPEED:
-					//	break;
+				case Animenum.MOVE: hash = HashMove; break;
+				case Animenum.RUN: hash = HashRun; break;
+				case Animenum.APPEAL: hash = HashAppeal; break;
+				case Animenum.HIT: hash = HashHit; break;
+				case Animenum.CARRY: hash = HashCarry; break;
+				case Animenum.DRAG: hash = HashDrag; break;
+				case Animenum.RANDOM: hash = HashRandom; break;
+					//case Animenum.ANIM_ANIMSPEED:			break;
 			}
 			anim.SetBool(hash, @bool.Value);
 		}
 	}
+
+	#region コールバック
+
+	private void Appeal()
+	{
+		if (PlayerInputCallback.isAppeal)
+			SetAnimation(Animenum.APPEAL, true);
+		else
+			SetAnimation(Animenum.APPEAL, false);
+	}
+
+	private void Hit()
+	{
+		if (PlayerInputCallback.isHit)
+			SetAnimation(Animenum.HIT, true);
+		else
+			SetAnimation(Animenum.HIT, false);
+	}
+
+	private void Hold()
+	{
+		//if (PlayerInputCallback.isHold)
+		//	SetAnimation(Animenum.CARRY, true);
+		//else
+		//	SetAnimation(Animenum.CARRY, false);
+	}
+
+	private void Run()
+	{
+		if (PlayerInputCallback.isRun)
+			SetAnimation(Animenum.RUN, true);
+		else
+			SetAnimation(Animenum.RUN, false);
+	}
+
+	#endregion
+
+
+	#region アニメーションから呼び出す処理
+	public void MoveSound()
+	{
+		//SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_WALK_002);
+	}
+
+	public void AnimStop()
+	{
+		anim.SetFloat(HashAnimSpeed, 0.0f);
+	}
+
+	/// <summary>
+	/// 鳴く
+	/// </summary>
+	public void OnCall()
+	{
+		// エフェクトを生成
+		var obj = EffectManager.Create(transform.position + new Vector3(0, 4, 0), 0, transform.rotation);
+		obj.transform.localScale = Vector3.one * 5;
+		obj.transform.parent = transform;
+
+		//// もしメガホンを保持している場合は、再生しない
+		//if (InteractCollision != null && InteractCollision.name.Contains("Megaphone"))
+		//	_IsMegaphone = true;
+		//else
+		//	SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_VOICE);
+	}
+
+	public void AnimCarryStop()
+	{
+		anim.SetBool(HashCarry, false);
+	}
+
+	public void AnimHold()
+	{
+		//if (InteractCollision == null || !InteractCollision.CompareTag("Interact"))
+		//	return;
+
+		//_IsHoldMotion = false;
+
+		//if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj))
+		//{
+		//	switch (baseObj.objType)
+		//	{
+		//		case BaseObj.ObjType.HOLD:
+		//		case BaseObj.ObjType.HIT_HOLD:
+		//			Hold(true);
+		//			_IsHold = true;
+		//			break;
+		//		case BaseObj.ObjType.DRAG:
+		//		case BaseObj.ObjType.HIT_DRAG:
+		//			Drag(true);
+		//			_IsHold = _IsDrag = true;
+		//			break;
+		//	}
+		//}
+	}
+
+	public void AnimHit()
+	{
+		//// 範囲内に何もなければ、何もしない
+		//if (WithinRange.Count == 0)
+		//	return;
+
+		//DecideNearestObject();
+
+		//if (InteractCollision.TryGetComponent<BaseObj>(out var baseObj))
+		//{
+		//	if (baseObj.objType == BaseObj.ObjType.HIT ||
+		//		baseObj.objType == BaseObj.ObjType.HIT_HOLD ||
+		//		baseObj.objType == BaseObj.ObjType.HIT_DRAG)
+		//	{
+		//		Hit();
+		//	}
+		//}
+	}
+	#endregion
 
 }

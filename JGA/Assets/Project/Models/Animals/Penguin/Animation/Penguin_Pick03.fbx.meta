@@ -60,7 +60,7 @@ ModelImporter:
       - time: 0.9874329
         functionName: AnimHold
         data: 
-        objectReferenceParameter: {fileID: 11500000, guid: 2bb286e7b0488f545863e9c7530574fb,
+        objectReferenceParameter: {fileID: 11500000, guid: 56704429b5943a041a8c7484308330e1,
           type: 3}
         floatParameter: 0
         intParameter: 0
@@ -68,7 +68,7 @@ ModelImporter:
       - time: 0.99934894
         functionName: AnimStop
         data: 
-        objectReferenceParameter: {fileID: 11500000, guid: 2bb286e7b0488f545863e9c7530574fb,
+        objectReferenceParameter: {fileID: 11500000, guid: 56704429b5943a041a8c7484308330e1,
           type: 3}
         floatParameter: 0
         intParameter: 0
