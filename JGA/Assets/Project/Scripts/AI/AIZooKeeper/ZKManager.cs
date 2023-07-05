@@ -22,7 +22,7 @@ public class ZKManager : SingletonMonoBehaviour<ZKManager>
         base.Awake();
 
         // シーンを読み込む
-        TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_TEST01);
+        TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_TESTZOOKEEPERSPAWON);
     }
 
     /// <summary>
@@ -69,7 +69,7 @@ public class ZKManager : SingletonMonoBehaviour<ZKManager>
                     gameObject.transform.parent = parent.transform;
                 // 名前変更
                 gameObject.name = data[i].name;
-                //gameObject.GetComponent<ZooKeeperAI>().SetData(data[i]);
+                gameObject.GetComponent<ZooKeeperAI>().SetData(data[i]);
             }
         }
     }

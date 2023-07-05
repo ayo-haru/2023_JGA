@@ -60,3 +60,7 @@ MonoBehaviour:
     ID: 11
     prefab: {fileID: 6574745801723262668, guid: 6db7d7bc5e17eb94297f87a302d507cf,
       type: 3}
+  - displayName: ZooKeeperManager
+    ID: 12
+    prefab: {fileID: 7854889061909953952, guid: 9f7fc4b900224a944a12aecd6da750c8,
+      type: 3}
