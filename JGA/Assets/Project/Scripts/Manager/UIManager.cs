@@ -93,7 +93,7 @@ public class UIManager : MonoBehaviour
 
         if (GameData.nowScene != (int)MySceneManager.SceneState.SCENE_TITLE) {
             InitGameUI();
-        /}
+        }
     }
 
     void Update() {
