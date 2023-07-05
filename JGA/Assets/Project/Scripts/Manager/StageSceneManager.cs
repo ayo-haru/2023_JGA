@@ -439,35 +439,35 @@ public class StageSceneManager : BaseSceneManager {
     /// 固定客生成
     /// </summary>
     private void SpawnFixGuest() {
-        GuestData.Data[] _guestList = GameData.guestData[GameData.nowScene-1].dataList;   // 設定された人数分生成する
-        for (int i = 0; i < _guestList.Length; i++) {
-            // 指定された列挙定数から目的地のブースの実際のpositionを設定
-            _guestList[i].rootTransforms = new List<Transform>();
-            for (int j = 0; j < _guestList[i].roots.Length; j++) {
-                _guestList[i].rootTransforms.Add(rootPos[(int)_guestList[i].roots[j]]);
-            }
-            // ペンギンブースの座標を入れる
-            _guestList[i].penguinTF = new List<Transform>();
-            _guestList[i].penguinTF.Add(rootPos[(int)GameData.eRoot.PENGUIN_N]);
-            _guestList[i].penguinTF.Add(rootPos[(int)GameData.eRoot.PENGUIN_S]);
-            _guestList[i].penguinTF.Add(rootPos[(int)GameData.eRoot.PENGUIN_W]);
-            _guestList[i].penguinTF.Add(rootPos[(int)GameData.eRoot.PENGUIN_E]);
+        //GuestData.Data[] _guestList = GameData.guestData[GameData.nowScene-1].dataList;   // 設定された人数分生成する
+        //for (int i = 0; i < _guestList.Length; i++) {
+        //    // 指定された列挙定数から目的地のブースの実際のpositionを設定
+        //    _guestList[i].rootTransforms = new List<Transform>();
+        //    for (int j = 0; j < _guestList[i].roots.Length; j++) {
+        //        _guestList[i].rootTransforms.Add(rootPos[(int)_guestList[i].roots[j]]);
+        //    }
+        //    // ペンギンブースの座標を入れる
+        //    _guestList[i].penguinTF = new List<Transform>();
+        //    _guestList[i].penguinTF.Add(rootPos[(int)GameData.eRoot.PENGUIN_N]);
+        //    _guestList[i].penguinTF.Add(rootPos[(int)GameData.eRoot.PENGUIN_S]);
+        //    _guestList[i].penguinTF.Add(rootPos[(int)GameData.eRoot.PENGUIN_W]);
+        //    _guestList[i].penguinTF.Add(rootPos[(int)GameData.eRoot.PENGUIN_E]);
 
-            // エントランスの座標を入れる
-            _guestList[i].entranceTF = rootPos[(int)GameData.eRoot.ENTRANCE];
+        //    // エントランスの座標を入れる
+        //    _guestList[i].entranceTF = rootPos[(int)GameData.eRoot.ENTRANCE];
 
-            // 生成
-            GameObject guestInstace;
-            int GuestIndex = UnityEngine.Random.Range(0, 3);
-            guestInstace = Instantiate(guestObj[GuestIndex], _guestList[i].rootTransforms[0].position, Quaternion.identity);
-            if (guestParent) {
-                guestInstace.transform.parent = guestParent.transform;   // 親にする
-            }
-            guestInstace.name = _guestList[i].name; // 表示名変更
+        //    // 生成
+        //    GameObject guestInstace;
+        //    int GuestIndex = UnityEngine.Random.Range(0, 3);
+        //    guestInstace = Instantiate(guestObj[GuestIndex], _guestList[i].rootTransforms[0].position, Quaternion.identity);
+        //    if (guestParent) {
+        //        guestInstace.transform.parent = guestParent.transform;   // 親にする
+        //    }
+        //    guestInstace.name = _guestList[i].name; // 表示名変更
 
-            // データの流し込み
-            guestInstace.GetComponent<AIManager>().SetGuestData(_guestList[i]);
-        }
+        //    // データの流し込み
+        //    guestInstace.GetComponent<AIManager>().SetGuestData(_guestList[i]);
+        //}
     }
 
     /// <summary>
@@ -536,35 +536,35 @@ public class StageSceneManager : BaseSceneManager {
     /// 飼育員生成
     /// </summary>
     private void SpawnZookeeper() {
-        ZooKeeperData.Data[] _zooKeeperList = GameData.zooKeeperData[GameData.nowScene-1].list;    // 設定された人数分を生成する
-        GameObject zooKeeperObj;
-        zooKeeperObj = PrefabContainerFinder.Find(GameData.characterDatas, "ZooKeeper.prefab");   // 生成するオブジェクト
-        GameObject parent = GameObject.Find("ZooKeepers");  //  生成するときの親にするオブジェクト
-        for (int i = 0; i < _zooKeeperList.Length; i++) {
-            GameObject spawnPos = GameObject.Find(_zooKeeperList[i].name + "Spawn"); // 生成位置を名前で取得する
-            if (spawnPos == null) { // 存在するか
-                Debug.LogWarning(_zooKeeperList[i].name + "のスポーン位置が見つかりませんでした。(StageSceneManager.cs)");    // 存在しないのでメッセージ出す
-            } else {
-                _zooKeeperList[i].respawnTF = spawnPos.GetComponent<Transform>();    // 存在してたので位置を取得
-            }
+        //ZooKeeperData.Data[] _zooKeeperList = GameData.zooKeeperData[GameData.nowScene-1].list;    // 設定された人数分を生成する
+        //GameObject zooKeeperObj;
+        //zooKeeperObj = PrefabContainerFinder.Find(GameData.characterDatas, "ZooKeeper.prefab");   // 生成するオブジェクト
+        //GameObject parent = GameObject.Find("ZooKeepers");  //  生成するときの親にするオブジェクト
+        //for (int i = 0; i < _zooKeeperList.Length; i++) {
+        //    GameObject spawnPos = GameObject.Find(_zooKeeperList[i].name + "Spawn"); // 生成位置を名前で取得する
+        //    if (spawnPos == null) { // 存在するか
+        //        Debug.LogWarning(_zooKeeperList[i].name + "のスポーン位置が見つかりませんでした。(StageSceneManager.cs)");    // 存在しないのでメッセージ出す
+        //    } else {
+        //        _zooKeeperList[i].respawnTF = spawnPos.GetComponent<Transform>();    // 存在してたので位置を取得
+        //    }
 
-            // 設定された定数から実際のpositionを入れる
-            _zooKeeperList[i].rootTransforms = new List<Transform>();
-            for (int j = 0; j < _zooKeeperList[i].roots.Length; j++) {
-                _zooKeeperList[i].rootTransforms.Add(rootPos[(int)_zooKeeperList[i].roots[j]]);
-            }
+        //    // 設定された定数から実際のpositionを入れる
+        //    _zooKeeperList[i].rootTransforms = new List<Transform>();
+        //    for (int j = 0; j < _zooKeeperList[i].roots.Length; j++) {
+        //        _zooKeeperList[i].rootTransforms.Add(rootPos[(int)_zooKeeperList[i].roots[j]]);
+        //    }
 
-            // 生成
-            if (spawnPos) {
-                GameObject zooKeeperInstace = Instantiate(zooKeeperObj, spawnPos.transform.position, Quaternion.identity);
-                if (parent) {
-                    zooKeeperInstace.transform.parent = parent.transform;   // 親を設定
-                }
-                zooKeeperInstace.name = _zooKeeperList[i].name; // 表示名変更
-                                                                // データをZooKeeperAI.csに流し込む
-                zooKeeperInstace.GetComponent<ZooKeeperAI>().SetData(_zooKeeperList[i]);
-            }
-        }
+        //    // 生成
+        //    if (spawnPos) {
+        //        GameObject zooKeeperInstace = Instantiate(zooKeeperObj, spawnPos.transform.position, Quaternion.identity);
+        //        if (parent) {
+        //            zooKeeperInstace.transform.parent = parent.transform;   // 親を設定
+        //        }
+        //        zooKeeperInstace.name = _zooKeeperList[i].name; // 表示名変更
+        //                                                        // データをZooKeeperAI.csに流し込む
+        //        zooKeeperInstace.GetComponent<ZooKeeperAI>().SetData(_zooKeeperList[i]);
+        //    }
+        //}
     }
 
 

@@ -22,31 +22,42 @@ public class UIManager : MonoBehaviour
     public static UIManager UIManagerInstance { get { return instance; } }
 
     //---キャンバス
-	GameObject canvasObj;
-    Canvas canvas;
+	private GameObject canvasObj;
+    private Canvas canvas;
+    public Canvas CanvasObj { get { return canvas; } }
 
     //---カメラ
-    Camera resultCamera;
-    ResultCamera _ResultCamera;
+    private Camera resultCamera;
+    private ResultCamera _ResultCamera;
 
     //---フェード
-    GameObject fade;
+    private GameObject fade;
+    public GameObject FadeObj { get { return fade; } }
+
+    //---ポーズ
+    private GameObject pausePrefab;
+    private GameObject pause;
+    public GameObject PauseObj { get { return pause; } }
 
     //---クリア
-    GameObject clearUIPrefab;
-    GameObject clearUI;
+    private GameObject clearUIPrefab;
+    private GameObject clearUI;
+    public GameObject ClearUIObj { get { return clearUI; } }
 
     //---ゲームオーバー
-    GameObject failedUIPrefab;
-    GameObject failedUI;
+    private GameObject failedUIPrefab;
+    private GameObject failedUI;
+    public GameObject FailedUIObj { get { return failedUI; } }
 
     //---操作方法
-    GameObject operationUIPrefab;
-    GameObject operationUI;
+    private GameObject operationUIPrefab;
+    private GameObject operationUI;
+    public GameObject OperationUIObj { get { return operationUI; } }
 
     //---時間UI
     private GameObject timerUIPrefab;
     private GameObject timerUI;
+    public GameObject TimerUIObj { get{ return timerUI; } }
     private TimerSliderUI _TimerUI;
     [Header("----- 時間UI設定項目 -----")]
     [Header("プレイ時間")]
@@ -60,8 +71,10 @@ public class UIManager : MonoBehaviour
     public int soundSeconds = 10;
 
     //---客人数UI
+    private GameObject guestNumUIPrefab;
     private GameObject guestNumUI;
     private GuestNumUI _GuestNumUI;
+    public GameObject GuestNumUI { get { return guestNumUI; } }
     [Header("----- 客カウントUI設定項目 -----")]
     //目標人数
     [Range(1, 99)] public int clearNum = 10;
@@ -80,7 +93,7 @@ public class UIManager : MonoBehaviour
 
         if (GameData.nowScene != (int)MySceneManager.SceneState.SCENE_TITLE) {
             InitGameUI();
-        }
+        /}
     }
 
     void Update() {
@@ -97,6 +110,11 @@ public class UIManager : MonoBehaviour
         RectTransform _canvasRT = canvasObj.GetComponent<RectTransform>();
 
         fade = GameObject.Find("FadePanel");
+
+        //----- ポーズの読み込み -----
+        pausePrefab = PrefabContainerFinder.Find(GameData.UIDatas, "PausePanel.prefab");
+        pause = Instantiate(pausePrefab, _canvasRT);
+        pause.name = pausePrefab.name;
 
         //----- 操作方法のUIの読み込みと出現 -----
         operationUIPrefab = PrefabContainerFinder.Find(GameData.UIDatas, "OperationUI.prefab");
@@ -118,7 +136,10 @@ public class UIManager : MonoBehaviour
 
 
         //----- タイマーUIの取得 -----
-        timerUI = GameObject.Find("TimerSlider");
+        timerUIPrefab = PrefabContainerFinder.Find(GameData.UIDatas, "TimerUI.prefab");
+        timerUI = Instantiate(timerUIPrefab, _canvasRT);
+        timerUI.name = timerUIPrefab.name;
+        timerUI.transform.SetSiblingIndex(fade.transform.GetSiblingIndex());
         if (timerUI) {
             _TimerUI = timerUI.GetComponent<TimerSliderUI>();
 
@@ -128,7 +149,10 @@ public class UIManager : MonoBehaviour
         }
 
         //----- 客人数カウントUIの取得 -----
-        guestNumUI = GameObject.Find("GuestNumUI");
+        guestNumUIPrefab = PrefabContainerFinder.Find(GameData.UIDatas, "GuestNumUI.prefab");
+        guestNumUI = Instantiate(guestNumUIPrefab,_canvasRT);
+        guestNumUI.name = guestNumUIPrefab.name;
+        guestNumUI.transform.SetSiblingIndex(fade.transform.GetSiblingIndex());
         if (guestNumUI) {
             _GuestNumUI = guestNumUI.GetComponent<GuestNumUI>();
         } else {
