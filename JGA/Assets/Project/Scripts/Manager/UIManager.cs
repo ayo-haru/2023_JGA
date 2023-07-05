@@ -86,14 +86,19 @@ public class UIManager : MonoBehaviour
     //---チュートリアル
     private TutorialManager _TutorialManager;
 
+    private void Awake() {
+        TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_TESTUI);
+    }
+
+
     void Start()
 	{
         canvasObj = GameObject.Find("Canvas");
         canvas = canvasObj.GetComponent<Canvas>();
 
-        if (GameData.nowScene != (int)MySceneManager.SceneState.SCENE_TITLE) {
+        //if (GameData.nowScene != (int)MySceneManager.SceneState.SCENE_TITLE) {
             InitGameUI();
-        }
+        //}
     }
 
     void Update() {
