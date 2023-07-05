@@ -18,14 +18,14 @@ public class PlayerManager : MonoBehaviour
 
 	[Header("PlayerManager")]
 	[SerializeField, Tooltip("歩行速度")]
-	private float moveSpeed = 25;
-	public float MoveSpeed { get { return moveSpeed; } set { moveSpeed = value; } }
+	private float _moveSpeed = 25;
 	[SerializeField, Tooltip("歩行時最高速度")]
 	private float _maxMoveSpeed = 5;
-	public float MaxMoveSpeed { get { return _maxMoveSpeed; } set { _maxMoveSpeed = value; } }
 	[SerializeField, Tooltip("歩行速度に対する疾走速度の倍率")]
-	private float runMagnification = 1.5f;
-	public float RunMagnification { get { return runMagnification; } set { runMagnification = value; } }
+	private float _runMagnification = 1.5f;
+	public float MoveSpeed { get { return _moveSpeed; } set { _moveSpeed = value; } }
+	public float MaxMoveSpeed { get { return _maxMoveSpeed; } set { _maxMoveSpeed = value; } }
+	public float RunMagnification { get { return _runMagnification; } set { _runMagnification = value; } }
 
 	[SerializeField, Tooltip("リスタート座標")]
 	private Transform respawnZone;
