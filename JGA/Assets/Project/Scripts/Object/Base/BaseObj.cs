@@ -83,7 +83,6 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 		else
 		{
 			GimickObjectManager.Instance.AddGimickObjectsList(this);
-
 		}
 
 	}
