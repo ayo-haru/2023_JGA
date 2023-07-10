@@ -39,7 +39,7 @@ public class TestGameManager : SingletonMonoBehaviour<TestGameManager>
 
 		// 以下各オブジェクト・マネージャーを取得
 		gimickObjectManaager = PrefabContainerFinder.Find(managerObj, "GimickObjectManager");
-		guestManager = PrefabContainerFinder.Find(managerObj, "guestManager");
+		guestManager = PrefabContainerFinder.Find(managerObj, "GuestManager");
 
 	}
 	/// <summary>
@@ -67,14 +67,25 @@ public class TestGameManager : SingletonMonoBehaviour<TestGameManager>
 
 	private void CreateGimickObjectManager()
 	{
-		if(!isCreateGimickObject) return;
-		Instantiate(gimickObjectManaager);
+		if (!isCreateGimickObject){
+			return;
+		}
+		else if (!gimickObjectManaager){
+			Debug.Log(gimickObjectManaager.name + "は見つかりませんでした.");
+		}
+		else Instantiate(gimickObjectManaager);
 	}
 
 	private void CreateGuestManager()
 	{
-		if (!isCreateGuest) return;
-		Instantiate(guestManager);
+		if (!isCreateGuest){
+			return;
+		}
+		else if (!guestManager)
+		{
+			Debug.Log(guestManager.name + "は見つかりませんでした.");
+		}
+		else Instantiate(gimickObjectManaager);
 	}
 }
 
