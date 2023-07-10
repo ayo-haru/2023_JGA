@@ -85,7 +85,7 @@ public class PlayerMove : PlayerAction
 
 		// 制限速度内の場合、移動方向の力を与える
 		_vForce = new Vector3(_playerManager.MoveInputValue.x, 0, _playerManager.MoveInputValue.y) * force;
-		Debug.Log($"_vForce:{_vForce}");
+		//Debug.Log($"_vForce:{_vForce}");
 
 		////引きずっているとき
 		//if (_IsDrag)
