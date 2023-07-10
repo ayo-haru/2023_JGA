@@ -23,6 +23,9 @@ public class GimmickObj : MonoBehaviour
     public List<bool> bReset;               // 元の位置にあるか
     public List<bool> bBring;               // オブジェクトを運んでいるか
 
+    /// <summary>
+    /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
+    /// </summary>
     void Awake()
     {
         ListClear(resetPos, resetRot, bReset, bBring);
