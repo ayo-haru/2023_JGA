@@ -330,7 +330,7 @@ public class SoundManager : MonoBehaviour
 			return -1f;
 		}
 
-		return MySceneManager.Sound.BGMDatas.list[((int)eBGM)].volume;
+		return SoundData.BGMDatas.list[((int)eBGM)].volume;
 	}
 
 	/// <summary>
@@ -340,14 +340,14 @@ public class SoundManager : MonoBehaviour
 	/// <returns><strong>成功時</strong> 0.0f ~ 1.0fの値<br/><strong>失敗時</strong> -1.0f</returns>
 	public static float GetVolume(ESE eSE)
 	{
-		if (MySceneManager.Sound.SEDatas.list.Length <= (int)eSE ||
-			MySceneManager.Sound.SEDatas.list.Length == 0)
+		if (SoundData.SEDatas.list.Length <= (int)eSE ||
+			SoundData.SEDatas.list.Length == 0)
 		{
 			Debug.LogError($"無効な値です。({eSE})");
 			return -1f;
 		}
 
-		return MySceneManager.Sound.BGMDatas.list[((int)eSE)].volume;
+		return SoundData.BGMDatas.list[((int)eSE)].volume;
 	}
 
 
@@ -363,7 +363,7 @@ public class SoundManager : MonoBehaviour
 		if (audioSource == null || clip == null)
 			Debug.LogError($"<color=red>指定されたオブジェクトがNULLです</color>\n");
 
-		var _SEs = MySceneManager.Sound.SEDatas.list;
+		var _SEs = SoundData.SEDatas.list;
 		// SEの場合
 		for (int i = 0; i < _SEs.Length; i++)
 		{
@@ -375,7 +375,7 @@ public class SoundManager : MonoBehaviour
 			}
 		}
 
-		var BGMs = MySceneManager.Sound.BGMDatas.list;
+		var BGMs = SoundData.BGMDatas.list;
 		// BGMの場合
 		for (int i = 0; i < BGMs.Length; i++)
 		{
@@ -397,14 +397,14 @@ public class SoundManager : MonoBehaviour
 	/// <param name="value">値(0.0f~1.0df)</param>
 	public static void SetVolume(AudioSource audioSource, EBGM eBGM, float value)
 	{
-		if (MySceneManager.Sound.BGMDatas.list.Length <= (int)eBGM ||
-			MySceneManager.Sound.BGMDatas.list.Length == 0)
+		if (SoundData.BGMDatas.list.Length <= (int)eBGM ||
+			SoundData.BGMDatas.list.Length == 0)
 		{
 			Debug.LogError($"無効な値です。({eBGM})");
 			return;
 		}
 
-		MySceneManager.Sound.BGMDatas.list[((int)eBGM)].volume = value;
+		SoundData.BGMDatas.list[((int)eBGM)].volume = value;
 		audioSource.volume = value;
 	}
 
@@ -416,14 +416,14 @@ public class SoundManager : MonoBehaviour
 	/// <param name="value">値(0.0f~1.0df)</param>
 	public static void SetVolume(AudioSource audioSource, ESE eSE, float value)
 	{
-		if (MySceneManager.Sound.SEDatas.list.Length <= (int)eSE ||
-			MySceneManager.Sound.SEDatas.list.Length == 0)
+		if (SoundData.SEDatas.list.Length <= (int)eSE ||
+			SoundData.SEDatas.list.Length == 0)
 		{
 			Debug.LogError($"無効な値です。({eSE})");
 			return;
 		}
 
-		MySceneManager.Sound.BGMDatas.list[((int)eSE)].volume = value;
+		SoundData.BGMDatas.list[((int)eSE)].volume = value;
 		audioSource.volume = value;
 	}
 
@@ -432,7 +432,7 @@ public class SoundManager : MonoBehaviour
 	/// </summary>
 	public static void SetVolume()
 	{
-		SoundData.Sound[] BGMs = MySceneManager.Sound.BGMDatas.list;
+		var BGMs = SoundData.BGMDatas.list;
 		List<AudioSource> list = Source.ToListPooled();
 		for (int i = 0; i < list.Count; ++i)
 		{
