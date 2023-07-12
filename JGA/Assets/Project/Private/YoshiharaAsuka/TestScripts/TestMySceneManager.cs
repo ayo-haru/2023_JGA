@@ -21,7 +21,7 @@ public static class TestMySceneManager
 	[SerializeField]
 	private static string[] SetSceneName =
 	{
-		"TestManagerScene",
+		"CommonScene",
 		"TestAddScene1",
 		"TestAddScene2",
 		"TestUIScene",

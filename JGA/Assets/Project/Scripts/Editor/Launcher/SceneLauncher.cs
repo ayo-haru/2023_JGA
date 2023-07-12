@@ -45,4 +45,11 @@ public static class SceneLauncher
 		EditorSceneManager.OpenScene("Assets/Project/Scenes/Game/Stage_002.unity", OpenSceneMode.Single);
 	}
 
+	[MenuItem("Launcher/CommonScene", priority = 6)]
+	public static void OpenCommonScene()
+	{
+		EditorSceneManager.OpenScene("Assets/Project/Private/YoshiharaAsuka/AddScene/CommonScene.unity", OpenSceneMode.Single);
+	}
+
+
 }

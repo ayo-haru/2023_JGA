@@ -418,23 +418,23 @@ public class SoundManager : MonoBehaviour
 		audioSource.volume = value;
 	}
 
-    /// <summary>
-    /// 再生中のBGMの音量を変更
-    /// </summary>
-    public static void SetVolume()
-    {
-        SoundData.Sound[] BGMs = MySceneManager.Sound.BGMDatas.list;
-        List<AudioSource> list = Source.ToListPooled();
-        for (int i = 0; i < list.Count; ++i)
-        {
-            for(int j = 0; j < BGMs.Length; ++j)
-            {
-                if (list[i].clip != BGMs[j].clip) continue;
-                list[i].volume = BGMs[j].volume * Volume.fBGM;
-                break;
-            }
-        }
-    }
+	/// <summary>
+	/// 再生中のBGMの音量を変更
+	/// </summary>
+	public static void SetVolume()
+	{
+		SoundData.Sound[] BGMs = MySceneManager.Sound.BGMDatas.list;
+		List<AudioSource> list = Source.ToListPooled();
+		for (int i = 0; i < list.Count; ++i)
+		{
+			for(int j = 0; j < BGMs.Length; ++j)
+			{
+				if (list[i].clip != BGMs[j].clip) continue;
+				list[i].volume = BGMs[j].volume * Volume.fBGM;
+				break;
+			}
+		}
+	}
 
 
 

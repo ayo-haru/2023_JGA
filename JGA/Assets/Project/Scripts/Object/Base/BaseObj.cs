@@ -37,7 +37,7 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 		RETURN		= 6,    // 元に戻す(飼育員)
 	}
 
-	//---共通変数宣言---
+	/* ========== 共通変数宣言 ===========*/
 	protected GimickObjectManager gimickObjectManager = null;	// ギミックオブジェクトマネージャー
 	protected Rigidbody rb = null;                              // リジッドボディ使用
 
@@ -49,16 +49,16 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 
 	protected Player player = null;								// プレイヤー取得
 	[SerializeField] public ObjType objType;					// オブジェクトのタイプ
-	protected bool isPlaySound;									// 音が鳴っているか
+	protected bool isPlaySound = false;							// 音が鳴っているか
 
 	public UnityEvent OnDestroyed = new UnityEvent();
-	//----------------
+	//===================================
 
 
 	//--- ポーズ用変数 ---
 	protected Vector3 pauseVelocity = Vector3.zero;
 	protected Vector3 pauseAngleVelocity = Vector3.zero;
-	//-----------------
+	//------------------
 
 
 
@@ -79,10 +79,11 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 		if (gimickObjectManager == null)
 		{
 			Destroy(this.gameObject);
-		}
+		} 
 		else
 		{
 			GimickObjectManager.Instance.AddGimickObjectsList(this);
+			Debug.Log(this.gameObject.name + "<color=#00AEEF>をリストに追加しました.</color>");
 		}
 
 	}
@@ -90,7 +91,10 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 	/// <summary>
 	/// オブジェクトが有効化された直後に呼び出される
 	/// </summary>
-	protected virtual void OnEnable() { }
+	protected virtual void OnEnable()
+	{
+
+	}
 
 	/// <summary>
 	/// Behaviourが無効になった直後に呼び出される
