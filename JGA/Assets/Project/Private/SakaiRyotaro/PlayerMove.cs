@@ -16,6 +16,11 @@ public class PlayerMove : PlayerAction
 	public Vector3 vForce { get { return _vForce; } }
 	private Rigidbody rb;
 
+	private float runForce;                                 // 疾走時速度
+	private float _maxRunSpeed;                             // 疾走時最高速度
+	private float appealForce;                              // アピール時速度
+	private float _maxAppealSpeed;                          // アピール時最高速度
+
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
 	/// </summary>
@@ -24,6 +29,12 @@ public class PlayerMove : PlayerAction
 		base.AwakeState(pm);
 
 		rb = _playerManager._playerRb;
+
+		//--- 速度設定
+		runForce = pm.MoveSpeed * pm.RunMagnification;
+		_maxRunSpeed = pm.MaxMoveSpeed * pm.RunMagnification;
+		appealForce = (pm.MoveSpeed + runForce) / 2;
+		_maxAppealSpeed = (pm.MaxMoveSpeed + _maxRunSpeed) / 2;
 	}
 
 	/// <summary>
@@ -64,20 +75,20 @@ public class PlayerMove : PlayerAction
 
 		//--- 速度、制限速度を定義
 		float force, max;
-		//// アピール中の場合
-		//if (_IsAppeal)
-		//{
-		//	force = appealForce;
-		//	max = _maxAppealSpeed;
-		//}
-		//// 走り中の場合
-		//else if (_IsRun)
-		//{
-		//	force = runForce;
-		//	max = _maxRunSpeed;
-		//}
-		//// 歩いている場合
-		//else
+		// アピール中の場合
+		if (PlayerInputCallback.isAppeal)
+		{
+			force = appealForce;
+			max = _maxAppealSpeed;
+		}
+		// 走り中の場合
+		else if (PlayerInputCallback.isRun)
+		{
+			force = runForce;
+			max = _maxRunSpeed;
+		}
+		// 歩いている場合
+		else
 		{
 			force = _playerManager.MoveSpeed;
 			max = _playerManager.MaxMoveSpeed;

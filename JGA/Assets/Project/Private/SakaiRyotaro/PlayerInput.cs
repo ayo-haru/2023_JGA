@@ -16,7 +16,7 @@ using UnityEngine.InputSystem;
 public class PlayerInput : PlayerAction
 {
 	[SerializeField] private PlayerAnimation playerAnimation;
-	private PlayerInputCallback pic = new PlayerInputCallback();
+	private PlayerInputCallback PIC = new PlayerInputCallback();
 
 	private static Subject<string> MoveSubject = new Subject<string>();
 	private static Subject<string> AppealSubject = new Subject<string>();
@@ -146,21 +146,21 @@ public class PlayerInput : PlayerAction
 
 	private void Appeal(InputAction.CallbackContext context)
 	{
-		pic.SetAppeal(context);
+		PIC.SetAppeal(context);
 	}
 
 	private void Hit(InputAction.CallbackContext context)
 	{
-		pic.SetHit(context);
+		PIC.SetHit(context);
 	}
 
 	private void Hold(InputAction.CallbackContext context)
 	{
-		pic.SetHold(context);
+		PIC.SetHold(context);
 	}
 
 	private void Run(InputAction.CallbackContext context)
 	{
-		pic.SetRun(context);
+		PIC.SetRun(context);
 	}
 }
