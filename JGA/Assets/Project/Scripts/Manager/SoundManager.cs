@@ -11,6 +11,7 @@
 //=============================================================================
 using System.Collections.Generic;
 using UniRx;
+using UniRx.Triggers;
 using Unity.VisualScripting;
 using UnityEditor.Rendering;
 using UnityEngine;
@@ -114,6 +115,11 @@ public class SoundManager : MonoBehaviour
 
 	}
 
+	public static class SoundData {
+		public static SoundDataContainer BGMDatas;
+		public static SoundDataContainer SEDatas;
+	}
+
 	private static HashSet<AudioSource> Source = new HashSet<AudioSource>();
 	private static AudioClip BGM;
 	private static List<AudioClip> SEs = new List<AudioClip>();
@@ -139,19 +145,20 @@ public class SoundManager : MonoBehaviour
 	/// </summary>
 	/// <param name="audioSource">音の再生元</param>
 	/// <param name="clip">音</param>
-	public static void Play( AudioSource audioSource, AudioClip clip)
+	public static void Play(AudioSource audioSource, AudioClip clip)
 	{
 		if (audioSource == null || clip == null)
 			Debug.LogError($"<color=red>指定されたオブジェクトがNULLです</color>\n");
 
 		Source.Add(audioSource);
-		var _SEs = MySceneManager.Sound.SEDatas.list;
+		var _SEs = SoundData.SEDatas.list;
 		// SEの場合
 		for (int i = 0; i < _SEs.Length; i++)
 		{
 			if (_SEs[i].clip == clip)
 			{
 				SEs.Add(_SEs[i].clip);
+				audioSource.clip = _SEs[i].clip;
 				audioSource.volume = _SEs[i].volume * Volume.fSE;
 				audioSource.loop = false;
 				audioSource.PlayOneShot(_SEs[i].clip);
@@ -159,7 +166,7 @@ public class SoundManager : MonoBehaviour
 			}
 		}
 
-		var BGMs = MySceneManager.Sound.BGMDatas.list;
+		var BGMs = SoundData.BGMDatas.list;
 		// BGMの場合
 		for (int i = 0; i < BGMs.Length; i++)
 		{
@@ -177,7 +184,7 @@ public class SoundManager : MonoBehaviour
 	}
 
 	/// <summary>
-	/// AudioClipから再生
+	/// 列挙定数
 	/// </summary>
 	/// <param name="audioSource">音の再生元</param>
 	/// <param name="id">ID</param>
@@ -188,14 +195,14 @@ public class SoundManager : MonoBehaviour
 
 		Source.Add(audioSource);
 
-		if (MySceneManager.Sound.BGMDatas.list.Length <= (int)eBGM ||
-			MySceneManager.Sound.BGMDatas.list.Length == 0)
+		if (SoundData.BGMDatas.list.Length <= (int)eBGM ||
+			SoundData.BGMDatas.list.Length == 0)
 		{
 			Debug.LogError($"無効な値です。({eBGM})");
 			return;
 		}
 
-		SoundData.Sound _BGM = MySceneManager.Sound.BGMDatas.list[((int)eBGM)];
+		SoundDataContainer.Sound _BGM = SoundData.BGMDatas.list[((int)eBGM)];
 		BGM = _BGM.clip;
 		audioSource.clip = _BGM.clip;
 		audioSource.volume = _BGM.volume * Volume.fBGM;
@@ -215,15 +222,16 @@ public class SoundManager : MonoBehaviour
 
 		Source.Add(audioSource);
 
-		if (MySceneManager.Sound.SEDatas.list.Length <= (int)eSE ||
-			MySceneManager.Sound.SEDatas.list.Length == 0)
+		if (SoundData.SEDatas.list.Length <= (int)eSE ||
+			SoundData.SEDatas.list.Length == 0)
 		{
 			Debug.LogError($"無効な値です。({eSE})");
 			return;
 		}
 
-		SoundData.Sound _SE = MySceneManager.Sound.SEDatas.list[((int)eSE)];
+		SoundDataContainer.Sound _SE = SoundData.SEDatas.list[((int)eSE)];
 		SEs.Add(_SE.clip);
+		audioSource.clip = _SE.clip;
 		audioSource.volume = _SE.volume * Volume.fSE;
 		audioSource.loop = false;
 		audioSource.PlayOneShot(_SE.clip);
@@ -240,13 +248,14 @@ public class SoundManager : MonoBehaviour
 			Debug.LogError($"<color=red>指定されたオブジェクトがNULLです</color>\n");
 
 		Source.Add(audioSource);
-		var _SEs = MySceneManager.Sound.SEDatas.list;
+		var _SEs = SoundData.SEDatas.list;
 		// SEの場合
 		for (int i = 0; i < _SEs.Length; i++)
 		{
 			if (_SEs[i].clip.name == name)
 			{
 				SEs.Add(_SEs[i].clip);
+				audioSource.clip = _SEs[i].clip;
 				audioSource.volume = _SEs[i].volume * Volume.fSE;
 				audioSource.loop = false;
 				audioSource.PlayOneShot(_SEs[i].clip);
@@ -254,7 +263,7 @@ public class SoundManager : MonoBehaviour
 			}
 		}
 
-		var BGMs = MySceneManager.Sound.BGMDatas.list;
+		var BGMs = SoundData.BGMDatas.list;
 		// BGMの場合
 		for (int i = 0; i < BGMs.Length; i++)
 		{
@@ -283,7 +292,7 @@ public class SoundManager : MonoBehaviour
 		if (clip == null)
 			Debug.LogError($"<color=red>指定されたオブジェクトがNULLです</color>\n");
 
-		var _SEs = MySceneManager.Sound.SEDatas.list;
+		var _SEs = SoundData.SEDatas.list;
 		// SEの場合
 		for (int i = 0; i < _SEs.Length; i++)
 		{
@@ -293,7 +302,7 @@ public class SoundManager : MonoBehaviour
 			}
 		}
 
-		var BGMs = MySceneManager.Sound.BGMDatas.list;
+		var BGMs = SoundData.BGMDatas.list;
 		// BGMの場合
 		for (int i = 0; i < BGMs.Length; i++)
 		{
@@ -314,8 +323,8 @@ public class SoundManager : MonoBehaviour
 	/// <returns><strong>成功時</strong> 0.0f ~ 1.0fの値<br/><strong>失敗時</strong> -1.0f</returns>
 	public static float GetVolume(EBGM eBGM)
 	{
-		if (MySceneManager.Sound.BGMDatas.list.Length <= (int)eBGM ||
-			MySceneManager.Sound.BGMDatas.list.Length == 0)
+		if (SoundData.BGMDatas.list.Length <= (int)eBGM ||
+            SoundData.BGMDatas.list.Length == 0)
 		{
 			Debug.LogError($"無効な値です。({eBGM})");
 			return -1f;

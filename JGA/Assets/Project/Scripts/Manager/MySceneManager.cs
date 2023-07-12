@@ -15,10 +15,10 @@ using UnityEngine.AddressableAssets;
 
 
 public class MySceneManager : SingletonMonoBehaviour<MySceneManager> {
-    public static class Sound {
-        public static SoundData BGMDatas;
-        public static SoundData SEDatas;
-    }
+    //public static class Sound {
+    //    public static SoundData BGMDatas;
+    //    public static SoundData SEDatas;
+    //}
 
     public static class Effect {
         public static EffectData effectDatas;
@@ -56,8 +56,8 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager> {
         //GameData.gimmickDatas = AddressableLoader<PrefabContainer>.Load("GimmickData");
         GameData.stageObjDatas = AddressableLoader<PrefabContainer>.Load("StageObjData");
         //---サウンド
-        Sound.BGMDatas = AddressableLoader<SoundData>.Load("BGMData");
-        Sound.SEDatas = AddressableLoader<SoundData>.Load("SEData");
+        SoundManager.SoundData.BGMDatas = AddressableLoader<SoundDataContainer>.Load("BGMData");
+        SoundManager.SoundData.SEDatas = AddressableLoader<SoundDataContainer>.Load("SEData");
         //---エフェクト
         Effect.effectDatas = AddressableLoader<EffectData>.Load("EffectData");
         //---音量
@@ -80,8 +80,8 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager> {
         Addressables.Release(GameData.UIDatas);
         Addressables.Release(GameData.animalDatas);
         Addressables.Release(GameData.stageObjDatas);
-        Addressables.Release(Sound.BGMDatas);
-        Addressables.Release(Sound.SEDatas);
+        Addressables.Release(SoundManager.SoundData.BGMDatas);
+        Addressables.Release(SoundManager.SoundData.SEDatas);
         Addressables.Release(Effect.effectDatas);
         Addressables.Release(Volume.GameVolumeDatas);
         for (int i = 0; i < GameData.zooKeeperData.Length; i++) {
