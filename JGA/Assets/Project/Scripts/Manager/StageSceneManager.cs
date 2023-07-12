@@ -32,72 +32,19 @@ public class StageSceneManager : BaseSceneManager {
     [SerializeField]
     private Transform[] rootPos;
 
-    #region ゲームマネージャーに移動
-    ////---時間UI
-    //private GameObject timerUI;
-    //private TimerSliderUI _TimerUI;
-
-    ////---客人数UI
-    //private GameObject guestNumUI;
-    //private GuestNumUI _GuestNumUI;
-
-    ////-----クリア画面
-    //private GameObject clearPanel;
-    //private ClearPanel _ClearPanel;
-    //private ReactiveProperty<bool> isClear = new ReactiveProperty<bool>(false);
-
-    ////-----ゲームオーバー画面
-    //private GameObject gameOverPanel;
-    //private GameOverPanel _GameOverPanel;
-    //private ReactiveProperty<bool> isGameOver = new ReactiveProperty<bool>(false);
-
-    ////---変数
-    //private bool isOnce; // 一度だけ処理をするときに使う
-    //AudioSource[] asList;
-    #endregion
-
     /// <summary>
     /// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
     /// </summary>
     void Awake() {
         Init();
 
-        #region ゲームマネージャーに移動
-#if UNITY_EDITOR
-        if (GameData.nowScene == 0) { // 本来ならnowSceneneには現在のシーン番号が入るがエディタ上で実行した場合は0が入っているので初期化
-            for (int i = 0; i < System.Enum.GetNames(typeof(MySceneManager.SceneState)).Length; i++) {
-                if (SceneManager.GetActiveScene().name == MySceneManager.sceneName[i]) {
-                    GameData.nowScene = i;
-                }
-            }
-            GameData.oldScene = GameData.nowScene;
-        }
-#endif
-        if (GameData.isContinueGame && GameData.oldScene == (int)MySceneManager.SceneState.SCENE_TITLE) {
-            /*
-             * セーブデータが存在または初期化済みでタイトルシーンを通ってきた場合つづきから
-             */
-        } else {
-            //BeginGame();
-        }
-
-        //isOnce = false;
-        //// BGM再生用にオーディオソース取得
-        //asList = GetComponents<AudioSource>();
-        #endregion
+        TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_GAME_001);
     }
 
     /// <summary>
     /// 最初のフレーム更新の前に呼び出される
     /// </summary>
     void Start() {
-        #region ゲームマネージャーに移動
-        //----- イベント登録 -----
-        //// クリア
-        //isClear.Subscribe(_ => { if (isClear.Value) OnClear(); }).AddTo(this);
-        //// ゲームオーバー
-        //isGameOver.Subscribe(_ => { if (isGameOver.Value) OnGameOver(); }).AddTo(this);
-        #endregion
         //----- それぞれのブースの座標の取得 -----
         rootPos = new Transform[Enum.GetNames(typeof(GameData.eRoot)).Length];
         // 客のルート取得===================================================================
@@ -192,103 +139,12 @@ public class StageSceneManager : BaseSceneManager {
         }
         #endregion
         //===============================================================================
-
-        #region ゲームマネージャーに移動
-        //----- タイマーUIの取得 -----
-        //timerUI = UIManager.UIManagerInstance.TimerUIObj;
-        //if (timerUI) {
-        //    _TimerUI = timerUI.GetComponent<TimerSliderUI>();
-
-        //    _TimerUI.CountStart();
-        //} else {
-        //    Debug.LogWarning("TimerUIがシーン上にありません");
-        //}
-
-        //----- 客人数カウントUIの取得 -----
-        //guestNumUI = UIManager.UIManagerInstance.TimerUIObj;
-        //if (guestNumUI) {
-        //    _GuestNumUI = guestNumUI.GetComponent<GuestNumUI>();
-        //} else {
-        //    Debug.LogWarning("GuestNumUIがシーン上にありません");
-        //}
-
-        //----- 音の処理 -----
-        //// BGM再生
-        //SoundManager.Play(asList[0], SoundManager.EBGM.GAME001);
-        //SoundManager.Play(asList[1], SoundManager.EBGM.INZOO);
-        //// フェード中だったら待機して音を止める
-        //StartCoroutine(WaitFade());
-
-        //----- セーブ -----
-        //SaveManager.SaveAll();  // 一旦全セーブ
-        #endregion
     }
 
     void Update() {
-        #region ゲームマネージャーに移動
-        //----- プレイヤーの座標保存 -----
-        //GameData.playerPos = playerInstance.transform.position;
-        //SaveSystem.SaveLastPlayerPos(GameData.playerPos);
-
-        ////----- 時間系の処理 -----
-        //if (timerUI) {
-        //    isGameOver.Value = _TimerUI.IsFinish();
-        //}
-
-        ////----- ゲームクリア -----
-        //if (guestNumUI) {
-        //    isClear.Value = _GuestNumUI.isClear();
-        //}
-
-        //if (isClear.Value) {
-        //    if (!isOnce) {   // 一度だけ処理
-        //        //　クリア画面取得
-        //        if (!clearPanel) clearPanel = GameObject.Find("ClearPanel");
-        //        if (clearPanel && !_ClearPanel) _ClearPanel = clearPanel.GetComponent<ClearPanel>();
-
-        //        int next = -1;
-        //        if (_ClearPanel) next = _ClearPanel.GetNextScene();
-        //        if (next != -1) {
-        //            GameData.oldScene = GameData.nowScene;  // 今のシーンをひとつ前のシーンとして保存
-        //            GameData.nowScene = next;
-        //            SceneChange(next);  // シーン遷移
-        //            isOnce = true;
-
-        //            SaveManager.SaveAll();
-        //        }
-        //    }
-        //}
-
-        ////----- 制限時間のゲームオーバー -----
-        //if (isGameOver.Value) {
-        //    if (!isOnce) {
-        //        // ゲームオーバー画面取得
-        //        if (!gameOverPanel) gameOverPanel = GameObject.Find("GameOverPanel");
-        //        if (gameOverPanel && !_GameOverPanel) _GameOverPanel = gameOverPanel.GetComponent<GameOverPanel>();
-
-        //        int next = -1;
-        //        if (_GameOverPanel) next = _GameOverPanel.GetNextScene();
-        //        if (next != -1) {
-        //            GameData.oldScene = GameData.nowScene;  // 今のシーンをひとつ前のシーンとして保存
-        //            GameData.nowScene = next;
-        //            SceneChange(next);  // シーン遷移
-        //            isOnce = true;
-        //        }
-        //    }
-        //}
-        #endregion
     }
 
     private void LateUpdate() {
-        #region ゲームマネージャーに移動
-        ////----- 飼育員に捕まったフラグを下す -----
-        ///*
-        // * Updateで下ろすと各処理と同フレーム中にフラグが降りてしまうためLateに書いた
-        // */
-        //if (GameData.isCatchPenguin) {
-        //    GameData.isCatchPenguin = false;
-        //}
-        #endregion
     }
 
     /// <summary>
@@ -299,80 +155,4 @@ public class StageSceneManager : BaseSceneManager {
     public Transform GetRootTransform(GameData.eRoot _root) {
         return rootPos[(int)_root];
     }
-
-    #region ゲームマネージャーに移動
-    ///// <summary>
-    ///// ステージを初めの状態からやる
-    ///// </summary>
-    //private void BeginGame() {
-    //    GameData.guestCnt = 0;
-    //    GameData.timer = 0.0f;
-    //    //playerRespawn = GameObject.Find("PlayerSpawn");
-    //    //GameData.playerPos = playerRespawn.transform.position;
-
-    //    // 一個前のシーンがタイトルかつ今のシーンがステージ１
-    //    if (GameData.oldScene == (int)MySceneManager.SceneState.SCENE_TITLE &&
-    //        GameData.nowScene == (int)MySceneManager.SceneState.SCENE_GAME_001) {
-    //        TutorialManager.StartTutorial();
-    //    }
-    //}
-
-    ///// <summary>
-    ///// 
-    ///// </summary>
-    ///// <returns></returns>
-    //IEnumerator WaitFade() {
-    //    asList[0].Pause();
-    //    asList[1].Pause();
-    //    yield return new WaitUntil(() => FadeManager.fadeMode == FadeManager.eFade.Default);
-    //    asList[0].UnPause();
-    //    asList[1].UnPause();
-    //}
-
-    ///// <summary>
-    ///// クリアになった瞬間にやる処理
-    ///// </summary>
-    //private void OnClear() {
-    //    // ポーズ
-    //    if (!PauseManager.isPaused) {
-    //        PauseManager.isPaused = true;
-    //        PauseManager.NoMenu = true;
-    //        PauseManager.Pause();
-    //    }
-
-    //    //----- 音の再生 -----
-    //    // ポーズ後にやらないとポーズに消される
-    //    SoundManager.Play(asList[2], SoundManager.ESE.GAMECLEAR);
-
-    //    // セーブ
-    //    SaveManager.SaveGuestCnt(0);
-    //    SaveManager.SaveTimer(0.0f);
-    //    if (System.Enum.GetNames(typeof(MySceneManager.SceneState)).Length > GameData.nowScene) {  // 最大シーンではないとき
-    //        SaveManager.SaveLastStageNum(GameData.nowScene + 1);
-    //    } else {
-    //        SaveManager.SaveLastStageNum(GameData.nowScene);
-    //    }
-    //    SaveManager.SaveLastPlayerPos(GameData.playerPos);
-    //}
-
-    ///// <summary>
-    ///// ゲームオーバーになったらやる処理
-    ///// </summary>
-    //private void OnGameOver() {
-    //    // ポーズ
-    //    if (!PauseManager.isPaused) {
-    //        PauseManager.isPaused = true;
-    //        PauseManager.NoMenu = true;
-    //        PauseManager.Pause();
-    //    }
-
-    //    //----- 音の再生 -----
-    //    // ポーズ後にやらないとポーズに消される
-    //    SoundManager.Play(asList[2], SoundManager.ESE.GAMEOVER);
-
-    //    //----- セーブ -----
-    //    // 初期値の値で保存。シーン番号は現在のシーン。
-    //    SaveManager.SaveInitDataAll();
-    //}
-    #endregion
 }

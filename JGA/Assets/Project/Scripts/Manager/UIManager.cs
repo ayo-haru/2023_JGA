@@ -88,17 +88,18 @@ public class UIManager : MonoBehaviour
 
     private void Awake() {
         TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_TESTUI);
+
+        canvasObj = GameObject.Find("UICanvas");
+        canvas = canvasObj.GetComponent<Canvas>();
+
+        //if (GameData.nowScene != (int)MySceneManager.SceneState.SCENE_TITLE) {
+        InitGameUI();
+        //}
     }
 
 
     void Start()
 	{
-        canvasObj = GameObject.Find("Canvas");
-        canvas = canvasObj.GetComponent<Canvas>();
-
-        //if (GameData.nowScene != (int)MySceneManager.SceneState.SCENE_TITLE) {
-            InitGameUI();
-        //}
     }
 
     void Update() {
@@ -165,14 +166,14 @@ public class UIManager : MonoBehaviour
         }
 
         //----- リザルトカメラの取得 -----
-        GameObject _cameraManagerObj;
-        _cameraManagerObj = GameObject.Find("CameraManager");
-        if (_cameraManagerObj) {
-            _ResultCamera = _cameraManagerObj.GetComponent<ResultCamera>();
-        } else {
-            Debug.LogWarning("CameraManagerがシーン上にありません");
-        }
-        resultCamera = GameObject.Find("ResultCamera").GetComponent<Camera>();
+        //GameObject _cameraManagerObj;
+        //_cameraManagerObj = GameObject.Find("CameraManager");
+        //if (_cameraManagerObj) {
+        //    _ResultCamera = _cameraManagerObj.GetComponent<ResultCamera>();
+        //} else {
+        //    Debug.LogWarning("CameraManagerがシーン上にありません");
+        //}
+        //resultCamera = GameObject.Find("ResultCamera").GetComponent<Camera>();
 
         //----- チュートリアルマネージャーの取得 -----
         if (GameData.nowScene == (int)MySceneManager.SceneState.SCENE_GAME_001) {

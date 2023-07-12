@@ -37,5 +37,5 @@ MonoBehaviour:
       type: 3}
   - displayName: GuestNumUI.prefab
     ID: 6
-    prefab: {fileID: 4310907480879071765, guid: ce240564607aa1e4cb44534f23cdfda6,
+    prefab: {fileID: 4310907480879071765, guid: cd7808725752fa44dbee40c5f12ba737,
       type: 3}
