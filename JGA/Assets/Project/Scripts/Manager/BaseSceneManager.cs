@@ -15,34 +15,9 @@ using UnityEngine.UI;
 
 public class BaseSceneManager : MonoBehaviour
 {
-    protected GameObject canvasObj;
-    protected Canvas canvas;
-
     protected void Init() {
-
-        //----- キャンバスが見つからなかったらキャンバスを作成する -----
-        canvasObj = GameObject.Find("Canvas");
-        if (canvasObj) {
-            canvas = canvasObj.GetComponent<Canvas>();
-        } else {
-            canvasObj = new GameObject();
-            canvasObj.name = "Canvas";
-            canvasObj.AddComponent<Canvas>();
-
-            canvas = canvasObj.GetComponent<Canvas>();
-            canvasObj.AddComponent<CanvasScaler>();
-            canvasObj.AddComponent<GraphicRaycaster>();
-        }
-        // キャンバスの設定
-        canvas.renderMode = RenderMode.ScreenSpaceCamera;
-        canvas.worldCamera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
-        canvas.planeDistance = 1;
-
         // AudioSourceをつける
         gameObject.AddComponent<AudioSource>();
-        
-        // UIのマネージャーを設定する
-        //gameObject.AddComponent<UIManager>();
     }
 
 

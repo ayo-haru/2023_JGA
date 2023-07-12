@@ -11,7 +11,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "ScriptableObject/SoundData")]
-public class SoundData : ScriptableObject
+public class SoundDataContainer : ScriptableObject
 {
 	[System.Serializable]
 	public class Sound
@@ -22,8 +22,8 @@ public class SoundData : ScriptableObject
 		public float volume = 1;
 	}
 
-	// 表示するリスト
-	[SerializeField]
+    // 表示するリスト
+    [SerializeField]
 	public Sound[] list = default;
 
 }
