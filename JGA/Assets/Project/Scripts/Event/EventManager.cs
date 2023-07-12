@@ -25,8 +25,7 @@ public class EventManager : MonoBehaviour
     private GameObject eventTextInstance;
     private Text eventTextChar;
 
-    // Start is called before the first frame update
-    void Start() {
+    private void Awake() {
         //----- イベントを静的クラスに保存 -----
         GameData.events = new EventParam[this.events.Length];
         for (int i = 0; i < events.Length; i++) {
@@ -38,6 +37,10 @@ public class EventManager : MonoBehaviour
             GameData.events[i].eventState = this.events[i].eventState;
             GameData.events[i].percent = this.events[i].percent;
         }
+    }
+
+    // Start is called before the first frame update
+    void Start() {
 
     }
 

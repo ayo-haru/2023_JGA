@@ -64,3 +64,7 @@ MonoBehaviour:
     ID: 12
     prefab: {fileID: 7854889061909953952, guid: 9f7fc4b900224a944a12aecd6da750c8,
       type: 3}
+  - displayName: EventManager
+    ID: 13
+    prefab: {fileID: 5052467974459341113, guid: ff38821d7139d23459ad75506261384e,
+      type: 3}
