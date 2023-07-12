@@ -8,6 +8,8 @@
 // [Date]
 // 2023/06/14	スクリプト作成
 // 2023/06/14	オブジェクトをリストに登録するように変更
+// 2023/07/12	GetGImickObjectAll()をBaseObj型で返すように変更
+// 2023/07/12	BaseObjのOnStartをAddListに追加された際に行うように変更
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -18,14 +20,22 @@ public class GimickObjectManager : SingletonMonoBehaviour<GimickObjectManager>
 {
 	[SerializeField]
 	private List<BaseObj> GimickObjectsList = new List<BaseObj>();
-	
+	protected override void Awake()
+	{
+		base.Awake();
+
+		// このオブジェクトが有効化された時にシーンを生成
+		TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_TESTGIMICK);
+
+		Debug.Log("<color=#00AEEF>ギミックオブジェクトシーンを加算します.</color>");
+
+	}
+
 	/// <summary>
 	/// オブジェクトが有効化された時
 	/// </summary>
 	private void OnEnable()
 	{
-		// このオブジェクトが有効化された時にシーンを生成
-		TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_TESTGIMICK);
 	}
 
 	/// <summary>
@@ -44,11 +54,16 @@ public class GimickObjectManager : SingletonMonoBehaviour<GimickObjectManager>
 	{
 		//TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_TESTGIMICK);
 
-		if(GimickObjectsList.Count == 0) { return; }
+		
+		/*  AddGimickObjectListにOnStartを移動(吉原:07/12)
+		 *  
+		if (GimickObjectsList.Count == 0) { return; }
 
-		foreach (BaseObj Gimickobjects in GimickObjectsList){
+		foreach (BaseObj Gimickobjects in GimickObjectsList)
+		{
 			Gimickobjects.OnStart();
 		}
+		*/
 
 	}
 
@@ -71,16 +86,18 @@ public class GimickObjectManager : SingletonMonoBehaviour<GimickObjectManager>
 
 	}
 
-		/// <summary>
-		/// リストにギミックオブジェクトを追加
-		/// </summary>
-		/// <param name="obj"></param>
-		public void AddGimickObjectsList(BaseObj obj)
+	/// <summary>
+	/// リストにギミックオブジェクトを追加
+	/// </summary>
+	/// <param name="obj"></param>
+	public void AddGimickObjectsList(BaseObj obj)
 	{
 		/* 重複チェックを入れようと思ったが、
 		 * 同じオブジェクト複数個使用する可能性がある
 		 * と思ったので記載なし。(06/16時点 吉原) */
 		GimickObjectsList.Add(obj);
+		obj.OnStart();
+
 	}
 
 	/// <summary>
@@ -154,7 +171,7 @@ public class GimickObjectManager : SingletonMonoBehaviour<GimickObjectManager>
 			}
 		}
 
-		Debug.LogError("指定されたオブジェクトは見つかりませんでした。");
+		Debug.LogError("<color=#fd7e00>指定されたオブジェクトは見つかりませんでした。</color>");
 		return null;
 	}
 
@@ -162,12 +179,12 @@ public class GimickObjectManager : SingletonMonoBehaviour<GimickObjectManager>
 	/// GimickObjectManagerで登録しているリストにあるオブジェクトをすべて取得
 	/// </summary>
 	/// <returns></returns>
-	public List<GameObject> GetGimickObjectAll()
+	public List<BaseObj> GetGimickObjectAll()
 	{
-		List<GameObject> objectsList = new List<GameObject>();
+		List<BaseObj> objectsList = new List<BaseObj>();
 
 		foreach(BaseObj gimickObjects in GimickObjectsList){
-			objectsList.Add(gimickObjects.gameObject);
+			objectsList.Add(gimickObjects);
 		}
 
 		return objectsList;

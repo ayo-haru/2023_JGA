@@ -86,7 +86,7 @@ public class TestGameManager : SingletonMonoBehaviour<TestGameManager>
 		{
 			Debug.Log(guestManager.name + "は見つかりませんでした.");
 		}
-		else Instantiate(gimickObjectManaager);
+		else InstantiateWithoutClone(gimickObjectManaager);
 	}
 
 

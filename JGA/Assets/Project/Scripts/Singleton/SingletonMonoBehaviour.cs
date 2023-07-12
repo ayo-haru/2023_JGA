@@ -58,7 +58,7 @@ public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBe
 			return;
 		}
 
-		Debug.Log(this.name + "生成されました");
+		Debug.Log(this.name + "<color=#00EF41>が生成されました.</color>");
 		instance = this as T;
 		DontDestroyOnLoad(this.gameObject);
 	}
@@ -74,10 +74,9 @@ public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBe
 		}
 		else{
 			DestroyImmediate(this.gameObject);
-			Debug.Log(this.gameObject.name + "解放処理を行いました");
+			Debug.Log(this.gameObject.name + "の解放処理を行いました");
 
 		}
-
 
 	}
 }
