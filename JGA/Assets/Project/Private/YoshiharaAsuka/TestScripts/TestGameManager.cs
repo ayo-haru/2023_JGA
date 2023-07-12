@@ -70,13 +70,14 @@ public class TestGameManager : SingletonMonoBehaviour<TestGameManager>
 		if (!isCreateGimickObject){
 			return;
 		}
-		else if (!gimickObjectManaager){
+		else if (!gimickObjectManaager)	{
 			Debug.Log(gimickObjectManaager.name + "は見つかりませんでした.");
 		}
-		else Instantiate(gimickObjectManaager);
-	}
+		else{
+			InstantiateWithoutClone(gimickObjectManaager);
+		}
 
-	private void CreateGuestManager()
+	}	private void CreateGuestManager()
 	{
 		if (!isCreateGuest){
 			return;
@@ -87,5 +88,20 @@ public class TestGameManager : SingletonMonoBehaviour<TestGameManager>
 		}
 		else Instantiate(gimickObjectManaager);
 	}
+
+
+	/// <summary>
+	/// 生成する際にCloneがつくのを回避する処理
+	/// </summary>
+	/// <param name="original"></param>
+	/// <returns></returns>
+	public static GameObject InstantiateWithoutClone(UnityEngine.Object original)
+	{
+		var result = Instantiate(original);
+		result.name = result.name.Replace("(Clone)", "");
+		return (GameObject)result;
+	}
+
 }
+
 

@@ -25,7 +25,7 @@ public class GimickObjectManager : SingletonMonoBehaviour<GimickObjectManager>
 	private void OnEnable()
 	{
 		// このオブジェクトが有効化された時にシーンを生成
-		//TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_TESTGIMICK);
+		TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_TESTGIMICK);
 	}
 
 	/// <summary>
@@ -59,12 +59,17 @@ public class GimickObjectManager : SingletonMonoBehaviour<GimickObjectManager>
 	{
 		if (GimickObjectsList.Count == 0) { return; }
 
-		foreach (BaseObj Gimickobjects in GimickObjectsList){
+		foreach (BaseObj Gimickobjects in GimickObjectsList)
+		{
 			Gimickobjects.OnUpdate();
 		}
+
+		if (Input.GetKeyDown(KeyCode.Space))
+		{
+			Release();
+		}
+
 	}
-
-
 
 		/// <summary>
 		/// リストにギミックオブジェクトを追加

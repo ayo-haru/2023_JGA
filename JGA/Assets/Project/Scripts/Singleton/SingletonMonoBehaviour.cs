@@ -62,4 +62,22 @@ public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBe
 		instance = this as T;
 		DontDestroyOnLoad(this.gameObject);
 	}
+
+	/// <summary>
+	/// Singletonで生成しているオブジェクトを破壊する処理
+	/// </summary>
+	public void Release()
+	{
+		if(instance == null){
+			Debug.Log(this.gameObject.name + "はありませんでした。" + "Release処理は行いませんでした。");
+			return;
+		}
+		else{
+			DestroyImmediate(this.gameObject);
+			Debug.Log(this.gameObject.name + "解放処理を行いました");
+
+		}
+
+
+	}
 }

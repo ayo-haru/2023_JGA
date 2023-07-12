@@ -90,7 +90,19 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 	/// <summary>
 	/// オブジェクトが有効化された直後に呼び出される
 	/// </summary>
-	protected virtual void OnEnable() { }
+	protected virtual void OnEnable()
+	{
+		// GimickObjectManagerのコンポーネントを検索
+		gimickObjectManager = FindObjectOfType<GimickObjectManager>();
+
+		if (gimickObjectManager == null)
+		{
+			Destroy(this.gameObject);
+		}
+		else{
+			GimickObjectManager.Instance.AddGimickObjectsList(this);
+		}
+	}
 
 	/// <summary>
 	/// Behaviourが無効になった直後に呼び出される
