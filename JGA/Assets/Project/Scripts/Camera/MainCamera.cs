@@ -87,7 +87,7 @@ public class MainCamera : MonoBehaviour
     private float scriptStop;
 
     //カメラの情報受け取り用
-    private CameraManager cameraObj;
+    private MainCameraManager cameraObj;
     //メインカメラ格納用
     private Camera maincamera;
     //座標角度格納用
@@ -142,7 +142,7 @@ public class MainCamera : MonoBehaviour
         crearGuest = 0;
 
         //カメラの情報の受け取り
-        cameraObj = GameObject.Find("CameraParent").GetComponent<CameraManager>();
+        cameraObj = GameObject.Find("CameraParent").GetComponent<MainCameraManager>();
         //初期化としてカメラの情報を格納
         maincamera = cameraObj.GetTransformObject();
 
