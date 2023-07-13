@@ -65,22 +65,24 @@ public class TransitionInteract : AITransition
         if (interactObjecs != null) return;
 
         interactObjecs = new List<BaseObj>();
-        GameObject Object = GameObject.Find("GuestSharedObject");
-        if (!Object) return;
-        GuestSharedObject sharedObject = Object.GetComponent<GuestSharedObject>();
-        if (!sharedObject) return;
-        interactObjecs = (reactionObject == EReactionObject.ALL) ? sharedObject.GetInteractObjects() : sharedObject.GetCarboardObjects();
+        if (!GimickObjectManager.Instance) return;
 
-#if false
-             Debug.LogWarning("GuestSharedObjectなかった");
-                GameObject[] interactObjectList = GameObject.FindGameObjectsWithTag("Interact");
-                interactObjecs = new List<BaseObj>();
-                for (int i = 0; i < interactObjectList.Length; ++i){
-                    BaseObj baseObjComponent = interactObjectList[i].GetComponent<BaseObj>();
-                    if (!baseObjComponent) continue;
-                    interactObjecs.Add(baseObjComponent);
+        //ギミックマネージャから取得
+        interactObjecs = GimickObjectManager.Instance.GetGimickObjectAll();
+
+        switch (reactionObject)
+        {
+            case EReactionObject.ALL:
+                break;
+            case EReactionObject.CARBOARD:
+                for(int i = 0; i < interactObjecs.Count; ++i)
+                {
+                    if (interactObjecs[i].TryGetComponent(out CardBoard cardBoard)) continue;
+                    interactObjecs.RemoveAt(i);
+                    --i;
                 }
-#endif
+                break;
+        }
     }
 
     public override bool IsTransition()
