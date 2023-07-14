@@ -14,6 +14,7 @@
 // 2023/04/08	(小楠)オプションの処理全部消した
 // 2023/05/26	(小楠)はじめからと続きからを追加
 // 2023/05/29	(小楠)ゲームパッド繋がってないときにキーボードで操作できないのを修正
+// 2023/07/14	(小楠)使ってない変数とか消したりした　UIのアニメーション開始の呼び出しを変更
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -39,22 +40,10 @@ public class TitleScenManager : BaseSceneManager {
     //続きからボタン隠す用
     private SpriteRenderer continueHideImage;
 
-    //入力フラグ
-    private bool bMouse = true;
-    //マウス位置
-    private Vector3 mousePos;
-
-    //[SerializeField] private InputActionReference actionMove;
-
-    //タイトル画面のボタン
-    private enum ETitleSelect { TITLESELECT_START, TITLESELECT_CONTINUE,TITLESELECT_OPTION, TITLESELECT_EXIT, MAX_TITLESELECT };
-
     //次のシーン
     private int nextScene;
 
     private AudioSource audioSource;
-    private bool bFlag = false;
-    private bool bAnimFlag = false;
 
     private void Awake() {
         /*
@@ -122,6 +111,8 @@ public class TitleScenManager : BaseSceneManager {
         SoundManager.Play(audioSource, SoundManager.EBGM.TITLE_001);
         //フェード中だったら待機して音を止める
         StartCoroutine(WaitFade());
+        //フェードアウトが終わったらアニメーションを再生
+        StartCoroutine(StartUIAnimation());
 
         List<BoxCollider> boxColliders = new List<BoxCollider>();
         boxColliders.Add(startButtonCollider);
@@ -131,52 +122,15 @@ public class TitleScenManager : BaseSceneManager {
         MenuInputManager.PushMenu(new MenuSettingItem(startButton, boxColliders));
     }
 
+#if false
     /// <summary>
     /// <summary>
     /// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
     /// </summary>
     void Update() {
-        //フェードが終わったらアニメーション開始
-        if (!bAnimFlag && FadeManager.fadeMode != FadeManager.eFade.FadeOut)
-        {
-            StartUIAnimation();
-        }
-#if false
-        bool beforeFlag = bFlag;
-        bFlag = optionObject.activeSelf;
-        //オプション画面が開かれているときは処理しない
-        if (bFlag) return;
-        //オプション画面から戻って来た時の初期化処理
-        if (beforeFlag) InitInput();
 
-        //マウスの状態を更新
-        Vector3 oldMousePos = mousePos;
-        mousePos = Input.mousePosition;
-
-        if (bMouse) return;
-
-        //マウスが動かされたらマウス入力に切り替え
-        if (Vector3.Distance(oldMousePos, mousePos) >= 1.5f)
-        {
-            ChangeInput();
-        }
+    }
 #endif
-    }
-
-    public void StartUIAnimation()
-    {
-        bAnimFlag = true;
-
-        ButtonWrite buttonWrite;
-        if (startButton.TryGetComponent(out buttonWrite)) buttonWrite.StartWriteAnimation();
-        if (continueButton.TryGetComponent(out buttonWrite)) buttonWrite.StartWriteAnimation();
-        if (optionButton.TryGetComponent(out buttonWrite)) buttonWrite.StartWriteAnimation();
-        if (exitButton.TryGetComponent(out buttonWrite)) buttonWrite.StartWriteAnimation();
-
-        if (!continueHideImage) return;
-        if (!continueHideImage.enabled) return;
-        if (continueHideImage.TryGetComponent(out buttonWrite)) buttonWrite.StartWriteAnimation();
-    }
 
 #region タイトル画面のボタン
     public void StartButton() {
@@ -226,8 +180,8 @@ public class TitleScenManager : BaseSceneManager {
         Application.Quit();
 #endif
     }
-    #endregion
-    #region SE鳴らす関数
+#endregion
+#region SE鳴らす関数
     public void SoundSESelect() {
         if (!audioSource) return;
         SoundManager.Play(audioSource, SoundManager.ESE.SELECT_001);
@@ -236,10 +190,25 @@ public class TitleScenManager : BaseSceneManager {
         if (!audioSource) return;
         SoundManager.Play(audioSource, SoundManager.ESE.DECISION_001);
     }
-    #endregion
+#endregion
     IEnumerator WaitFade() {
         audioSource.Pause();
         yield return new WaitUntil(() => FadeManager.fadeMode == FadeManager.eFade.Default);
         audioSource.UnPause();
+    }
+
+    IEnumerator StartUIAnimation()
+    {
+        yield return new WaitUntil(() => FadeManager.fadeMode != FadeManager.eFade.FadeOut);
+
+        ButtonWrite buttonWrite;
+        if (startButton.TryGetComponent(out buttonWrite)) buttonWrite.StartWriteAnimation();
+        if (continueButton.TryGetComponent(out buttonWrite)) buttonWrite.StartWriteAnimation();
+        if (optionButton.TryGetComponent(out buttonWrite)) buttonWrite.StartWriteAnimation();
+        if (exitButton.TryGetComponent(out buttonWrite)) buttonWrite.StartWriteAnimation();
+
+        if (!continueHideImage) yield break;
+        if (!continueHideImage.enabled) yield break; 
+        if (continueHideImage.TryGetComponent(out buttonWrite)) buttonWrite.StartWriteAnimation();
     }
 }
