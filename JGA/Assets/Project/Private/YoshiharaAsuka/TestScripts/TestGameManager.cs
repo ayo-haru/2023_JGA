@@ -16,6 +16,15 @@ using UniRx;
 using UnityEngine.SceneManagement;
 
 public class TestGameManager : SingletonMonoBehaviour<TestGameManager> {
+    /*   
+     *めも！！！！！！！！！！！！！！！！！！！！！！
+     *
+     *UIマネージャーでよみこみが完了したら読み込むようにする
+     *
+     *
+     */
+
+
     // マネージャーオブジェクトのプレハブを取得
     public static PrefabContainer managerObj;
 
@@ -111,6 +120,8 @@ public class TestGameManager : SingletonMonoBehaviour<TestGameManager> {
         CreateGuestManager();
         CreateEventManager();
 
+
+        Debug.Log("ゲームマネージャースタート");
         //----- タイマーUIの取得 -----
         timerUI = UIManager.UIManagerInstance.TimerUIObj;
         if (timerUI) {
