@@ -10,12 +10,13 @@
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 [System.Serializable]
-public class UIManager : MonoBehaviour
+public class UIManager : MonoBehaviour,IManagerCommon
 {
     private static UIManager instance;
 
@@ -72,7 +73,7 @@ public class UIManager : MonoBehaviour
 
     //---客人数UI
     private GameObject guestNumUIPrefab;
-    private GameObject guestNumUI;
+    private static GameObject guestNumUI;
     private GuestNumUI _GuestNumUI;
     public GameObject GuestNumUI { get { return guestNumUI; } }
     [Header("----- 客カウントUI設定項目 -----")]
@@ -87,19 +88,14 @@ public class UIManager : MonoBehaviour
     private TutorialManager _TutorialManager;
 
     private void Awake() {
-        TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_TESTUI);
+        AsyncOperation asyncOperation = TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_TESTUI);
 
-        canvasObj = GameObject.Find("UICanvas");
-        canvas = canvasObj.GetComponent<Canvas>();
-
-        //if (GameData.nowScene != (int)MySceneManager.SceneState.SCENE_TITLE) {
-        InitGameUI();
-        //}
+        StartCoroutine(WaitAddScene(asyncOperation));
     }
-
 
     void Start()
 	{
+        Debug.Log("UIスタート");
     }
 
     void Update() {
@@ -109,10 +105,28 @@ public class UIManager : MonoBehaviour
     }
 
     /// <summary>
+    /// シーン加算完了待ち
+    /// </summary>
+    /// <param name="_asyncOperation"></param>
+    /// <returns></returns>
+    public IEnumerator WaitAddScene(AsyncOperation _asyncOperation) {
+        yield return new WaitUntil(() => _asyncOperation.isDone == true);
+
+        //if (GameData.nowScene != (int)MySceneManager.SceneState.SCENE_TITLE) {
+        InitGameUI();
+
+        Debug.Log("UI配置完了");
+        //}
+    }
+
+    /// <summary>
     /// ゲームUIの初期化
     /// </summary>
     private void InitGameUI() {
-    #region
+        #region
+        canvasObj = GameObject.Find("UICanvas");
+        canvas = canvasObj.GetComponent<Canvas>();
+
         RectTransform _canvasRT = canvasObj.GetComponent<RectTransform>();
 
         fade = GameObject.Find("FadePanel");
