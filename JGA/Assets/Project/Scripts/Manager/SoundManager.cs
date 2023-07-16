@@ -119,6 +119,8 @@ public class SoundManager : MonoBehaviour
 		public static SoundDataContainer BGMDatas;
 		public static SoundDataContainer SEDatas;
 	}
+	
+	public static GameVolume GameVolumeDatas;
 
 	private static HashSet<AudioSource> Source = new HashSet<AudioSource>();
 	private static AudioClip BGM;
@@ -132,6 +134,13 @@ public class SoundManager : MonoBehaviour
 		PauseManager.OnResumed.Subscribe(x => { Resumed(); }).AddTo(this.gameObject);
 
 		SceneManager.activeSceneChanged += ActiveSceneChanged;
+
+		//---サウンド
+		SoundManager.SoundData.BGMDatas = AddressableLoader<SoundDataContainer>.Load("BGMData");
+		SoundManager.SoundData.SEDatas = AddressableLoader<SoundDataContainer>.Load("SEData");
+
+		//---音量
+		GameVolumeDatas = AddressableLoader<GameVolume>.Load("GameVolume");
 	}
 
 	private void Start()
@@ -232,7 +241,7 @@ public class SoundManager : MonoBehaviour
 		SoundDataContainer.Sound _SE = SoundData.SEDatas.list[((int)eSE)];
 		SEs.Add(_SE.clip);
 		audioSource.clip = _SE.clip;
-		audioSource.volume = _SE.volume * Volume.fSE;
+		//audioSource.volume = _SE.volume * Volume.fSE;
 		audioSource.loop = false;
 		audioSource.PlayOneShot(_SE.clip);
 	}

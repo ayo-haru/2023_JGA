@@ -28,6 +28,7 @@ public class FadeManager : MonoBehaviour {
     [SerializeField]
     private float speed = 0.01f;
 
+    private GameObject fadePanel;
     private Image image;
     private static float alpha;
 
@@ -41,7 +42,8 @@ public class FadeManager : MonoBehaviour {
         oldFadeMode = fadeMode = eFade.Default;
 
         alpha = 0.0f;
-        image = GetComponent<Image>();
+        fadePanel = GameObject.Find("FadePanel");
+        image = fadePanel.GetComponent<Image>();
         image.color = new Color(0.0f, 0.0f, 0.0f, alpha);
 
         audioSource = gameObject.AddComponent<AudioSource>();   // オーディオソースの追加と保存
@@ -59,7 +61,7 @@ public class FadeManager : MonoBehaviour {
     /// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
     /// </summary>
     void Update() {
-        if (GameData.isCatchPenguin) {   // ペンギンを捕まえたらフェードアウト開始
+        if (GameData.isCatchPenguin) {   // ペンギンを捕まえたらブラックアウトからフェードイン開始
             StartFadeIn();
         }
 

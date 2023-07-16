@@ -36,27 +36,22 @@ public class UIManager : MonoBehaviour,IManagerCommon
     public GameObject FadeObj { get { return fade; } }
 
     //---ポーズ
-    private GameObject pausePrefab;
     private GameObject pause;
     public GameObject PauseObj { get { return pause; } }
 
     //---クリア
-    private GameObject clearUIPrefab;
     private GameObject clearUI;
     public GameObject ClearUIObj { get { return clearUI; } }
 
     //---ゲームオーバー
-    private GameObject failedUIPrefab;
     private GameObject failedUI;
     public GameObject FailedUIObj { get { return failedUI; } }
 
     //---操作方法
-    private GameObject operationUIPrefab;
     private GameObject operationUI;
     public GameObject OperationUIObj { get { return operationUI; } }
 
     //---時間UI
-    private GameObject timerUIPrefab;
     private GameObject timerUI;
     public GameObject TimerUIObj { get{ return timerUI; } }
     private TimerSliderUI _TimerUI;
@@ -72,7 +67,6 @@ public class UIManager : MonoBehaviour,IManagerCommon
     public int soundSeconds = 10;
 
     //---客人数UI
-    private GameObject guestNumUIPrefab;
     private static GameObject guestNumUI;
     private GuestNumUI _GuestNumUI;
     public GameObject GuestNumUI { get { return guestNumUI; } }
@@ -95,7 +89,7 @@ public class UIManager : MonoBehaviour,IManagerCommon
 
     void Start()
 	{
-        Debug.Log("UIスタート");
+        InitGameUI();
     }
 
     void Update() {
@@ -118,42 +112,21 @@ public class UIManager : MonoBehaviour,IManagerCommon
     /// </summary>
     private void InitGameUI() {
         #region
-        canvasObj = GameObject.Find("UICanvas");
-        canvas = canvasObj.GetComponent<Canvas>();
+        //----- ポーズの取得 -----
+        pause = GameObject.Find("Pause");
 
-        RectTransform _canvasRT = canvasObj.GetComponent<RectTransform>();
+        //----- 操作方法のUIの取得 -----
+        operationUI = GameObject.Find("OperationUI");
 
-        fade = GameObject.Find("FadePanel");
+        //----- クリアのUIの取得 ------
+        clearUI = GameObject.Find("ClearPanel");
 
-        //----- ポーズの読み込み -----
-        pausePrefab = PrefabContainerFinder.Find(GameData.UIDatas, "PausePanel.prefab");
-        pause = Instantiate(pausePrefab, _canvasRT);
-        pause.name = pausePrefab.name;
-
-        //----- 操作方法のUIの読み込みと出現 -----
-        operationUIPrefab = PrefabContainerFinder.Find(GameData.UIDatas, "OperationUI.prefab");
-        operationUI = Instantiate(operationUIPrefab, _canvasRT);
-        operationUI.name = operationUIPrefab.name;    // 名前を変更
-        operationUI.transform.SetSiblingIndex(fade.transform.GetSiblingIndex()); // フェードの裏側に来るようにする
-
-        //----- クリアのUI読み込みと出現 ------
-        clearUIPrefab = PrefabContainerFinder.Find(GameData.UIDatas, "ClearUI.prefab");
-        clearUI = Instantiate(clearUIPrefab, _canvasRT);
-        clearUI.name = clearUIPrefab.name;    // 名前を変更
-        clearUI.transform.SetSiblingIndex(fade.transform.GetSiblingIndex());    // フェードの裏側に来るようにする
-
-        //----- ゲームオーバーのUI読み込みと出現 -----
-        failedUIPrefab = PrefabContainerFinder.Find(GameData.UIDatas, "FailedUI.prefab");
-        failedUI = Instantiate(failedUIPrefab, _canvasRT);
-        failedUI.name = failedUIPrefab.name; // 名前を変更
-        failedUI.transform.SetSiblingIndex(fade.transform.GetSiblingIndex()); // フェードの裏側に来るようにする
+        //----- ゲームオーバーのUI読み込み -----
+        failedUI = GameObject.Find("GameOverPanel");
 
 
         //----- タイマーUIの取得 -----
-        timerUIPrefab = PrefabContainerFinder.Find(GameData.UIDatas, "TimerUI.prefab");
-        timerUI = Instantiate(timerUIPrefab, _canvasRT);
-        timerUI.name = timerUIPrefab.name;
-        timerUI.transform.SetSiblingIndex(fade.transform.GetSiblingIndex());
+        timerUI = GameObject.Find("TimerSlider");
         if (timerUI) {
             _TimerUI = timerUI.GetComponent<TimerSliderUI>();
 
@@ -163,10 +136,7 @@ public class UIManager : MonoBehaviour,IManagerCommon
         }
 
         //----- 客人数カウントUIの取得 -----
-        guestNumUIPrefab = PrefabContainerFinder.Find(GameData.UIDatas, "GuestNumUI.prefab");
-        guestNumUI = Instantiate(guestNumUIPrefab,_canvasRT);
-        guestNumUI.name = guestNumUIPrefab.name;
-        guestNumUI.transform.SetSiblingIndex(fade.transform.GetSiblingIndex());
+        guestNumUI = GameObject.Find("GuestNumText");
         if (guestNumUI) {
             _GuestNumUI = guestNumUI.GetComponent<GuestNumUI>();
         } else {
