@@ -99,9 +99,9 @@ public class UIManager : MonoBehaviour,IManagerCommon
     }
 
     void Update() {
-        if (GameData.nowScene != (int)MySceneManager.SceneState.SCENE_TITLE) {
+        //if (GameData.nowScene != (int)MySceneManager.SceneState.SCENE_TITLE) {
             UpdateGameUI();
-        }
+        //}
     }
 
     /// <summary>
@@ -111,12 +111,6 @@ public class UIManager : MonoBehaviour,IManagerCommon
     /// <returns></returns>
     public IEnumerator WaitAddScene(AsyncOperation _asyncOperation) {
         yield return new WaitUntil(() => _asyncOperation.isDone == true);
-
-        //if (GameData.nowScene != (int)MySceneManager.SceneState.SCENE_TITLE) {
-        InitGameUI();
-
-        Debug.Log("UI配置完了");
-        //}
     }
 
     /// <summary>

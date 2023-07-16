@@ -135,7 +135,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 		CreateGimickObjectManager();
 
 		//----- タイマーUIの取得 -----
-		timerUI = UIManager.UIManagerInstance.TimerUIObj;
+		//timerUI = UIManager.UIManagerInstance.TimerUIObj;
+		timerUI = GameObject.Find("TimerSlider");
 		if (timerUI) {
 			_TimerUI = timerUI.GetComponent<TimerSliderUI>();
 
@@ -145,7 +146,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 		}
 
 		//----- 客人数カウントUIの取得 -----
-		guestNumUI = UIManager.UIManagerInstance.TimerUIObj;
+		//guestNumUI = UIManager.UIManagerInstance.TimerUIObj;
+		guestNumUI = GameObject.Find("GuestNumText");
 		if (guestNumUI) {
 			_GuestNumUI = guestNumUI.GetComponent<GuestNumUI>();
 		} else {
