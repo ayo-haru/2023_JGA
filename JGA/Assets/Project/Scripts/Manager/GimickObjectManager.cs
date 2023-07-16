@@ -25,7 +25,7 @@ public class GimickObjectManager : SingletonMonoBehaviour<GimickObjectManager>
 		base.Awake();
 
 		// このオブジェクトが有効化された時にシーンを生成
-		TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_TESTGIMICK);
+		TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_GIMICK);
 
 		Debug.Log("<color=#00AEEF>ギミックオブジェクトシーンを加算します.</color>");
 

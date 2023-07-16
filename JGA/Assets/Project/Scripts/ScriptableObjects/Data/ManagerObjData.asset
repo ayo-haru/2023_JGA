@@ -68,3 +68,7 @@ MonoBehaviour:
     ID: 13
     prefab: {fileID: 5052467974459341113, guid: ff38821d7139d23459ad75506261384e,
       type: 3}
+  - displayName: StageManager
+    ID: 14
+    prefab: {fileID: 6348633696836463273, guid: d638d426e9cc2624284238320dd145d2,
+      type: 3}
