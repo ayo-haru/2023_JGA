@@ -21,7 +21,7 @@ public class TestSceneLoad : MonoBehaviour
 	/// </summary>
 	void Awake()
 	{
-		TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_TESTGIMICK);
+		TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_GIMICK);
 	}
 
 	/// <summary>

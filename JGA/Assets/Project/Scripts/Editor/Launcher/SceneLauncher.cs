@@ -51,5 +51,12 @@ public static class SceneLauncher
 		EditorSceneManager.OpenScene("Assets/Project/Private/YoshiharaAsuka/AddScene/CommonScene.unity", OpenSceneMode.Single);
 	}
 
+	[MenuItem("Launcher/GimickObjectScene", priority = 6)]
+	public static void OpenGimickObjectScene()
+	{
+		EditorSceneManager.OpenScene("Assets/Project/Private/YoshiharaAsuka/AddScene/GimickObjectScene.unity", OpenSceneMode.Single);
+	}
+
+
 
 }

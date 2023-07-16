@@ -25,13 +25,13 @@ public class TestMySceneManager
 		"TestAddScene1",
 		"TestAddScene2",
 		"TestUIScene",
-		"TestGimickObjectScene",
+		"GimickObjectScene",
 		"TestGuestSpawonScene",
 		"TestZooKeeperSpawonScene",
-        "Title",
-        "Stage_001",
-        "Stage_002"
-    };
+		"Title",
+		"Stage_001",
+		"Stage_002"
+	};
 
 	/* シーン名の列挙を定義 */
 	public enum SCENE
@@ -40,13 +40,13 @@ public class TestMySceneManager
 		SCENE_TEST01,
 		SCENE_TEST02,
 		SCENE_TESTUI,
-		SCENE_TESTGIMICK,
+		SCENE_GIMICK,
 		SCENE_TESTGUESTSPAWON,
 		SCENE_TESTZOOKEEPERSPAWON,
-        SCENE_TITLE,
-        SCENE_GAME_001,
-        SCENE_GAME_002,
-    };
+		SCENE_TITLE,
+		SCENE_GAME_001,
+		SCENE_GAME_002,
+	};
 
 
 /// <summary>

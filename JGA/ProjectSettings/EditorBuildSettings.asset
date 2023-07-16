@@ -30,7 +30,7 @@ EditorBuildSettings:
     path: Assets/Project/Private/YoshiharaAsuka/AddScene/TestAddScene2.unity
     guid: 3546616e0cce56b47a1548907797326d
   - enabled: 1
-    path: Assets/Project/Private/YoshiharaAsuka/AddScene/TestGimickObjectScene.unity
+    path: Assets/Project/Private/YoshiharaAsuka/AddScene/GimickObjectScene.unity
     guid: 7ad6492ceaa4ff346bce6e2a6e50af50
   - enabled: 1
     path: Assets/Project/Private/YoshiharaAsuka/AddScene/TestGuestSpawonScene.unity

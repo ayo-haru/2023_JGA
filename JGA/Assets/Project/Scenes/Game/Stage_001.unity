@@ -5072,7 +5072,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &344348764
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16541,7 +16541,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1143973690
 Transform:
   m_ObjectHideFlags: 0
@@ -20274,10 +20274,30 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3488218270430079029, guid: 01eb5b54d8149be439800ab13cb5d514,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3488218270694432705, guid: 01eb5b54d8149be439800ab13cb5d514,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3488218270860131710, guid: 01eb5b54d8149be439800ab13cb5d514,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3488218270860131711, guid: 01eb5b54d8149be439800ab13cb5d514,
         type: 3}
       propertyPath: m_LocalPosition.y
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3488218272058856177, guid: 01eb5b54d8149be439800ab13cb5d514,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3605908709911736363, guid: 01eb5b54d8149be439800ab13cb5d514,
         type: 3}
@@ -20638,6 +20658,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_RootOrder
       value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 9105807029503970745, guid: 01eb5b54d8149be439800ab13cb5d514,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 01eb5b54d8149be439800ab13cb5d514, type: 3}
@@ -23874,7 +23899,7 @@ PrefabInstance:
     - target: {fileID: 7013362251430728592, guid: 6c48ae1620ef1e6468b1a7473519eca9,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.5
+      value: -0.19
       objectReference: {fileID: 0}
     - target: {fileID: 7013362251430728592, guid: 6c48ae1620ef1e6468b1a7473519eca9,
         type: 3}
@@ -25163,6 +25188,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: GimickObjectManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 7234625745326861927, guid: d6aa2ce5f2414a44d9e3eae2c417620e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d6aa2ce5f2414a44d9e3eae2c417620e, type: 3}
@@ -31058,7 +31088,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2128571571
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34172,6 +34202,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: GuestManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 6574745801723262668, guid: 6db7d7bc5e17eb94297f87a302d507cf,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6574745801723262669, guid: 6db7d7bc5e17eb94297f87a302d507cf,
         type: 3}
