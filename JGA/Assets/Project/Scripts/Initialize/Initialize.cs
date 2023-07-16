@@ -17,6 +17,7 @@ public class Initialize
 {
     // 初期化を行うシーンの名前を検索
     private const string InitializeSceneName = "InitializeScene";
+    private const string CommonSceneName = "CommonScene";
 
     // 属性のリファレンス:https://docs.unity3d.com/ScriptReference/RuntimeInitializeOnLoadMethodAttribute.html
     // [RuntimeInitializeOnLoadMethod]ゲームがロードされた後に呼び出される。
@@ -30,6 +31,15 @@ public class Initialize
         }
         else{
             Debug.LogError("初期化用シーンの呼び出しが出来ませんでした。");
+        }
+
+        if (!SceneManager.GetSceneByName(CommonSceneName).IsValid())
+        {
+            SceneManager.LoadScene(CommonSceneName, LoadSceneMode.Additive);
+        }
+        else
+        {
+            Debug.LogError("共通シーンの呼び出しが出来ませんでした。");
         }
     }
 

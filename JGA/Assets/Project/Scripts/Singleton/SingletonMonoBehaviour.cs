@@ -34,7 +34,7 @@ public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBe
 				instance = FindObjectOfType<T>();
 				if (instance == null)
 				{
-					Debug.LogError(typeof(T) + "is missing int the scene.");
+					Debug.Log(typeof(T) + "<color=#fd7e00>is missing int the scene.</color>");
 				}
 			}
 			return instance;

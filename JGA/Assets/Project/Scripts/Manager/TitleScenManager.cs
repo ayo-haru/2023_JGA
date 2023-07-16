@@ -100,6 +100,7 @@ public class TitleScenManager : BaseSceneManager {
             //続きから隠すようの画像を非表示にする
             if(continueHideImage)continueHideImage.enabled = false;
         }
+
     }
     private void OnDestroy()
     {

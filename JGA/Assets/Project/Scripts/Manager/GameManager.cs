@@ -76,7 +76,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
 
 
-	protected override void Awake() {
+	protected override void Awake() 
+	{
 		base.Awake();
 
 		//----- イベント登録 -----
@@ -133,6 +134,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 		CreateEventManager();
 		CreateGuestManager();
 		CreateGimickObjectManager();
+
+		StartGame();
 
 		//----- タイマーUIの取得 -----
 		//timerUI = UIManager.UIManagerInstance.TimerUIObj;
@@ -388,6 +391,10 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 		SaveManager.SaveInitDataAll();
 	}
 
+	private void StartGame()
+	{
+		TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_TITLE);
+	}
 }
 
 
