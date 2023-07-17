@@ -11,7 +11,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "ScriptableObject/EffectData")]
-public class EffectData : ScriptableObject
+public class EffectDataContainer : ScriptableObject
 {
 	//[System.Serializable]
 	//public class Effect

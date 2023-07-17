@@ -16,6 +16,10 @@ using static Unity.VisualScripting.Member;
 
 public class EffectManager : MonoBehaviour
 {
+	public static class EffectData {
+		public static EffectDataContainer effectDatas;
+	}
+
 	private static HashSet<ParticleSystem> Particles = new HashSet<ParticleSystem>();
 
 	private void Awake()
@@ -24,6 +28,8 @@ public class EffectManager : MonoBehaviour
 		PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(this.gameObject);
 		PauseManager.OnResumed.Subscribe(x => { Resumed(); }).AddTo(this.gameObject);
 
+		//---エフェクト
+		EffectData.effectDatas = AddressableLoader<EffectDataContainer>.Load("EffectData");
 	}
 
 	/// <summary>
@@ -39,7 +45,7 @@ public class EffectManager : MonoBehaviour
 		if (!quaternion.HasValue)
 			quaternion = Quaternion.identity;
 
-		var list = MySceneManager.Effect.effectDatas.list;
+		var list = EffectData.effectDatas.list;
 
 		for (int i = 0; i < list.Length; i++)
 		{
@@ -67,7 +73,7 @@ public class EffectManager : MonoBehaviour
 		if (!quaternion.HasValue)
 			quaternion = Quaternion.identity;
 
-		var list = MySceneManager.Effect.effectDatas.list;
+		var list = EffectData.effectDatas.list;
 
 		if (list.Length >= ID && ID < 0)
 		{
@@ -92,7 +98,7 @@ public class EffectManager : MonoBehaviour
 		if (!quaternion.HasValue)
 			quaternion = Quaternion.identity;
 
-		var list = MySceneManager.Effect.effectDatas.list;
+		var list = EffectData.effectDatas.list;
 
 		for (int i = 0; i < list.Length; i++)
 		{

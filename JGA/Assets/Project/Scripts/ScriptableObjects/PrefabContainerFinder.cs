@@ -11,8 +11,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PrefabContainerFinder : MonoBehaviour
@@ -44,5 +42,24 @@ public class PrefabContainerFinder : MonoBehaviour
 
         Debug.LogError("<color=red>指定されたオブジェクトが見つかりません</color>(PrefabContainerFind)\n");
         return null;
+    }
+
+    private static void ContainerNullCheck(PrefabContainer _prefabContainer) {
+        if (_prefabContainer == null) {
+            //----- ScriptableObjectの登録したデータの読み込み -----
+            //---オブジェクト
+            GameData.characterDatas = AddressableLoader<PrefabContainer>.Load("CharacterData");
+            //GameData.UIDatas = AddressableLoader<PrefabContainer>.Load("UIData");
+            GameData.animalDatas = AddressableLoader<PrefabContainer>.Load("AnimalData");
+            //GameData.gimmickDatas = AddressableLoader<PrefabContainer>.Load("GimmickData");
+            GameData.stageObjDatas = AddressableLoader<PrefabContainer>.Load("StageObjData");
+            //---データ
+            GameData.zooKeeperData = new ZooKeeperData[2];
+            GameData.zooKeeperData[0] = AddressableLoader<ZooKeeperData>.Load("Stage01_ZooKeeperData");
+            GameData.zooKeeperData[1] = AddressableLoader<ZooKeeperData>.Load("Stage02_ZooKeeperData");
+            GameData.guestData = new GuestData[2];
+            GameData.guestData[0] = AddressableLoader<GuestData>.Load("Stage01_GuestData");
+            GameData.guestData[1] = AddressableLoader<GuestData>.Load("Stage02_GuestData");
+        }
     }
 }
