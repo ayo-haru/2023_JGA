@@ -33,6 +33,7 @@ public class Initialize
             Debug.LogError("初期化用シーンの呼び出しが出来ませんでした。");
         }
 
+        #if false
         if (!SceneManager.GetSceneByName(CommonSceneName).IsValid())
         {
             SceneManager.LoadScene(CommonSceneName, LoadSceneMode.Additive);
@@ -41,6 +42,7 @@ public class Initialize
         {
             Debug.LogError("共通シーンの呼び出しが出来ませんでした。");
         }
+        #endif
     }
 
 }
