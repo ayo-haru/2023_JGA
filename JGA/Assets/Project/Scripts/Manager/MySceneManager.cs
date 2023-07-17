@@ -20,9 +20,6 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager> {
     //    public static SoundData SEDatas;
     //}
 
-    public static class Effect {
-        public static EffectData effectDatas;
-    }
 
     // このクラスを持つオブジェクトは消えない
     //protected override bool dontDestroyOnLoad { get { return true; } }
@@ -44,23 +41,6 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager> {
         // FPSを60に固定
         Application.targetFrameRate = 60;
 
-        //----- ScriptableObjectの登録したデータの読み込み -----
-        //---オブジェクト
-        GameData.characterDatas = AddressableLoader<PrefabContainer>.Load("CharacterData");
-        //GameData.UIDatas = AddressableLoader<PrefabContainer>.Load("UIData");
-        GameData.animalDatas = AddressableLoader<PrefabContainer>.Load("AnimalData");
-        //GameData.gimmickDatas = AddressableLoader<PrefabContainer>.Load("GimmickData");
-        GameData.stageObjDatas = AddressableLoader<PrefabContainer>.Load("StageObjData");
-        //---エフェクト
-        Effect.effectDatas = AddressableLoader<EffectData>.Load("EffectData");
-        //---データ
-        GameData.zooKeeperData = new ZooKeeperData[2];
-        GameData.zooKeeperData[(int)SceneState.SCENE_GAME_001 - 1] = AddressableLoader<ZooKeeperData>.Load("Stage01_ZooKeeperData");
-        GameData.zooKeeperData[(int)SceneState.SCENE_GAME_002 - 1] = AddressableLoader<ZooKeeperData>.Load("Stage02_ZooKeeperData");
-        GameData.guestData = new GuestData[2];
-        GameData.guestData[(int)SceneState.SCENE_GAME_001 - 1] = AddressableLoader<GuestData>.Load("Stage01_GuestData");
-        GameData.guestData[(int)SceneState.SCENE_GAME_002 - 1] = AddressableLoader<GuestData>.Load("Stage02_GuestData");
-
         //----- 変数初期化 -----
         GameData.isCatchPenguin = false;
     }
@@ -73,8 +53,7 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager> {
         Addressables.Release(GameData.stageObjDatas);
         Addressables.Release(SoundManager.SoundData.BGMDatas);
         Addressables.Release(SoundManager.SoundData.SEDatas);
-        Addressables.Release(Effect.effectDatas);
-        //Addressables.Release(Volume.GameVolumeDatas);
+        //Addressables.Release(Effect.effectDatas);
         for (int i = 0; i < GameData.zooKeeperData.Length; i++) {
             Addressables.Release(GameData.zooKeeperData[i]);
         }
