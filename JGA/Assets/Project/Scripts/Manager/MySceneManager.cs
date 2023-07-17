@@ -24,10 +24,6 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager> {
         public static EffectData effectDatas;
     }
 
-    public static class Volume {
-        public static GameVolume GameVolumeDatas;
-    }
-
     // このクラスを持つオブジェクトは消えない
     //protected override bool dontDestroyOnLoad { get { return true; } }
 
@@ -51,17 +47,12 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager> {
         //----- ScriptableObjectの登録したデータの読み込み -----
         //---オブジェクト
         GameData.characterDatas = AddressableLoader<PrefabContainer>.Load("CharacterData");
-        GameData.UIDatas = AddressableLoader<PrefabContainer>.Load("UIData");
+        //GameData.UIDatas = AddressableLoader<PrefabContainer>.Load("UIData");
         GameData.animalDatas = AddressableLoader<PrefabContainer>.Load("AnimalData");
         //GameData.gimmickDatas = AddressableLoader<PrefabContainer>.Load("GimmickData");
         GameData.stageObjDatas = AddressableLoader<PrefabContainer>.Load("StageObjData");
-        //---サウンド
-        SoundManager.SoundData.BGMDatas = AddressableLoader<SoundDataContainer>.Load("BGMData");
-        SoundManager.SoundData.SEDatas = AddressableLoader<SoundDataContainer>.Load("SEData");
         //---エフェクト
         Effect.effectDatas = AddressableLoader<EffectData>.Load("EffectData");
-        //---音量
-        Volume.GameVolumeDatas = AddressableLoader<GameVolume>.Load("GameVolume");
         //---データ
         GameData.zooKeeperData = new ZooKeeperData[2];
         GameData.zooKeeperData[(int)SceneState.SCENE_GAME_001 - 1] = AddressableLoader<ZooKeeperData>.Load("Stage01_ZooKeeperData");
@@ -83,7 +74,7 @@ public class MySceneManager : SingletonMonoBehaviour<MySceneManager> {
         Addressables.Release(SoundManager.SoundData.BGMDatas);
         Addressables.Release(SoundManager.SoundData.SEDatas);
         Addressables.Release(Effect.effectDatas);
-        Addressables.Release(Volume.GameVolumeDatas);
+        //Addressables.Release(Volume.GameVolumeDatas);
         for (int i = 0; i < GameData.zooKeeperData.Length; i++) {
             Addressables.Release(GameData.zooKeeperData[i]);
         }

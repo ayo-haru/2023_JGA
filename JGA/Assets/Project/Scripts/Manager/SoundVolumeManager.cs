@@ -16,39 +16,39 @@ using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public static class SoundVolumeManager /* : MonoBehaviour*/
+public class SoundVolumeManager /* : MonoBehaviour*/
 {
 	public static GameVolume.Volume GetVolume()
 	{
-		return MySceneManager.Volume.GameVolumeDatas.volume;
+		return SoundManager.GameVolumeDatas.volume;
 	}
 
 	public static float GetBGM()
 	{
-		return MySceneManager.Volume.GameVolumeDatas.volume.fBGM;
+		return SoundManager.GameVolumeDatas.volume.fBGM;
 	}
 
 	public static float GetSE()
 	{
-		return MySceneManager.Volume.GameVolumeDatas.volume.fSE;
+		return SoundManager.GameVolumeDatas.volume.fSE;
 	}
 
 
 	public static void SetVolume(GameVolume.Volume vol)
 	{
-		MySceneManager.Volume.GameVolumeDatas.volume = vol;
+		SoundManager.GameVolumeDatas.volume = vol;
 	}
 
 	public static void SetBGM(float vol)
 	{
-		MySceneManager.Volume.GameVolumeDatas.volume.fBGM = vol;
+		SoundManager.GameVolumeDatas.volume.fBGM = vol;
 		//再生中のBGMの音量を変える
 		SoundManager.SetVolume();
 	}
 
 	public static void SetSE(float vol)
 	{
-		MySceneManager.Volume.GameVolumeDatas.volume.fSE = vol;
+		SoundManager.GameVolumeDatas.volume.fSE = vol;
 	}
 
 }
