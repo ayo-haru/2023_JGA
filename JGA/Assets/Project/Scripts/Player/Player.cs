@@ -158,16 +158,6 @@ public class Player : MonoBehaviour
 			}
 		}
 
-		//--- プレイヤー初期位置
-		if (respawnZone == null)
-		{
-			var respawn = GameObject.Find("PlayerSpawn");
-			if (respawn == null)
-				Debug.LogError("<color=red>プレイヤーのリスポーン位置が見つかりません[Player.cs]</color>");
-			else
-				respawnZone = respawn.transform;
-		}
-
 		//--- 物を離した際に元の階層に戻すためのやつ
 		InteractObjectParent = GameObject.Find("InteractObject");
 
@@ -202,6 +192,17 @@ public class Player : MonoBehaviour
 		_maxRunSpeed = _maxMoveSpeed * runMagnification;
 		appealForce = (moveForce + runForce) / 2;
 		_maxAppealSpeed = (_maxMoveSpeed + _maxRunSpeed) / 2;
+	}
+
+    private void Start() {
+		//--- プレイヤー初期位置
+		if (respawnZone == null) {
+			var respawn = GameObject.Find("PlayerSpawn");
+			if (respawn == null)
+				Debug.LogError("<color=red>プレイヤーのリスポーン位置が見つかりません[Player.cs]</color>");
+			else
+				respawnZone = respawn.transform;
+		}
 	}
 
 	private void OnDisable()
