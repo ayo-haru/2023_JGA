@@ -79,6 +79,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	//------ プレイヤー
 	private GameObject playerObj;
 	private GameObject playerInstance;
+	private GameObject playerRespawn;
 
 
 	//---変数
@@ -104,11 +105,12 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 		managerObj = AddressableLoader<PrefabContainer>.Load("ManagerObjData");
 
 		// 以下各オブジェクト・マネージャーを取得
-		gimickObjectManaager = PrefabContainerFinder.Find(managerObj, "GimickObjectManager");
-		guestManager = PrefabContainerFinder.Find(managerObj, "GuestManager");
-		eventManager = PrefabContainerFinder.Find(managerObj, "EventManager");
-		stageManager = PrefabContainerFinder.Find(managerObj, "StageSceneManager");
+		gimickObjectManaager = PrefabContainerFinder.Find(ref managerObj, "GimickObjectManager");
+		guestManager = PrefabContainerFinder.Find(ref managerObj, "GuestManager");
+		eventManager = PrefabContainerFinder.Find(ref managerObj, "EventManager");
+		stageManager = PrefabContainerFinder.Find(ref managerObj, "StageSceneManager");
 
+		StartScene();
 
 		//----- ゲーム初期化 -----
 #if UNITY_EDITOR
@@ -148,7 +150,6 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 		//CreateGuestManager();
 		//CreateGimickObjectManager();
 
-		StartScene();
 
 		//----- タイマーUIの取得 -----
 		//timerUI = UIManager.UIManagerInstance.TimerUIObj;
@@ -179,6 +180,9 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
 		//----- セーブ -----
 		SaveManager.SaveAll();  // 一旦全セーブ
+
+		//----- プレイヤー生成 -----
+		CreatPlayer();
 	}
 
 	/// <summary>
@@ -283,9 +287,14 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	{
 		if (isCreatePlayer)
 		{
-			playerObj = PrefabContainerFinder.Find(GameData.characterDatas, "Player.prefab");
-			playerInstance = Instantiate(playerObj, GameData.playerPos, Quaternion.Euler(0.0f, 180.0f, 0.0f));
-			playerInstance.name = "Player";
+			if (!TestMySceneManager.CheckLoadScene("Title")) {
+				playerRespawn = GameObject.Find("PlayerSpawn");
+				GameData.playerPos = playerRespawn.transform.position;
+
+				playerObj = PrefabContainerFinder.Find(ref GameData.characterDatas, "Player.prefab");
+				playerInstance = Instantiate(playerObj, GameData.playerPos, Quaternion.Euler(0.0f, 180.0f, 0.0f));
+				playerInstance.name = "Player";
+			}
 		}
 	}
 

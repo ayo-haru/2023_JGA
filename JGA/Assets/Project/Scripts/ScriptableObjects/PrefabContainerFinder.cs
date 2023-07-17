@@ -33,7 +33,9 @@ public class PrefabContainerFinder : MonoBehaviour
     /// <param name="_prefabContainer"></param>
     /// <param name="_displayName"></param>
     /// <returns></returns>
-    public static GameObject Find(PrefabContainer _prefabContainer, string _displayName) { // 名前で検索
+    public static GameObject Find(ref PrefabContainer _prefabContainer, string _displayName) { // 名前で検索
+        ContainerNullCheck(_prefabContainer);
+
         for (int i = 0; i < _prefabContainer.list.Length; i++) {
             if (_prefabContainer.list[i].displayName == _displayName) {
                 return _prefabContainer.list[i].prefab;

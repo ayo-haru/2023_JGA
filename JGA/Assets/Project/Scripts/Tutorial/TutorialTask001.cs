@@ -41,7 +41,7 @@ public class TutorialTask001 : ITurorial
         timer = MAX_TIME;
 
         //----- 壁を生成 -----
-        wallPrefab = PrefabContainerFinder.Find(GameData.stageObjDatas, "TutorialWall.prefab");
+        wallPrefab = PrefabContainerFinder.Find(ref GameData.stageObjDatas, "TutorialWall.prefab");
 
         tutorialWall_001 = GameObject.Instantiate(wallPrefab, new Vector3(23.5f, 0.0f, -42.0f), Quaternion.Euler(0.0f, -45.0f, 0.0f));
         tutorialWall_001.name = "TutorialWall_001";

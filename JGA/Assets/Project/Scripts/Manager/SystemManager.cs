@@ -32,10 +32,10 @@ public class SystemManager : MonoBehaviour
     private void Awake() {
         managerDatas = AddressableLoader<PrefabContainer>.Load("ManagerObjData");
 
-        soundManagerObj = PrefabContainerFinder.Find(managerDatas, "SoundManager");
-        fadeManagerObj = PrefabContainerFinder.Find(managerDatas, "FadeManager");
-        pauseManagerObj = PrefabContainerFinder.Find(managerDatas, "PauseManager");
-        uiManagerObj = PrefabContainerFinder.Find(managerDatas, "UIManager");
+        soundManagerObj = PrefabContainerFinder.Find(ref managerDatas, "SoundManager");
+        fadeManagerObj = PrefabContainerFinder.Find(ref managerDatas, "FadeManager");
+        pauseManagerObj = PrefabContainerFinder.Find(ref managerDatas, "PauseManager");
+        uiManagerObj = PrefabContainerFinder.Find(ref managerDatas, "UIManager");
 
         //----- ƒCƒxƒ“ƒg“o˜^ -----
         // ‰¹

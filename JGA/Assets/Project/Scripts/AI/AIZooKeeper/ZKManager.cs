@@ -38,7 +38,7 @@ public class ZKManager : SingletonMonoBehaviour<ZKManager>
     /// </summary>
     private void ZooKeeperSpawn()
     {
-        GameObject zkObj = PrefabContainerFinder.Find(GameData.characterDatas, "ZooKeeper.prefab");     // プレハブ取得
+        GameObject zkObj = PrefabContainerFinder.Find(ref GameData.characterDatas, "ZooKeeper.prefab");     // プレハブ取得
         GameObject parent = GameObject.Find("ZooKeepers");      // 親オブジェクト取得
         ZooKeeperData.Data[] data = GameData.zooKeeperData[GameData.nowScene - 1].list;
 

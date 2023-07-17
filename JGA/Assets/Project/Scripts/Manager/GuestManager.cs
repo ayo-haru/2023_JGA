@@ -48,7 +48,7 @@ public class GuestManager : SingletonMonoBehaviour<GuestManager>
 		// 生成する客のプレハブ
 		for(int i = 0; i < guestPrefabName.Length; ++i)
 		{
-			guestPrefab.Add(PrefabContainerFinder.Find(GameData.characterDatas, guestPrefabName[i]));
+			guestPrefab.Add(PrefabContainerFinder.Find(ref GameData.characterDatas, guestPrefabName[i]));
 		}
 		//親取得
 		guestParent = GameObject.Find("GuestSpawon");
