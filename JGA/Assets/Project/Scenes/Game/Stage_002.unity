@@ -438,6 +438,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: GimickObjectManager
       objectReference: {fileID: 0}
+    - target: {fileID: 7234625745326861927, guid: d6aa2ce5f2414a44d9e3eae2c417620e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d6aa2ce5f2414a44d9e3eae2c417620e, type: 3}
 --- !u!1001 &29565165
@@ -5167,7 +5172,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &344348764
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14596,7 +14601,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1036327218
 Transform:
   m_ObjectHideFlags: 0
@@ -16484,7 +16489,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1143973690
 Transform:
   m_ObjectHideFlags: 0
@@ -16986,7 +16991,7 @@ Transform:
   - {fileID: 1834640372}
   - {fileID: 1679283772}
   m_Father: {fileID: 931485154}
-  m_RootOrder: 34
+  m_RootOrder: 35
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1202971224
 PrefabInstance:
@@ -20285,6 +20290,11 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: 136.59
       objectReference: {fileID: 0}
+    - target: {fileID: 621727849915856111, guid: 01eb5b54d8149be439800ab13cb5d514,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 854504126599249016, guid: 01eb5b54d8149be439800ab13cb5d514,
         type: 3}
       propertyPath: m_RootOrder
@@ -20415,6 +20425,11 @@ PrefabInstance:
       propertyPath: m_Convex
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2459970310086132842, guid: 01eb5b54d8149be439800ab13cb5d514,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2814847195465569544, guid: 01eb5b54d8149be439800ab13cb5d514,
         type: 3}
       propertyPath: m_RootOrder
@@ -20529,6 +20544,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Extents.z
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5397787067579521811, guid: 01eb5b54d8149be439800ab13cb5d514,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5710732473280698389, guid: 01eb5b54d8149be439800ab13cb5d514,
         type: 3}
@@ -20690,6 +20710,11 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 26
       objectReference: {fileID: 0}
+    - target: {fileID: 7706603364082420125, guid: 01eb5b54d8149be439800ab13cb5d514,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7764331879218380348, guid: 01eb5b54d8149be439800ab13cb5d514,
         type: 3}
       propertyPath: m_RootOrder
@@ -20714,6 +20739,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_RootOrder
       value: 29
+      objectReference: {fileID: 0}
+    - target: {fileID: 8608517545973386783, guid: 01eb5b54d8149be439800ab13cb5d514,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8860481236839209161, guid: 01eb5b54d8149be439800ab13cb5d514,
         type: 3}
@@ -32371,7 +32401,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2128571571
 MonoBehaviour:
   m_ObjectHideFlags: 0

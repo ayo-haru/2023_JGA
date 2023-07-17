@@ -73,18 +73,7 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 		PauseManager.OnPaused.Subscribe(x => { Pause(); }).AddTo(this.gameObject);
 		PauseManager.OnResumed.Subscribe(x => { Resumed(); }).AddTo(this.gameObject);
 
-		// GimickObjectManagerのコンポーネントを検索
-		gimickObjectManager = FindObjectOfType<GimickObjectManager>();
 
-		if (gimickObjectManager == null)
-		{
-			Destroy(this.gameObject);
-		} 
-		else
-		{
-			GimickObjectManager.Instance.AddGimickObjectsList(this);
-			Debug.Log(this.gameObject.name + "<color=#00AEEF>をリストに追加しました.</color>");
-		}
 
 	}
 
@@ -93,7 +82,18 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 	/// </summary>
 	protected virtual void OnEnable()
 	{
+		// GimickObjectManagerのコンポーネントを検索
+		gimickObjectManager = FindObjectOfType<GimickObjectManager>();
 
+		if (gimickObjectManager == null)
+		{
+			Destroy(this.gameObject);
+		}
+		else
+		{
+			GimickObjectManager.Instance.AddGimickObjectsList(this);
+			Debug.Log("<color=#00AEEF>" + this.gameObject.name + "をリストに追加しました.</color>");
+		}
 	}
 
 	/// <summary>
@@ -142,7 +142,7 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 		/* GimickObjectManagerがない場合は処理を行わない */
 		if (gimickObjectManager == null)
 		{
-			Debug.LogError("<color=#fd7e00>GimickObjectManagerがありません</color>");
+			Debug.LogError("<color=#fd7e00>" + this.gameObject.name + "の処理.GimickObjectManagerがありません</color>");
 			return;
 		}
 
@@ -156,7 +156,7 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 		/* GimickObjectManagerがない場合は処理を行わない */
 		if (gimickObjectManager == null)
 		{
-			Debug.LogError("<color=#fd7e00>GimickObjectManagerがありません</color>");
+			Debug.LogError("<color=#fd7e00>" + this.gameObject.name + "GimickObjectManagerがありません</color>");
 			return;
 		}
 
@@ -170,7 +170,7 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 		/* GimickObjectManagerがない場合は処理を行わない */
 		if (gimickObjectManager == null)
 		{
-			Debug.LogError("<color=#fd7e00>GimickObjectManagerがありません</color>");
+			Debug.LogError("<color=#fd7e00>" + this.gameObject.name + "GimickObjectManagerがありません</color>");
 			return;
 		}
 
@@ -184,7 +184,7 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 		/* GimickObjectManagerがない場合は処理を行わない */
 		if (gimickObjectManager == null)
 		{
-			Debug.LogError("<color=#fd7e00>GimickObjectManagerがありません</color>");
+			Debug.LogError("<color=#fd7e00>" + this.gameObject.name + "GimickObjectManagerがありません</color>");
 			return;
 		}
 
@@ -228,7 +228,7 @@ public class BaseObj : MonoBehaviour, IPlayObjectSound
 	{
 		this.OnDestroyed.AddListener(() => 
 		{ 
-			Debug.Log(this.gameObject.name + "破壊されました");
+			Debug.Log("<color=#00AEEF>" + this.gameObject.name + "破壊されました</color>");
 			if (gimickObjectManager){
 				GimickObjectManager.Instance.RemoveGimickObjectsList(this);
 			}

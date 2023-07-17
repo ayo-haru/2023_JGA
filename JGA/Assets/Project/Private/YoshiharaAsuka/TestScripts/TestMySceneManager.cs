@@ -56,24 +56,24 @@ public class TestMySceneManager
 public static AsyncOperation AddScene(SCENE scene)
 	{
 		if (CheckLoadScene(SetSceneName[(int)scene])){
-			Debug.Log(SetSceneName[(int)scene] + "はすでに追加されたシーンです");
+			Debug.Log("<color=#fd7e00>" + SetSceneName[(int)scene] + "はすでに追加されたシーンです</color>");
 			return null;
 		}
 
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(SetSceneName[(int)scene],LoadSceneMode.Additive);
+		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(SetSceneName[(int)scene],LoadSceneMode.Additive);
 
 		return asyncLoad;
 	}
 
 
-    /// <summary>
-    /// 指定したシーンの減算
-    /// </summary>
-    /// <param name="scene"></param>
-    public static void SubtractScene(SCENE scene)
+	/// <summary>
+	/// 指定したシーンの減算
+	/// </summary>
+	/// <param name="scene"></param>
+	public static void SubtractScene(SCENE scene)
 	{
 		if (!CheckLoadScene(SetSceneName[(int)scene])){
-			Debug.Log(SetSceneName[(int)scene] + "は読み込まれていないシーンです");
+			Debug.Log("<color=#fd7e00>" + SetSceneName[(int)scene] + "は読み込まれていないシーンです</color>");
 			return;
 		}
 

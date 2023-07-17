@@ -313,7 +313,7 @@ PrefabInstance:
     - target: {fileID: 4959561452964517233, guid: 9fd14f8353bbe0840aaf9747e05bc0b7,
         type: 3}
       propertyPath: useUI.value
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4959561452964517233, guid: 9fd14f8353bbe0840aaf9747e05bc0b7,
         type: 3}
@@ -337,7 +337,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1404278798}
   - component: {fileID: 1404278797}
-  - component: {fileID: 1404278796}
   - component: {fileID: 1404278799}
   m_Layer: 0
   m_Name: Main Camera
@@ -346,14 +345,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &1404278796
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1404278795}
-  m_Enabled: 1
 --- !u!20 &1404278797
 Camera:
   m_ObjectHideFlags: 0
@@ -563,18 +554,38 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7242081884832298767, guid: c3b6eb606fe216c4997fafcc4e7bbc1c,
         type: 3}
-      propertyPath: isCreateEvent
+      propertyPath: Stage001
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7242081884832298767, guid: c3b6eb606fe216c4997fafcc4e7bbc1c,
+        type: 3}
+      propertyPath: Stage002
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7242081884832298767, guid: c3b6eb606fe216c4997fafcc4e7bbc1c,
+        type: 3}
+      propertyPath: TitleScene
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7242081884832298767, guid: c3b6eb606fe216c4997fafcc4e7bbc1c,
+        type: 3}
+      propertyPath: isCreateEvent
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7242081884832298767, guid: c3b6eb606fe216c4997fafcc4e7bbc1c,
+        type: 3}
+      propertyPath: isCreateGuest
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7242081884832298767, guid: c3b6eb606fe216c4997fafcc4e7bbc1c,
         type: 3}
       propertyPath: isCreateStage
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7242081884832298767, guid: c3b6eb606fe216c4997fafcc4e7bbc1c,
         type: 3}
       propertyPath: isCreatePlayer
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7242081884832298767, guid: c3b6eb606fe216c4997fafcc4e7bbc1c,
         type: 3}

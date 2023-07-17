@@ -18,6 +18,18 @@ using UnityEngine.SceneManagement;
 public class GameManager : SingletonMonoBehaviour<GameManager> 
 {
 	/* ===============インスペクター公開================ */
+	[Header("開始するシーンを選択してください。")]
+	[SerializeField]
+	private bool TitleScene = true;
+
+	[SerializeField]
+	private bool Stage001 = false;
+
+	[SerializeField]
+	private bool Stage002 = false;
+
+
+
 	[Header("生成したいオブジェクトにチェックを入れてください。")]
 
 	[SerializeField]
@@ -72,7 +84,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	//---変数
 	private bool isOnce; // 一度だけ処理をするときに使う
 	AudioSource[] asList;
-
+	public string[] LoadSceneName;
 
 
 
@@ -126,16 +138,17 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	/// <summary>
 	/// 最初のフレーム更新の前に呼び出される
 	/// </summary>
-	private void Start() {
+	private void Start() 
+	{
 
 		/* ※呼び出す順番に注意！*/
-		CreateStageManager();
-		CreatPlayer();
-		CreateEventManager();
-		CreateGuestManager();
-		CreateGimickObjectManager();
+		//CreateStageManager();
+		//CreatPlayer();
+		//CreateEventManager();
+		//CreateGuestManager();
+		//CreateGimickObjectManager();
 
-		StartGame();
+		StartScene();
 
 		//----- タイマーUIの取得 -----
 		//timerUI = UIManager.UIManagerInstance.TimerUIObj;
@@ -171,15 +184,21 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	/// <summary>
 	/// 1フレームごとに呼び出される（端末の性能によって呼び出し回数が異なる）：inputなどの入力処理
 	/// </summary>
-	private void Update() {
-		/*
-		 *TODO
-		 *プレイヤーのマネージャー？からプレイヤーの座標を取得して保存するか
-		 *プレイヤーが保存するようにするかとかのいずれかでプレイヤーの座標をセーブする
-		 */
-		//-----プレイヤーの座標保存---- -
-		GameData.playerPos = playerInstance.transform.position;
-		SaveSystem.SaveLastPlayerPos(GameData.playerPos);
+	private void Update() 
+	{
+
+		if(!TestMySceneManager.CheckLoadScene("Title")){
+			/*
+			 *TODO
+			 *プレイヤーのマネージャー？からプレイヤーの座標を取得して保存するか
+			 *プレイヤーが保存するようにするかとかのいずれかでプレイヤーの座標をセーブする
+			 */
+			//-----プレイヤーの座標保存---- -
+			GameData.playerPos = playerInstance.transform.position;
+			SaveSystem.SaveLastPlayerPos(GameData.playerPos);
+			Debug.Log("<color=#00AEEF>プレイヤー生成をしました。</color>");
+		}
+
 
 		//----- 時間系の処理 -----
 		if (timerUI) {
@@ -229,7 +248,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 		}
 	}
 
-	private void LateUpdate() {
+	private void LateUpdate() 
+	{
 		//----- 飼育員に捕まったフラグを下す -----
 		/*
 		 * Updateで下ろすと各処理と同フレーム中にフラグが降りてしまうためLateに書いた
@@ -243,7 +263,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	/// <summary>
 	/// ギミックマネージャー生成処理
 	/// </summary>
-	private void CreateGimickObjectManager() {
+	private void CreateGimickObjectManager() 
+	{
 		if (!isCreateGimickObject) {
 			return;
 		} else if (!gimickObjectManaager) {
@@ -266,13 +287,13 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 			playerInstance = Instantiate(playerObj, GameData.playerPos, Quaternion.Euler(0.0f, 180.0f, 0.0f));
 			playerInstance.name = "Player";
 		}
-
 	}
 
 	/// <summary>
 	/// 客マネージャー生成
 	/// </summary>
-	private void CreateGuestManager() {
+	private void CreateGuestManager() 
+	{
 		if (!isCreateGuest) {
 			return;
 		} 
@@ -286,7 +307,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	/// <summary>
 	/// イベントマネージャ-生成
 	/// </summary>
-	private void CreateEventManager() {
+	private void CreateEventManager() 
+	{
 		if (!isCreateEvent) {
 			return;
 		} 
@@ -391,10 +413,48 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 		SaveManager.SaveInitDataAll();
 	}
 
-	private void StartGame()
+	private void StartScene()
+	{
+		if (TitleScene)
+		{
+			StartTitle();
+		}
+
+		if(Stage001)
+		{
+			StartStage001();
+		}
+
+		if (Stage002)
+		{
+			StartStage002();
+		}
+
+	}
+	private void StartTitle()
 	{
 		TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_TITLE);
 	}
+
+	private void StartStage001()
+	{
+		TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_GAME_001);
+
+		CreateEventManager();
+		CreateGuestManager();
+		CreateGimickObjectManager();
+	}
+
+	private void StartStage002()
+	{
+		TestMySceneManager.AddScene(TestMySceneManager.SCENE.SCENE_GAME_002);
+
+		CreateEventManager();
+		CreateGuestManager();
+		CreateGimickObjectManager();
+	}
+
+
 }
 
 
