@@ -104,7 +104,7 @@ public class PlayerAnimation : PlayerAction
 				if (stateInfo.normalizedTime >= 1.0f)
 				{
 					_bHitMotion = false;
-					anim.SetBool(HashHit, _bHitMotion);
+					anim.SetBool(HashHit, false);
 				}
 			}
 		}
@@ -116,13 +116,13 @@ public class PlayerAnimation : PlayerAction
 		// 対象のモーションをtrueにし、その他のモーションはfalseにする
 		if (!@bool.HasValue)
 		{
-			anim.SetBool(HashMove, Animenum.MOVE == num);
-			anim.SetBool(HashRun, Animenum.RUN == num);
-			anim.SetBool(HashAppeal, Animenum.APPEAL == num);
-			anim.SetBool(HashHit, Animenum.HIT == num);
-			anim.SetBool(HashCarry, Animenum.CARRY == num);
-			anim.SetBool(HashDrag, Animenum.DRAG == num);
-			anim.SetBool(HashRandom, Animenum.RANDOM == num);
+			anim.SetBool(HashMove,		Animenum.MOVE == num);
+			anim.SetBool(HashRun,		Animenum.RUN == num);
+			anim.SetBool(HashAppeal,	Animenum.APPEAL == num);
+			anim.SetBool(HashHit,		Animenum.HIT == num);
+			anim.SetBool(HashCarry,		Animenum.CARRY == num);
+			anim.SetBool(HashDrag,		Animenum.DRAG == num);
+			anim.SetBool(HashRandom,	Animenum.RANDOM == num);
 		}
 		// もし@boolに値が与えられていた場合
 		// 対象のモーションのみtrueにする
@@ -131,13 +131,13 @@ public class PlayerAnimation : PlayerAction
 			int hash = 0;
 			switch (num)
 			{
-				case Animenum.MOVE: hash = HashMove; break;
-				case Animenum.RUN: hash = HashRun; break;
-				case Animenum.APPEAL: hash = HashAppeal; break;
-				case Animenum.HIT: hash = HashHit; break;
-				case Animenum.CARRY: hash = HashCarry; break;
-				case Animenum.DRAG: hash = HashDrag; break;
-				case Animenum.RANDOM: hash = HashRandom; break;
+				case Animenum.MOVE:		hash = HashMove;	break;
+				case Animenum.RUN:		hash = HashRun;		break;
+				case Animenum.APPEAL:	hash = HashAppeal;	break;
+				case Animenum.HIT:		hash = HashHit;		break;
+				case Animenum.CARRY:	hash = HashCarry;	break;
+				case Animenum.DRAG:		hash = HashDrag;	break;
+				case Animenum.RANDOM:	hash = HashRandom;	break;
 					//case Animenum.ANIM_ANIMSPEED:			break;
 			}
 			anim.SetBool(hash, @bool.Value);
@@ -156,10 +156,20 @@ public class PlayerAnimation : PlayerAction
 
 	private void Hit()
 	{
-		if (PlayerInputCallback.isHit)
-			SetAnimation(Animenum.HIT, true);
-		else
-			SetAnimation(Animenum.HIT, false);
+		//--- 以下の場合は実行しない
+		//・既にはたいている
+		//・アピール中
+		//・ポーズ中
+		//・掴んでいる
+
+		if (_bHitMotion ||
+			PlayerInputCallback.isAppeal ||
+			PlayerInputCallback.isHold ||
+			PauseManager.isPaused )
+			return;
+
+		PlayerInputCallback.isHit = _bHitMotion = true;
+		SetAnimation(Animenum.HIT, true);
 	}
 
 	private void Hold()
@@ -201,12 +211,6 @@ public class PlayerAnimation : PlayerAction
 		var obj = EffectManager.Create(transform.position + new Vector3(0, 4, 0), 0, transform.rotation);
 		obj.transform.localScale = Vector3.one * 5;
 		obj.transform.parent = transform;
-
-		//// もしメガホンを保持している場合は、再生しない
-		//if (InteractCollision != null && InteractCollision.name.Contains("Megaphone"))
-		//	_IsMegaphone = true;
-		//else
-		//	SoundManager.Play(audioSource, SoundManager.ESE.PENGUIN_VOICE);
 	}
 
 	public void AnimCarryStop()

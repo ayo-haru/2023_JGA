@@ -14,7 +14,7 @@ public class PlayerMove : PlayerAction
 {
 	[SerializeField] private Vector3 _vForce;               // 移動方向
 	public Vector3 vForce { get { return _vForce; } }
-	private Rigidbody rb;
+	private Vector2 moveInputValue = Vector2.zero;
 
 	private float runForce;                                 // 疾走時速度
 	private float _maxRunSpeed;                             // 疾走時最高速度
@@ -50,9 +50,30 @@ public class PlayerMove : PlayerAction
 	/// </summary>
 	public override void FixedUpdateState()
 	{
-		if (_playerManager.MoveInputValue != Vector2.zero)
+		if (_playerManager.MoveInputValue != Vector2.zero && !_playerManager._player.pAnim.bHitMotion)
 		{
+			// 前フレームと方向が違う時
+			if (moveInputValue != _playerManager.MoveInputValue)
+			{
+				// 方向を更新
+				moveInputValue = _playerManager.MoveInputValue;
+
+				// キーボード操作時は慣性を半減させる
+				if (!bGamePad)
+				{
+					_playerManager._player.rb.velocity /= 2;
+					_playerManager._player.rb.angularVelocity /= 2;
+				}
+			}
+
 			Move();
+		}
+		else
+		{
+			// 慣性をなくす
+			_playerManager.MoveInputValue = Vector2.zero;
+			_playerManager._player.rb.velocity = Vector3.zero;
+			_playerManager._player.rb.angularVelocity = Vector3.zero;
 		}
 	}
 
@@ -116,8 +137,8 @@ public class PlayerMove : PlayerAction
 		//else
 		{
 			//移動
-			if (rb.velocity.magnitude < max && _vForce != Vector3.zero)
-				rb.AddForce(_vForce);
+			if (_playerManager._player.rb.velocity.magnitude < max && _vForce != Vector3.zero)
+				_playerManager._player.rb.AddForce(_vForce);
 			//回転
 			if (_playerManager.MoveInputValue.normalized == Vector2.zero)
 				return;
@@ -130,5 +151,4 @@ public class PlayerMove : PlayerAction
 			transform.LookAt(transform.position + fw);
 		}
 	}
-
 }

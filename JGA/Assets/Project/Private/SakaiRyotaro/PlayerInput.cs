@@ -8,33 +8,21 @@
 // [Date]
 // 2023/06/05	スクリプト作成
 //=============================================================================
-using System;
-using UniRx;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerInput : PlayerAction
 {
-	[SerializeField] private PlayerAnimation playerAnimation;
-	private PlayerInputCallback PIC = new PlayerInputCallback();
+	[SerializeField] private bool bGamePad;     // ゲームパッド接続確認フラグ
+	public bool IsGamePad { get {  return bGamePad; } }
 
-	private static Subject<string> MoveSubject = new Subject<string>();
-	private static Subject<string> AppealSubject = new Subject<string>();
-	private static Subject<string> HitSubject = new Subject<string>();
-	private static Subject<string> HoldSubject = new Subject<string>();
-	private static Subject<string> RunSubject = new Subject<string>();
+	private PlayerInputCallback PIC = new PlayerInputCallback();
 
 	[SerializeField] private InputActionReference actionMove;
 	[SerializeField] private InputActionReference actionAppeal;
 	[SerializeField] private InputActionReference actionHit;
 	[SerializeField] private InputActionReference actionHold;
 	[SerializeField] private InputActionReference actionRun; //PC only
-
-	public static IObservable<string> OnMove { get { return MoveSubject; } }
-	public static IObservable<string> OnAppeal { get { return AppealSubject; } }
-	public static IObservable<string> OnHit { get { return HitSubject; } }
-	public static IObservable<string> OnHold { get { return HoldSubject; } }
-	public static IObservable<string> OnRun { get { return RunSubject; } }
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -60,9 +48,6 @@ public class PlayerInput : PlayerAction
 		actionHit.ToInputAction().Enable();
 		actionHold.ToInputAction().Enable();
 		actionRun.ToInputAction().Enable();
-
-		if (playerAnimation == null)
-			playerAnimation = GetComponent<PlayerAnimation>();
 	}
 
 	public void Disable()
@@ -127,7 +112,8 @@ public class PlayerInput : PlayerAction
 	/// </summary>
 	public override void UpdateState()
 	{
-
+		// ゲームパッドが接続されているか
+		bGamePad = Gamepad.current != null;
 	}
 
 	private void Move(InputAction.CallbackContext context)
@@ -135,7 +121,7 @@ public class PlayerInput : PlayerAction
 		if (context.phase == InputActionPhase.Canceled)
 		{
 			_playerManager.MoveInputValue = Vector2.zero;
-			playerAnimation.SetAnimation(PlayerAnimation.Animenum.MOVE, false);
+			pm.p .SetAnimation(PlayerAnimation.Animenum.MOVE, false);
 		}
 		else
 		{
