@@ -12,6 +12,11 @@ public class SystemManager : MonoBehaviour
     private ReactiveProperty<bool> useSound = new ReactiveProperty<bool>(false);
     private GameObject soundManagerObj;
 
+    [Header("エフェクト")]
+    [SerializeField]
+    private ReactiveProperty<bool> useEffect = new ReactiveProperty<bool>(false);
+    private GameObject effectManagerObj;
+
     [Header("フェード")]
     [SerializeField]
     private ReactiveProperty<bool> useFade = new ReactiveProperty<bool>(false);
@@ -27,29 +32,24 @@ public class SystemManager : MonoBehaviour
     private ReactiveProperty<bool> useUI = new ReactiveProperty<bool>(false);
     private GameObject uiManagerObj;
 
-    PrefabContainer managerDatas;
-
     private void Awake() {
-        managerDatas = AddressableLoader<PrefabContainer>.Load("ManagerObjData");
-
-        soundManagerObj = PrefabContainerFinder.Find(ref managerDatas, "SoundManager");
-        fadeManagerObj = PrefabContainerFinder.Find(ref managerDatas, "FadeManager");
-        pauseManagerObj = PrefabContainerFinder.Find(ref managerDatas, "PauseManager");
-        uiManagerObj = PrefabContainerFinder.Find(ref managerDatas, "UIManager");
+        soundManagerObj = PrefabContainerFinder.Find(ref GameData.managerObjDatas, "SoundManager");
+        effectManagerObj = PrefabContainerFinder.Find(ref GameData.managerObjDatas, "EffectManager");
+        fadeManagerObj = PrefabContainerFinder.Find(ref GameData.managerObjDatas, "FadeManager");
+        pauseManagerObj = PrefabContainerFinder.Find(ref GameData.managerObjDatas, "PauseManager");
+        uiManagerObj = PrefabContainerFinder.Find(ref GameData.managerObjDatas, "UIManager");
 
         //----- イベント登録 -----
         // 音
         useSound.Subscribe(_ => { if (useSound.Value) { InstatiateManager(soundManagerObj); } }).AddTo(this);
+        // エフェクト
+        useEffect.Subscribe(_ => { if (useEffect.Value){ InstatiateManager(effectManagerObj);}}).AddTo(this);        
         // フェード
-        useFade.Subscribe(_ => { if (useFade.Value) { /*InstatiateManager(FadeManager);*/ } }).AddTo(this);
+        useFade.Subscribe(_ => { if (useFade.Value) { InstatiateManager(fadeManagerObj); } }).AddTo(this);
         // ポーズ
         usePause.Subscribe(_ => { if (usePause.Value) { InstatiateManager(pauseManagerObj); } }).AddTo(this);
         // UI
         useUI.Subscribe(_ => { if (useUI.Value) { InstatiateManager(uiManagerObj); } }).AddTo(this);
-    }
-
-    private void OnApplicationQuit() {
-        Addressables.Release(managerDatas);
     }
 
     // Start is called before the first frame update
