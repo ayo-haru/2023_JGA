@@ -20,6 +20,7 @@ public static class GameData
     public static PrefabContainer animalDatas;
     //public static PrefabContainer gimmickDatas;
     public static PrefabContainer stageObjDatas;
+    public static PrefabContainer managerObjDatas;
 
     //---データの登録
     public static ZooKeeperData[] zooKeeperData;

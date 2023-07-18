@@ -49,9 +49,6 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
 	//===============================================
 
-	// マネージャーオブジェクトのプレハブを取得
-	public static PrefabContainer managerObj;
-
 	// ---各種マネージャー参照
 	private GameObject stageManager;
 	private GameObject eventManager;
@@ -101,14 +98,11 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
 
 		//----- マネージャー読み込み -----
-		// マネージャーデータのアセットを取得
-		managerObj = AddressableLoader<PrefabContainer>.Load("ManagerObjData");
-
 		// 以下各オブジェクト・マネージャーを取得
-		gimickObjectManaager = PrefabContainerFinder.Find(ref managerObj, "GimickObjectManager");
-		guestManager = PrefabContainerFinder.Find(ref managerObj, "GuestManager");
-		eventManager = PrefabContainerFinder.Find(ref managerObj, "EventManager");
-		stageManager = PrefabContainerFinder.Find(ref managerObj, "StageSceneManager");
+		gimickObjectManaager = PrefabContainerFinder.Find(ref GameData.managerObjDatas, "GimickObjectManager");
+		guestManager = PrefabContainerFinder.Find(ref GameData.managerObjDatas, "GuestManager");
+		eventManager = PrefabContainerFinder.Find(ref GameData.managerObjDatas, "EventManager");
+		stageManager = PrefabContainerFinder.Find(ref GameData.managerObjDatas, "StageSceneManager");
 
 		StartScene();
 

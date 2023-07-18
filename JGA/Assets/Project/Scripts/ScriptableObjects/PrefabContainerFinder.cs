@@ -55,6 +55,8 @@ public class PrefabContainerFinder : MonoBehaviour
             GameData.animalDatas = AddressableLoader<PrefabContainer>.Load("AnimalData");
             //GameData.gimmickDatas = AddressableLoader<PrefabContainer>.Load("GimmickData");
             GameData.stageObjDatas = AddressableLoader<PrefabContainer>.Load("StageObjData");
+            GameData.managerObjDatas = AddressableLoader<PrefabContainer>.Load("ManagerObjData");
+
             //---データ
             GameData.zooKeeperData = new ZooKeeperData[2];
             GameData.zooKeeperData[0] = AddressableLoader<ZooKeeperData>.Load("Stage01_ZooKeeperData");
