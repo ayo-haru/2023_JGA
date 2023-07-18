@@ -13,8 +13,17 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-	private GameObject _player;
-	public Rigidbody _playerRb;
+	public struct PLAYER
+	{
+		[SerializeField] public GameObject pObj;
+		[SerializeField] public Rigidbody rb;
+		[SerializeField] public PlayerAnimation pAnim;
+		[SerializeField] public PlayerCollision pCollision;
+		[SerializeField] public PlayerInteract pInteract;
+		[SerializeField] public PlayerInput pInput;
+		[SerializeField] public PlayerMove pMove;
+	}
+	public PLAYER _player;
 
 	[Header("PlayerManager")]
 	[SerializeField, Tooltip("歩行速度")]
@@ -41,10 +50,13 @@ public class PlayerManager : MonoBehaviour
 	/// </summary>
 	void Awake()
 	{
-		if (!_player)
-			_player = GameObject.FindGameObjectWithTag("Player");
-		_playerRb = _player.GetComponent<Rigidbody>();
-		playerActions.AddRange(_player.GetComponents<PlayerAction>());
+		if (!_player.pObj)
+		{
+			_player.pObj = GameObject.FindGameObjectWithTag("Player");
+			_player.rb = _player.pObj.GetComponent<Rigidbody>();
+		}
+
+		playerActions.AddRange(_player.pObj.GetComponents<PlayerAction>());
 
 		foreach (var action in playerActions)
 		{
