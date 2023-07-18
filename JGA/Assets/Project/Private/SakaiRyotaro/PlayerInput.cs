@@ -121,12 +121,12 @@ public class PlayerInput : PlayerAction
 		if (context.phase == InputActionPhase.Canceled)
 		{
 			_playerManager.MoveInputValue = Vector2.zero;
-			pm.p .SetAnimation(PlayerAnimation.Animenum.MOVE, false);
+			_playerManager._player.pAnim.SetAnimation(PlayerAnimation.Animenum.MOVE, false);
 		}
 		else
 		{
 			_playerManager.MoveInputValue = context.ReadValue<Vector2>();
-			playerAnimation.SetAnimation(PlayerAnimation.Animenum.MOVE, true);
+			_playerManager._player.pAnim.SetAnimation(PlayerAnimation.Animenum.MOVE, true);
 		}
 	}
 

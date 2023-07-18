@@ -28,8 +28,6 @@ public class PlayerMove : PlayerAction
 	{
 		base.AwakeState(pm);
 
-		rb = _playerManager._playerRb;
-
 		//--- 速度設定
 		runForce = pm.MoveSpeed * pm.RunMagnification;
 		_maxRunSpeed = pm.MaxMoveSpeed * pm.RunMagnification;
@@ -59,7 +57,7 @@ public class PlayerMove : PlayerAction
 				moveInputValue = _playerManager.MoveInputValue;
 
 				// キーボード操作時は慣性を半減させる
-				if (!bGamePad)
+				if (!_playerManager._player.pInput.IsGamePad)
 				{
 					_playerManager._player.rb.velocity /= 2;
 					_playerManager._player.rb.angularVelocity /= 2;
