@@ -31,7 +31,7 @@ public class GuestAnimation : MonoBehaviour
     //ナビメッシュエージェント
     private NavMeshAgent agent;
     //アニメーションステート
-    public enum EGuestAnimState { IDLE,WALK,RUN,SURPRISED,SIT_IDLE,STAND_UP,WAIT,WATCH1,WATCH2,MAX_GUEST_ANIM_STATE,};
+    public enum EGuestAnimState { IDLE,WALK,SURPRISED,SIT_IDLE,STAND_UP,WAIT,WATCH1,WATCH2,MAX_GUEST_ANIM_STATE,};
     private EGuestAnimState state;
     //首を向ける方向
     private Transform lookAtTarget = null;
@@ -179,15 +179,9 @@ public class GuestAnimation : MonoBehaviour
         {
             case EGuestAnimState.IDLE:
                 animator.SetBool("isWalk", false);
-                animator.SetBool("isRun", false);
                 break;
             case EGuestAnimState.WALK:
                 animator.SetBool("isWalk", true);
-                animator.SetBool("isRun", false);
-                break;
-            case EGuestAnimState.RUN:
-                animator.SetBool("isWalk", false);
-                animator.SetBool("isRun", true);
                 break;
             case EGuestAnimState.SURPRISED:
             case EGuestAnimState.STAND_UP:          //立ち上がった後にびっくりするアニメーションを再生するため
@@ -220,7 +214,6 @@ public class GuestAnimation : MonoBehaviour
     {
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Idle")) return EGuestAnimState.IDLE;
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Walk")) return EGuestAnimState.WALK;
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Run")) return EGuestAnimState.RUN;
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Surprised")) return EGuestAnimState.SURPRISED;
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Sit")) return EGuestAnimState.SIT_IDLE;
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("StandUp")) return EGuestAnimState.STAND_UP;
