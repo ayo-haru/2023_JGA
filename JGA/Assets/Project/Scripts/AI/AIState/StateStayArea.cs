@@ -111,12 +111,19 @@ public class StateStayArea : AIState
         gameObject.tag = "Untagged";
 
         //ペンギンブースに着いた客の人数を追加
-        GuestNumUI guestNumUI = GameObject.Find("GuestNumUI").GetComponent<GuestNumUI>();
-        if (guestNumUI){
+#if true
+        GameObject guestNumUIObj = GameObject.Find("GuestNumUI");
+        GuestNumUI guestNumUI = null;
+        if (guestNumUIObj ? guestNumUIObj.TryGetComponent(out guestNumUI) : false)
+        {
             guestNumUI.Add();
-        }else{
-            Debug.LogError("客人数表示用UIが取得できませんでした");
         }
+#else
+        if (!UIManager.UIManagerInstance) return;
+        if (!UIManager.UIManagerInstance.GuestNumUI) return;
+        if (!UIManager.UIManagerInstance.GuestNumUI.TryGetComponent(out GuestNumUI guestNumUI)) return;
+        guestNumUI.Add();
+#endif
     }
 
     public override void UpdateState()

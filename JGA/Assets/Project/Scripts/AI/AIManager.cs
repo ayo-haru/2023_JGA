@@ -108,9 +108,9 @@ public class AIManager : MonoBehaviour
         UnityEngine.Random.InitState(DateTime.Now.Millisecond);
 
         //ゲストマネージャーに追加
-        //GuestManager.Instance.AddGuest(this);
+        GuestManager.Instance.AddGuest(this);
     }
-
+#if false
     /// <summary>
     /// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
     /// </summary>
@@ -127,6 +127,7 @@ public class AIManager : MonoBehaviour
         //ステートの更新処理
         if (nodeList[currentState].state) nodeList[currentState].state.UpdateState();
     }
+#endif
 
     public void MyFixedUpdate()
     {
