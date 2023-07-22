@@ -60,14 +60,15 @@ public class GuestAnimation : MonoBehaviour
 
     }
 #endif
-	/// <summary>
-	/// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
-	/// </summary>
-	void FixedUpdate()
+#if false
+    /// <summary>
+    /// 一定時間ごとに呼び出されるメソッド（端末に依存せずに再現性がある）：rigidbodyなどの物理演算
+    /// </summary>
+    void FixedUpdate()
 	{
         MyFixedUpdate();
     }
-
+#endif
     public void MyFixedUpdate()
     {
         if (PauseManager.isPaused) return;
@@ -122,12 +123,12 @@ public class GuestAnimation : MonoBehaviour
 
         state = nowState;
     }
-
+#if false
     private void LateUpdate()
     {
         MyLateUpdate();
     }
-
+#endif
     public void MyLateUpdate()
     {
         if (PauseManager.isPaused) return;

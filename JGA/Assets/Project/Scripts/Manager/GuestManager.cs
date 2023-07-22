@@ -124,6 +124,8 @@ public class GuestManager : SingletonMonoBehaviour<GuestManager>
 	/// </summary>
 	private void SpawnFixGuest()
 	{
+        if (GameData.nowScene - 1 >= GameData.guestData.Length || GameData.nowScene - 1 < 0) return;
+
 		GuestData.Data[] _guestList = GameData.guestData[GameData.nowScene - 1].dataList;   // 設定された人数分生成する
 
 		for (int i = 0; i < _guestList.Length; i++)
