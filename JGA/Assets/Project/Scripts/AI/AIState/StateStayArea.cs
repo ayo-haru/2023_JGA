@@ -18,6 +18,7 @@
 // 2023/04/10	(小楠）ナビメッシュが動かなくなってしまうバグを直した
 // 2023/04/17	(小楠）ペンギンのTransform取得した
 // 2023/05/23	(小楠）到着した時のアニメーションを増やした
+// 2023/07/24	(小楠）子ども用の待機アニメーションの再生を追加
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -141,6 +142,8 @@ public class StateStayArea : AIState
             //動物の方を向く
             Quaternion rot = Quaternion.LookRotation(((!animal) ? agent.destination : animal.position) - transform.position);
             transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime);
+            //子どもの場合は待機モーションの変更をしない
+            if (guestAnimation.IsChild) return;
             //IDLEモーションの場合はタイマーを更新
             if (guestAnimation.GetAnimationState() != GuestAnimation.EGuestAnimState.IDLE) return;
             fAnimTimer -= Time.deltaTime;
@@ -158,11 +161,15 @@ public class StateStayArea : AIState
         if (agent.remainingDistance > agent.stoppingDistance) return;
 
         //待機アニメーションの再生
-        guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.IDLE);
-        switch (Random.Range(0, 3))
-        {
-            case 1: guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.WATCH1); break;
-            case 2: guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.WATCH2); break;
+        if (guestAnimation.IsChild){
+            guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.JUMP);
+        }else{
+            guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.IDLE);
+            switch (Random.Range(0, 3))
+            {
+                case 1: guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.WATCH1); break;
+                case 2: guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.WATCH2); break;
+            }
         }
 
         //ui設定

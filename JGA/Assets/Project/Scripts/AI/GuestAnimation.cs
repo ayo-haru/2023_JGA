@@ -31,12 +31,16 @@ public class GuestAnimation : MonoBehaviour
     //ナビメッシュエージェント
     private NavMeshAgent agent;
     //アニメーションステート
-    public enum EGuestAnimState { IDLE,WALK,SURPRISED,SIT_IDLE,STAND_UP,WAIT,WATCH1,WATCH2,MAX_GUEST_ANIM_STATE,};
+    public enum EGuestAnimState { IDLE,WALK,SURPRISED,SIT_IDLE,STAND_UP,WAIT,WATCH1,WATCH2,JUMP,MAX_GUEST_ANIM_STATE,};
     private EGuestAnimState state;
     //首を向ける方向
     private Transform lookAtTarget = null;
     private Transform beforeLookAtTarget = null;
     private float fAnimTimer;
+
+    //子ども用フラグ
+    private bool bChild = false;
+    public bool IsChild { get { return bChild; } }
 
 	/// <summary>
 	/// Prefabのインスタンス化直後に呼び出される：ゲームオブジェクトの参照を取得など
@@ -49,6 +53,8 @@ public class GuestAnimation : MonoBehaviour
 
         agent = GetComponent<NavMeshAgent>();
         state = EGuestAnimState.IDLE;
+
+        bChild = animator.name.StartsWith("Boy") || animator.name.StartsWith("Girl");
     }
 #if false
     /// <summary>
@@ -176,6 +182,13 @@ public class GuestAnimation : MonoBehaviour
 
     public void SetAnimation(EGuestAnimState _state)
     {
+        //ジャンプから他のアニメーションに変える時
+        if(_state != EGuestAnimState.JUMP && bChild){
+            if (GetAnimationState() == EGuestAnimState.JUMP){
+                animator.SetTrigger("finJump");
+            }
+        }
+        
         switch (_state)
         {
             case EGuestAnimState.IDLE:
@@ -200,6 +213,10 @@ public class GuestAnimation : MonoBehaviour
             case EGuestAnimState.WATCH2:
                 animator.SetTrigger("watch2");
                 break;
+            case EGuestAnimState.JUMP:
+                if (!bChild) break;
+                animator.Play("Jump");
+                break;
         }
     }
     public void SetLookAt(Transform _target)
@@ -221,6 +238,7 @@ public class GuestAnimation : MonoBehaviour
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Wait")) return EGuestAnimState.WAIT;
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Watch1")) return EGuestAnimState.WATCH1;
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Watch2")) return EGuestAnimState.WATCH2;
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Jump")) return EGuestAnimState.JUMP;
 
         return EGuestAnimState.MAX_GUEST_ANIM_STATE;
     }
