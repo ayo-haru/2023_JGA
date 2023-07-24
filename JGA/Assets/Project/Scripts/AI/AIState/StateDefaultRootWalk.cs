@@ -15,6 +15,7 @@
 // 2023/03/18	(小楠）動物の方向くようにした
 // 2023/03/25	(伊地田）自動生成に対応
 // 2023/05/20	(小楠)要らないコメント消したりした
+// 2023/07/24	(小楠)待機中のアニメーションの再生を変更
 //=============================================================================
 using System.Collections;
 using System.Collections.Generic;
@@ -41,6 +42,7 @@ public class StateDefaultRootWalk : AIState
     //一回だけ処理するようのフラグ
     private bool bOnce = true;
     private bool bChange = false;
+    private bool bAnim = true;
 
 #if false
     /// <summary>
@@ -122,13 +124,11 @@ public class StateDefaultRootWalk : AIState
         if(agent.path.status == NavMeshPathStatus.PathPartial)
         {
             ChangeTarget();
+            return;
         }
 
         //目的地へ移動中
         if (agent.remainingDistance > agent.stoppingDistance) return;
-
-        //待機時間中の処理
-        guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.IDLE);
 
         //ランダム生成用エントランスに到着したら
         if ((agent.destination.x - agent.stoppingDistance < data.entranceTF.position.x && agent.destination.x + agent.stoppingDistance > data.entranceTF.position.x) &&
@@ -146,11 +146,19 @@ public class StateDefaultRootWalk : AIState
         if (data.waitTime <= fTimer)
         {
             ChangeTarget();
+            return;
         }
 
         //動物の方を向く
         Quaternion rot = Quaternion.LookRotation(((!animals[targetNum]) ? data.rootTransforms[targetNum].position : animals[targetNum].position) - transform.position);
         transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime);
+
+        //待機アニメーションの再生
+        if (bAnim)
+        {
+            guestAnimation.SetAnimation(guestAnimation.IsChild ? GuestAnimation.EGuestAnimState.JUMP : GuestAnimation.EGuestAnimState.IDLE);
+            bAnim = false;
+        }
     }
 
     public override void FinState()
@@ -174,8 +182,18 @@ public class StateDefaultRootWalk : AIState
     /// </summary>
     public void ChangeTarget()
     {
-        //ターゲットが1つ以下の場合は処理しない
-        if(data.rootTransforms.Count <= 1 && !bChange) return;
+        //ターゲットが1つ以下の場合
+        if(data.rootTransforms.Count <= 1 && !bChange)
+        {
+            //初めて目的地に着いた時のみ待機モーションの再生を行う
+            if (bAnim)
+            {
+                guestAnimation.SetAnimation(guestAnimation.IsChild ? GuestAnimation.EGuestAnimState.JUMP : GuestAnimation.EGuestAnimState.IDLE);
+                bAnim = false;
+            }
+            return;
+        }
+
         bChange = false;
 
         //ランダム生成されたものなら、ルートを最後まで回ったらエントランスに戻る
@@ -187,6 +205,7 @@ public class StateDefaultRootWalk : AIState
         }
         fTimer = 0.0f;
         guestAnimation.SetAnimation(GuestAnimation.EGuestAnimState.WALK);
+        bAnim = true;
     }
     /// <summary>
     /// 動物の位置を取得
