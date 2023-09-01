@@ -94,7 +94,7 @@ public static class SaveSystem {
 #endif
             //FileInfo info = new FileInfo(path + "/" + SAVE_FILE_PATH);  // 保存場所からのロード
             path += ("/" + SAVE_FILE_PATH); // 保存場所のパスを格納
-            FileStream fs = new FileStream(path, FileMode.Open, FileAccess.ReadWrite);
+            FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read,FileShare.ReadWrite);
             StreamReader reader = new StreamReader(fs);
             //StreamReader reader = new StreamReader(info.OpenRead());    // info.OpenRead()でファイルパスがとれるっぽい
             string json = reader.ReadToEnd();                           // ReadToEndは一括読込らしいReadLineで一行ずつ読込
